@@ -21,6 +21,7 @@ core
 !core/
 tags
 .DS_Store
+._.DS_Store
 .directory
 *.debug
 Makefile*
@@ -72,3 +73,4 @@ Thumbs.db
 *.exe
 
 CMakeLists.txt.user
+build*
