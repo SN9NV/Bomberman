@@ -5,7 +5,9 @@
 #include <SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include "loadshaders.hpp"
+
+#include "GLSLProgram.hpp"
+#include "Sprite.hpp"
 
 class MainGame {
 	public:
@@ -26,5 +28,9 @@ class MainGame {
 		SDL_Window	*_window;
 		GameState	_gameState;
 
+		Sprite		_sprite;
+		GLSLProgram	_colourProgram;
+
 		void		_processInput(void);
+		void		_drawGame(void);
 };
