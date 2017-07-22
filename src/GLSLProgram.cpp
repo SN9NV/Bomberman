@@ -94,6 +94,17 @@ void GLSLProgram::disable(void) {
 	}
 }
 
+GLint GLSLProgram::getUniformLocation(const std::string &uniformName) {
+	GLuint location = glGetUniformLocation(this->_programID, uniformName.c_str());
+
+	if (location == GL_INVALID_INDEX) {
+		std::cerr << "Uniform variable: " << uniformName << " not found in shader\n";
+		exit(1);
+	}
+
+	return location;
+}
+
 std::string	readFileToString(const std::string &filename) {
 	std::ifstream	fileStream(filename, std::ios::in);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #include <SDL.h>
 #include <GL/glew.h>
@@ -8,6 +9,8 @@
 
 #include "GLSLProgram.hpp"
 #include "Sprite.hpp"
+#include "GLTexture.hpp"
+#include "ImageLoader.hpp"
 
 class MainGame {
 	public:
@@ -27,8 +30,9 @@ class MainGame {
 		unsigned	_height;
 		SDL_Window	*_window;
 		GameState	_gameState;
+		float		_time;
 
-		Sprite		_sprite;
+		std::vector<Sprite *> _sprites;
 		GLSLProgram	_colourProgram;
 
 		void		_processInput(void);

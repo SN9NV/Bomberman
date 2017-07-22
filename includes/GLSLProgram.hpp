@@ -18,6 +18,7 @@ class GLSLProgram
 		void	addAttribute(const std::string &attributeName);
 		void	enable(void);
 		void	disable(void);
+		GLint	getUniformLocation(const std::string &uniformName);
 
 	private:
 		GLuint		_vertexShaderID;

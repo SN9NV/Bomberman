@@ -6,11 +6,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
 set(RESOURCE_DIRS
 	shaders
+	images
 )
 
 set(RESOURCE_FILES
 	shaders/fragmentshader.fsh
 	shaders/vertexshader.vsh
+	images/bomb_party_v4.png
 )
 
 set(SOURCES
@@ -21,6 +23,11 @@ set(SOURCES
 	src/Position2D.cpp
 	src/Colour.cpp
 	src/Vertex.cpp
+	src/IO.cpp
+	src/picoPNG.cpp
+	src/ImageLoader.cpp
+	src/TextureCache.cpp
+	src/ResourceManager.cpp
 
 	includes/MainGame.hpp
 	includes/Sprite.hpp
@@ -28,6 +35,12 @@ set(SOURCES
 	includes/Position2D.hpp
 	includes/Colour.hpp
 	includes/Vertex.hpp
+	includes/IO.hpp
+	includes/picoPNG.hpp
+	includes/GLTexture.hpp
+	includes/ImageLoader.hpp
+	includes/ResourceManager.hpp
+	includes/TextureCache.hpp
 )
 
 find_package(OpenGL REQUIRED)

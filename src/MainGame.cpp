@@ -10,7 +10,8 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 		_name(windowName),
 		_width(width),
 		_height(height),
-		_gameState(MainGame::GameState::RUNNING) {
+		_gameState(MainGame::GameState::RUNNING),
+		_time(0.0f) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	this->_window = SDL_CreateWindow(this->_name.c_str(),
@@ -37,13 +38,25 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
-	// Init sprite
-	this->_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
+	// Create sprites
+	this->_sprites.push_back(new Sprite());
+	this->_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
+
+	this->_sprites.push_back(new Sprite());
+	this->_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
+
+	this->_sprites.push_back(new Sprite());
+	this->_sprites.back()->init(-1.0f, 0.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
+
+	this->_sprites.push_back(new Sprite());
+	this->_sprites.back()->init(0.0f, -1.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
+
 
 	// Init shaders
 	this->_colourProgram.compileShaders("shaders/vertexshader.vsh", "shaders/fragmentshader.fsh");
 	this->_colourProgram.addAttribute("vertexPosition");
 	this->_colourProgram.addAttribute("vertexColour");
+	this->_colourProgram.addAttribute("vertexUV");
 	this->_colourProgram.linkProgram();
 }
 
@@ -56,6 +69,9 @@ MainGame::~MainGame(void) {
 void	MainGame::startGameLoop(void) {
 	while (this->_gameState != MainGame::GameState::WANTS_QUIT) {
 		this->_processInput();
+
+		this->_time += 0.001f;
+
 		this->_drawGame();
 	}
 }
@@ -69,7 +85,7 @@ void	MainGame::_processInput(void) {
 				this->_gameState = MainGame::GameState::WANTS_QUIT;
 				break;
 			case SDL_MOUSEMOTION:
-				std::cout << event.motion.x << " " << event.motion.y << "\n";
+				//std::cout << event.motion.x << " " << event.motion.y << "\n";
 				break;
 		}
 	}
@@ -82,7 +98,20 @@ void	MainGame::_drawGame(void) {
 
 	//Draw sprite
 	this->_colourProgram.enable();
-	this->_sprite.draw();
+
+	glActiveTexture(GL_TEXTURE0);
+
+	GLint	textureLocation = this->_colourProgram.getUniformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
+
+	GLint timeLocation = this->_colourProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, this->_time);
+
+	for (auto &sprite : this->_sprites) {
+		sprite->draw();
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 	this->_colourProgram.disable();
 
 	// Swap the buffers
