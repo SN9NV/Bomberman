@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <string>
 #include <GL/glew.h>
-#include "Vertex.hpp"
-#include "GLTexture.hpp"
+
+#include "Structs.hpp"
 #include "ResourceManager.hpp"
 
 class Sprite

@@ -11,7 +11,7 @@ GLTexture ImageLoader::loadPNG(const std::string &filePath) {
 		exit(1);
 	}
 
-	if (decodePNG(out, width, height, &(in[0]), in.size())) {
+	if (PicoPNG::decodePNG(out, width, height, &(in[0]), in.size())) {
 		std::cerr << "Failed to decode PNG: " << filePath << "\n";
 		exit(1);
 	}

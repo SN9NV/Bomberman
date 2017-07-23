@@ -1,56 +1,19 @@
 #include "MainGame.hpp"
 
-static void	SDL_FatalError(std::string message) {
-	std::cout << message << "\n";
-	SDL_Quit();
-	exit(1);
-}
-
 MainGame::MainGame(const std::string &windowName, const unsigned width, const unsigned height) :
-		_name(windowName),
-		_width(width),
-		_height(height),
-		_gameState(MainGame::GameState::RUNNING),
-		_time(0.0f) {
-	SDL_Init(SDL_INIT_EVERYTHING);
+	_window(),
+	_gameState(MainGame::GameState::RUNNING),
+	_time(0.0f),
+	_maxFPS(60.0f)
+{
+	this->_camera.init(width, height);
 
-	this->_window = SDL_CreateWindow(this->_name.c_str(),
-									 SDL_WINDOWPOS_CENTERED,
-									 SDL_WINDOWPOS_CENTERED,
-									 this->_width,
-									 this->_height,
-									 SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-
-	if (this->_window == nullptr) {
-		SDL_FatalError("Could not create SDL2 window");
-	}
-
-	SDL_GLContext	glContext = SDL_GL_CreateContext(_window);
-
-	if (glContext == nullptr) {
-		SDL_FatalError("SDL_GL context could not be created");
-	}
-
-	if (glewInit() != GLEW_OK) {
-		SDL_FatalError("GLEW did not initialize");
-	}
-
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+	// Initialize window
+	this->_window.create(windowName, width, height, Window::Flags::VSYNC_ENABLED);
 
 	// Create sprites
-	this->_sprites.push_back(new Sprite());
-	this->_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
-
-	this->_sprites.push_back(new Sprite());
-	this->_sprites.back()->init(0.0f, 0.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
-
-	this->_sprites.push_back(new Sprite());
-	this->_sprites.back()->init(-1.0f, 0.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
-
-	this->_sprites.push_back(new Sprite());
-	this->_sprites.back()->init(0.0f, -1.0f, 1.0f, 1.0f, "images/bomb_party_v4.png");
-
+	this->_sprites.push_back(new Sprite(0.0f, 0.0f, width / 2, width / 2, "images/bomb_party_v4.png"));
+	this->_sprites.push_back(new Sprite(width / 2,  0.0f, width / 2, width / 2, "images/bomb_party_v4.png"));
 
 	// Init shaders
 	this->_colourProgram.compileShaders("shaders/vertexshader.vsh", "shaders/fragmentshader.fsh");
@@ -61,7 +24,11 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 }
 
 MainGame::~MainGame(void) {
-	SDL_DestroyWindow(this->_window);
+	for (auto &sprite : this->_sprites) {
+		delete sprite;
+	}
+
+	this->_window.~Window();
 
 	SDL_Quit();
 }
@@ -69,15 +36,18 @@ MainGame::~MainGame(void) {
 void	MainGame::startGameLoop(void) {
 	while (this->_gameState != MainGame::GameState::WANTS_QUIT) {
 		this->_processInput();
-
-		this->_time += 0.001f;
-
+		this->_time += 0.01f;
+		this->_camera.update();
 		this->_drawGame();
+		this->_calculateFPS();
 	}
 }
 
 void	MainGame::_processInput(void) {
 	SDL_Event	event;
+
+	const float	CAMERA_SPEED = 20.0f;
+	const float	SCALE_SPEED = 0.1f;
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -86,6 +56,29 @@ void	MainGame::_processInput(void) {
 				break;
 			case SDL_MOUSEMOTION:
 				//std::cout << event.motion.x << " " << event.motion.y << "\n";
+				break;
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.sym) {
+					case SDLK_w:
+						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+						break;
+					case SDLK_s:
+						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+						break;
+					case SDLK_a:
+						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+						break;
+					case SDLK_d:
+						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+						break;
+					case SDLK_q:
+						this->_camera.setScale(this->_camera.getScale() + SCALE_SPEED);
+						break;
+					case SDLK_e:
+						this->_camera.setScale(this->_camera.getScale() - SCALE_SPEED);
+						break;
+				}
+
 				break;
 		}
 	}
@@ -104,8 +97,12 @@ void	MainGame::_drawGame(void) {
 	GLint	textureLocation = this->_colourProgram.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
-	GLint timeLocation = this->_colourProgram.getUniformLocation("time");
+	GLint	timeLocation = this->_colourProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, this->_time);
+
+	GLint	PLocation = this->_colourProgram.getUniformLocation("P");
+	glm::mat4	cameraMatrix = this->_camera.getCameraMatrix();
+	glUniformMatrix4fv(PLocation, 1, GL_FALSE, &cameraMatrix[0][0]);
 
 	for (auto &sprite : this->_sprites) {
 		sprite->draw();
@@ -115,5 +112,36 @@ void	MainGame::_drawGame(void) {
 	this->_colourProgram.disable();
 
 	// Swap the buffers
-	SDL_GL_SwapWindow(this->_window);
+	this->_window.swapBuffers();
+}
+
+void MainGame::_calculateFPS(void) {
+	static const unsigned	NUM_SAMPLES = 100;
+	static float			frameTime[NUM_SAMPLES];
+	static unsigned			currentFrame = 0;
+	static float			previousTicks = SDL_GetTicks();
+
+	float	currentTicks = SDL_GetTicks();
+	this->_frameTime = currentTicks - previousTicks;
+	previousTicks = currentTicks;
+
+	frameTime[currentFrame++ % NUM_SAMPLES] = this->_frameTime;
+
+	float averageFrameTime = 0;
+
+	for (unsigned i = 0; i < NUM_SAMPLES; i++) {
+		averageFrameTime += frameTime[i];
+	}
+
+	averageFrameTime /= NUM_SAMPLES;
+
+	if (averageFrameTime > 0) {
+		this->_fps = 1000 / averageFrameTime;
+	} else {
+		this->_fps = 0;
+	}
+
+	if (!(currentFrame % NUM_SAMPLES)) {
+		std::cout << this->_fps << "\n";
+	}
 }
