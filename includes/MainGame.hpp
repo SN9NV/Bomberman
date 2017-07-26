@@ -16,6 +16,7 @@
 #include "InputManager.hpp"
 #include "FPSCounter.hpp"
 #include "SpriteBatch.hpp"
+#include "Projectile.hpp"
 
 class MainGame {
 	public:
@@ -40,13 +41,15 @@ class MainGame {
 		unsigned	_screenHeight;
 
 
-		std::vector<Sprite *>	_sprites;
-		GLSLProgram				_colourProgram;
-		Camera2D				_camera;
-		InputManager<MainGame>	_inputManager;
-		FPSCounter				_FPSCounter;
-		SpriteBatch				_spriteBatch;
+		std::vector<Sprite *>		_sprites;
+		GLSLProgram					_colourProgram;
+		Camera2D					_camera;
+		InputManager<MainGame>		_inputManager;
+		FPSCounter					_FPSCounter;
+		SpriteBatch					_spriteBatch;
+		std::vector<Projectile *>	_projectiles;
 
+		void		_initControls(void);
 		void		_processInput(void);
 		void		_drawGame(void);
 };

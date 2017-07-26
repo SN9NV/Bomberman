@@ -17,6 +17,7 @@ set(RESOURCE_FILES
 	shaders/fragmentshader.fsh
 	shaders/vertexshader.vsh
 	images/bomb_party_v4.png
+	images/cartoon-bullet-2400px.png
 )
 
 # Source files to be compiled
@@ -33,8 +34,8 @@ set(SOURCE_FILES
 	src/Window.cpp
 	src/Camera2D.cpp
 	src/SpriteBatch.cpp
-#	src/InputManager.cpp
 	src/FPSCounter.cpp
+	src/Projectile;
 )
 
 # Header files to be compiled
@@ -54,6 +55,7 @@ set(HEADER_FILES
 	includes/SpriteBatch.hpp
 	includes/InputManager.hpp
 	includes/FPSCounter.hpp
+	includes/Projectile;
 )
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

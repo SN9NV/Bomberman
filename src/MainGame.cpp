@@ -29,6 +29,37 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 				 "\tEscape      Exits the game\n\n";
 
 	// Register the input keys and the functions to run if the key is pressed
+	this->_initControls();
+}
+
+MainGame::~MainGame(void) {
+	this->_window.~Window();
+
+	SDL_Quit();
+}
+
+void	MainGame::startGameLoop(void) {
+	while (this->_gameState != MainGame::GameState::WANTS_QUIT) {
+		this->_processInput();
+		this->_time += 0.01f;
+		this->_camera.update();
+
+		auto projectile = this->_projectiles.begin();
+		while(projectile != this->_projectiles.end()) {
+			if ((*projectile)->update()) {
+				projectile = this->_projectiles.erase(projectile);
+			} else {
+				projectile++;
+			}
+		}
+
+		this->_drawGame();
+		this->_FPSCounter.fps(true);
+	}
+}
+
+void MainGame::_initControls()
+{
 	this->_inputManager.registerInput(SDLK_w, [](MainGame *mainGame) {
 		mainGame->_camera.addPosition(glm::vec2(0.0f, MainGame::CAMERA_SPEED));
 	});
@@ -61,27 +92,12 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	this->_inputManager.registerInput(SDL_BUTTON_LEFT, [](MainGame *mainGame) {
 		glm::vec2	mouseCoords = mainGame->_camera.screenToWorldCoords(mainGame->_inputManager.getMouseCoords());
 		std::cout << "Mouse position: " << mouseCoords.x << ", " << mouseCoords.y << "\n";
+
+		glm::vec2	playerPosition(0.0f, 0.0f);
+		glm::vec2	direction = glm::normalize(mouseCoords - playerPosition);
+
+		mainGame->_projectiles.push_back(new Projectile(playerPosition, direction, 1.0f, 1000));
 	});
-}
-
-MainGame::~MainGame(void) {
-//	for (auto &sprite : this->_sprites) {
-//		delete sprite;
-//	}
-
-	this->_window.~Window();
-
-	SDL_Quit();
-}
-
-void	MainGame::startGameLoop(void) {
-	while (this->_gameState != MainGame::GameState::WANTS_QUIT) {
-		this->_processInput();
-		this->_time += 0.01f;
-		this->_camera.update();
-		this->_drawGame();
-//		this->_FPSCounter.fps(true);
-	}
 }
 
 void	MainGame::_processInput(void) {
@@ -133,16 +149,16 @@ void	MainGame::_drawGame(void) {
 	glm::mat4	cameraMatrix = this->_camera.getCameraMatrix();
 	glUniformMatrix4fv(PLocation, 1, GL_FALSE, &cameraMatrix[0][0]);
 
-//	for (auto &sprite : this->_sprites) {
-//		sprite->draw();
-//	}
-
 	this->_spriteBatch.begin();
 
 	glm::vec4	position(0.0f, 0.0f, this->_screenWidth / 2.0f, this->_screenWidth / 2.0f);
 	GLTexture	texture = ResourceManager::getTexture("images/bomb_party_v4.png");
 
 	this->_spriteBatch.draw(position, texture.id, 0.0f, { 255, 255, 255, 255 });
+
+	for(auto &projectile : this->_projectiles) {
+		projectile->draw(this->_spriteBatch);
+	}
 
 	this->_spriteBatch.end();
 	this->_spriteBatch.renderBatch();
