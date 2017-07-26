@@ -90,8 +90,8 @@ glm::mat4 Camera2D::getCameraMatrix() const
 glm::vec2 Camera2D::screenToWorldCoords(glm::vec2 screenCoords) const
 {
 	screenCoords -= glm::vec2(this->_screenWidth / 2.0f, this->_screenHeight / 2.0f);
-	screenCoords /= this->_scale;
-	screenCoords += this->_position;
+	screenCoords += glm::vec2(this->_position.x, -this->_position.y);
+	screenCoords /= glm::vec2(this->_scale, -this->_scale);
 
 	return screenCoords;
 }
