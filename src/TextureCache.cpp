@@ -16,6 +16,6 @@ GLTexture TextureCache::getTexture(const std::string &texturePath) {
 		return newTexture;
 	}
 
-	std::cout << "Loaded cached texture: " << texturePath << "\n";
+//	std::cout << "Loaded cached texture: " << texturePath << "\n";
 	return mapIterator->second;
 }

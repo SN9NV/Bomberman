@@ -13,7 +13,9 @@ class Camera2D
 		void		init(unsigned screenWidth, unsigned screenHeight);
 		void		update();
 
-		void		setScale(const float scale);
+		void		addScale(float scale);
+		void		setScale(float scale);
+		void		addPosition(const glm::vec2 &rhs);
 		void		setPosition(const glm::vec2 &position);
 		void		setCameraMatrix(const glm::mat4 &cameraMatrix);
 

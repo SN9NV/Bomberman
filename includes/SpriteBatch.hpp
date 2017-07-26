@@ -18,33 +18,48 @@ struct Glyph {
 	Vertex	bottomRight;
 };
 
-enum class GlyphSortType {
-	NONE,
-	FRONT_TO_BACK,
-	BACK_TO_FRONT,
-	TEXTURE
+
+
+struct RenderBatch {
+	GLuint	offset;
+	GLuint	numVerticies;
+	GLuint	texture;
+
+	RenderBatch(GLuint Offset, GLuint NumVerticies, GLuint Texture) :
+		offset(Offset), numVerticies(NumVerticies), texture(Texture) {}
 };
 
 class SpriteBatch {
 	public:
+		enum GlyphSortType {
+			NONE,
+			FRONT_TO_BACK,
+			BACK_TO_FRONT,
+			TEXTURE
+		};
+
 		SpriteBatch();
 		~SpriteBatch();
 
 		void	init();
-		void	begin(GlyphSortType sortType = GlyphSortType::TEXTURE);
+		void	begin(GlyphSortType sortType = SpriteBatch::GlyphSortType::TEXTURE);
 		void	end();
 
+		void	draw(const glm::vec4 &destRect, GLuint texture, float depth);
+		void	draw(const glm::vec4 &destRect, GLuint texture, float depth, const Colour &colour);
 		void	draw(const glm::vec4 &destRect, const glm::vec4 &uvRect, GLuint texture, float depth, const Colour &colour);
 		void	renderBatch();
 
-		void	createVertexArray();
 
 	private:
-		GLuint					_vbo;
-		GLuint					_vao;
-		std::vector<Glyph *>	_glyphs;
-		GlyphSortType			_sortType;
+		GLuint						_vbo;
+		GLuint						_vao;
+		GlyphSortType				_sortType;
+		std::vector<Glyph *>		_glyphs;
+		std::vector<RenderBatch>	_renderBatches;
 
+		void	_createRenderBatches();
+		void	_createVertexArray();
 		void	_sortGlyphs();
 };
 

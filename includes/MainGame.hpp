@@ -15,6 +15,7 @@
 #include "Camera2D.hpp"
 #include "InputManager.hpp"
 #include "FPSCounter.hpp"
+#include "SpriteBatch.hpp"
 
 class MainGame {
 	public:
@@ -23,7 +24,7 @@ class MainGame {
 			WANTS_QUIT
 		};
 
-		static constexpr float	CAMERA_SPEED = 2.0f;
+		static constexpr float	CAMERA_SPEED = 8.0f;
 		static constexpr float	SCALE_SPEED = 0.1f;
 
 		MainGame(const std::string &windowName, const unsigned width, const unsigned height);
@@ -35,6 +36,8 @@ class MainGame {
 		Window		_window;
 		GameState	_gameState;
 		float		_time;
+		unsigned	_screenWidth;
+		unsigned	_screenHeight;
 
 
 		std::vector<Sprite *>	_sprites;
@@ -42,8 +45,8 @@ class MainGame {
 		Camera2D				_camera;
 		InputManager<MainGame>	_inputManager;
 		FPSCounter				_FPSCounter;
+		SpriteBatch				_spriteBatch;
 
 		void		_processInput(void);
 		void		_drawGame(void);
-//		void		_calculateFPS(void);
 };

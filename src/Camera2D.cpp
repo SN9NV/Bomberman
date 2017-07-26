@@ -42,13 +42,25 @@ void Camera2D::update()
 	}
 }
 
+void Camera2D::addScale(float scale)
+{
+	this->_scale += scale;
+	this->_bNeedsMatrixUpdate = true;
+}
+
+void Camera2D::addPosition(const glm::vec2 &rhs)
+{
+	this->_position += rhs;
+	this->_bNeedsMatrixUpdate = true;
+}
+
 void Camera2D::setPosition(const glm::vec2 &position)
 {
 	this->_position = position;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-void Camera2D::setScale(const float scale)
+void Camera2D::setScale(float scale)
 {
 	this->_scale = scale;
 	this->_bNeedsMatrixUpdate = true;

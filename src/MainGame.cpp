@@ -4,6 +4,8 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	_window(),
 	_gameState(MainGame::GameState::RUNNING),
 	_time(0.0f),
+	_screenWidth(width),
+	_screenHeight(height),
 	_inputManager(this)
 {
 
@@ -12,9 +14,7 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	// Initialize window
 	this->_window.create(windowName, width, height, Window::Flags::VSYNC_ENABLED);
 
-	// Create sprites
-	this->_sprites.push_back(new Sprite(0.0f, 0.0f, width / 2, width / 2, "images/bomb_party_v4.png"));
-	this->_sprites.push_back(new Sprite(width / 2,  0.0f, width / 2, width / 2, "images/bomb_party_v4.png"));
+	this->_spriteBatch.init();
 
 	// Init shaders
 	this->_colourProgram.compileShaders("shaders/vertexshader.vsh", "shaders/fragmentshader.fsh");
@@ -23,28 +23,34 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	this->_colourProgram.addAttribute("vertexUV");
 	this->_colourProgram.linkProgram();
 
+	std::cout << "Controlls:\n"
+				 "\tW, A, S, D  Move camera\n"
+				 "\tQ, E        Zoom in and out\n"
+				 "\tEscape      Exits the game\n\n";
+
+	// Register the input keys and the functions to run if the key is pressed
 	this->_inputManager.registerInput(SDLK_w, [](MainGame *mainGame) {
-		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(0.0f, MainGame::CAMERA_SPEED));
+		mainGame->_camera.addPosition(glm::vec2(0.0f, -MainGame::CAMERA_SPEED));
 	});
 
 	this->_inputManager.registerInput(SDLK_s, [](MainGame *mainGame) {
-		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(0.0f, -MainGame::CAMERA_SPEED));
+		mainGame->_camera.addPosition(glm::vec2(0.0f, MainGame::CAMERA_SPEED));
 	});
 
 	this->_inputManager.registerInput(SDLK_a, [](MainGame *mainGame) {
-		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(-MainGame::CAMERA_SPEED, 0.0f));
+		mainGame->_camera.addPosition(glm::vec2(MainGame::CAMERA_SPEED, 0.0f));
 	});
 
 	this->_inputManager.registerInput(SDLK_d, [](MainGame *mainGame) {
-		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(MainGame::CAMERA_SPEED, 0.0f));
+		mainGame->_camera.addPosition(glm::vec2(-MainGame::CAMERA_SPEED, 0.0f));
 	});
 
 	this->_inputManager.registerInput(SDLK_q, [](MainGame *mainGame) {
-		mainGame->_camera.setScale(mainGame->_camera.getScale() + MainGame::SCALE_SPEED);
+		mainGame->_camera.addScale(MainGame::SCALE_SPEED);
 	});
 
 	this->_inputManager.registerInput(SDLK_e, [](MainGame *mainGame) {
-		mainGame->_camera.setScale(mainGame->_camera.getScale() - MainGame::SCALE_SPEED);
+		mainGame->_camera.addScale(-MainGame::SCALE_SPEED);
 	});
 
 	this->_inputManager.registerInput(SDLK_ESCAPE, [](MainGame *mainGame) {
@@ -53,9 +59,9 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 }
 
 MainGame::~MainGame(void) {
-	for (auto &sprite : this->_sprites) {
-		delete sprite;
-	}
+//	for (auto &sprite : this->_sprites) {
+//		delete sprite;
+//	}
 
 	this->_window.~Window();
 
@@ -114,13 +120,24 @@ void	MainGame::_drawGame(void) {
 	GLint	timeLocation = this->_colourProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, this->_time);
 
+	// Set up camera matrix
 	GLint	PLocation = this->_colourProgram.getUniformLocation("P");
 	glm::mat4	cameraMatrix = this->_camera.getCameraMatrix();
 	glUniformMatrix4fv(PLocation, 1, GL_FALSE, &cameraMatrix[0][0]);
 
-	for (auto &sprite : this->_sprites) {
-		sprite->draw();
-	}
+//	for (auto &sprite : this->_sprites) {
+//		sprite->draw();
+//	}
+
+	this->_spriteBatch.begin();
+
+	glm::vec4	position(0.0f, 0.0f, this->_screenWidth / 2.0f, this->_screenWidth / 2.0f);
+	GLTexture	texture = ResourceManager::getTexture("images/bomb_party_v4.png");
+
+	this->_spriteBatch.draw(position, texture.id, 0.0f, { 255, 255, 255, 255 });
+
+	this->_spriteBatch.end();
+	this->_spriteBatch.renderBatch();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	this->_colourProgram.disable();
