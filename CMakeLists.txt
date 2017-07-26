@@ -33,6 +33,8 @@ set(SOURCE_FILES
 	src/Window.cpp
 	src/Camera2D.cpp
 	src/SpriteBatch.cpp
+#	src/InputManager.cpp
+	src/FPSCounter.cpp
 )
 
 # Header files to be compiled
@@ -50,6 +52,8 @@ set(HEADER_FILES
 	includes/Structs.hpp
 	includes/Camera2D.hpp
 	includes/SpriteBatch.hpp
+	includes/InputManager.hpp
+	includes/FPSCounter.hpp
 )
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -88,7 +92,7 @@ target_link_libraries(${PROJECT_NAME}
 	${GLM_LIBRARIES}
 )
 
-# Function to synbolically link the resources into the build directory
+# Function to symbolically link the resources into the build directory
 #	Won't work on Windows
 foreach(RESOURCE_DIR ${RESOURCE_DIRS})
 	add_custom_command(

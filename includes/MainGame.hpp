@@ -13,6 +13,8 @@
 #include "GLTexture.hpp"
 #include "ImageLoader.hpp"
 #include "Camera2D.hpp"
+#include "InputManager.hpp"
+#include "FPSCounter.hpp"
 
 class MainGame {
 	public:
@@ -20,6 +22,9 @@ class MainGame {
 			RUNNING,
 			WANTS_QUIT
 		};
+
+		static constexpr float	CAMERA_SPEED = 2.0f;
+		static constexpr float	SCALE_SPEED = 0.1f;
 
 		MainGame(const std::string &windowName, const unsigned width, const unsigned height);
 		~MainGame(void);
@@ -30,15 +35,15 @@ class MainGame {
 		Window		_window;
 		GameState	_gameState;
 		float		_time;
-		float		_fps;
-		float		_frameTime;
-		float		_maxFPS;
+
 
 		std::vector<Sprite *>	_sprites;
 		GLSLProgram				_colourProgram;
 		Camera2D				_camera;
+		InputManager<MainGame>	_inputManager;
+		FPSCounter				_FPSCounter;
 
 		void		_processInput(void);
 		void		_drawGame(void);
-		void		_calculateFPS(void);
+//		void		_calculateFPS(void);
 };

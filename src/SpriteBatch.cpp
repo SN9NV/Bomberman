@@ -51,6 +51,11 @@ void SpriteBatch::draw(const glm::vec4 &destRect, const glm::vec4 &uvRect, GLuin
 	this->_glyphs.push_back(newGlyph);
 }
 
+void SpriteBatch::renderBatch()
+{
+
+}
+
 void SpriteBatch::createVertexArray()
 {
 	if (this->_vao == 0) {
@@ -83,13 +88,15 @@ void SpriteBatch::_sortGlyphs()
 {
 	switch (this->_sortType) {
 		case GlyphSortType::BACK_TO_FRONT:
-			std::stable_sort(this->_glyphs.begin(), this->_glyphs.end(), [](Glyph *a, Glyph *b) { return (b->depth < b->depth); });
+			std::stable_sort(this->_glyphs.begin(), this->_glyphs.end(), [](Glyph *a, Glyph *b) { return (a->depth < b->depth); });
 			break;
 		case GlyphSortType::FRONT_TO_BACK:
-			std::stable_sort(this->_glyphs.begin(), this->_glyphs.end(), [](Glyph *a, Glyph *b) { return (b->depth > b->depth); });
+			std::stable_sort(this->_glyphs.begin(), this->_glyphs.end(), [](Glyph *a, Glyph *b) { return (a->depth > b->depth); });
 			break;
 		case GlyphSortType::TEXTURE:
 			std::stable_sort(this->_glyphs.begin(), this->_glyphs.end(), [](Glyph *a, Glyph *b) { return (a->texture < b->texture); });
+			break;
+		default:
 			break;
 	}
 }

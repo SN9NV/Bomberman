@@ -4,8 +4,9 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	_window(),
 	_gameState(MainGame::GameState::RUNNING),
 	_time(0.0f),
-	_maxFPS(60.0f)
+	_inputManager(this)
 {
+
 	this->_camera.init(width, height);
 
 	// Initialize window
@@ -21,6 +22,34 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	this->_colourProgram.addAttribute("vertexColour");
 	this->_colourProgram.addAttribute("vertexUV");
 	this->_colourProgram.linkProgram();
+
+	this->_inputManager.registerInput(SDLK_w, [](MainGame *mainGame) {
+		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(0.0f, MainGame::CAMERA_SPEED));
+	});
+
+	this->_inputManager.registerInput(SDLK_s, [](MainGame *mainGame) {
+		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(0.0f, -MainGame::CAMERA_SPEED));
+	});
+
+	this->_inputManager.registerInput(SDLK_a, [](MainGame *mainGame) {
+		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(-MainGame::CAMERA_SPEED, 0.0f));
+	});
+
+	this->_inputManager.registerInput(SDLK_d, [](MainGame *mainGame) {
+		mainGame->_camera.setPosition(mainGame->_camera.getPosition() + glm::vec2(MainGame::CAMERA_SPEED, 0.0f));
+	});
+
+	this->_inputManager.registerInput(SDLK_q, [](MainGame *mainGame) {
+		mainGame->_camera.setScale(mainGame->_camera.getScale() + MainGame::SCALE_SPEED);
+	});
+
+	this->_inputManager.registerInput(SDLK_e, [](MainGame *mainGame) {
+		mainGame->_camera.setScale(mainGame->_camera.getScale() - MainGame::SCALE_SPEED);
+	});
+
+	this->_inputManager.registerInput(SDLK_ESCAPE, [](MainGame *mainGame) {
+		mainGame->_gameState = MainGame::GameState::WANTS_QUIT;
+	});
 }
 
 MainGame::~MainGame(void) {
@@ -39,15 +68,12 @@ void	MainGame::startGameLoop(void) {
 		this->_time += 0.01f;
 		this->_camera.update();
 		this->_drawGame();
-		this->_calculateFPS();
+		this->_FPSCounter.fps(true);
 	}
 }
 
 void	MainGame::_processInput(void) {
 	SDL_Event	event;
-
-	const float	CAMERA_SPEED = 20.0f;
-	const float	SCALE_SPEED = 0.1f;
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -58,30 +84,18 @@ void	MainGame::_processInput(void) {
 				//std::cout << event.motion.x << " " << event.motion.y << "\n";
 				break;
 			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {
-					case SDLK_w:
-						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
-						break;
-					case SDLK_s:
-						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
-						break;
-					case SDLK_a:
-						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
-						break;
-					case SDLK_d:
-						this->_camera.setPosition(this->_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
-						break;
-					case SDLK_q:
-						this->_camera.setScale(this->_camera.getScale() + SCALE_SPEED);
-						break;
-					case SDLK_e:
-						this->_camera.setScale(this->_camera.getScale() - SCALE_SPEED);
-						break;
+				if (event.key.repeat == 0) {
+					this->_inputManager.pressKey(event.key.keysym.sym);
 				}
 
 				break;
+			case SDL_KEYUP:
+				this->_inputManager.releaseKey(event.key.keysym.sym);
+				break;
 		}
 	}
+
+	this->_inputManager.processInput();
 }
 
 void	MainGame::_drawGame(void) {
@@ -113,35 +127,4 @@ void	MainGame::_drawGame(void) {
 
 	// Swap the buffers
 	this->_window.swapBuffers();
-}
-
-void MainGame::_calculateFPS(void) {
-	static const unsigned	NUM_SAMPLES = 100;
-	static float			frameTime[NUM_SAMPLES];
-	static unsigned			currentFrame = 0;
-	static float			previousTicks = SDL_GetTicks();
-
-	float	currentTicks = SDL_GetTicks();
-	this->_frameTime = currentTicks - previousTicks;
-	previousTicks = currentTicks;
-
-	frameTime[currentFrame++ % NUM_SAMPLES] = this->_frameTime;
-
-	float averageFrameTime = 0;
-
-	for (unsigned i = 0; i < NUM_SAMPLES; i++) {
-		averageFrameTime += frameTime[i];
-	}
-
-	averageFrameTime /= NUM_SAMPLES;
-
-	if (averageFrameTime > 0) {
-		this->_fps = 1000 / averageFrameTime;
-	} else {
-		this->_fps = 0;
-	}
-
-	if (!(currentFrame % NUM_SAMPLES)) {
-		std::cout << this->_fps << "\n";
-	}
 }

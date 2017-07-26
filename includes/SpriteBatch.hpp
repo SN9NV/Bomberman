@@ -25,8 +25,7 @@ enum class GlyphSortType {
 	TEXTURE
 };
 
-class SpriteBatch
-{
+class SpriteBatch {
 	public:
 		SpriteBatch();
 		~SpriteBatch();

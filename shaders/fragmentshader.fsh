@@ -17,5 +17,5 @@ void main() {
 	newColour[1] = fragmentColour[1] * 0.5f * (cos(fragmentPosition[0] * 4.0f + time + 2.094395102f) + 1.0f);
 	newColour[2] = fragmentColour[2] * 0.5f * (cos(fragmentPosition[0] * 4.0f + time + 4.188790205f) + 1.0f);
 
-	colour = myTexture * newColour;
+	colour = myTexture + (newColour * 0.0f);
 }
