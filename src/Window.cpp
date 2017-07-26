@@ -62,6 +62,9 @@ void Window::create(const std::string &windowName, unsigned screenWidth, unsigne
 	} else {
 		std::cout << "VSYNC is disabled\n";
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::swapBuffers()

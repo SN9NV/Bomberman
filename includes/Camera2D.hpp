@@ -23,6 +23,7 @@ class Camera2D
 		glm::vec2	getPosition() const;
 		glm::mat4	getCameraMatrix() const;
 
+		glm::vec2	screenToWorldCoords(glm::vec2 screenCoords) const;
 
 	private:
 		unsigned	_screenWidth;

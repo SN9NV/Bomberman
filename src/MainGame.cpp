@@ -30,19 +30,19 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 
 	// Register the input keys and the functions to run if the key is pressed
 	this->_inputManager.registerInput(SDLK_w, [](MainGame *mainGame) {
-		mainGame->_camera.addPosition(glm::vec2(0.0f, -MainGame::CAMERA_SPEED));
-	});
-
-	this->_inputManager.registerInput(SDLK_s, [](MainGame *mainGame) {
 		mainGame->_camera.addPosition(glm::vec2(0.0f, MainGame::CAMERA_SPEED));
 	});
 
+	this->_inputManager.registerInput(SDLK_s, [](MainGame *mainGame) {
+		mainGame->_camera.addPosition(glm::vec2(0.0f, -MainGame::CAMERA_SPEED));
+	});
+
 	this->_inputManager.registerInput(SDLK_a, [](MainGame *mainGame) {
-		mainGame->_camera.addPosition(glm::vec2(MainGame::CAMERA_SPEED, 0.0f));
+		mainGame->_camera.addPosition(glm::vec2(-MainGame::CAMERA_SPEED, 0.0f));
 	});
 
 	this->_inputManager.registerInput(SDLK_d, [](MainGame *mainGame) {
-		mainGame->_camera.addPosition(glm::vec2(-MainGame::CAMERA_SPEED, 0.0f));
+		mainGame->_camera.addPosition(glm::vec2(MainGame::CAMERA_SPEED, 0.0f));
 	});
 
 	this->_inputManager.registerInput(SDLK_q, [](MainGame *mainGame) {
@@ -55,6 +55,12 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 
 	this->_inputManager.registerInput(SDLK_ESCAPE, [](MainGame *mainGame) {
 		mainGame->_gameState = MainGame::GameState::WANTS_QUIT;
+	});
+
+	// Mouse button functions
+	this->_inputManager.registerInput(SDL_BUTTON_LEFT, [](MainGame *mainGame) {
+		glm::vec2	mouseCoords = mainGame->_camera.screenToWorldCoords(mainGame->_inputManager.getMouseCoords());
+		std::cout << "Mouse position: " << mouseCoords.x << ", " << mouseCoords.y << "\n";
 	});
 }
 
@@ -74,7 +80,7 @@ void	MainGame::startGameLoop(void) {
 		this->_time += 0.01f;
 		this->_camera.update();
 		this->_drawGame();
-		this->_FPSCounter.fps(true);
+//		this->_FPSCounter.fps(true);
 	}
 }
 
@@ -87,7 +93,7 @@ void	MainGame::_processInput(void) {
 				this->_gameState = MainGame::GameState::WANTS_QUIT;
 				break;
 			case SDL_MOUSEMOTION:
-				//std::cout << event.motion.x << " " << event.motion.y << "\n";
+				this->_inputManager.setMouseCoords(event.motion.x, event.motion.y);
 				break;
 			case SDL_KEYDOWN:
 				if (event.key.repeat == 0) {
@@ -98,6 +104,11 @@ void	MainGame::_processInput(void) {
 			case SDL_KEYUP:
 				this->_inputManager.releaseKey(event.key.keysym.sym);
 				break;
+			case SDL_MOUSEBUTTONDOWN:
+				this->_inputManager.pressKey(event.button.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				this->_inputManager.releaseKey(event.button.button);
 		}
 	}
 
@@ -116,9 +127,6 @@ void	MainGame::_drawGame(void) {
 
 	GLint	textureLocation = this->_colourProgram.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
-
-	GLint	timeLocation = this->_colourProgram.getUniformLocation("time");
-	glUniform1f(timeLocation, this->_time);
 
 	// Set up camera matrix
 	GLint	PLocation = this->_colourProgram.getUniformLocation("P");
