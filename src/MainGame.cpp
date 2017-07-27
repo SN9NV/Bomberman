@@ -88,6 +88,11 @@ void MainGame::_initControls()
 		mainGame->_gameState = MainGame::GameState::WANTS_QUIT;
 	});
 
+	this->_inputManager.registerInput(SDLK_v, [](MainGame *mainGame) {
+		(void)mainGame;
+		SDL_GL_SetSwapInterval(SDL_GL_GetSwapInterval() ? 0 : 1);
+	});
+
 	// Mouse button functions
 	this->_inputManager.registerInput(SDL_BUTTON_LEFT, [](MainGame *mainGame) {
 		glm::vec2	mouseCoords = mainGame->_camera.screenToWorldCoords(mainGame->_inputManager.getMouseCoords());
@@ -151,7 +156,7 @@ void	MainGame::_drawGame(void) {
 
 	this->_spriteBatch.begin();
 
-	glm::vec4	position(0.0f, 0.0f, this->_screenWidth / 2.0f, this->_screenWidth / 2.0f);
+	glm::vec4	position(0.0f, 0.0f, this->_screenWidth / 2.0f, this->_screenHeight / 2.0f);
 	GLTexture	texture = ResourceManager::getTexture("images/bomb_party_v4.png");
 
 	this->_spriteBatch.draw(position, texture.id, 0.0f, { 255, 255, 255, 255 });

@@ -39,7 +39,10 @@ void Window::create(const std::string &windowName, unsigned screenWidth, unsigne
 		throw SDL_FatalError("Could not create SDL2 window");
 	}
 
-	SDL_GLContext	glContext = SDL_GL_CreateContext(_window);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GLContext	glContext = SDL_GL_CreateContext(this->_window);
 
 	if (glContext == nullptr) {
 		throw SDL_FatalError("SDL_GL context could not be created");
@@ -49,9 +52,10 @@ void Window::create(const std::string &windowName, unsigned screenWidth, unsigne
 		throw SDL_FatalError("GLEW did not initialize");
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << "\n";
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
 	// Enable VSYNC. Comment to disable
