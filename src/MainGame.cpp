@@ -26,6 +26,7 @@ MainGame::MainGame(const std::string &windowName, const unsigned width, const un
 	std::cout << "Controlls:\n"
 				 "\tW, A, S, D  Move camera\n"
 				 "\tQ, E        Zoom in and out\n"
+				 "\tV           Toggles VSYNC\n"
 				 "\tEscape      Exits the game\n\n";
 
 	// Register the input keys and the functions to run if the key is pressed
