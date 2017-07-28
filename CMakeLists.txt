@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 set(RESOURCE_DIRS
 	shaders
 	images
+	resources
 )
 
 # Here so that the files show up in QT Creator
