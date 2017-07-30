@@ -11,15 +11,6 @@ set(RESOURCE_DIRS
 	images
 )
 
-# Here so that the files show up in QT Creator
-#	They are not compiled
-set(RESOURCE_FILES
-	shaders/fragmentshader.fsh
-	shaders/vertexshader.vsh
-	images/bomb_party_v4.png
-	images/cartoon-bullet-2400px.png
-)
-
 # Source files to be compiled
 set(SOURCE_FILES
 	src/main.cpp
@@ -32,10 +23,12 @@ set(SOURCE_FILES
 	src/TextureCache.cpp
 	src/ResourceManager.cpp
 	src/Window.cpp
-	src/Camera2D.cpp
+	src/Camera.cpp
 	src/SpriteBatch.cpp
 	src/FPSCounter.cpp
-	src/Projectile;
+	src/Projectile.cpp
+	src/Entity.cpp
+	src/Model.cpp
 )
 
 # Header files to be compiled
@@ -51,11 +44,13 @@ set(HEADER_FILES
 	includes/TextureCache.hpp
 	includes/Window.hpp
 	includes/Structs.hpp
-	includes/Camera2D.hpp
+	includes/Camera.hpp
 	includes/SpriteBatch.hpp
 	includes/InputManager.hpp
 	includes/FPSCounter.hpp
-	includes/Projectile;
+	includes/Projectile.hpp
+	includes/Entity.hpp
+	includes/Model.hpp
 )
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

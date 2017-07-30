@@ -1,23 +1,18 @@
-#include "Camera2D.hpp"
+#include "Camera.hpp"
 
-Camera2D::Camera2D() :
+Camera::Camera() :
 	_screenWidth(0),
 	_screenHeight(0),
 	_bNeedsMatrixUpdate(true),
 	_scale(1.0f),
-	_position(0, 0),
+	_position(0.0f, 0.0f, 0.0f),
 	_cameraMatrix(1.0f),
 	_orthoMatrix(1.0f)
 {
 
 }
 
-Camera2D::~Camera2D()
-{
-
-}
-
-void Camera2D::init(unsigned screenWidth, unsigned screenHeight)
+void Camera::init(unsigned screenWidth, unsigned screenHeight)
 {
 	this->_screenWidth = screenWidth;
 	this->_screenHeight = screenHeight;
@@ -29,7 +24,7 @@ void Camera2D::init(unsigned screenWidth, unsigned screenHeight)
 			static_cast<float>(this->_screenHeight));
 }
 
-void Camera2D::update()
+void Camera::update()
 {
 	if (this->_bNeedsMatrixUpdate) {
 		glm::vec3	translate(-this->_position.x + this->_screenWidth/2.0f, -this->_position.y + this->_screenHeight/2.0f, 0.0f);
@@ -42,59 +37,70 @@ void Camera2D::update()
 	}
 }
 
-void Camera2D::addScale(float scale)
+void Camera::addScale(const float delta)
 {
-	this->_scale += scale;
+	this->_scale += delta;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-void Camera2D::addPosition(const glm::vec2 &rhs)
+void Camera::addPosition(const glm::vec3 &delta)
 {
-	this->_position += rhs;
+	this->_position += delta;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-void Camera2D::setPosition(const glm::vec2 &position)
+void Camera::setPosition(const glm::vec3 &position)
 {
 	this->_position = position;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-void Camera2D::setScale(float scale)
+void Camera::addRotation(const glm::vec3 &delta)
+{
+	this->_rotation += delta;
+	this->_bNeedsMatrixUpdate = true;
+}
+
+void Camera::setRotation(const glm::vec3 &rotation)
+{
+	this->_rotation = rotation;
+	this->_bNeedsMatrixUpdate = true;
+}
+
+void Camera::setScale(const float scale)
 {
 	this->_scale = scale;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-void Camera2D::setCameraMatrix(const glm::mat4 &cameraMatrix)
+void Camera::setCameraMatrix(const glm::mat4 &cameraMatrix)
 {
 	this->_cameraMatrix = cameraMatrix;
 	this->_bNeedsMatrixUpdate = true;
 }
 
-glm::vec2 Camera2D::getPosition() const
+glm::vec3 Camera::position() const
 {
 	return this->_position;
 }
 
-float Camera2D::getScale() const
+float Camera::scale() const
 {
 	return this->_scale;
 }
 
-glm::mat4 Camera2D::getCameraMatrix() const
+glm::mat4 Camera::cameraMatrix() const
 {
 	return this->_cameraMatrix;
 }
 
-glm::vec2 Camera2D::screenToWorldCoords(glm::vec2 screenCoords) const
+glm::vec3 Camera::screenToWorldCoords(glm::vec2 screenCoords) const
 {
 	screenCoords.y = this->_screenHeight - screenCoords.y;
 
-	screenCoords -= glm::vec2(this->_screenWidth / 2.0f, this->_screenHeight / 2.0f);
+	screenCoords -= glm::vec3(this->_screenWidth / 2.0f, this->_screenHeight / 2.0f, 0.0f);
 	screenCoords /= this->_scale;
 	screenCoords += this->_position;
-
 
 	return screenCoords;
 }
