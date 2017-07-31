@@ -56,4 +56,4 @@ target_link_libraries(${PROJECT_NAME}
         ${GLEW_LIBRARIES}
         ${SDL2_LIBRARIES}
         ${GLM_LIBRARIES}
-        )
+)

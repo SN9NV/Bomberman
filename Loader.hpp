@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <regex>
 
 #include <GL/glew.h>
 
@@ -15,12 +16,12 @@ public:
 	Loader() = default;
 	~Loader();
 
-	Model	loadToVAO(const std::string &texturePath, const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices);
+	Model	loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath);
+	Model	loadToVAO(const std::string &objPath, const std::string &texturePath);
 	Texture	loadTexture(const std::string &texturePath);
 
 private:
 	std::vector<GLuint>	_vaos;
-
 	std::vector<GLuint>	_vbos;
 	std::vector<GLuint>	_textureIDs;
 

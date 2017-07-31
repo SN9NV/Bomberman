@@ -12,8 +12,7 @@ void Renderer::init(GLSLProgram &shader, Window *window) {
 
 	this->_shader->uploadMatrix4f(
 			shader.getUniformLocation("projectionMatrix"),
-//			glm::perspectiveFov<float>(this->FOV, window->getWidth(), window->getHeight(), this->NEAR_PLANE, this->FAR_PLANE)
-			glm::perspective<float>(glm::radians(FOV), window->getWidth() / window->getHeight(), NEAR_PLANE, FAR_PLANE)
+			glm::perspectiveFov<float>(FOV, window->getWidth(), window->getHeight(), NEAR_PLANE, FAR_PLANE)
 	);
 
 	this->_shader->end();

@@ -4,7 +4,6 @@ in vec3 vertexPosition;
 in vec3 vertexNormal;
 in vec2 vertexUV;
 
-out vec3 colour;
 out vec3 fragmentPosition;
 out vec3 fragmentNormal;
 out vec2 fragmentUV;
@@ -19,6 +18,4 @@ void main() {
 	fragmentPosition = vertexPosition;
 	fragmentNormal = vertexNormal;
 	fragmentUV = vertexUV;
-
-	colour = vec3(vertexPosition.x + 0.5, 0.0, vertexPosition.y + 0.5);
 }
