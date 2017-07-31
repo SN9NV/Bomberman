@@ -5,7 +5,6 @@
 #include "InputManager.hpp"
 #include "Camera.hpp"
 #include "Maths.hpp"
-#include "Vertex.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
@@ -101,12 +100,12 @@ int main() {
 			23, 21, 22
 	};
 
-	for (auto &vertex : vertices) {
-		std::cout << vertex << "\n";
-	}
+//	for (auto &vertex : vertices) {
+//		std::cout << vertex << "\n";
+//	}
 
 	Model	model = loader.loadToVAO("../image.png", vertices, indices);
-	Entity	entity(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, model);
+	Entity	entity(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, -5.0f), 1.0f, model);
 
 	Camera camera;
 
@@ -122,7 +121,8 @@ int main() {
 			gameState = GameState ::WANTS_QUIT;
 		}
 
-//		entity.addRotation(glm::vec3(0.005f, 0.005f, 0.0f));
+		entity.addRotation(glm::vec3(0.005f, 0.005f, 0.0f));
+//		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
 		camera.update(inputManager);
 
 		renderer.prepare();
