@@ -7,7 +7,7 @@ Window::Window() :
 		_height(0),
 		_window(nullptr)
 {
-
+	if (GLenum error = glGetError()) std::cout << "Error: " << error << "\n";
 }
 
 Window::~Window() {

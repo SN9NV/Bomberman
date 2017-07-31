@@ -44,8 +44,8 @@ void Renderer::render(Entity &entity) {
 	glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr);
 
 	// Unbind everything
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
+//	glDisableVertexAttribArray(0);
+//	glDisableVertexAttribArray(1);
+//	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
 }

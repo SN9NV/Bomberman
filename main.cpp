@@ -10,6 +10,7 @@ static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
 bool processInput(InputManager &inputManager);
+void	openGLError();
 
 std::ostream &operator<<(std::ostream &out, const glm::vec4 &rhs) {
 	out << "[ " << rhs.x << ", " << rhs.y << ", " << rhs.z << ", " << rhs.w << " ]";
@@ -88,58 +89,26 @@ int main() {
 		{ { 0.5f, -0.5f, 0.5f }, normal, uv[3] }
 	};
 
-//		std::vector<Vertex> vertices = {
-//		{ { -0.5f, 0.5f, -0.5f }, uv[0] },
-//		{ { -0.5f, -0.5f, -0.5f }, uv[1] },
-//		{ { 0.5f, -0.5f, -0.5f }, uv[2] },
-//		{ { 0.5f, 0.5f, -0.5f }, uv[3] },
-//
-//		{ { -0.5f, 0.5f, 0.5f }, uv[0] },
-//		{ { -0.5f, -0.5f, 0.5f }, uv[1] },
-//		{ { 0.5f, -0.5f, 0.5f }, uv[2] },
-//		{ { 0.5f, 0.5f, 0.5f }, uv[3] },
-//
-//		{ { 0.5f, 0.5f, -0.5f }, uv[0] },
-//		{ { 0.5f, -0.5f, -0.5f }, uv[1] },
-//		{ { 0.5f, -0.5f, 0.5f }, uv[2] },
-//		{ { 0.5f, 0.5f, 0.5f }, uv[3] },
-//
-//		{ { -0.5f, 0.5f, -0.5f }, uv[0] },
-//		{ { -0.5f, -0.5f, -0.5f }, uv[1] },
-//		{ { -0.5f, -0.5f, 0.5f }, uv[2] },
-//		{ { -0.5f, 0.5f, 0.5f }, uv[3] },
-//
-//		{ { -0.5f, 0.5f, 0.5f }, uv[0] },
-//		{ { -0.5f, 0.5f, -0.5f }, uv[1] },
-//		{ { 0.5f, 0.5f, -0.5f }, uv[2] },
-//		{ { 0.5f, 0.5f, 0.5f }, uv[3] },
-//
-//		{ { -0.5f, -0.5f, 0.5f }, uv[0] },
-//		{ { -0.5f, -0.5f, -0.5f }, uv[1] },
-//		{ { 0.5f, -0.5f, -0.5f }, uv[2] },
-//		{ { 0.5f, -0.5f, 0.5f }, uv[3] }
-//	};
-
 	std::vector<unsigned>	indices = {
-			0, 1, 3,
-			3, 1, 2,
-			4, 5, 7,
-			7, 5, 6,
-			8, 9, 11,
-			11, 9, 10,
-			12, 13, 15,
-			15, 13, 14,
-			16, 17, 19,
-			19, 17, 18,
-			20, 21, 23,
-			23, 21, 22
+		0, 1, 3,
+		3, 1, 2,
+		4, 5, 7,
+		7, 5, 6,
+		8, 9, 11,
+		11, 9, 10,
+		12, 13, 15,
+		15, 13, 14,
+		16, 17, 19,
+		19, 17, 18,
+		20, 21, 23,
+		23, 21, 22
 	};
 
 	for (auto &vertex : vertices) {
 		std::cout << vertex << "\n";
 	}
 
-	Model	model = loader.loadToVAO("../image.png", vertices, indices);
+	Model	model = loader.loadToVAO(vertices, indices, "../image.png");
 	Entity	entity(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, -5.0f), 1.0f, model);
 
 	Camera camera;
@@ -157,8 +126,9 @@ int main() {
 		}
 
 		entity.addRotation(glm::vec3(0.005f, 0.005f, 0.0f));
-//		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
+		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
 		camera.update(inputManager);
+
 
 		renderer.prepare();
 		shader.start();
@@ -168,6 +138,8 @@ int main() {
 
 		shader.end();
 		window.swapBuffers();
+
+		if (GLenum error = glGetError()) std::cout << "Error: " << error << "\n";
 	}
 
 	return 0;
@@ -196,4 +168,36 @@ bool processInput(InputManager &inputManager) {
 
 	return inputManager.isKeyPressed(SDLK_ESCAPE);
 
+}
+
+void	openGLError() {
+	GLenum error = glGetError();
+
+	switch (error) {
+		case GL_NO_ERROR:
+			break;
+		case GL_INVALID_ENUM:
+			std::cout << "Error: " << error << " Invalid enum\n";
+			break;
+		case GL_INVALID_VALUE:
+			std::cout << "Error: " << error << " Invalid value\n";
+			break;
+		case GL_INVALID_OPERATION:
+			std::cout << "Error: " << error << " Invalid operation\n";
+			break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			std::cout << "Error: " << error << "Invalid frambuffer operation\n";
+			break;
+		case GL_OUT_OF_MEMORY:
+			std::cout << "Error: " << error << " Out of memory\n";
+			break;
+		case GL_STACK_OVERFLOW:
+			std::cout << "Error: " << error << " Stack underflow\n";
+			break;
+		case GL_STACK_UNDERFLOW:
+			std::cout << "Error: " << error << " Stack underflow\n";
+			break;
+		default:
+			std::cout << "Error: " << error << "\n";
+	}
 }
