@@ -139,7 +139,7 @@ int main() {
 		shader.end();
 		window.swapBuffers();
 
-		if (GLenum error = glGetError()) std::cout << "Error: " << error << "\n";
+
 	}
 
 	return 0;

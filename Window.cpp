@@ -7,7 +7,7 @@ Window::Window() :
 		_height(0),
 		_window(nullptr)
 {
-	if (GLenum error = glGetError()) std::cout << "Error: " << error << "\n";
+
 }
 
 Window::~Window() {
@@ -37,7 +37,8 @@ void Window::create(const std::string &windowName, unsigned width, unsigned heig
 			SDL_WINDOWPOS_CENTERED,
 			this->_width,
 			this->_height,
-			flags);
+			flags
+	);
 
 	if (this->_window == nullptr) {
 		throw SDL_FatalError("Could not create SDL2 window");
