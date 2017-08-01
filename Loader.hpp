@@ -8,7 +8,6 @@
 #include <GL/glew.h>
 
 #include "Model.hpp"
-#include "ImageLoader.hpp"
 #include "Vertex.hpp"
 
 class Loader {
