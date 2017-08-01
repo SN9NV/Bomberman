@@ -3,8 +3,8 @@
 Model Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath) {
 	GLuint	vaoID = this->_createVAO();
 
-	this->_bindIndicesBuffer(indices);
 	this->_uploadVertexArray(vertices);
+	this->_bindIndicesBuffer(indices);
 
 	glBindVertexArray(0);
 
@@ -106,6 +106,23 @@ void Loader::_uploadVertexArray(const std::vector<Vertex> &vertices) {
 			  "Vertex size: " << sizeof(Vertex) << "\n";
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals,
+						const std::vector<float> &uv, const std::vector<unsigned> &indices,
+						const std::string &texturePath) {
+	GLuint	vaoID = this->_createVAO();
+
+	this->_storeDataInAttributeList(0, 3, vertices);
+	this->_storeDataInAttributeList(1, 3, normals);
+	this->_storeDataInAttributeList(2, 2, uv);
+	this->_bindIndicesBuffer(indices);
+
+	glBindVertexArray(0);
+
+	Texture texture = this->loadTexture(texturePath);
+
+	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
 }
 
 /*Model Loader::loadToVAO(const std::string &objPath, const std::string &texturePath) {

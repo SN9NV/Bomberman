@@ -54,10 +54,10 @@ int main() {
 	Renderer		renderer(shader, &window);
 	InputManager	inputManager;
 
-	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
-	std::vector<glm::vec2>	uv = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f } };
+//	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
+//	std::vector<glm::vec2>	uv = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f } };
 
-	std::vector<Vertex> vertices = {
+	/*std::vector<Vertex> vertices = {
 		{ { -0.5f, 0.5f, -0.5f }, normal, uv[0] },
 		{ { -0.5f, -0.5f, -0.5f }, normal, uv[1] },
 		{ { 0.5f, -0.5f, -0.5f }, normal, uv[2] },
@@ -87,6 +87,92 @@ int main() {
 		{ { -0.5f, -0.5f, -0.5f }, normal, uv[1] },
 		{ { 0.5f, -0.5f, -0.5f }, normal, uv[2] },
 		{ { 0.5f, -0.5f, 0.5f }, normal, uv[3] }
+	};*/
+
+	std::vector<float> vertices = {
+			-0.5f,0.5f,0,
+			-0.5f,-0.5f,0,
+			0.5f,-0.5f,0,
+			0.5f,0.5f,0,
+
+			-0.5f,0.5f,1,
+			-0.5f,-0.5f,1,
+			0.5f,-0.5f,1,
+			0.5f,0.5f,1,
+
+			0.5f,0.5f,0,
+			0.5f,-0.5f,0,
+			0.5f,-0.5f,1,
+			0.5f,0.5f,1,
+
+			-0.5f,0.5f,0,
+			-0.5f,-0.5f,0,
+			-0.5f,-0.5f,1,
+			-0.5f,0.5f,1,
+
+			-0.5f,0.5f,1,
+			-0.5f,0.5f,0,
+			0.5f,0.5f,0,
+			0.5f,0.5f,1,
+
+			-0.5f,-0.5f,1,
+			-0.5f,-0.5f,0,
+			0.5f,-0.5f,0,
+			0.5f,-0.5f,1
+	};
+
+	std::vector<float>	normals = {
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f
+	};
+
+	std::vector<float> uv = {
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0
 	};
 
 	std::vector<unsigned>	indices = {
@@ -104,11 +190,12 @@ int main() {
 		23, 21, 22
 	};
 
-	for (auto &vertex : vertices) {
-		std::cout << vertex << "\n";
-	}
+//	for (auto &vertex : vertices) {
+//		std::cout << vertex << "\n";
+//	}
 
-	Model	model = loader.loadToVAO(vertices, indices, "../image.png");
+//	Model	model = loader.loadToVAO(vertices, indices, "../image.png");
+	Model	model = loader.loadToVAO(vertices, normals, uv, indices, "../image.png");
 	Entity	entity(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, -5.0f), 1.0f, model);
 
 	Camera camera;
@@ -126,9 +213,8 @@ int main() {
 		}
 
 		entity.addRotation(glm::vec3(0.005f, 0.005f, 0.0f));
-		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
+//		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
 		camera.update(inputManager);
-
 
 		renderer.prepare();
 		shader.start();
@@ -138,8 +224,6 @@ int main() {
 
 		shader.end();
 		window.swapBuffers();
-
-
 	}
 
 	return 0;

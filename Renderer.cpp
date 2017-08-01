@@ -19,7 +19,7 @@ void Renderer::init(GLSLProgram &shader, Window *window) {
 }
 
 void Renderer::prepare() {
-//	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
@@ -30,8 +30,8 @@ void Renderer::render(Entity &entity) {
 	// Bind the model and texture
 	glBindVertexArray(model.getVaoID());
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+//	glEnableVertexAttribArray(1);
+//	glEnableVertexAttribArray(2);
 
 	glm::mat4	transformation = Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
@@ -44,7 +44,7 @@ void Renderer::render(Entity &entity) {
 	glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr);
 
 	// Unbind everything
-//	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(0);
 //	glDisableVertexAttribArray(1);
 //	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
