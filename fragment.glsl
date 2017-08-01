@@ -9,6 +9,7 @@ out vec4 out_colour;
 uniform sampler2D modelTexture;
 
 void main() {
-	vec2 uv = vec2(fragmentNormal.x * fragmentUV.x, fragmentNormal.y * fragmentUV.y);
-	out_colour =  texture(modelTexture, uv);
+//	vec2 uv = vec2(fragmentNormal.x * fragmentUV.x, fragmentNormal.y * fragmentUV.y);
+	out_colour =  texture(modelTexture, fragmentUV);
+	
 }
