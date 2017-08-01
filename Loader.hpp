@@ -18,7 +18,6 @@ public:
 
 	Model	loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath);
 	Model	loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals, const std::vector<float> &uv, const std::vector<unsigned> &indices, const std::string &texturePath);
-//	Model	loadToVAO(const std::string &objPath, const std::string &texturePath);
 	Texture	loadTexture(const std::string &texturePath);
 
 private:

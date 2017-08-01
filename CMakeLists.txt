@@ -18,7 +18,6 @@ set(SOURCE_FILES
 		Renderer.cpp Renderer.hpp
 		Maths.cpp Maths.hpp
 		Loader.cpp Loader.hpp
-		ImageLoader.cpp ImageLoader.hpp
 		picoPNG.cpp picoPNG.hpp
 		Vertex.hpp glmOstream.cpp glmOstream.hpp glError.cpp glError.hpp)
 

@@ -1,4 +1,5 @@
 #include "IO.hpp"
+#include "picoPNG.hpp"
 
 namespace IO {
 	std::string	readFileToString(const std::string &filename) {

@@ -16,15 +16,13 @@ public:
 	Renderer() = default;
 	~Renderer() = default;
 
-	explicit Renderer(GLSLProgram &shader, Window *window);
+	Renderer(const GLSLProgram &shader, const Window &window);
 
-	void	init(GLSLProgram &shader, Window *window);
-	void	prepare();
-	void	render(Entity &entity);
+	void	prepare() const;
+	void	render(const Entity &entity) const;
 
 private:
-	glm::mat4	_projectionMatrix;
-	GLSLProgram	*_shader;
+	const GLSLProgram	&_shader;
 };
 
 

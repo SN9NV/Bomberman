@@ -1,4 +1,4 @@
-#include "glmOstream.hpp
+#include "glmOstream.hpp"
 
 std::ostream &operator<<(std::ostream &out, const glm::vec4 &rhs) {
 	out << "[ " << rhs.x << ", " << rhs.y << ", " << rhs.z << ", " << rhs.w << " ]";

@@ -10,13 +10,12 @@ static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
 bool	processInput(InputManager &inputManager);
-void	openGLError();
 
 int main() {
 	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
 	Loader			loader;
 	GLSLProgram		shader;
-	Renderer		renderer(shader, &window);
+	Renderer		renderer(shader, window);
 	InputManager	inputManager;
 
 	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
@@ -117,10 +116,10 @@ int main() {
 		camera.update(inputManager, shader);
 		renderer.render(entity);
 
-		float rotation = 0.05f;
+		float rotation = 0.0f;
 		for (auto &cEntity : entities) {
 			rotation += 0.05f;
-			cEntity.addRotation(glm::vec3(-rotation, 0, rotation));
+			cEntity.addRotation(glm::vec3(rotation, rotation, 0.0f));
 			renderer.render(cEntity);
 		}
 

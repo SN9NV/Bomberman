@@ -82,7 +82,7 @@ void GLSLProgram::bindAttribute(const std::string &attributeName) {
 	glBindAttribLocation(this->_programID, this->_attributeCount++, attributeName.c_str());
 }
 
-void GLSLProgram::start() {
+void GLSLProgram::start() const {
 	for (unsigned i = 0; i < this->_attributeCount; i++) {
 		glEnableVertexAttribArray(i);
 	}
@@ -90,7 +90,7 @@ void GLSLProgram::start() {
 	glUseProgram(this->_programID);
 }
 
-void GLSLProgram::end() {
+void GLSLProgram::end() const {
 	glUseProgram(0);
 
 	for (unsigned i = 0; i < this->_attributeCount; i++) {
@@ -98,7 +98,7 @@ void GLSLProgram::end() {
 	}
 }
 
-GLint GLSLProgram::getUniformLocation(const std::string &uniformName) {
+GLint GLSLProgram::getUniformLocation(const std::string &uniformName) const {
 	GLint location = glGetUniformLocation(this->_programID, uniformName.c_str());
 
 	if (static_cast<GLuint>(location) == GL_INVALID_INDEX) {
@@ -109,19 +109,19 @@ GLint GLSLProgram::getUniformLocation(const std::string &uniformName) {
 	return location;
 }
 
-void GLSLProgram::uploadFloat(GLint location, float value) {
+void GLSLProgram::uploadFloat(GLint location, float value) const {
 	glUniform1f(location, value);
 }
 
-void GLSLProgram::uploadvec3d(GLint location, const glm::vec3 &value) {
+void GLSLProgram::uploadvec3d(GLint location, const glm::vec3 &value) const {
 	glUniform3f(location, value.x, value.y, value.z);
 }
 
-void GLSLProgram::uploadBool(GLint location, bool value) {
+void GLSLProgram::uploadBool(GLint location, bool value) const {
 	glUniform1ui(location, value ? 1 : 0);
 }
 
-void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) {
+void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) const {
 	glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 }
 

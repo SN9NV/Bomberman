@@ -18,7 +18,7 @@ public:
 	glm::vec3	getPosition() const;
 	glm::vec3	getRotation() const;
 
-	void	update(const InputManager &inputManager, GLSLProgram &shader);
+	void	update(const InputManager &inputManager, const GLSLProgram &shader);
 
 private:
 	glm::vec3	_position;
