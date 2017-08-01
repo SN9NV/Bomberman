@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "InputManager.hpp"
+#include "GLSLProgram.hpp"
 
 class Camera {
 public:
@@ -17,11 +18,12 @@ public:
 	glm::vec3	getPosition() const;
 	glm::vec3	getRotation() const;
 
-	void	update(const InputManager &inputManager);
+	void	update(const InputManager &inputManager, GLSLProgram &shader);
 
 private:
 	glm::vec3	_position;
 	glm::vec3	_rotation;
+	bool 		_needsUpdate;
 };
 
 

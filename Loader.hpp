@@ -27,6 +27,7 @@ private:
 	std::vector<GLuint>	_textureIDs;
 
 	GLuint	_createVAO();
+	GLuint	_createVBO(GLenum target);
 	void	_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data);
 	void	_uploadVertexArray(const std::vector<Vertex> &vertices);
 	void	_bindIndicesBuffer(const std::vector<unsigned> &indices);

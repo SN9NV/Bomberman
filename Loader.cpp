@@ -51,23 +51,28 @@ GLuint Loader::_createVAO() {
 	return vaoID;
 }
 
-void Loader::_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data) {
-	GLuint	vboID;
+GLuint Loader::_createVBO(GLenum target) {
+	GLuint	vboID = 0;
 
 	glGenBuffers(1, &vboID);
 	this->_vbos.push_back(vboID);
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBindBuffer(target, vboID);
+
+	return vboID;
+}
+
+void Loader::_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data) {
+	this->_createVBO(GL_ARRAY_BUFFER);
+
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, 0, nullptr);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Loader::_bindIndicesBuffer(const std::vector<unsigned> &indices) {
-	GLuint	vboID;
+	this->_createVBO(GL_ELEMENT_ARRAY_BUFFER);
 
-	glGenBuffers(1, &vboID);
-	this->_vbos.push_back(vboID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
 }
 
@@ -86,19 +91,12 @@ Loader::~Loader() {
 }
 
 void Loader::_uploadVertexArray(const std::vector<Vertex> &vertices) {
-	GLuint	vboID;
-
-	glGenBuffers(1, &vboID);
-	this->_vbos.push_back(vboID);
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	this->_createVBO(GL_ARRAY_BUFFER);
 
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, position));
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
 
 	std::cout << "Position offset: " << offsetof(Vertex, position) << "\n" <<
 			  "Normal offset: " << offsetof(Vertex, normal) << "\n" <<
@@ -124,6 +122,8 @@ Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<fl
 
 	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
 }
+
+
 
 /*Model Loader::loadToVAO(const std::string &objPath, const std::string &texturePath) {
 	GLuint	vaoID = this->_createVAO();

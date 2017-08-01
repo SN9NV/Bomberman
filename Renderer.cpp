@@ -1,6 +1,8 @@
 #include "Renderer.hpp"
 #include "Maths.hpp"
 
+std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs);
+
 Renderer::Renderer(GLSLProgram &shader, Window *window) {
 	init(shader, window);
 }
@@ -10,10 +12,10 @@ void Renderer::init(GLSLProgram &shader, Window *window) {
 
 	this->_shader->start();
 
-	this->_shader->uploadMatrix4f(
-			shader.getUniformLocation("projectionMatrix"),
-			glm::perspectiveFov<float>(FOV, window->getWidth(), window->getHeight(), NEAR_PLANE, FAR_PLANE)
-	);
+	glm::mat4 projectionMatrix = glm::perspectiveFov<float>(FOV, window->getWidth(), window->getHeight(), NEAR_PLANE, FAR_PLANE);
+	this->_shader->uploadMatrix4f(shader.getUniformLocation("projectionMatrix"), projectionMatrix);
+
+	std::cout << "ProjectionMatrix: " << projectionMatrix << "\n";
 
 	this->_shader->end();
 }
@@ -30,8 +32,8 @@ void Renderer::render(Entity &entity) {
 	// Bind the model and texture
 	glBindVertexArray(model.getVaoID());
 	glEnableVertexAttribArray(0);
-//	glEnableVertexAttribArray(1);
-//	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glm::mat4	transformation = Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
@@ -45,7 +47,7 @@ void Renderer::render(Entity &entity) {
 
 	// Unbind everything
 	glDisableVertexAttribArray(0);
-//	glDisableVertexAttribArray(1);
-//	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
 }
