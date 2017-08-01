@@ -20,7 +20,7 @@ set(SOURCE_FILES
 		Loader.cpp Loader.hpp
 		ImageLoader.cpp ImageLoader.hpp
 		picoPNG.cpp picoPNG.hpp
-		Vertex.hpp)
+		Vertex.hpp glmOstream.cpp glmOstream.hpp glError.cpp glError.hpp)
 
 
 
