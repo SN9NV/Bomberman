@@ -34,6 +34,10 @@ Texture Loader::loadTexture(const std::string &texturePath) {
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, GL_RGBA, GL_UNSIGNED_BYTE, out.data());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	this->_textureIDs.push_back(textureID);
@@ -98,11 +102,6 @@ void Loader::_uploadVertexArray(const std::vector<Vertex> &vertices) {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
 
-	std::cout << "Position offset: " << offsetof(Vertex, position) << "\n" <<
-			  "Normal offset: " << offsetof(Vertex, normal) << "\n" <<
-			  "UV offset: " << offsetof(Vertex, uv) << "\n" <<
-			  "Vertex size: " << sizeof(Vertex) << "\n";
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -122,36 +121,3 @@ Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<fl
 
 	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
 }
-
-
-
-/*Model Loader::loadToVAO(const std::string &objPath, const std::string &texturePath) {
-	GLuint	vaoID = this->_createVAO();
-
-	// Open OBJ file
-	std::ifstream	objFile(objPath);
-
-	if (!objFile.is_open()) {
-		std::cerr << "Could not open file\n";
-		exit(1);
-	}
-
-	// Read OBJ file line by line
-	std::string	line;
-	std::regex	vertexRegex("v\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)");
-	std::regex	textureRegex("vt\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)");
-	std::regex	normalRegex("vn\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)\\s+(-?[0-9.]+)");
-
-	while (std::getline(objFile, line)) {
-
-	}
-
-//	this->_uploadVertexArray();
-//	this->_bindIndicesBuffer();
-
-	glBindVertexArray(0);
-
-	Texture texture = this->loadTexture(texturePath);
-
-	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
-}*/

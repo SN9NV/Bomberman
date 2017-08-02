@@ -19,7 +19,7 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation) :
 
 }
 
-void Camera::update(const InputManager &inputManager, GLSLProgram &shader) {
+void Camera::update(const InputManager &inputManager, const GLSLProgram &shader) {
 	if (inputManager.isKeyPressed(SDLK_w)) {
 		this->_position.y += 0.02f;
 		this->_needsUpdate = true;
@@ -53,8 +53,6 @@ void Camera::update(const InputManager &inputManager, GLSLProgram &shader) {
 	if (this->_needsUpdate) {
 		glm::mat4 viewMatrix = Maths::createViewMatrix(*this);
 		shader.uploadMatrix4f(shader.getUniformLocation("viewMatrix"), viewMatrix);
-
-		std::cout << "Uploading view matrix:\n" << viewMatrix << "\n";
 
 		this->_needsUpdate = false;
 	}

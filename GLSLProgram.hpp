@@ -15,14 +15,14 @@ public:
 
 	bool	compileShaders(const std::string &vertexFilePath, const std::string &fragmentFilePath);
 	bool	linkProgram();
+	void	start() const;
+	void	end() const;
 	void	bindAttribute(const std::string &attributeName);
-	void	start();
-	void	end();
-	GLint	getUniformLocation(const std::string &uniformName);
-	void	uploadFloat(GLint location, float value);
-	void	uploadvec3d(GLint location, const glm::vec3 &value);
-	void	uploadBool(GLint location, bool value);
-	void	uploadMatrix4f(GLint location, const glm::mat4 &value);
+	GLint	getUniformLocation(const std::string &uniformName) const;
+	void	uploadFloat(GLint location, float value) const;
+	void	uploadvec3d(GLint location, const glm::vec3 &value) const;
+	void	uploadBool(GLint location, bool value) const;
+	void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
 
 private:
 	GLuint	_vertexShaderID;

@@ -18,9 +18,8 @@ set(SOURCE_FILES
 		Renderer.cpp Renderer.hpp
 		Maths.cpp Maths.hpp
 		Loader.cpp Loader.hpp
-		ImageLoader.cpp ImageLoader.hpp
 		picoPNG.cpp picoPNG.hpp
-		Vertex.hpp)
+		Vertex.hpp glmOstream.cpp glmOstream.hpp glError.cpp glError.hpp XMLParser/XMLParser.cpp XMLParser/XMLParser.hpp XMLParser/XMLNode.cpp XMLParser/XMLNode.hpp)
 
 
 
