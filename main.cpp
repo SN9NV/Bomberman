@@ -6,6 +6,11 @@
 #include "Camera.hpp"
 #include "Maths.hpp"
 
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+
+#include "tinyGLTF/tiny_gltf.h"
+
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
