@@ -1,4 +1,6 @@
 #include "Loader.hpp"
+#include "IO.hpp"
+#include "picoPNG.hpp"
 
 Model Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath) {
 	GLuint	vaoID = this->_createVAO();

@@ -19,7 +19,11 @@ set(SOURCE_FILES
 		Maths.cpp Maths.hpp
 		Loader.cpp Loader.hpp
 		picoPNG.cpp picoPNG.hpp
-		Vertex.hpp glmOstream.cpp glmOstream.hpp glError.cpp glError.hpp XMLParser/XMLParser.cpp XMLParser/XMLParser.hpp XMLParser/XMLNode.cpp XMLParser/XMLNode.hpp)
+		Vertex.hpp
+		glmOstream.cpp glmOstream.hpp
+		glError.cpp glError.hpp
+
+		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h)
 
 
 

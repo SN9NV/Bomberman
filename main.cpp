@@ -11,18 +11,58 @@
 
 #include "tinyGLTF/tiny_gltf.h"
 
-static constexpr unsigned HEIGHT = 720;
-static constexpr unsigned WIDTH = 1024;
+//static constexpr unsigned HEIGHT = 720;
+//static constexpr unsigned WIDTH = 1024;
+
+//typedef struct {
+//	std::string name;
+//	std::vector<Primitive> primitives;
+//	std::vector<double> weights;  // weights to be applied to the Morph Targets
+//	std::vector<std::map<std::string, int> > targets;
+//	ParameterMap extensions;
+//	Value extras;
+//} Mesh;
+
+std::ostream &operator<<(std::ostream &out, const std::vector<tinygltf::Mesh> &meshes) {
+	for (auto &mesh : meshes) {
+		out << "Name: " << mesh.name << "\n";
+//		out << "Primitives:\n" << mesh.primitives << "\n";
+//		out << "Weights:\n" << mesh.weights << "\n";
+//		out << ""
+	}
+
+	return out;
+}
 
 bool	processInput(InputManager &inputManager);
 
 int main() {
-	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
-	Loader			loader;
-	GLSLProgram		shader;
-	Renderer		renderer(shader, window);
-	InputManager	inputManager;
+//	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
+//	Loader			loader;
+//	GLSLProgram		shader;
+//	Renderer		renderer(shader, window);
+//	InputManager	inputManager;
 
+//	(void)renderer;
+
+	tinygltf::Model model;
+	tinygltf::TinyGLTF loader;
+	std::string err;
+
+	bool ret = loader.LoadBinaryFromFile(&model, &err, "../cube.glb");
+
+	if (!err.empty()) {
+		std::cout << "Err: " << err << "\n";
+	}
+
+	if (!ret) {
+		std::cout << "Failed to parse glTF\n";
+		return -1;
+	}
+
+	std::cout << model.meshes << "\n";
+
+/*
 	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
 	std::vector<glm::vec2>	uv = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f } };
 
@@ -131,6 +171,7 @@ int main() {
 		shader.end();
 		window.swapBuffers();
 	}
+*/
 
 	return 0;
 }
