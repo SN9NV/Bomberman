@@ -471,10 +471,10 @@ struct Primitive {
   // to their corresponding accessors
   Value extras;
 
-  Primitive() {
-    material = -1;
-    indices = -1;
-  }
+  Primitive() :
+    material(-1),
+    indices(-1),
+    mode(-1) { }
 };
 
 typedef struct {

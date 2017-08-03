@@ -51,8 +51,10 @@ void Camera::update(const InputManager &inputManager, const GLSLProgram &shader)
 	}
 
 	if (this->_needsUpdate) {
-		glm::mat4 viewMatrix = Maths::createViewMatrix(*this);
-		shader.uploadMatrix4f(shader.getUniformLocation("viewMatrix"), viewMatrix);
+		shader.uploadMatrix4f(
+				shader.getUniformLocation("viewMatrix"),
+				Maths::createViewMatrix(*this)
+		);
 
 		this->_needsUpdate = false;
 	}
