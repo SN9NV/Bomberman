@@ -58,19 +58,15 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 
 			switch (accessor.type) {
 				case TINYGLTF_TYPE_SCALAR:
-//					std::cout << "Rendering with type scalar\n";
 					size = 1;
 					break;
 				case TINYGLTF_TYPE_VEC2:
-//					std::cout << "Rendering with type vec2\n";
 					size = 2;
 					break;
 				case TINYGLTF_TYPE_VEC3:
-//					std::cout << "Rendering with type vec3\n";
 					size = 3;
 					break;
 				case TINYGLTF_TYPE_VEC4:
-//					std::cout << "Rendering with type vec4\n";
 					size = 4;
 					break;
 				default:
