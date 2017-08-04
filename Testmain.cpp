@@ -16,31 +16,36 @@ static constexpr unsigned WIDTH = 1024;
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
-std::ostream &operator<<(std::ostream &out, const std::vector<tinygltf::Mesh> &meshes) {
-	unsigned i = 0;
-
-	out << "Meshes: " << meshes.size();
-
-	for (auto &mesh : meshes) {
-		out << "Mesh: " << i++ << "\n";
-		out << "Name: " << mesh.name << "\n";
-//		out << "Primitives:\n" << mesh.primitives << "\n";
-//		out << "Weights:\n" << mesh.weights << "\n";
-//		out << ""
+std::string GLenumGetString(const GLenum num) {
+	switch (num) {
+		case GL_UNSIGNED_SHORT:
+			return "GL_UNSIGNED_SHORT";
+		case GL_UNSIGNED_INT:
+			return "GL_UNSIGNED_INT";
+		case GL_UNSIGNED_BYTE:
+			return "GL_UNSIGNED_BYTE";
+		case GL_ARRAY_BUFFER:
+			return "GL_ARRAY_BUFFER";
+		case GL_ELEMENT_ARRAY_BUFFER:
+			return "GL_ELEMENT_ARRAY_BUFFER";
+		case GL_TRIANGLES:
+			return "GL_TRIANGLES";
+		case GL_TRIANGLE_STRIP:
+			return "GL_TRIANGLE_STRIP";
+		case GL_TRIANGLE_FAN:
+			return "GL_TRIANGLE_FAN";
+		case GL_POINTS:
+			return "GL_POINTS";
+		case GL_LINE:
+			return "GL_LINE";
+		case GL_LINE_LOOP:
+			return "GL_LINE_LOOP";
+		default:
+			return "*** UNKNOWN ***";
 	}
-
-	return out;
 }
 
-typedef struct { GLuint vb; } GLBufferState;
-
-typedef struct {
-	std::map<std::string, GLuint> attribs;
-	std::map<std::string, GLuint> uniforms;
-} GLProgramState;
-
-std::map<int, GLBufferState> gBufferState;
-GLProgramState gGLProgramState;
+std::map<int, GLuint> gBuffers;
 
 void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 	for (auto &primitive : mesh.primitives) {
@@ -48,11 +53,9 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 			return;
 
 		for (auto &attr : primitive.attributes) {
-			assert(attr.second >= 0);
-
 			const auto &accessor = model.accessors[attr.second];
 
-			glBindBuffer(GL_ARRAY_BUFFER, gBufferState[accessor.bufferView].vb);
+			glBindBuffer(GL_ARRAY_BUFFER, gBuffers[accessor.bufferView]);
 
 			int size;
 
@@ -74,21 +77,27 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 			}
 
 			if (attr.first == "POSITION" || attr.first == "NORMAL" || attr.first == "TEXCOORD_0") {
-					glVertexAttribPointer(
-							gGLProgramState.attribs[attr.first],
-							size,
-							(GLenum)accessor.componentType,
-							(GLboolean)((accessor.normalized) ? GL_TRUE : GL_FALSE),
-							(GLsizei)model.bufferViews[accessor.bufferView].byteStride,
-							BUFFER_OFFSET(accessor.byteOffset)
-					);
+				GLuint index = 0;
 
-					glEnableVertexAttribArray(gGLProgramState.attribs[attr.first]);
+				if (attr.first == "POSITION") index = 0;
+				else if (attr.first == "NORMAL") index = 2;
+				else if (attr.first == "TEXCOORD_0") index = 1;
+
+				glVertexAttribPointer(
+						index,
+						size,
+						(GLenum)accessor.componentType,
+						(GLboolean)((accessor.normalized) ? GL_TRUE : GL_FALSE),
+						(GLsizei)model.bufferViews[accessor.bufferView].byteStride,
+						BUFFER_OFFSET(accessor.byteOffset)
+				);
+
+				glEnableVertexAttribArray(index);
 			}
 		}
 
 		const auto &indexAssessor = model.accessors[primitive.indices];
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gBufferState[indexAssessor.bufferView].vb);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gBuffers[indexAssessor.bufferView]);
 
 		GLenum mode;
 
@@ -115,39 +124,25 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 				mode = GL_TRIANGLES;
 		}
 
-		glEnableVertexAttribArray(0);
-
-		std::cout << "Drawing: " << indexAssessor.count << " ";
-
-		switch (indexAssessor.componentType) {
-			case GL_UNSIGNED_INT:
-				std::cout << "GL_UNSIGNED_INT";
-				break;
-			case GL_UNSIGNED_SHORT:
-				std::cout << "GL_UNSIGNED_SHORT";
-				break;
-			case GL_UNSIGNED_BYTE:
-				std::cout << "GL_UNSIGNED_BYTE";
-				break;
-			default:
-				std::cout << "*** UNKNOWN ***";
-		}
-
-		std::cout << " with offset: " << indexAssessor.byteOffset << "\n";
-
 		glDrawElements(mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
 			BUFFER_OFFSET(indexAssessor.byteOffset));
 
 		for (auto &attr : primitive.attributes) {
 			if (attr.first == "POSITION" || attr.first == "NORMAL" || attr.first == "TEXCOORD_0") {
-				glDisableVertexAttribArray(gGLProgramState.attribs[attr.first]);
+				GLuint index = 0;
+
+				if (attr.first == "POSITION") index = 0;
+				else if (attr.first == "NORMAL") index = 2;
+				else if (attr.first == "TEXCOORD_0") index = 1;
+
+				glDisableVertexAttribArray(index);
 			}
 		}
 	}
 }
 
 void	setupMeshState(tinygltf::Model &model) {
-	unsigned i = 0;
+	unsigned bufferNumber = 0;
 
 	for (const auto &view : model.bufferViews) {
 		if (view.target == 0) {
@@ -156,33 +151,13 @@ void	setupMeshState(tinygltf::Model &model) {
 
 		const tinygltf::Buffer &buffer = model.buffers[view.buffer];
 
-		GLBufferState state = {};
-
-		glGenBuffers(1, &state.vb);
-		glBindBuffer((GLenum)view.target, state.vb);
-
-		std::cout << "Uploading buffer: ";
-
-		switch (view.target) {
-			case GL_ELEMENT_ARRAY_BUFFER:
-				std::cout << "GL_ELEMENT_ARRAY_BUFFER";
-				break;
-			case GL_ARRAY_BUFFER:
-				std::cout << "GL_ARRAY_BUFFER";
-				break;
-			default:
-				std::cout << "*** UNKNOWN ***";
-		}
-
-		std::cout << "\nLength: " << view.byteLength << "\nOffset: " << view.byteOffset << "\n";
-
+		GLuint vboID = 0;
+		glGenBuffers(1, &vboID);
+		glBindBuffer((GLenum)view.target, vboID);
 		glBufferData((GLenum)view.target, view.byteLength, buffer.data.data() + view.byteOffset, GL_STATIC_DRAW);
+		glBindBuffer((GLenum)view.target, 0);
 
-		if (view.target != GL_ELEMENT_ARRAY_BUFFER) {
-			glBindBuffer((GLenum)view.target, 0);
-		}
-
-		gBufferState[i++] = state;
+		gBuffers[bufferNumber++] = vboID;
 	}
 }
 
@@ -201,15 +176,16 @@ bool	processInput(InputManager &inputManager);
 
 int main() {
 	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
-	GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl", { "viewMatrix" });
+	GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl", { "view" });
 	InputManager	inputManager;
 
 	tinygltf::Model model;
 	tinygltf::TinyGLTF glTFLoader;
 	std::string err;
 
-//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
-	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
+	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../unwrappedCube.glb");
 
 	if (!err.empty()) {
 		std::cout << "Err: " << err << "\n";
@@ -220,7 +196,7 @@ int main() {
 		return -1;
 	}
 
-	Camera camera(glm::vec3(0, 0, 10.0f), glm::vec3(0, 0, 0), window);
+	Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
 		PLAY,
@@ -233,6 +209,10 @@ int main() {
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
 			gameState = GameState ::WANTS_QUIT;
+		}
+
+		if (inputManager.isKeyPressed(SDLK_c)) {
+			std::cout << "Camera:\n" << camera << "\n";
 		}
 
 		shader.start();
