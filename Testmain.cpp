@@ -183,9 +183,10 @@ int main() {
 	tinygltf::TinyGLTF glTFLoader;
 	std::string err;
 
-	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../unwrappedCube.glb");
+	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../doubleCube.glb");
 
 	if (!err.empty()) {
 		std::cout << "Err: " << err << "\n";
