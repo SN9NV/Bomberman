@@ -17,4 +17,5 @@ void main() {
 
 //	colour = vec4(0.5 * normalize(fragmentNormal) + 0.5, 1.0);
 	colour = vec4(fragmentUV, 0.0, 1.0);
+//	colour = vec4(fragmentNormal.x * fragmentUV.x, fragmentNormal.y * fragmentUV.y, fragmentNormal.z, 1.0);
 }

@@ -16,6 +16,22 @@ static constexpr unsigned WIDTH = 1024;
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
+class attrType {
+public:
+	static constexpr GLuint	POSITION = 0;
+	static constexpr GLuint	NORMAL = 1;
+	static constexpr GLuint	UV = 2;
+	static constexpr GLuint UNKNOWN = 555;
+
+	static GLuint convert(const std::string &type) {
+		if (type == "POSITION") return attrType::POSITION;
+		if (type == "NORMAL") return attrType::NORMAL;
+		if (type == "TEXCOORD_0") return attrType::UV;
+
+		return attrType::UNKNOWN;
+	}
+};
+
 std::string GLenumGetString(const GLenum num) {
 	switch (num) {
 		case GL_UNSIGNED_SHORT:
@@ -57,12 +73,9 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 
 			glBindBuffer(GL_ARRAY_BUFFER, gBuffers[accessor.bufferView]);
 
-			int size;
+			GLint size;
 
 			switch (accessor.type) {
-				case TINYGLTF_TYPE_SCALAR:
-					size = 1;
-					break;
 				case TINYGLTF_TYPE_VEC2:
 					size = 2;
 					break;
@@ -76,13 +89,9 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 					size = 1;
 			}
 
-			if (attr.first == "POSITION" || attr.first == "NORMAL" || attr.first == "TEXCOORD_0") {
-				GLuint index = 0;
+			GLuint index = attrType::convert(attr.first);
 
-				if (attr.first == "POSITION") index = 0;
-				else if (attr.first == "NORMAL") index = 2;
-				else if (attr.first == "TEXCOORD_0") index = 1;
-
+			if (index != attrType::UNKNOWN) {
 				glVertexAttribPointer(
 						index,
 						size,
@@ -99,42 +108,13 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 		const auto &indexAssessor = model.accessors[primitive.indices];
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gBuffers[indexAssessor.bufferView]);
 
-		GLenum mode;
-
-		switch (primitive.mode) {
-			case TINYGLTF_MODE_TRIANGLES:
-				mode = GL_TRIANGLES;
-				break;
-			case TINYGLTF_MODE_TRIANGLE_STRIP:
-				mode = GL_TRIANGLE_STRIP;
-				break;
-			case TINYGLTF_MODE_TRIANGLE_FAN:
-				mode = GL_TRIANGLE_FAN;
-				break;
-			case TINYGLTF_MODE_POINTS:
-				mode = GL_POINTS;
-				break;
-			case TINYGLTF_MODE_LINE:
-				mode = GL_LINE;
-				break;
-			case TINYGLTF_MODE_LINE_LOOP:
-				mode = GL_LINE_LOOP;
-				break;
-			default:
-				mode = GL_TRIANGLES;
-		}
-
-		glDrawElements(mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
+		glDrawElements((GLenum)primitive.mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
 			BUFFER_OFFSET(indexAssessor.byteOffset));
 
 		for (auto &attr : primitive.attributes) {
-			if (attr.first == "POSITION" || attr.first == "NORMAL" || attr.first == "TEXCOORD_0") {
-				GLuint index = 0;
+			GLuint index = attrType::convert(attr.first);
 
-				if (attr.first == "POSITION") index = 0;
-				else if (attr.first == "NORMAL") index = 2;
-				else if (attr.first == "TEXCOORD_0") index = 1;
-
+			if (index != attrType::UNKNOWN) {
 				glDisableVertexAttribArray(index);
 			}
 		}
@@ -184,9 +164,9 @@ int main() {
 	std::string err;
 
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
-//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
+	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../unwrappedCube.glb");
-	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../doubleCube.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../doubleCube.glb");
 
 	if (!err.empty()) {
 		std::cout << "Err: " << err << "\n";
