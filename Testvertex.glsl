@@ -4,16 +4,15 @@ in vec3	vertexPosition;
 in vec3	vertexNormal;
 in vec2	vertexUV;
 
-out vec3	normal;
-out vec2	uv;
+out vec3	fragmentNormal;
+out vec2	fragmentUV;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+//uniform mat4 transformation;
+uniform mat4 view;
 
 void main() {
-	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(vertexPosition, 1.0);
+	gl_Position = view * /*transformation **/ vec4(vertexPosition, 1.0);
 
-	normal = vertexNormal;
-	uv = vertexUV;
+	fragmentNormal = vertexNormal;
+	fragmentUV = vertexUV;
 }

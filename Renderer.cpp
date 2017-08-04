@@ -1,16 +1,8 @@
 #include "Renderer.hpp"
 #include "Maths.hpp"
 
-Renderer::Renderer(const GLSLProgram &shader, const Window &window) :
-	_shader(shader)
-{
-	this->_shader.start();
-
-	glm::mat4 projectionMatrix = glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE);
-	this->_shader.uploadMatrix4f(shader.getUniformLocation("projectionMatrix"), projectionMatrix);
-
-	this->_shader.end();
-}
+Renderer::Renderer(const GLSLProgram &shader) :
+	_shader(shader) { }
 
 void Renderer::prepare() const {
 	glEnable(GL_DEPTH_TEST);
@@ -29,7 +21,7 @@ void Renderer::render(const Entity &entity) const {
 
 	// Upload the model's transformation matrix
 	glm::mat4	transformation = Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
-	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("transformationMatrix"), transformation);
+	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("transformation"), transformation);
 
 	// Draw the triangles
 	glActiveTexture(GL_TEXTURE0);

@@ -10,13 +10,13 @@
 
 class GLSLProgram {
 public:
-	GLSLProgram();
+	GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath, const std::vector<std::string> &uniforms);
 	~GLSLProgram() = default;
 
 	bool	compileShaders(const std::string &vertexFilePath, const std::string &fragmentFilePath);
 	bool	linkProgram();
-	void	start() const;
-	void	end() const;
+	void	start();
+	void	end();
 	void	bindAttribute(const std::string &attributeName);
 	GLint	getUniformLocation(const std::string &uniformName) const;
 	void	uploadFloat(GLint location, float value) const;
@@ -29,6 +29,7 @@ private:
 	GLuint	_fragmentShaderID;
 	GLuint	_programID;
 	unsigned	_attributeCount;
+	bool 		_isInUse;
 
 	bool 		_compileShader(const std::string &shaderSRC, GLuint shaderID);
 };

@@ -8,12 +8,11 @@ out vec3 fragmentPosition;
 out vec2 fragmentUV;
 out vec3 fragmentNormal;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+uniform mat4 transformation;
+uniform mat4 view;
 
 void main() {
-	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(vertexPosition, 1.0);
+	gl_Position = view * transformation * vec4(vertexPosition, 1.0);
 
 	fragmentPosition = vertexPosition;
 	fragmentUV = vertexUV;

@@ -16,7 +16,7 @@ public:
 	Renderer() = default;
 	~Renderer() = default;
 
-	Renderer(const GLSLProgram &shader, const Window &window);
+	Renderer(const GLSLProgram &shader);
 
 	void	prepare() const;
 	void	render(const Entity &entity) const;

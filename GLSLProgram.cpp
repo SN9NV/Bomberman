@@ -1,21 +1,18 @@
 #include <iostream>
 #include "GLSLProgram.hpp"
 
-GLSLProgram::GLSLProgram() :
+GLSLProgram::GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath, const std::vector<std::string> &uniforms) :
 	_vertexShaderID(0),
 	_fragmentShaderID(0),
 	_programID(0),
-	_attributeCount(0)
+	_attributeCount(0),
+	_isInUse(false)
 {
-	this->compileShaders("../vertex.glsl", "../fragment.glsl");
+	this->compileShaders(vertexFilePath, fragmentFilePath);
 
-//	uniform mat4 transformationMatrix;
-//	uniform mat4 projectionMatrix;
-//	uniform mat4 viewMatrix;
-
-	this->bindAttribute("transformationMatrix");
-	this->bindAttribute("projectionMatrix");
-	this->bindAttribute("viewMatrix");
+	for (auto &uniform : uniforms) {
+		this->bindAttribute(uniform);
+	}
 
 	this->linkProgram();
 }
@@ -82,16 +79,18 @@ void GLSLProgram::bindAttribute(const std::string &attributeName) {
 	glBindAttribLocation(this->_programID, this->_attributeCount++, attributeName.c_str());
 }
 
-void GLSLProgram::start() const {
+void GLSLProgram::start() {
 	for (unsigned i = 0; i < this->_attributeCount; i++) {
 		glEnableVertexAttribArray(i);
 	}
 
 	glUseProgram(this->_programID);
+	this->_isInUse = true;
 }
 
-void GLSLProgram::end() const {
+void GLSLProgram::end() {
 	glUseProgram(0);
+	this->_isInUse = false;
 
 	for (unsigned i = 0; i < this->_attributeCount; i++) {
 		glDisableVertexAttribArray(i);
@@ -99,6 +98,10 @@ void GLSLProgram::end() const {
 }
 
 GLint GLSLProgram::getUniformLocation(const std::string &uniformName) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
 	GLint location = glGetUniformLocation(this->_programID, uniformName.c_str());
 
 	if (static_cast<GLuint>(location) == GL_INVALID_INDEX) {
@@ -110,18 +113,34 @@ GLint GLSLProgram::getUniformLocation(const std::string &uniformName) const {
 }
 
 void GLSLProgram::uploadFloat(GLint location, float value) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
 	glUniform1f(location, value);
 }
 
 void GLSLProgram::uploadvec3d(GLint location, const glm::vec3 &value) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
 	glUniform3f(location, value.x, value.y, value.z);
 }
 
 void GLSLProgram::uploadBool(GLint location, bool value) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
 	glUniform1ui(location, value ? 1 : 0);
 }
 
 void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
 	glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 }
 

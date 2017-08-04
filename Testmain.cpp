@@ -115,6 +115,26 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 				mode = GL_TRIANGLES;
 		}
 
+		glEnableVertexAttribArray(0);
+
+		std::cout << "Drawing: " << indexAssessor.count << " ";
+
+		switch (indexAssessor.componentType) {
+			case GL_UNSIGNED_INT:
+				std::cout << "GL_UNSIGNED_INT";
+				break;
+			case GL_UNSIGNED_SHORT:
+				std::cout << "GL_UNSIGNED_SHORT";
+				break;
+			case GL_UNSIGNED_BYTE:
+				std::cout << "GL_UNSIGNED_BYTE";
+				break;
+			default:
+				std::cout << "*** UNKNOWN ***";
+		}
+
+		std::cout << " with offset: " << indexAssessor.byteOffset << "\n";
+
 		glDrawElements(mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
 			BUFFER_OFFSET(indexAssessor.byteOffset));
 
@@ -126,7 +146,7 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 	}
 }
 
-void	setupMeshState(tinygltf::Model &model, GLSLProgram &shader) {
+void	setupMeshState(tinygltf::Model &model) {
 	unsigned i = 0;
 
 	for (const auto &view : model.bufferViews) {
@@ -141,15 +161,29 @@ void	setupMeshState(tinygltf::Model &model, GLSLProgram &shader) {
 		glGenBuffers(1, &state.vb);
 		glBindBuffer((GLenum)view.target, state.vb);
 
+		std::cout << "Uploading buffer: ";
+
+		switch (view.target) {
+			case GL_ELEMENT_ARRAY_BUFFER:
+				std::cout << "GL_ELEMENT_ARRAY_BUFFER";
+				break;
+			case GL_ARRAY_BUFFER:
+				std::cout << "GL_ARRAY_BUFFER";
+				break;
+			default:
+				std::cout << "*** UNKNOWN ***";
+		}
+
+		std::cout << "\nLength: " << view.byteLength << "\nOffset: " << view.byteOffset << "\n";
+
 		glBufferData((GLenum)view.target, view.byteLength, buffer.data.data() + view.byteOffset, GL_STATIC_DRAW);
-		glBindBuffer((GLenum)view.target, 0);
+
+		if (view.target != GL_ELEMENT_ARRAY_BUFFER) {
+			glBindBuffer((GLenum)view.target, 0);
+		}
 
 		gBufferState[i++] = state;
 	}
-
-	shader.start();
-//	gGLProgramState.uniforms["isCurvesLoc"] = (GLuint)shader.getUniformLocation("uIsCurves");
-	shader.end();
 }
 
 void	drawNode(tinygltf::Model &model, const tinygltf::Node &node) {
@@ -167,15 +201,15 @@ bool	processInput(InputManager &inputManager);
 
 int main() {
 	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
-	GLSLProgram		shader;
+	GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl", { "viewMatrix" });
 	InputManager	inputManager;
-
 
 	tinygltf::Model model;
 	tinygltf::TinyGLTF glTFLoader;
 	std::string err;
 
-	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
 
 	if (!err.empty()) {
 		std::cout << "Err: " << err << "\n";
@@ -186,11 +220,7 @@ int main() {
 		return -1;
 	}
 
-	if (shader.compileShaders("../Testvertex.glsl", "../Textfragment.glsl")) {
-		exit(1);
-	}
-
-	Camera camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+	Camera camera(glm::vec3(0, 0, 10.0f), glm::vec3(0, 0, 0), window);
 
 	enum GameState {
 		PLAY,
@@ -198,7 +228,7 @@ int main() {
 	};
 
 	int gameState = GameState::PLAY;
-	setupMeshState(model, shader);
+	setupMeshState(model);
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
@@ -244,6 +274,5 @@ bool processInput(InputManager &inputManager) {
 	}
 
 	return inputManager.isKeyPressed(SDLK_ESCAPE);
-
 }
 

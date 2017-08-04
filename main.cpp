@@ -30,8 +30,8 @@ bool	processInput(InputManager &inputManager);
 int main() {
 	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
 	Loader			loader;
-	GLSLProgram		shader;
-	Renderer		renderer(shader, window);
+	GLSLProgram		shader("../vertex.glsl", "../fragment.glsl", { "transformation", "view" });
+	Renderer		renderer(shader);
 	InputManager	inputManager;
 
 	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
@@ -109,7 +109,7 @@ int main() {
 			Entity(glm::vec3(-5.0f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model2)
 	};
 
-	Camera camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+	Camera camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), window);
 
 	enum GameState {
 		PLAY,
