@@ -80,8 +80,6 @@ void Loader::_bindIndicesBuffer(const std::vector<unsigned> &indices) {
 	this->_createVBO(GL_ELEMENT_ARRAY_BUFFER);
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 Loader::~Loader() {
