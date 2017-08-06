@@ -5,22 +5,25 @@
 #include <GL/glew.h>
 
 #include "Texture.hpp"
+#include "tinyGLTF/tiny_gltf.h"
 
 class Model {
 public:
 	Model() = default;
 	~Model() = default;
 
-	Model(GLuint vaoID, const Texture &texture, unsigned vertexCount);
+	Model(const tinygltf::Model &model, const Texture &texture);
 
-	GLuint		getVaoID() const;
-	Texture		getTexture() const;
-	unsigned	getVertexCount() const;
+	GLuint					getVaoID() const;
+	std::vector<GLuint>		&getVBOs();
+	Texture					&getTexture();
+	tinygltf::Model 		&getTinygltfModel();
 
 private:
-	GLuint		_vaoID;
-	Texture		_texture;
-	unsigned	_vertexCount;
+	GLuint					_vaoID;
+	std::vector<GLuint>		_vbos;
+	Texture					_texture;
+	tinygltf::Model			_model;
 };
 
 

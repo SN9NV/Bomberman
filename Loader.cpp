@@ -3,7 +3,7 @@
 #include "picoPNG.hpp"
 
 Model Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath) {
-	GLuint	vaoID = this->_createVAO();
+	this->_createVAO();
 
 	this->_uploadVertexArray(vertices);
 	this->_bindIndicesBuffer(indices);
@@ -12,7 +12,7 @@ Model Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<u
 
 	Texture texture = this->loadTexture(texturePath);
 
-	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
+	return Model(tinygltf::Model(), texture);
 }
 
 Texture Loader::loadTexture(const std::string &texturePath) {
@@ -110,7 +110,7 @@ void Loader::_uploadVertexArray(const std::vector<Vertex> &vertices) {
 Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals,
 						const std::vector<float> &uv, const std::vector<unsigned> &indices,
 						const std::string &texturePath) {
-	GLuint	vaoID = this->_createVAO();
+	this->_createVAO();
 
 	this->_storeDataInAttributeList(0, 3, vertices);
 	this->_storeDataInAttributeList(1, 3, normals);
@@ -121,5 +121,5 @@ Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<fl
 
 	Texture texture = this->loadTexture(texturePath);
 
-	return Model(vaoID, texture, static_cast<unsigned>(indices.size()));
+	return Model(tinygltf::Model(), texture);
 }

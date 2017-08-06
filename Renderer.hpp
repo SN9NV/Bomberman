@@ -19,7 +19,7 @@ public:
 	Renderer(const GLSLProgram &shader);
 
 	void	prepare() const;
-	void	render(const Entity &entity) const;
+	void	render(Entity &entity) const;
 
 private:
 	const GLSLProgram	&_shader;

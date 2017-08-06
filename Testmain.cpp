@@ -65,12 +65,12 @@ std::string GLenumGetString(const GLenum num) {
 	}
 }
 
-std::map<int, GLuint> gBuffers;
+std::vector<GLuint> gBuffers;
 
 void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 	for (auto &primitive : mesh.primitives) {
 		if (primitive.indices < 0)
-			return;
+			continue;
 
 		for (auto &attr : primitive.attributes) {
 			const auto &accessor = model.accessors[attr.second];
@@ -126,14 +126,13 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh) {
 }
 
 void	setupMeshState(tinygltf::Model &model) {
-	unsigned bufferNumber = 0;
-
 	for (const auto &view : model.bufferViews) {
 		if (view.target == 0) {
 			continue;
 		}
 
 		const tinygltf::Buffer &buffer = model.buffers[view.buffer];
+		std::cout << view.buffer << "\n";
 
 		GLuint vboID = 0;
 		glGenBuffers(1, &vboID);
@@ -141,7 +140,7 @@ void	setupMeshState(tinygltf::Model &model) {
 		glBufferData((GLenum)view.target, view.byteLength, buffer.data.data() + view.byteOffset, GL_STATIC_DRAW);
 		glBindBuffer((GLenum)view.target, 0);
 
-		gBuffers[bufferNumber++] = vboID;
+		gBuffers.push_back(vboID);
 	}
 }
 
