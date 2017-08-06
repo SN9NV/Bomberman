@@ -191,7 +191,7 @@ int main() {
 
 	Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, fullModelBomber);
 	Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, fullModelBomber);
-	Entity	cube({-1.5, -0.42, -1}, {0, 0, 0}, 0.5, fullModelCube);
+	Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, fullModelCube);
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {

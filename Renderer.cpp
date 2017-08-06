@@ -117,9 +117,8 @@ void Renderer::render(Entity &entity) const {
 //	glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 //	glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr);
 
-	glActiveTexture(GL_TEXTURE0); // Not required. Active by default
-	glBindTexture(GL_TEXTURE_2D, 1);
-//	this->_shader.upload1i(this->_shader.getUniformLocation("samplerUV"), 0);
+//	glActiveTexture(GL_TEXTURE0); // Not required. Active by default
+	glBindTexture(GL_TEXTURE_2D, entityModel.getTexture().getID());
 
 	tinygltf::Model	&model = entityModel.getTinygltfModel();
 	const tinygltf::Scene &scene = model.scenes[model.defaultScene];
