@@ -2,7 +2,7 @@
 #include "Maths.hpp"
 
 namespace cge {
-	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, const Model &model) :
+	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model) :
 			_model(model),
 			_position(position),
 			_rotation(rotation),

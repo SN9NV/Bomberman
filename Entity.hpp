@@ -12,7 +12,7 @@ namespace cge {
 		Entity() = default;
 		virtual ~Entity() = default;
 
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, const Model &model);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 
 		virtual void	update(const InputManager &input, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
@@ -26,7 +26,7 @@ namespace cge {
 		float 		getScale() const;
 
 	protected:
-		Model		_model;
+		Model		&_model;
 		glm::vec3	_position;
 		glm::vec3	_rotation;
 		float 		_scale;

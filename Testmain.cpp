@@ -32,14 +32,12 @@ int main() {
 
 	int gameState = GameState::PLAY;
 
-	shader.start();
-		cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
-		cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
+	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
+	cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
 
-		cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
-		cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
-		cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
-	shader.end();
+	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
+	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
