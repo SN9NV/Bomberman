@@ -16,7 +16,7 @@ const vec3 lightLocation = { 5.0, 5.0, 5.0 };
 void main() {
 	gl_Position = view * transformation * vec4(vertexPosition, 1.0);
 
-	fragmentNormal = vertexNormal;
+	fragmentNormal = (transformation * vec4(vertexNormal, 1.0)).xyz;
 	fragmentUV = vertexUV;
 	toLight = lightLocation - vertexPosition;
 }

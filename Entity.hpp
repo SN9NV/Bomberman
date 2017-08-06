@@ -22,8 +22,6 @@ public:
 	glm::vec3	getRotation() const;
 	float 		getScale() const;
 
-	void		updateTransformation(const GLSLProgram &shader);
-
 private:
 	Model		_model;
 	glm::vec3	_position;

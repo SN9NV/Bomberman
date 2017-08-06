@@ -48,16 +48,3 @@ glm::vec3 Entity::getRotation() const {
 float Entity::getScale() const {
 	return this->_scale;
 }
-
-void Entity::updateTransformation(const GLSLProgram &shader) {
-	if (this->_needsTransformationUpdate) {
-		if (this->_transformationLocation == 0) {
-			this->_transformationLocation = shader.getUniformLocation("transformation");
-		}
-
-		this->_transformation = Maths::createTransformationMatrix(this->_position, this->_rotation, this->_scale);
-		shader.uploadMatrix4f(this->_transformationLocation, this->_transformation);
-
-		this->_needsTransformationUpdate = false;
-	}
-}

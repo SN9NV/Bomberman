@@ -172,3 +172,11 @@ bool GLSLProgram::_compileShader(const std::string &shaderSRC, GLuint shaderID) 
 
 	return false;
 }
+
+void GLSLProgram::upload1i(GLint location, GLint value) const {
+	if (!this->_isInUse) {
+		std::cerr << "Program is not in use\n";
+	}
+
+	glUniform1i(location, value);
+}

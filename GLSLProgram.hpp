@@ -18,7 +18,9 @@ public:
 	void	start();
 	void	end();
 	void	bindAttribute(const std::string &attributeName);
+
 	GLint	getUniformLocation(const std::string &uniformName) const;
+	void	upload1i(GLint location, GLint value) const;
 	void	uploadFloat(GLint location, float value) const;
 	void	uploadvec3d(GLint location, const glm::vec3 &value) const;
 	void	uploadBool(GLint location, bool value) const;

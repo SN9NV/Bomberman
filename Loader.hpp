@@ -15,20 +15,20 @@ public:
 	Loader() = default;
 	~Loader();
 
-	Model	loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath);
-	Model	loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals, const std::vector<float> &uv, const std::vector<unsigned> &indices, const std::string &texturePath);
+//	Model	loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath);
+//	Model	loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals, const std::vector<float> &uv, const std::vector<unsigned> &indices, const std::string &texturePath);
 	Texture	loadTexture(const std::string &texturePath);
 
 private:
-	std::vector<GLuint>	_vaos;
-	std::vector<GLuint>	_vbos;
-	std::vector<GLuint>	_textureIDs;
+//	std::vector<GLuint>	_vaos;
+//	std::vector<GLuint>	_vbos;
+	std::map<std::string, GLuint>	_textures;
 
-	GLuint	_createVAO();
-	GLuint	_createVBO(GLenum target);
-	void	_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data);
-	void	_uploadVertexArray(const std::vector<Vertex> &vertices);
-	void	_bindIndicesBuffer(const std::vector<unsigned> &indices);
+//	GLuint	_createVAO();
+//	GLuint	_createVBO(GLenum target);
+//	void	_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data);
+//	void	_uploadVertexArray(const std::vector<Vertex> &vertices);
+//	void	_bindIndicesBuffer(const std::vector<unsigned> &indices);
 };
 
 

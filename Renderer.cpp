@@ -106,12 +106,20 @@ void Renderer::render(Entity &entity) const {
 //	// Upload the model's transformation matrix
 //	glm::mat4	transformation = Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 //	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("transformation"), transformation);
-	entity.updateTransformation(this->_shader);
+
+	this->_shader.uploadMatrix4f(
+			this->_shader.getUniformLocation("transformation"),
+			Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())
+	);
 //
 //	// Draw the triangles
 //	glActiveTexture(GL_TEXTURE0);
 //	glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 //	glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr);
+
+	glActiveTexture(GL_TEXTURE0); // Not required. Active by default
+	glBindTexture(GL_TEXTURE_2D, 1);
+//	this->_shader.upload1i(this->_shader.getUniformLocation("samplerUV"), 0);
 
 	tinygltf::Model	&model = entityModel.getTinygltfModel();
 	const tinygltf::Scene &scene = model.scenes[model.defaultScene];

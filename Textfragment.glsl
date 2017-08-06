@@ -6,7 +6,7 @@ in vec3	toLight;
 
 out vec4 colour;
 
-//uniform sampler2D samplerUV;
+uniform sampler2D samplerUV;
 
 void main() {
 	vec3 unitNormal = normalize(fragmentNormal);
@@ -16,6 +16,7 @@ void main() {
 	float brightness = max(normalBrightness, 0.1);
 	vec4 diffuse = vec4(vec3(brightness), 1.0);
 
-	colour = diffuse * vec4(fragmentUV, 0.0, 1.0);
+	colour = diffuse * texture(samplerUV, fragmentUV);
+//	colour = diffuse * vec4(fragmentUV, 0.0, 1.0);
 //	colour = diffuse * vec4(1.0, 1.0, 1.0, 1.0);
 }
