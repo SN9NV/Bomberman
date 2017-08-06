@@ -15,53 +15,55 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Windo
 }
 
 void Camera::update(const InputManager &inputManager, const GLSLProgram &shader, bool printCameraChange) {
+	const float velocity = 0.02f;
+	
 	if (inputManager.isKeyPressed(SDLK_w)) {
-		this->_position.y += 0.02f;
+		this->_position.y += velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_s)) {
-		this->_position.y -= 0.02f;
+		this->_position.y -= velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_d)) {
-		this->_position.x += 0.02f;
+		this->_position.x += velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_a)) {
-		this->_position.x -= 0.02f;
+		this->_position.x -= velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_q)) {
-		this->_position.z += 0.02f;
+		this->_position.z += velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_e)) {
-		this->_position.z -= 0.02f;
+		this->_position.z -= velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_UP)) {
-		this->_rotation.x += 0.02f;
+		this->_rotation.x += velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_DOWN)) {
-		this->_rotation.x -= 0.02f;
+		this->_rotation.x -= velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_LEFT)) {
-		this->_rotation.y -= 0.02f;
+		this->_rotation.y -= velocity;
 		this->_needsUpdate = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_RIGHT)) {
-		this->_rotation.y += 0.02f;
+		this->_rotation.y += velocity;
 		this->_needsUpdate = true;
 	}
 

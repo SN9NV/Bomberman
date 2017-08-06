@@ -21,12 +21,16 @@ public:
 	static constexpr GLuint	POSITION = 0;
 	static constexpr GLuint	NORMAL = 1;
 	static constexpr GLuint	UV = 2;
-	static constexpr GLuint UNKNOWN = 555;
+	static constexpr GLuint	JOINTS = 3;
+	static constexpr GLuint	WEIGHTS = 4;
+	static constexpr GLuint UNKNOWN = 5;
 
 	static GLuint convert(const std::string &type) {
 		if (type == "POSITION") return attrType::POSITION;
 		if (type == "NORMAL") return attrType::NORMAL;
 		if (type == "TEXCOORD_0") return attrType::UV;
+		if (type == "JOINTS_0") return attrType::JOINTS;
+		if (type == "WEIGHTS_0") return attrType::WEIGHTS;
 
 		return attrType::UNKNOWN;
 	}
@@ -163,10 +167,11 @@ int main() {
 	tinygltf::TinyGLTF glTFLoader;
 	std::string err;
 
-//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
-	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
+	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../cube.glb");
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../unwrappedCube.glb");
 //	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../doubleCube.glb");
+//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../companion.glb");
 
 	if (!err.empty()) {
 		std::cout << "Err: " << err << "\n";

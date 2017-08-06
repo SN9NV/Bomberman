@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, const Model &model) :
+Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, const tinygltf::Model &model) :
 	_model(model),
 	_position(position),
 	_rotation(rotation),
@@ -25,7 +25,7 @@ void Entity::setRotation(const glm::vec3 &rotation) {
 	this->_rotation = rotation;
 }
 
-const Model &Entity::getModel() const {
+const tinygltf::Model &Entity::getModel() const {
 	return this->_model;
 }
 

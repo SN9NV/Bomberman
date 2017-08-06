@@ -1,18 +1,22 @@
 #version 330 core
 
-in vec3	vertexPosition;
-//in vec3	vertexNormal;
-in vec2	vertexUV;
+layout(location = 0) in vec3	vertexPosition;
+layout(location = 1) in vec3	vertexNormal;
+layout(location = 2) in vec2	vertexUV;
 
 out vec3	fragmentNormal;
 out vec2	fragmentUV;
+out vec3	toLight;
 
 //uniform mat4 transformation;
 uniform mat4 view;
 
+const vec3 lightLocation = { 5.0, 5.0, 5.0 };
+
 void main() {
 	gl_Position = view * /*transformation **/ vec4(vertexPosition, 1.0);
 
-//	fragmentNormal = vertexNormal;
+	fragmentNormal = vertexNormal;
 	fragmentUV = vertexUV;
+	toLight = lightLocation - vertexPosition;
 }
