@@ -1,7 +1,7 @@
 #include <iostream>
 #include "GLSLProgram.hpp"
 
-GLSLProgram::GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath, const std::vector<std::string> &uniforms) :
+GLSLProgram::GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath) :
 	_vertexShaderID(0),
 	_fragmentShaderID(0),
 	_programID(0),
@@ -9,16 +9,11 @@ GLSLProgram::GLSLProgram(const std::string &vertexFilePath, const std::string &f
 	_isInUse(false)
 {
 	this->compileShaders(vertexFilePath, fragmentFilePath);
-
-	for (auto &uniform : uniforms) {
-		this->bindAttribute(uniform);
-	}
-
 	this->linkProgram();
 }
 
 bool GLSLProgram::compileShaders(const std::string &vertexFilePath, const std::string &fragmentFilePath) {
-	// Create program and shader ID's
+	/// Create program and shader ID's
 	this->_programID = glCreateProgram();
 	this->_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	this->_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -28,7 +23,7 @@ bool GLSLProgram::compileShaders(const std::string &vertexFilePath, const std::s
 		return true;
 	}
 
-	// Read shaders from file
+	/// Read shaders from file
 	std::string	VertexShaderSRC = IO::readFileToString(vertexFilePath);
 	std::string FragmentShaderSRC = IO::readFileToString(fragmentFilePath);
 
@@ -145,16 +140,16 @@ void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) const {
 }
 
 bool GLSLProgram::_compileShader(const std::string &shaderSRC, GLuint shaderID) {
-	// Convert shader to char array
+	/// Convert shader to char array
 	const char *shaderSRCPointer = shaderSRC.c_str();
 
-	// Compile shader
+	/// Compile shader
 	glShaderSource(shaderID, 1, &shaderSRCPointer, nullptr);
 	glCompileShader(shaderID);
 
 	GLint	success = GL_FALSE;
 
-	// Check for errors in the Shader's source code
+	/// Check for errors in the Shader's source code
 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
 
 	if (success == GL_FALSE) {

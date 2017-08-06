@@ -59,7 +59,7 @@ void Window::create(const std::string &windowName, unsigned width, unsigned heig
 
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << "\n";
 
-	// Enable VSYNC. Comment to disable
+	/// Enable VSYNC?
 	SDL_GL_SetSwapInterval(static_cast<bool>((windowFlags & Window::Flags::VSYNC_ENABLED)) ? 1 : 0);
 
 	if (static_cast<bool>(SDL_GL_GetSwapInterval())) {

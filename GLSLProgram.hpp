@@ -10,7 +10,7 @@
 
 class GLSLProgram {
 public:
-	GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath, const std::vector<std::string> &uniforms);
+	GLSLProgram(const std::string &vertexFilePath, const std::string &fragmentFilePath);
 	~GLSLProgram() = default;
 
 	bool	compileShaders(const std::string &vertexFilePath, const std::string &fragmentFilePath);
@@ -27,9 +27,9 @@ public:
 	void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
 
 private:
-	GLuint	_vertexShaderID;
-	GLuint	_fragmentShaderID;
-	GLuint	_programID;
+	GLuint		_vertexShaderID;
+	GLuint		_fragmentShaderID;
+	GLuint		_programID;
 	unsigned	_attributeCount;
 	bool 		_isInUse;
 

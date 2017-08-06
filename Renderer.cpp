@@ -1,6 +1,8 @@
 #include "Renderer.hpp"
 #include "Maths.hpp"
 
+#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+
 Renderer::Renderer(const GLSLProgram &shader) :
 	_shader(shader) { }
 
@@ -10,29 +12,7 @@ void Renderer::prepare() const {
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
-
-class attrType {
-public:
-	static constexpr GLuint	POSITION = 0;
-	static constexpr GLuint	NORMAL = 1;
-	static constexpr GLuint	UV = 2;
-	static constexpr GLuint	JOINTS = 3;
-	static constexpr GLuint	WEIGHTS = 4;
-	static constexpr GLuint UNKNOWN = 5;
-
-	static GLuint convert(const std::string &type) {
-		if (type == "POSITION") return attrType::POSITION;
-		if (type == "NORMAL") return attrType::NORMAL;
-		if (type == "TEXCOORD_0") return attrType::UV;
-		if (type == "JOINTS_0") return attrType::JOINTS;
-		if (type == "WEIGHTS_0") return attrType::WEIGHTS;
-
-		return attrType::UNKNOWN;
-	}
-};
-
-void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) {
+void	Renderer::drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const {
 	for (auto &primitive : mesh.primitives) {
 		if (primitive.indices < 0)
 			continue;
@@ -91,33 +71,21 @@ void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GL
 }
 
 void Renderer::render(Entity &entity) const {
-//	Model	&model = entity.getModel();
 	Model &entityModel = entity.getModel();
-//
-//	// Bind the model and texture
+
+	/// Bind the model and texture
 	glBindVertexArray(entityModel.getVaoID());
-//	glEnableVertexAttribArray(0);
-//	glEnableVertexAttribArray(1);
-//	glEnableVertexAttribArray(2);
 	for (auto &attribArray : entityModel.getVBOs()) {
 		glEnableVertexAttribArray(attribArray);
 	}
-//
-//	// Upload the model's transformation matrix
-//	glm::mat4	transformation = Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
-//	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("transformation"), transformation);
 
+	/// Upload the model's transformation matrix
 	this->_shader.uploadMatrix4f(
 			this->_shader.getUniformLocation("transformation"),
 			Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())
 	);
-//
-//	// Draw the triangles
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
-//	glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, nullptr);
 
-//	glActiveTexture(GL_TEXTURE0); // Not required. Active by default
+	/// Draw the triangles
 	glBindTexture(GL_TEXTURE_2D, entityModel.getTexture().getID());
 
 	tinygltf::Model	&model = entityModel.getTinygltfModel();
@@ -128,14 +96,20 @@ void Renderer::render(Entity &entity) const {
 		drawMesh(model, model.meshes[(node.mesh >= 0) ? node.mesh : 0], entityModel.getVBOs());
 	}
 
-//
-//	// Unbind everything
-//	glDisableVertexAttribArray(0);
-//	glDisableVertexAttribArray(1);
-//	glDisableVertexAttribArray(2);
+	/// Unbind everything
 	for (auto &attribArray : entityModel.getVBOs()) {
 		glDisableVertexAttribArray(attribArray);
 	}
 
 	glBindVertexArray(0);
+}
+
+GLuint Renderer::attrType::convert(const std::string &type) {
+	if (type == "POSITION") return attrType::POSITION;
+	if (type == "NORMAL") return attrType::NORMAL;
+	if (type == "TEXCOORD_0") return attrType::UV;
+	if (type == "JOINTS_0") return attrType::JOINTS;
+	if (type == "WEIGHTS_0") return attrType::WEIGHTS;
+
+	return attrType::UNKNOWN;
 }

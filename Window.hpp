@@ -2,9 +2,7 @@
 #define NEW_WINDOW_HPP
 
 #include <string>
-
 #include <SDL.h>
-
 #include "Exceptions.hpp"
 
 class Window {

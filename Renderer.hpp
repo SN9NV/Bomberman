@@ -9,10 +9,6 @@
 
 class Renderer {
 public:
-	static constexpr float	FOV = 70.0f;
-	static constexpr float	NEAR_PLANE = 0.1f;
-	static constexpr float	FAR_PLANE = 1000.0f;
-
 	Renderer() = default;
 	~Renderer() = default;
 
@@ -22,7 +18,21 @@ public:
 	void	render(Entity &entity) const;
 
 private:
-	const GLSLProgram	&_shader;
+	const	GLSLProgram	&_shader;
+
+	class attrType {
+	public:
+		static constexpr GLuint	POSITION = 0;
+		static constexpr GLuint	NORMAL = 1;
+		static constexpr GLuint	UV = 2;
+		static constexpr GLuint	JOINTS = 3;
+		static constexpr GLuint	WEIGHTS = 4;
+		static constexpr GLuint UNKNOWN = 5;
+
+		static GLuint convert(const std::string &type);
+	};
+
+	void	drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const;
 };
 
 

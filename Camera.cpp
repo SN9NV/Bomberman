@@ -74,7 +74,7 @@ void Camera::update(const InputManager &inputManager, const GLSLProgram &shader,
 
 		this->_viewMatrix = Maths::createViewMatrix(*this);
 
-//		projectionMatrix * viewMatrix
+		/// projectionMatrix * viewMatrix
 		shader.uploadMatrix4f(
 				shader.getUniformLocation("view"),
 				this->_projectionMatrix * this->_viewMatrix

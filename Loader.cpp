@@ -2,19 +2,6 @@
 #include "IO.hpp"
 #include "picoPNG.hpp"
 
-/*Model Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned> &indices, const std::string &texturePath) {
-	this->_createVAO();
-
-	this->_uploadVertexArray(vertices);
-	this->_bindIndicesBuffer(indices);
-
-	glBindVertexArray(0);
-
-	Texture texture = this->loadTexture(texturePath);
-
-	return Model(tinygltf::Model(), texture);
-}*/
-
 Texture Loader::loadTexture(const std::string &texturePath) {
 	auto foundTexture = this->_textures.find(texturePath);
 	GLuint	textureID = 0;
@@ -52,79 +39,8 @@ Texture Loader::loadTexture(const std::string &texturePath) {
 	return Texture(textureID);
 }
 
-/*GLuint Loader::_createVAO() {
-	GLuint	vaoID = 0;
-
-	glGenVertexArrays(1, &vaoID);
-	this->_vaos.push_back(vaoID);
-	glBindVertexArray(vaoID);
-
-	return vaoID;
-}*/
-
-/*GLuint Loader::_createVBO(GLenum target) {
-	GLuint	vboID = 0;
-
-	glGenBuffers(1, &vboID);
-	this->_vbos.push_back(vboID);
-	glBindBuffer(target, vboID);
-
-	return vboID;
-}*/
-
-/*void Loader::_storeDataInAttributeList(GLuint attributeNumber, unsigned coordinateSize, const std::vector<float> &data) {
-	this->_createVBO(GL_ARRAY_BUFFER);
-
-	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}*/
-
-/*void Loader::_bindIndicesBuffer(const std::vector<unsigned> &indices) {
-	this->_createVBO(GL_ELEMENT_ARRAY_BUFFER);
-
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
-}*/
-
 Loader::~Loader() {
-/*	for (auto &vao : this->_vaos) {
-		glDeleteVertexArrays(1, &vao);
-	}
-
-	for (auto &vbo : this->_vbos) {
-		glDeleteBuffers(1, &vbo);
-	}*/
-
 	for (auto &texture : this->_textures) {
 		glDeleteTextures(1, &(texture.second));
 	}
 }
-
-/*void Loader::_uploadVertexArray(const std::vector<Vertex> &vertices) {
-	this->_createVBO(GL_ARRAY_BUFFER);
-
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, position));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}*/
-
-/*Model Loader::loadToVAO(const std::vector<float> &vertices, const std::vector<float> &normals,
-						const std::vector<float> &uv, const std::vector<unsigned> &indices,
-						const std::string &texturePath) {
-	this->_createVAO();
-
-	this->_storeDataInAttributeList(0, 3, vertices);
-	this->_storeDataInAttributeList(1, 3, normals);
-	this->_storeDataInAttributeList(2, 2, uv);
-	this->_bindIndicesBuffer(indices);
-
-	glBindVertexArray(0);
-
-	Texture texture = this->loadTexture(texturePath);
-
-	return Model(tinygltf::Model(), texture);
-}*/
