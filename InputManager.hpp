@@ -5,22 +5,23 @@
 #include <glm/vec2.hpp>
 #include <unordered_map>
 
-class InputManager {
-public:
-	InputManager() = default;
-	~InputManager() = default;
+namespace cge {
+	class InputManager {
+	public:
+		InputManager() = default;
+		~InputManager() = default;
 
-	void	pressKey(int keysym);
-	void	releaseKey(int keysym);
-	void	setMouseCoordinates(const glm::vec2 &mouseCoordinates);
+		void	pressKey(int keysym);
+		void	releaseKey(int keysym);
+		void	setMouseCoordinates(const glm::vec2 &mouseCoordinates);
 
-	glm::vec2	getMouseCoordinates() const;
-	bool 		isKeyPressed(int keysym) const;
+		glm::vec2	getMouseCoordinates() const;
+		bool 		isKeyPressed(int keysym) const;
 
-private:
-	std::unordered_map<int, bool>	_keyMap;
-	glm::vec2						_mouseCoordinates;
-};
-
+	private:
+		std::unordered_map<int, bool>	_keyMap;
+		glm::vec2						_mouseCoordinates;
+	};
+}
 
 #endif //NEW_INPUTMANAGER_HPP

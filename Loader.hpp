@@ -10,16 +10,21 @@
 #include "Model.hpp"
 #include "Vertex.hpp"
 
-class Loader {
-public:
-	Loader() = default;
-	~Loader();
+namespace cge {
+	class Loader {
+	public:
+		Loader() = default;
+		~Loader();
 
-	Texture	loadTexture(const std::string &texturePath);
+		Texture			loadTexture(const std::string &texturePath);
+		tinygltf::Model	&loadGLTFModel(const std::string &modelPath);
 
-private:
-	std::map<std::string, GLuint>	_textures;
-};
+	private:
+		std::map<std::string, GLuint>			_textures;
+		std::map<std::string, tinygltf::Model>	_models;
 
+		tinygltf::TinyGLTF						_gltfLoader;
+	};
+}
 
 #endif //NEW_LOADER_HPP

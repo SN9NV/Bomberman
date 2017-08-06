@@ -14,27 +14,16 @@
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
-bool	processInput(InputManager &inputManager);
+bool	processInput(cge::InputManager &inputManager);
 
 int main() {
-	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
-	GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl");
-	InputManager	inputManager;
-	Renderer		renderer(shader);
-	Loader			loader;
+	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl");
+	cge::InputManager	inputManager;
+	cge::Renderer		renderer(shader);
+	cge::Loader			loader;
 
-	tinygltf::Model model1;
-	tinygltf::Model model2;
-	tinygltf::TinyGLTF glTFLoader;
-	std::string err;
-
-	glTFLoader.LoadBinaryFromFile(&model1, &err, "../resources/moddels/bomner2.glb");
-//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/cube.glb");
-//	bool ret = glTFLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/unwrappedCube.glb");
-//	glTFLoader.LoadBinaryFromFile(&model2, &err, "../resources/moddels/doubleCube.glb");
-	glTFLoader.LoadBinaryFromFile(&model2, &err, "../resources/moddels/companion.glb");
-
-	Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
+	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
 		PLAY,
@@ -44,13 +33,13 @@ int main() {
 	int gameState = GameState::PLAY;
 
 	shader.start();
-	Model fullModelBomber = Model(model1, loader.loadTexture("../resources/moddels/BomBerTextureDiffuseColor.png"));
-	Model fullModelCube = Model(model2, loader.loadTexture("../resources/moddels/companion.png"));
-	shader.end();
+		cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
+		cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
 
-	Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, fullModelBomber);
-	Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, fullModelBomber);
-	Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, fullModelCube);
+		cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+		cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
+		cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
+	shader.end();
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
@@ -67,15 +56,13 @@ int main() {
 
 
 		shader.start();
+			renderer.prepare();
 
-		renderer.prepare();
+			camera.update(shader);
 
-		camera.update(inputManager, shader);
-
-		renderer.render(bomber1);
-		renderer.render(bomber2);
-		renderer.render(cube);
-
+			renderer.render(bomber1);
+			renderer.render(bomber2);
+			renderer.render(cube);
 		shader.end();
 		window.swapBuffers();
 	}
@@ -83,7 +70,7 @@ int main() {
 	return 0;
 }
 
-bool processInput(InputManager &inputManager) {
+bool processInput(cge::InputManager &inputManager) {
 	SDL_Event	event = {};
 
 	while (SDL_PollEvent(&event) > 0) {
@@ -106,4 +93,3 @@ bool processInput(InputManager &inputManager) {
 
 	return inputManager.isKeyPressed(SDLK_ESCAPE);
 }
-

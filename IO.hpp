@@ -8,10 +8,11 @@
 
 #include "Texture.hpp"
 
-namespace IO {
-	std::string	readFileToString(const std::string &filename);
-	bool		readFileToBuffer(const std::string &filePath, std::vector<unsigned char> &buffer);
+namespace cge {
+	namespace IO {
+		std::string	readFileToString(const std::string &filename);
+		bool		readFileToBuffer(const std::string &filePath, std::vector<unsigned char> &buffer);
+	}
 }
-
 
 #endif //NEW_IO_HPP

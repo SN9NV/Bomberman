@@ -1,28 +1,30 @@
 #include "IO.hpp"
 #include "picoPNG.hpp"
 
-namespace IO {
-	std::string	readFileToString(const std::string &filename) {
-		std::ifstream	fileStream(filename, std::ios::in);
+namespace cge {
+	namespace IO {
+		std::string	readFileToString(const std::string &filename) {
+			std::ifstream	fileStream(filename, std::ios::in);
 
-		if (!fileStream.is_open()) {
-			std::cerr << "Could not open file: " << filename << '\n';
-			exit(1);
+			if (!fileStream.is_open()) {
+				std::cerr << "Could not open file: " << filename << '\n';
+				exit(1);
+			}
+
+			return std::string(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
 		}
 
-		return std::string(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
-	}
+		bool		readFileToBuffer(const std::string &filePath, std::vector<unsigned char> &buffer) {
+			std::ifstream	fileStream(filePath, std::ios::binary);
 
-	bool		readFileToBuffer(const std::string &filePath, std::vector<unsigned char> &buffer) {
-		std::ifstream	fileStream(filePath, std::ios::binary);
+			if (!fileStream.is_open()) {
+				std::cerr << "Could not open file: " << filePath << '\n';
+				return true;
+			}
 
-		if (!fileStream.is_open()) {
-			std::cerr << "Could not open file: " << filePath << '\n';
-			return true;
+			buffer = std::vector<unsigned char>(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
+
+			return false;
 		}
-
-		buffer = std::vector<unsigned char>(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
-
-		return false;
 	}
 }

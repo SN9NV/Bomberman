@@ -24,7 +24,7 @@ set(SOURCE_FILES
 		glmOstream.cpp glmOstream.hpp
 		glError.cpp glError.hpp
 
-		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h)
+		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h Player.cpp Player.hpp)
 
 
 

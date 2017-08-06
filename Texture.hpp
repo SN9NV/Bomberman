@@ -4,19 +4,20 @@
 
 #include <GL/glew.h>
 
-class Texture {
-public:
-	Texture() = default;
-	~Texture() = default;
+namespace cge {
+	class Texture {
+	public:
+		Texture() = default;
+		~Texture() = default;
 
-	Texture(GLuint textureID);
+		Texture(GLuint textureID);
 
-	GLuint		getID() const;
+		GLuint		getID() const;
 
-private:
-	GLuint	_textureID;
+	private:
+		GLuint	_textureID;
 
-};
-
+	};
+}
 
 #endif //NEW_TEXTURE_HPP
