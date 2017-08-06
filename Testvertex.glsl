@@ -8,13 +8,13 @@ out vec3	fragmentNormal;
 out vec2	fragmentUV;
 out vec3	toLight;
 
-//uniform mat4 transformation;
+uniform mat4 transformation;
 uniform mat4 view;
 
 const vec3 lightLocation = { 5.0, 5.0, 5.0 };
 
 void main() {
-	gl_Position = view * /*transformation **/ vec4(vertexPosition, 1.0);
+	gl_Position = view * transformation * vec4(vertexPosition, 1.0);
 
 	fragmentNormal = vertexNormal;
 	fragmentUV = vertexUV;
