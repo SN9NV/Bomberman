@@ -3,8 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "Model.hpp"
-#include "GLSLProgram.hpp"
-#include "InputManager.hpp"
+#include "../rendering/GLSLProgram.hpp"
+#include "../io/InputManager.hpp"
 
 namespace cge {
 	class Entity {
@@ -12,9 +12,9 @@ namespace cge {
 		Entity() = default;
 		virtual ~Entity() = default;
 
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model model);
 
-		virtual void	update(const InputManager &input, unsigned lastFrameTime);
+		virtual void	update(unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);

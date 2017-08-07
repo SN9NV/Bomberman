@@ -3,7 +3,7 @@
 
 #include <string>
 #include <SDL.h>
-#include "Exceptions.hpp"
+#include "../error_handling/Exceptions.hpp"
 
 namespace cge {
 	class Window {

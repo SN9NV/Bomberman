@@ -17,8 +17,11 @@ static constexpr unsigned WIDTH = 1024;
 bool	processInput(cge::InputManager &inputManager);
 
 int main() {
+	std::cout << "foo" <<std::endl;
 	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GLSLProgram	shader("../Testvertex.glsl", "../Textfragment.glsl");
+	std::cout << "past windowinit" <<std::endl;
+	cge::GLSLProgram	shader("shaders/fragment.glsl", "../shaders/Textfragment.glsl");
+	std::cout << "past shader loader" <<std::endl;
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;

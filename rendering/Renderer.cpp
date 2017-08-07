@@ -1,5 +1,5 @@
 #include "Renderer.hpp"
-#include "Maths.hpp"
+#include "../extras/Maths.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -58,8 +58,12 @@ namespace cge {
 			const auto &indexAssessor = model.accessors[primitive.indices];
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboMap[indexAssessor.bufferView]);
 
-			glDrawElements((GLenum)primitive.mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
-						   BUFFER_OFFSET(indexAssessor.byteOffset));
+			glDrawElements(
+					(GLenum)primitive.mode,
+					(GLsizei)indexAssessor.count,
+					(GLenum)indexAssessor.componentType,
+					BUFFER_OFFSET(indexAssessor.byteOffset)
+			);
 
 			for (auto &attr : primitive.attributes) {
 				GLuint index = attrType::convert(attr.first);
@@ -76,9 +80,6 @@ namespace cge {
 
 		/// Bind the model and texture
 		glBindVertexArray(entityModel.getVaoID());
-		for (auto &attribArray : entityModel.getVBOs()) {
-			glEnableVertexAttribArray(attribArray);
-		}
 
 		/// Upload the model's transformation matrix
 		this->_shader.uploadMatrix4f(
@@ -96,13 +97,6 @@ namespace cge {
 			tinygltf::Node	&node = model.nodes[nodeIndex];
 			drawMesh(model, model.meshes[(node.mesh >= 0) ? node.mesh : 0], entityModel.getVBOs());
 		}
-
-		/// Unbind everything
-		for (auto &attribArray : entityModel.getVBOs()) {
-			glDisableVertexAttribArray(attribArray);
-		}
-
-		glBindVertexArray(0);
 	}
 
 	GLuint Renderer::attrType::convert(const std::string &type) {

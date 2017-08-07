@@ -19,6 +19,10 @@ void main() {
 
 	fragmentNormal = (transformation * vec4(vertexNormal, 1.0)).xyz;
 	fragmentUV = vertexUV;
+<<<<<<< HEAD:Testvertex.glsl
 	toLight = lightLocation - vertexPosition;
 	gl_Position = vec4(0,0,0,1);
+=======
+	toLight = lightLocation - (transformation * vec4(vertexPosition, 1.0)).xyz;
+>>>>>>> 0edabe10ac407c61924f48cfb29a9842e474e0ca:shaders/vertex.glsl
 }

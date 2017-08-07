@@ -8,8 +8,8 @@ namespace cge {
 #include <GL/glew.h>
 
 #include "Texture.hpp"
-#include "tinyGLTF/tiny_gltf.h"
-#include "Loader.hpp"
+#include "../tinyGLTF/tiny_gltf.h"
+#include "../loaders/Loader.hpp"
 
 namespace cge {
 	class Model {

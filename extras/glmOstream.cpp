@@ -18,14 +18,6 @@ std::ostream &operator<<(std::ostream &out, const glm::vec2 &rhs) {
 	return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const Vertex &rhs) {
-	out << "{ { " << rhs.position.x << ", " << rhs.position.y << ", " << rhs.position.z << " }, ";
-	out << "{ " << rhs.normal.x << ", " << rhs.normal.y << ", " << rhs.normal.z << " }, ";
-	out << "{ " << rhs.uv.x << ", " << rhs.uv.y << " } }";
-
-	return out;
-}
-
 std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs) {
 	out << "[ " << rhs[0][0] << ", " << rhs[0][1] << ", " << rhs[0][2] << ", " << rhs[0][3] << " ]\n";
 	out << "[ " << rhs[1][0] << ", " << rhs[1][1] << ", " << rhs[1][2] << ", " << rhs[1][3] << " ]\n";

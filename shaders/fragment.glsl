@@ -17,5 +17,10 @@ void main() {
 	vec4 diffuse = vec4(vec3(brightness), 1.0);
 
 	colour = diffuse * texture(samplerUV, fragmentUV);
+<<<<<<< HEAD:Textfragment.glsl
 	colour = vec4(1, 1, 1, 1);
+=======
+//	colour = diffuse * vec4(0.0, 1.0, 0.0, 1.0);
+//	colour = vec4(0.0, 1.0, 0.0, 1.0);
+>>>>>>> 0edabe10ac407c61924f48cfb29a9842e474e0ca:shaders/fragment.glsl
 }

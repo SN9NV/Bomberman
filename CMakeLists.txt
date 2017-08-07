@@ -5,28 +5,33 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
 set(SOURCE_FILES
-#		main.cpp
-		Testmain.cpp
-		Camera.cpp Camera.hpp
-		InputManager.cpp InputManager.hpp
-		Entity.cpp Entity.hpp
-		Model.cpp Model.hpp
-		Texture.cpp Texture.hpp
-		Window.cpp Window.hpp
-		Exceptions.hpp
-		GLSLProgram.cpp GLSLProgram.hpp
-		IO.cpp IO.hpp
-		Renderer.cpp Renderer.hpp
-		Maths.cpp Maths.hpp
-		Loader.cpp Loader.hpp
-		picoPNG.cpp picoPNG.hpp
-		Vertex.hpp
-		glmOstream.cpp glmOstream.hpp
-		glError.cpp glError.hpp
-
-		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h Player.cpp Player.hpp BomberManGameLogic/MapLoader.cpp BomberManGameLogic/Object.cpp BomberManGameLogic/Object.h BomberManGameLogic/Being.cpp BomberManGameLogic/Being.h BomberManGameLogic/main.cpp)
-
-
+		tinyGLTF/picojson.h
+		tinyGLTF/stb_image.h
+        tinyGLTF/tiny_gltf.h
+        BomberManGameLogic/MapLoader.cpp
+        BomberManGameLogic/Being.cpp
+        BomberManGameLogic/Being.h
+        BomberManGameLogic/main.cpp
+		tinyGLTF/picojson.h
+        tinyGLTF/stb_image.h
+        tinyGLTF/tiny_gltf.h
+		main.cpp
+		entites/Camera.cpp entites/Camera.hpp
+		io/InputManager.cpp io/InputManager.hpp
+		entites/Entity.cpp entites/Entity.hpp
+		entites/Model.cpp entites/Model.hpp
+		entites/Texture.cpp entites/Texture.hpp
+		io/Window.cpp io/Window.hpp
+		error_handling/Exceptions.hpp
+		rendering/GLSLProgram.cpp rendering/GLSLProgram.hpp
+		loaders/IO.cpp loaders/IO.hpp
+		rendering/Renderer.cpp rendering/Renderer.hpp
+		extras/Maths.cpp extras/Maths.hpp
+		loaders/Loader.cpp loaders/Loader.hpp
+		loaders/picoPNG.cpp loaders/picoPNG.hpp
+		extras/glmOstream.cpp extras/glmOstream.hpp
+		error_handling/glError.cpp error_handling/glError.hpp
+		entites/Player.cpp entites/Player.hpp BomberManGameLogic/Being.cpp BomberManGameLogic/Being.h)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)

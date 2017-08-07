@@ -1,8 +1,8 @@
 #include "Entity.hpp"
-#include "Maths.hpp"
+#include "../extras/Maths.hpp"
 
 namespace cge {
-	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model) :
+	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model model) :
 			_model(model),
 			_position(position),
 			_rotation(rotation),
@@ -11,7 +11,7 @@ namespace cge {
 			_transformationLocation(0),
 			_needsTransformationUpdate(true)
 	{
-		std::cout << "Using model at address: " << &model << "\n";
+
 	}
 
 	void Entity::addPosition(const glm::vec3 &delta) {
@@ -50,8 +50,7 @@ namespace cge {
 		return this->_scale;
 	}
 
-	void Entity::update(const InputManager &input, unsigned lastFrameTime) {
-		(void)input;
+	void Entity::update(unsigned lastFrameTime) {
 		(void)lastFrameTime;
 	}
 }

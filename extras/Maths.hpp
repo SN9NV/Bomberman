@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Camera.hpp"
+#include "../entites/Camera.hpp"
 
 namespace cge {
 	namespace Maths {

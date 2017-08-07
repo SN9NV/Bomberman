@@ -1,5 +1,5 @@
 #include "Camera.hpp"
-#include "Maths.hpp"
+#include "../extras/Maths.hpp"
 
 std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs);
 
