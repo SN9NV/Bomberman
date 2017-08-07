@@ -60,11 +60,9 @@ namespace cge {
 				exit(1);
 			}
 
-			std::cout << "Model: " << modelPath << " not found in map. Loading from file\n";
 			return model;
 		}
 
-		std::cout << "Model: " << modelPath << " was found in map. Returning reference\n";
 		return foundModel->second;
 	}
 }
