@@ -3,8 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "Model.hpp"
-#include "GLSLProgram.hpp"
-#include "InputManager.hpp"
+#include "../rendering/GLSLProgram.hpp"
+#include "../io/InputManager.hpp"
 
 namespace cge {
 	class Entity {

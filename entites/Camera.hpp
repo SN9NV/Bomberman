@@ -3,9 +3,9 @@
 
 #include <glm/glm.hpp>
 
-#include "InputManager.hpp"
-#include "GLSLProgram.hpp"
-#include "Window.hpp"
+#include "../io/InputManager.hpp"
+#include "../rendering/GLSLProgram.hpp"
+#include "../io/Window.hpp"
 
 namespace cge {
 	class Camera {

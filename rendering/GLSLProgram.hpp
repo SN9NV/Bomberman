@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "IO.hpp"
+#include "../loaders/IO.hpp"
 
 namespace cge {
 	class GLSLProgram {

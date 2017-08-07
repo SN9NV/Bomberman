@@ -6,7 +6,7 @@
 #include <fstream>
 #include <vector>
 
-#include "Texture.hpp"
+#include "../entites/Texture.hpp"
 
 namespace cge {
 	namespace IO {

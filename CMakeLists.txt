@@ -8,24 +8,22 @@ set(SOURCE_FILES
 		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h
 
 		main.cpp
-		Camera.cpp Camera.hpp
-		InputManager.cpp InputManager.hpp
-		Entity.cpp Entity.hpp
-		Model.cpp Model.hpp
-		Texture.cpp Texture.hpp
-		Window.cpp Window.hpp
-		Exceptions.hpp
-		GLSLProgram.cpp GLSLProgram.hpp
-		IO.cpp IO.hpp
-		Renderer.cpp Renderer.hpp
-		Maths.cpp Maths.hpp
-		Loader.cpp Loader.hpp
-		picoPNG.cpp picoPNG.hpp
-		Vertex.hpp
-		glmOstream.cpp glmOstream.hpp
-		glError.cpp glError.hpp
-		Player.cpp Player.hpp)
-
+		entites/Camera.cpp entites/Camera.hpp
+		io/InputManager.cpp io/InputManager.hpp
+		entites/Entity.cpp entites/Entity.hpp
+		entites/Model.cpp entites/Model.hpp
+		entites/Texture.cpp entites/Texture.hpp
+		io/Window.cpp io/Window.hpp
+		error_handling/Exceptions.hpp
+		rendering/GLSLProgram.cpp rendering/GLSLProgram.hpp
+		loaders/IO.cpp loaders/IO.hpp
+		rendering/Renderer.cpp rendering/Renderer.hpp
+		extras/Maths.cpp extras/Maths.hpp
+		loaders/Loader.cpp loaders/Loader.hpp
+		loaders/picoPNG.cpp loaders/picoPNG.hpp
+		extras/glmOstream.cpp extras/glmOstream.hpp
+		error_handling/glError.cpp error_handling/glError.hpp
+		entites/Player.cpp entites/Player.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

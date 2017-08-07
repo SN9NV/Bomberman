@@ -1,5 +1,5 @@
 #include "Renderer.hpp"
-#include "Maths.hpp"
+#include "../extras/Maths.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 

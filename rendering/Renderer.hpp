@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "GLSLProgram.hpp"
-#include "Entity.hpp"
-#include "Window.hpp"
+#include "../entites/Entity.hpp"
+#include "../io/Window.hpp"
 
 namespace cge {
 	class Renderer {

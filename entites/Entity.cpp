@@ -1,5 +1,5 @@
 #include "Entity.hpp"
-#include "Maths.hpp"
+#include "../extras/Maths.hpp"
 
 namespace cge {
 	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model) :

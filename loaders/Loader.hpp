@@ -7,8 +7,7 @@
 
 #include <GL/glew.h>
 
-#include "Model.hpp"
-#include "Vertex.hpp"
+#include "../entites/Model.hpp"
 
 namespace cge {
 	class Loader {

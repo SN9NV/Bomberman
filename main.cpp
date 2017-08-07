@@ -1,10 +1,9 @@
-#include "Window.hpp"
-#include "Loader.hpp"
-#include "GLSLProgram.hpp"
-#include "Renderer.hpp"
-#include "InputManager.hpp"
-#include "Camera.hpp"
-#include "Maths.hpp"
+#include "io/Window.hpp"
+#include "loaders/Loader.hpp"
+#include "rendering/GLSLProgram.hpp"
+#include "rendering/Renderer.hpp"
+#include "entites/Camera.hpp"
+#include "extras/Maths.hpp"
 
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -18,7 +17,7 @@ bool	processInput(cge::InputManager &inputManager);
 
 int main() {
 	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GLSLProgram	shader("../vertex.glsl", "../fragment.glsl");
+	cge::GLSLProgram	shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;
