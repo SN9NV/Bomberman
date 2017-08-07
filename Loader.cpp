@@ -49,7 +49,6 @@ namespace cge {
 		auto foundModel = this->_models.find(modelPath);
 
 		if (foundModel == this->_models.end()) {
-//			std::cout << "Model: " << modelPath << " not found in map. Loading from file\n";
 			this->_models[modelPath] = tinygltf::Model();
 			tinygltf::Model &model = this->_models[modelPath];
 			std::string		err;
@@ -61,10 +60,11 @@ namespace cge {
 				exit(1);
 			}
 
+			std::cout << "Model: " << modelPath << " not found in map. Loading from file\n";
 			return model;
 		}
 
-//		std::cout << "Model: " << modelPath << " was found in map. Returning reference\n";
+		std::cout << "Model: " << modelPath << " was found in map. Returning reference\n";
 		return foundModel->second;
 	}
 }

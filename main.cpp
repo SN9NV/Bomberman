@@ -52,7 +52,6 @@ int main() {
 		bomber2.addRotation({0.01f, 0.0f, 0.0f});
 		cube.addRotation({0.0f, 0.0f, 0.01f});
 
-
 		shader.start();
 			renderer.prepare();
 			camera.update(shader);
