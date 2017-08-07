@@ -11,12 +11,14 @@ out vec3	toLight;
 uniform mat4 transformation;
 uniform mat4 view;
 
-const vec3 lightLocation = { 5.0, 5.0, 5.0 };
+const vec3 lightLocation = vec3(5.0, 5.0, 5.0);
 
 void main() {
+
 	gl_Position = view * transformation * vec4(vertexPosition, 1.0);
 
 	fragmentNormal = (transformation * vec4(vertexNormal, 1.0)).xyz;
 	fragmentUV = vertexUV;
 	toLight = lightLocation - vertexPosition;
+	gl_Position = vec4(0,0,0,1);
 }

@@ -54,7 +54,7 @@ namespace cge {
 			tinygltf::Model &model = this->_models[modelPath];
 			std::string		err;
 
-			this->_gltfLoader.LoadBinaryFromFile(&model, &err, "../resources/moddels/bomner2.glb");
+			this->_gltfLoader.LoadBinaryFromFile(&model, &err, modelPath);
 
 			if (!err.empty()) {
 				std::cout << "Had error loading glTF file!!!\n" << err << "\n";

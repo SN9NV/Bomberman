@@ -839,7 +839,7 @@ std::string base64_decode(std::string const &s);
       appreciated but is not required.
 
    2. Altered source versions must be plainly marked as such, and must not be
-      misrepresented as being the original source code.
+      misrepresented as Being the original source code.
 
    3. This notice may not be removed or altered from any source distribution.
 

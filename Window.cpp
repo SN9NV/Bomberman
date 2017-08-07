@@ -53,7 +53,7 @@ namespace cge {
 		if (glContext == nullptr) {
 			throw SDL_FatalError("SDL_GL context could not be created");
 		}
-
+		glewExperimental = true;
 		if (glewInit() != GLEW_OK) {
 			throw SDL_FatalError("GLEW did not initialize");
 		}

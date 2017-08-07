@@ -18,12 +18,12 @@ bool	processInput(cge::InputManager &inputManager);
 
 int main() {
 	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GLSLProgram		shader("../Testvertex.glsl", "../Textfragment.glsl");
+	cge::GLSLProgram	shader("../Testvertex.glsl", "../Textfragment.glsl");
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;
 
-	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
+	cge::Camera camera(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), window);
 
 	enum GameState {
 		PLAY,
@@ -32,12 +32,13 @@ int main() {
 
 	int gameState = GameState::PLAY;
 
-	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
+	//cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
+	cge::Model bomberModel = cge::Model("../resources/moddels/Bomber.glb", "../resources/moddels/BomberManTextureDiffuseColor.png", loader);
+	cge::Model bomberModel2 = cge::Model("../resources/moddels/Bomber.glb", "../resources/moddels/BomberManTextureDiffuseColor.png", loader);
 
 	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
 	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
-	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
+	//cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
@@ -50,7 +51,7 @@ int main() {
 
 		bomber1.addRotation({0.0f, 0.01f, 0.0f});
 		bomber2.addRotation({0.01f, 0.0f, 0.0f});
-		cube.addRotation({0.0f, 0.0f, 0.01f});
+		//cube.addRotation({0.0f, 0.0f, 0.01f});
 
 
 		shader.start();
@@ -60,7 +61,7 @@ int main() {
 
 			renderer.render(bomber1);
 			renderer.render(bomber2);
-			renderer.render(cube);
+		//	renderer.render(cube);
 		shader.end();
 		window.swapBuffers();
 	}
