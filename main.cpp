@@ -14,102 +14,16 @@
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
-std::ostream &operator<<(std::ostream &out, const std::vector<tinygltf::Mesh> &meshes) {
-	for (auto &mesh : meshes) {
-		out << "Name: " << mesh.name << "\n";
-//		out << "Primitives:\n" << mesh.primitives << "\n";
-//		out << "Weights:\n" << mesh.weights << "\n";
-//		out << ""
-	}
-
-	return out;
-}
-
-bool	processInput(InputManager &inputManager);
+bool	processInput(cge::InputManager &inputManager);
 
 int main() {
-	Window			window("Bomberman", WIDTH, HEIGHT, Window::Flags::VSYNC_ENABLED);
-	Loader			loader;
-	GLSLProgram		shader("../vertex.glsl", "../fragment.glsl", { "transformation", "view" });
-	Renderer		renderer(shader);
-	InputManager	inputManager;
+	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::GLSLProgram	shader("../vertex.glsl", "../fragment.glsl");
+	cge::InputManager	inputManager;
+	cge::Renderer		renderer(shader);
+	cge::Loader			loader;
 
-	glm::vec3	normal = { 1.0f, 1.0f, 1.0f };
-	std::vector<glm::vec2>	uv = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f } };
-
-	std::vector<Vertex> vertices = {
-		{ { -0.5f, 0.5f, -0.5f }, uv[0], normal },
-		{ { -0.5f, -0.5f, -0.5f }, uv[1], normal },
-		{ { 0.5f, -0.5f, -0.5f }, uv[2], normal },
-		{ { 0.5f, 0.5f, -0.5f }, uv[3], normal },
-
-		{ { -0.5f, 0.5f, 0.5f }, uv[0], normal },
-		{ { -0.5f, -0.5f, 0.5f }, uv[1], normal },
-		{ { 0.5f, -0.5f, 0.5f }, uv[2], normal },
-		{ { 0.5f, 0.5f, 0.5f }, uv[3], normal },
-
-		{ { 0.5f, 0.5f, -0.5f }, uv[0], normal },
-		{ { 0.5f, -0.5f, -0.5f }, uv[1], normal },
-		{ { 0.5f, -0.5f, 0.5f }, uv[2], normal },
-		{ { 0.5f, 0.5f, 0.5f }, uv[3], normal },
-
-		{ { -0.5f, 0.5f, -0.5f }, uv[0], normal },
-		{ { -0.5f, -0.5f, -0.5f }, uv[1], normal },
-		{ { -0.5f, -0.5f, 0.5f }, uv[2], normal },
-		{ { -0.5f, 0.5f, 0.5f }, uv[3], normal },
-
-		{ { -0.5f, 0.5f, 0.5f }, uv[0], normal },
-		{ { -0.5f, 0.5f, -0.5f }, uv[1], normal },
-		{ { 0.5f, 0.5f, -0.5f }, uv[2], normal },
-		{ { 0.5f, 0.5f, 0.5f }, uv[3], normal },
-
-		{ { -0.5f, -0.5f, 0.5f }, uv[0], normal },
-		{ { -0.5f, -0.5f, -0.5f }, uv[1], normal },
-		{ { 0.5f, -0.5f, -0.5f }, uv[2], normal },
-		{ { 0.5f, -0.5f, 0.5f }, uv[3], normal }
-	};
-
-	std::vector<unsigned>	indices = {
-		0, 1, 3,
-		3, 1, 2,
-		4, 5, 7,
-		7, 5, 6,
-		8, 9, 11,
-		11, 9, 10,
-		12, 13, 15,
-		15, 13, 14,
-		16, 17, 19,
-		19, 17, 18,
-		20, 21, 23,
-		23, 21, 22
-	};
-
-	std::vector<unsigned>	indices2 = {
-			0, 1, 3,
-			3, 1, 2,
-			4, 5, 7,
-			7, 5, 6,
-			8, 9, 11,
-			11, 9, 10,
-			12, 13, 15,
-			15, 13, 14,
-			16, 17, 19,
-			19, 17, 18
-	};
-
-	Model	model = loader.loadToVAO(vertices, indices, "../image.png");
-	Model	model2 = loader.loadToVAO(vertices, indices2, "../image2.png");
-	Entity	entity(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, -5.0f), 1.0f, model);
-
-	std::vector<Entity>		entities {
-			Entity(glm::vec3(5.0f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model2),
-			Entity(glm::vec3(2.5f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model),
-			Entity(glm::vec3(0.0f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model2),
-			Entity(glm::vec3(-2.5f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model),
-			Entity(glm::vec3(-5.0f, 3.0f, -10.0f), glm::vec3(0, 0, 0), 1.0f, model2)
-	};
-
-	Camera camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), window);
+	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
 		PLAY,
@@ -118,27 +32,34 @@ int main() {
 
 	int gameState = GameState::PLAY;
 
+	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
+	cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
+
+	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
+	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
+
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
 			gameState = GameState ::WANTS_QUIT;
 		}
 
-		entity.addRotation(glm::vec3(0.005f, 0.005f, 0.0f));
-//		entity.addPosition(glm::vec3(0.0f, 0.0f, -0.01f));
-
-		renderer.prepare();
-		shader.start();
-
-		camera.update(inputManager, shader);
-		renderer.render(entity);
-
-		float rotation = 0.0f;
-		for (auto &cEntity : entities) {
-			rotation += 0.05f;
-			cEntity.addRotation(glm::vec3(rotation, rotation, 0.0f));
-			renderer.render(cEntity);
+		if (inputManager.isKeyPressed(SDLK_c)) {
+			std::cout << "Camera:\n" << camera << "\n";
 		}
 
+		bomber1.addRotation({0.0f, 0.01f, 0.0f});
+		bomber2.addRotation({0.01f, 0.0f, 0.0f});
+		cube.addRotation({0.0f, 0.0f, 0.01f});
+
+
+		shader.start();
+			renderer.prepare();
+			camera.update(shader);
+
+			renderer.render(bomber1);
+			renderer.render(bomber2);
+			renderer.render(cube);
 		shader.end();
 		window.swapBuffers();
 	}
@@ -146,8 +67,8 @@ int main() {
 	return 0;
 }
 
-bool processInput(InputManager &inputManager) {
-	SDL_Event	event;
+bool processInput(cge::InputManager &inputManager) {
+	SDL_Event	event = {};
 
 	while (SDL_PollEvent(&event) > 0) {
 		switch (event.type) {
@@ -168,6 +89,4 @@ bool processInput(InputManager &inputManager) {
 	}
 
 	return inputManager.isKeyPressed(SDLK_ESCAPE);
-
 }
-

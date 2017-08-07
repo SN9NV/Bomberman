@@ -5,8 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
 set(SOURCE_FILES
-#		main.cpp
-		Testmain.cpp
+		main.cpp
 		Camera.cpp Camera.hpp
 		InputManager.cpp InputManager.hpp
 		Entity.cpp Entity.hpp
@@ -24,7 +23,8 @@ set(SOURCE_FILES
 		glmOstream.cpp glmOstream.hpp
 		glError.cpp glError.hpp
 
-		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h Player.cpp Player.hpp)
+		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h
+		Player.cpp Player.hpp)
 
 
 

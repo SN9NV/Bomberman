@@ -14,6 +14,8 @@ namespace cge {
 	}
 
 	void	Renderer::drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const {
+		std::cout << "drawing mesh: " << &mesh << "\n";
+
 		for (auto &primitive : mesh.primitives) {
 			if (primitive.indices < 0)
 				continue;
@@ -58,6 +60,7 @@ namespace cge {
 			const auto &indexAssessor = model.accessors[primitive.indices];
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboMap[indexAssessor.bufferView]);
 
+			std::cout << "Drawing " << indexAssessor.count << " vertices\n";
 			glDrawElements((GLenum)primitive.mode, (GLsizei)indexAssessor.count, (GLenum)indexAssessor.componentType,
 						   BUFFER_OFFSET(indexAssessor.byteOffset));
 

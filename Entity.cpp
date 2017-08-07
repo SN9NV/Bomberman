@@ -11,7 +11,7 @@ namespace cge {
 			_transformationLocation(0),
 			_needsTransformationUpdate(true)
 	{
-		std::cout << "Using model at address: " << &model << "\n";
+
 	}
 
 	void Entity::addPosition(const glm::vec3 &delta) {
