@@ -27,7 +27,7 @@ int main() {
 	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
-		PLAY_GAME,
+		PLAY_GAME_PLAY,
 		PLAY_GAME_PAUSED,
 		PLAY_MAINMENU,
 		PLAY_OPTIONS,
@@ -36,7 +36,7 @@ int main() {
 		WANTS_QUIT
 	};
 
-	int gameState = GameState::PLAY_GAME;
+	int gameState = GameState::PLAY_GAME_PLAY;
 
 	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
 	cge::Model bomberModel = cge::Model("../resources/moddels/Bomber.glb", "../resources/moddels/BomberManTextureDiffuseColor.png", loader);
@@ -51,7 +51,7 @@ int main() {
 		}
 
 		switch (gameState) {
-			case (GameState::PLAY_GAME): {
+			case (GameState::PLAY_GAME_PLAY): {
 				sounds.PlayMusic(cge::Sounds::Music::Menu);
 
 				if (inputManager.isKeyPressed(SDLK_c)) {

@@ -32,7 +32,8 @@ set(SOURCE_FILES
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/glError.cpp error_handling/glError.hpp
 		entites/Player.cpp entites/Player.hpp
-		sounds/Sounds.cpp sounds/Sounds.hpp)
+		sounds/Sounds.cpp sounds/Sounds.hpp
+		gui/GUI.cpp gui/GUI.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -103,6 +104,8 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_mixer
 # Directories to find the header files
 include_directories(
         includes
+		gui
+		gui/CEGUI
         ${GLEW_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
 		${SDL2_MIXER_INCLUDE_DIRS}
@@ -111,6 +114,7 @@ include_directories(
 
 # Directories to find the libraries
 link_directories(
+		${CMAKE_SOURCE_DIR}/resources/gui/libs
         ${GLEW_LIBRARY_DIRS}
         ${SDL2_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
@@ -125,6 +129,16 @@ target_link_libraries(${PROJECT_NAME}
         ${SDL2_LIBRARIES}
 		${SDL2_MIXER_LIBRARIES}
         ${GLM_LIBRARIES}
+		CEGUIBase-0
+		CEGUIOpenGLRenderer-0
+		CEGUIExpatParser
+		CEGUISILLYImageCodec
+)
+
+#this makes sure it reads all the dylibs correctly
+add_custom_command(
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND /bin/sh ${PROJECT_SOURCE_DIR}/resources/gui/libs/install.sh
 )
 
 # Function to symbolically link the resources into the build directory

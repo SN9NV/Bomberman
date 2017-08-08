@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="HUDGamePaused" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="AlfiskoSkin/Label" name="lbl_Paused" >
+            <Property name="Area" value="{{0,45},{0,-194},{0,175},{0,-162}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Game Paused" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VerticalAlignment" value="Centre" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="btn_SaveGame" >
+            <Property name="Area" value="{{0,45},{0,-134},{0,245},{0,-102}}" />
+            <Property name="Text" value="Save Game" />
+            <Property name="VerticalAlignment" value="Centre" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="btn_LoadGame" >
+            <Property name="Area" value="{{0,45},{0,-84},{0,245},{0,-52}}" />
+            <Property name="Text" value="Load Game" />
+            <Property name="VerticalAlignment" value="Centre" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="btn_Options" >
+            <Property name="Area" value="{{0,45},{0,-34},{0,245},{0,-2}}" />
+            <Property name="Text" value="Options" />
+            <Property name="VerticalAlignment" value="Centre" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="btn_MainMenu" >
+            <Property name="Area" value="{{0,45},{0,16},{0,245},{0,48}}" />
+            <Property name="Text" value="Main Menu" />
+            <Property name="VerticalAlignment" value="Centre" />
+            <Property name="HorizontalAlignment" value="Centre" />
+        </Window>
+    </Window>
+</GUILayout>
