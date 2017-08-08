@@ -27,21 +27,21 @@ namespace cge {
 		float 		getScale() const;
 
 	protected:
-		Model		&_model;
-		glm::vec3	_position;
-		glm::vec3	_rotation;
-		float 		_scale;
-		glm::mat4	_transformation;
-		GLint		_transformationLocation;
-		unsigned	_lastTicks;
-		unsigned	_ticksDelta;
-		unsigned	_animationTicks;
-		unsigned	_currentAnimation;
-		bool		_hasAnimation;
+		Model			&_model;
+		glm::vec3		_position;
+		glm::vec3		_rotation;
+		float 			_scale;
+		glm::mat4		_transformation;
+		GLint			_transformationLocation;
+		unsigned		_lastTicks;
+		unsigned		_ticksDelta;
+		unsigned		_animationTicks;
+		unsigned		_currentAnimation;
+		bool			_hasAnimation;
 
-		bool		_needsTransformationUpdate;
+		bool			_needsTransformationUpdate;
 
-		void		_applyAnimation();
+		void			_applyAnimation();
 	};
 }
 
