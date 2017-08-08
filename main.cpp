@@ -17,7 +17,7 @@ bool	processInput(cge::InputManager &inputManager);
 
 int main() {
 	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GLSLProgram	shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
+	cge::GLSLProgram	shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;
@@ -31,8 +31,8 @@ int main() {
 
 	int gameState = GameState::PLAY;
 
-	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
+	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
+	cge::Model bomberModel = cge::Model("resources/moddels/Bomber.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
 
 	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
 	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
