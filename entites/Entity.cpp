@@ -104,7 +104,10 @@ void cge::Entity::_applyAnimation() {
 		}
 
 		/// Find how far through the bottom frame we are
-		/// bottomScale(a, x, b) = (x - a)/(b - x) where a < x < b
+		/// Interpolant = (x - a)/(b - a) where a < x < b
+		float interpolant =
+				(this->_animationTicks - keyFrames[topKeyframeIndex-1]) /
+				(keyFrames[topKeyframeIndex] - keyFrames[topKeyframeIndex-1]);
 
 		if (channel.target_path == "translation") {
 
