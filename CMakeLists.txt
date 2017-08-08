@@ -7,7 +7,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 # These directories get symlinked into the build directory after compilation
 set(RESOURCE_DIRS
 	shaders
-	images
 	resources
 )
 

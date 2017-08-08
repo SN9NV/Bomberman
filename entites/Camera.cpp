@@ -3,60 +3,58 @@
 
 std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs);
 
-namespace cge {
-	Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window) :
-			_position(position),
-			_rotation(rotation),
-			_projectionMatrix(glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
-			_viewMatrix(1.0f),
-			_needsUpdate(true)
-	{
+cge::Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window) :
+		_position(position),
+		_rotation(rotation),
+		_projectionMatrix(glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
+		_viewMatrix(1.0f),
+		_needsUpdate(true)
+{
 
-	}
+}
 
-	void Camera::update(const GLSLProgram &shader, bool printCameraChange) {
-		if (this->_needsUpdate) {
-			if (printCameraChange) {
-				std::cout << *this << "\n";
-			}
-
-			this->_viewMatrix = Maths::createViewMatrix(*this);
-
-			/// projectionMatrix * viewMatrix
-			shader.uploadMatrix4f(
-					shader.getUniformLocation("view"),
-					this->_projectionMatrix * this->_viewMatrix
-			);
-
-			this->_needsUpdate = false;
+void cge::Camera::update(const GLSLProgram &shader, bool printCameraChange) {
+	if (this->_needsUpdate) {
+		if (printCameraChange) {
+			std::cout << *this << "\n";
 		}
-	}
 
-	void Camera::setPosition(const glm::vec3 &position) {
-		this->_position = position;
-		this->_needsUpdate = true;
-	}
+		this->_viewMatrix = Maths::createViewMatrix(*this);
 
-	void Camera::setRotation(const glm::vec3 &rotation) {
-		this->_rotation = rotation;
-		this->_needsUpdate = true;
-	}
+		/// projectionMatrix * viewMatrix
+		shader.uploadMatrix4f(
+				shader.getUniformLocation("view"),
+				this->_projectionMatrix * this->_viewMatrix
+		);
 
-	glm::vec3 Camera::getPosition() const {
-		return this->_position;
+		this->_needsUpdate = false;
 	}
+}
 
-	glm::vec3 Camera::getRotation() const {
-		return this->_rotation;
-	}
+void cge::Camera::setPosition(const glm::vec3 &position) {
+	this->_position = position;
+	this->_needsUpdate = true;
+}
 
-	glm::mat4 Camera::getProjectionMatrix() const {
-		return this->_projectionMatrix;
-	}
+void cge::Camera::setRotation(const glm::vec3 &rotation) {
+	this->_rotation = rotation;
+	this->_needsUpdate = true;
+}
 
-	glm::mat4 Camera::getViewMatrix() const {
-		return this->_viewMatrix;
-	}
+glm::vec3 cge::Camera::getPosition() const {
+	return this->_position;
+}
+
+glm::vec3 cge::Camera::getRotation() const {
+	return this->_rotation;
+}
+
+glm::mat4 cge::Camera::getProjectionMatrix() const {
+	return this->_projectionMatrix;
+}
+
+glm::mat4 cge::Camera::getViewMatrix() const {
+	return this->_viewMatrix;
 }
 
 std::ostream &operator<<(std::ostream &out, const cge::Camera &rhs) {

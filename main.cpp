@@ -18,7 +18,7 @@ bool	processInput(cge::InputManager &inputManager);
 
 int main() {
 	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GLSLProgram	shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
+	cge::GLSLProgram	shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;
@@ -38,8 +38,8 @@ int main() {
 
 	int gameState = GameState::PLAY_GAME_PLAY;
 
-	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("../resources/moddels/Bomber.glb", "../resources/moddels/BomberManTextureDiffuseColor.png", loader);
+	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
+	cge::Model bomberModel = cge::Model("resources/moddels/Bomber.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
 
 	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
 	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
@@ -58,9 +58,9 @@ int main() {
 					std::cout << "Camera:\n" << camera << "\n";
 				}
 
-				bomber1.addRotation({0.0f, 0.01f, 0.0f});
-				bomber2.addRotation({0.01f, 0.0f, 0.0f});
-				cube.addRotation({0.0f, 0.0f, 0.01f});
+				bomber1.addRotation({0.0f, 0.025f, 0.0f});
+				bomber2.addRotation({0.05f, 0.0f, 0.0f});
+				cube.addRotation({0.0f, 0.0f, 0.05f});
 
 				shader.start();
 				renderer.prepare();
