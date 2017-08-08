@@ -4,6 +4,7 @@
 #include "rendering/Renderer.hpp"
 #include "entites/Camera.hpp"
 #include "extras/Maths.hpp"
+#include "sounds/Sounds.hpp"
 
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -21,18 +22,24 @@ int main() {
 	cge::InputManager	inputManager;
 	cge::Renderer		renderer(shader);
 	cge::Loader			loader;
+	cge::Sounds			sounds;
 
 	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
-		PLAY,
+		PLAY_GAME,
+		PLAY_GAME_PAUSED,
+		PLAY_MAINMENU,
+		PLAY_OPTIONS,
+		PLAY_SAVE_GAME,
+		PLAY_LOAD_GAME,
 		WANTS_QUIT
 	};
 
-	int gameState = GameState::PLAY;
+	int gameState = GameState::PLAY_GAME;
 
 	cge::Model cubeModel = cge::Model("../resources/moddels/companion.glb", "../resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("../resources/moddels/bomner2.glb", "../resources/moddels/BomBerTextureDiffuseColor.png", loader);
+	cge::Model bomberModel = cge::Model("../resources/moddels/Bomber.glb", "../resources/moddels/BomberManTextureDiffuseColor.png", loader);
 
 	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
 	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
@@ -40,26 +47,36 @@ int main() {
 
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
-			gameState = GameState ::WANTS_QUIT;
+			gameState = GameState::WANTS_QUIT;
 		}
 
-		if (inputManager.isKeyPressed(SDLK_c)) {
-			std::cout << "Camera:\n" << camera << "\n";
+		switch (gameState) {
+			case (GameState::PLAY_GAME): {
+				sounds.PlayMusic(cge::Sounds::Music::Menu);
+
+				if (inputManager.isKeyPressed(SDLK_c)) {
+					std::cout << "Camera:\n" << camera << "\n";
+				}
+
+				bomber1.addRotation({0.0f, 0.01f, 0.0f});
+				bomber2.addRotation({0.01f, 0.0f, 0.0f});
+				cube.addRotation({0.0f, 0.0f, 0.01f});
+
+				shader.start();
+				renderer.prepare();
+				camera.update(shader);
+
+				renderer.render(bomber1);
+				renderer.render(bomber2);
+				renderer.render(cube);
+				shader.end();
+				window.swapBuffers();
+				break;
+			}
+			default:
+			case (GameState::PLAY_MAINMENU):
+				break;
 		}
-
-		bomber1.addRotation({0.0f, 0.01f, 0.0f});
-		bomber2.addRotation({0.01f, 0.0f, 0.0f});
-		cube.addRotation({0.0f, 0.0f, 0.01f});
-
-		shader.start();
-			renderer.prepare();
-			camera.update(shader);
-
-			renderer.render(bomber1);
-			renderer.render(bomber2);
-			renderer.render(cube);
-		shader.end();
-		window.swapBuffers();
 	}
 
 	return 0;
