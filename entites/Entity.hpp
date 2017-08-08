@@ -14,7 +14,8 @@ namespace cge {
 
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 
-		virtual void	update(const InputManager &input, unsigned lastFrameTime);
+		void			update(bool updateAnimation);
+		virtual void 	update(const cge::InputManager &inputManager, bool updateAnimation) = 0;
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);
@@ -32,8 +33,15 @@ namespace cge {
 		float 		_scale;
 		glm::mat4	_transformation;
 		GLint		_transformationLocation;
+		unsigned	_lastTicks;
+		unsigned	_ticksDelta;
+		unsigned	_animationTicks;
+		unsigned	_currentAnimation;
+		bool		_hasAnimation;
 
 		bool		_needsTransformationUpdate;
+
+		void		_applyAnimation();
 	};
 }
 

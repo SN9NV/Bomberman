@@ -31,7 +31,7 @@ set(SOURCE_FILES
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/glError.cpp error_handling/glError.hpp
 		entites/Player.cpp entites/Player.hpp
-		sounds/Sounds.cpp sounds/Sounds.hpp)
+		sounds/Sounds.cpp sounds/Sounds.hpp extras/tinygltfOstream.cpp extras/tinygltfOstream.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

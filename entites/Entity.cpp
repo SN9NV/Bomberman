@@ -8,6 +8,11 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_scale(scale),
 		_transformation(1.0),
 		_transformationLocation(0),
+		_lastTicks(SDL_GetTicks()),
+		_ticksDelta(0),
+		_animationTicks(0),
+		_currentAnimation(0),
+		_hasAnimation(!model.getTinygltfModel().animations.empty()),
 		_needsTransformationUpdate(true)
 {
 
@@ -49,7 +54,18 @@ float cge::Entity::getScale() const {
 	return this->_scale;
 }
 
-void cge::Entity::update(const cge::InputManager &input, unsigned lastFrameTime) {
-	(void)input;
-	(void)lastFrameTime;
+void cge::Entity::update(bool updateAnimation) {
+	unsigned currentTicks = SDL_GetTicks();
+	this->_ticksDelta = currentTicks - this->_lastTicks;
+	this->_lastTicks = currentTicks;
+
+	if (updateAnimation && this->_hasAnimation) {
+		this->_applyAnimation();
+	}
+
+
+}
+
+void cge::Entity::_applyAnimation() {
+
 }
