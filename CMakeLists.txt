@@ -4,6 +4,14 @@ project(Bomberman)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
+# These directories get symlinked into the build directory after compilation
+set(RESOURCE_DIRS
+	shaders
+	images
+	resources
+)
+
+# Source files to be compiled
 set(SOURCE_FILES
 		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h
 
