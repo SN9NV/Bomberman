@@ -3,25 +3,29 @@
 //
 
 #include "Being.h"
+#include <cmath>
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, std::string &modelPath,
-			 std::string &texturePath, cge::Loader &loader, float speed, std::string fragmenPath, std::string vertexPath):
-		Entity(position, rotation, scale, (cge::Model(modelPath, texturePath, loader))),
-		_speed(speed),
-		_shader(fragmenPath, vertexPath),
-		_renderer(_shader)
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed) :
+		Entity(position, rotation, scale, model),
+		_speed(speed)
 {
-	this->_n_moveDir = glm::vec2(0,0);
+	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-void Being::update( unsigned lastFrameTime)
+void Being::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
-	_position = _position + (lastFrameTime * _speed * _n_moveDir);
+	if (_n_moveDir.x > 0 || _n_moveDir.z > 0)
+		_n_moveDir = glm::normalize(_n_moveDir);
+	_position = _position + ((lastFrameTime * _speed) * _n_moveDir);
+
+	float angle = atan2(_n_moveDir.x, _n_moveDir.z);
+	this->setRotation({0,angle, 0});
+	(void) input;
 }
 
-void Being::render() {
+/*void Being::render() {
 	_shader.start();
 	_renderer.prepare();
 	_renderer.render((cge::Entity&)this->getModel());
 	_shader.end();
-}
+}*/

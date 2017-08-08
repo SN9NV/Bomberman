@@ -2,7 +2,7 @@
 #include "../extras/Maths.hpp"
 
 namespace cge {
-	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model model) :
+	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model) :
 			_model(model),
 			_position(position),
 			_rotation(rotation),
@@ -50,7 +50,8 @@ namespace cge {
 		return this->_scale;
 	}
 
-	void Entity::update(unsigned lastFrameTime) {
+	void Entity::update(const cge::InputManager &input, unsigned lastFrameTime) {
 		(void)lastFrameTime;
+		(void)input;
 	}
 }

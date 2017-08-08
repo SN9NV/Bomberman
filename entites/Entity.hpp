@@ -12,9 +12,9 @@ namespace cge {
 		Entity() = default;
 		virtual ~Entity() = default;
 
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model model);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 
-		virtual void	update(unsigned lastFrameTime);
+		virtual void	update(const cge::InputManager &input, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);

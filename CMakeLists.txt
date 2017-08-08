@@ -11,7 +11,6 @@ set(SOURCE_FILES
         BomberManGameLogic/MapLoader.cpp
         BomberManGameLogic/Being.cpp
         BomberManGameLogic/Being.h
-        BomberManGameLogic/main.cpp
 		tinyGLTF/picojson.h
         tinyGLTF/stb_image.h
         tinyGLTF/tiny_gltf.h
@@ -31,7 +30,12 @@ set(SOURCE_FILES
 		loaders/picoPNG.cpp loaders/picoPNG.hpp
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/glError.cpp error_handling/glError.hpp
-		entites/Player.cpp entites/Player.hpp BomberManGameLogic/Being.cpp BomberManGameLogic/Being.h)
+		entites/Player.cpp entites/Player.hpp
+		BomberManGameLogic/Being.cpp
+		BomberManGameLogic/Being.h
+		BomberManGameLogic/Player.cpp
+		BomberManGameLogic/Player.hpp
+		BomberManGameLogic/RunLevel.cpp BomberManGameLogic/GameLogic.h)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)

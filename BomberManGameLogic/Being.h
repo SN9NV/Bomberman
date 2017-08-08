@@ -12,16 +12,19 @@
 
 class Being : public cge::Entity
 {
-private:
-	glm::vec2 _n_moveDir;
+protected:
 	float _speed;
-	cge::GLSLProgram	_shader;
-	cge::Renderer		_renderer;
+	//cge::GLSLProgram _shader;
+	//cge::Renderer _renderer;
+	glm::vec3 _n_moveDir;
+
 public:
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, std::string &modlePath, std::string &texturePath, cge::Loader &loader,
-		  float speed, std::string fragmenPath, std::string vertexPath);
-	void update(unsigned lastFrameTime);
-	void render();
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
+		  float speed);
+
+	void update(const cge::InputManager &input, unsigned lastFrameTime) override;
+
+//	void render();
 };
 
 

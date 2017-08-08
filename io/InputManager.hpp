@@ -11,14 +11,17 @@ namespace cge {
 		InputManager() = default;
 		~InputManager() = default;
 
+		void 	poolKeyEvnt();
 		void	pressKey(int keysym);
 		void	releaseKey(int keysym);
 		void	setMouseCoordinates(const glm::vec2 &mouseCoordinates);
 
 		glm::vec2	getMouseCoordinates() const;
 		bool 		isKeyPressed(int keysym) const;
+		bool 		isExitCase() const;
 
 	private:
+		bool 							_exitCase;
 		std::unordered_map<int, bool>	_keyMap;
 		glm::vec2						_mouseCoordinates;
 	};
