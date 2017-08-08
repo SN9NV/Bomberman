@@ -14,7 +14,7 @@ set(RESOURCE_DIRS
 set(SOURCE_FILES
 		tinyGLTF/picojson.h tinyGLTF/stb_image.h tinyGLTF/tiny_gltf.h
 
-		main.cpp
+		main.cpp shared.hpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
 		entites/Entity.cpp entites/Entity.hpp
@@ -32,7 +32,9 @@ set(SOURCE_FILES
 		error_handling/glError.cpp error_handling/glError.hpp
 		entites/Player.cpp entites/Player.hpp
 		sounds/Sounds.cpp sounds/Sounds.hpp
-		gui/GUI.cpp gui/GUI.hpp)
+		gui/GUI.cpp gui/GUI.hpp
+		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
+		gui/LoadGameScreen.cpp gui/LoadGameScreen.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -130,15 +132,15 @@ target_link_libraries(${PROJECT_NAME}
         ${GLM_LIBRARIES}
 		CEGUIBase-0
 		CEGUIOpenGLRenderer-0
-		CEGUIExpatParser
-		CEGUISILLYImageCodec
+#		CEGUIExpatParser
+#		CEGUISILLYImageCodec
 )
 
-#this makes sure it reads all the dylibs correctly
-add_custom_command(
-		TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND /bin/sh ${PROJECT_SOURCE_DIR}/resources/gui/libs/install.sh
-)
+#this makes sure it reads all the dylibs correctly, doesn't work on ubuntu.
+#add_custom_command(
+#		TARGET ${PROJECT_NAME} POST_BUILD
+#		COMMAND /bin/sh ${PROJECT_SOURCE_DIR}/resources/gui/libs/install.sh
+#)
 
 # Function to symbolically link the resources into the build directory
 #	Won't work on Windows

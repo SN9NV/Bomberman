@@ -5,19 +5,19 @@
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="AlfiskoSkin/Button" name="btn_NewGame" >
-            <Property name="Area" value="{{0,30},{0,30},{0,230},{0,62}}" />
+            <Property name="Area" value="{{0.025,0},{0,30},{0.225,0},{0,62}}" />
             <Property name="Text" value="New Game" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_LoadGame" >
-            <Property name="Area" value="{{0,30},{0,80},{0,230},{0,112}}" />
+            <Property name="Area" value="{{0.025,0},{0,80},{0.225,0},{0,112}}" />
             <Property name="Text" value="Load Game" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_Options" >
-            <Property name="Area" value="{{0,30},{0,130},{0,230},{0,162}}" />
+            <Property name="Area" value="{{0.025,0},{0,130},{0.225,0},{0,162}}" />
             <Property name="Text" value="Options" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_Quit" >
-            <Property name="Area" value="{{0,30},{0,180},{0,230},{0,212}}" />
+            <Property name="Area" value="{{0.025,0},{0,180},{0.225,0},{0,212}}" />
             <Property name="Text" value="Exit Game" />
         </Window>
     </Window>

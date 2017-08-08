@@ -1,0 +1,20 @@
+//
+// Created by owen on 2017/08/08.
+//
+
+#ifndef BOMBERMAN_SHARED_HPP
+#define BOMBERMAN_SHARED_HPP
+
+namespace cge {
+	enum GameState {
+		PLAY_GAME_PLAY,
+		PLAY_GAME_PAUSED,
+		PLAY_MAINMENU,
+		PLAY_OPTIONS,
+		PLAY_SAVE_GAME,
+		PLAY_LOAD_GAME,
+		WANTS_QUIT
+	};
+};
+
+#endif //BOMBERMAN_SHARED_HPP

@@ -5,20 +5,20 @@
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="AlfiskoSkin/Label" name="lbl_Title" >
-            <Property name="Area" value="{{0,20},{0,20},{0,200},{0,52}}" />
+            <Property name="Area" value="{{0,20},{0,20},{0,200},{0,55}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Load Saved Game:" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="TaharezLook/Listbox" name="lb_SavedGames" >
-            <Property name="Area" value="{{0,20},{0,70},{0,1000},{0,680}}" />
+            <Property name="Area" value="{{0.025,0},{0,70},{0.95,0},{0.9,0}}" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_MainMenu" >
-            <Property name="Area" value="{{0,20},{0,700},{0,200},{0,732}}" />
+            <Property name="Area" value="{{0.025,0},{0.92,0},{0,200},{0.92,32}}" />
             <Property name="Text" value="Main Menu" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_LoadGame" >
-            <Property name="Area" value="{{0,220},{0,700},{0,400},{0,732}}" />
+            <Property name="Area" value="{{0.025,200},{0.92,0},{0,400},{0.92,32}}" />
             <Property name="Text" value="Load Game" />
         </Window>
     </Window>

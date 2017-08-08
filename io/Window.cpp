@@ -46,6 +46,8 @@ void cge::Window::create(const std::string &windowName, unsigned width, unsigned
 		throw SDL_FatalError("Could not create SDL2 window");
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GLContext	glContext = SDL_GL_CreateContext(this->_window);
 
@@ -53,6 +55,7 @@ void cge::Window::create(const std::string &windowName, unsigned width, unsigned
 		throw SDL_FatalError("SDL_GL context could not be created");
 	}
 
+	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
 		throw SDL_FatalError("GLEW did not initialize");
 	}

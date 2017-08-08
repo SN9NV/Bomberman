@@ -44,6 +44,11 @@ namespace cge {
 			return (static_cast<T *>(newWindow));
 		};
 
+		template<class T>
+		T *getChildFromRoot(const std::string& name) {
+			return (dynamic_cast<T *>(this->_context->getRootWindow()->getChild(name)));
+		}
+
 		void loadLayout(const std::string layoutFile);
 
 		static void

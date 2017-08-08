@@ -12,7 +12,7 @@
 #include <utility>
 
 #define RESERVED_CHANNELS 32
-#define DEFAULT_MUSIC_VOLUME 70
+#define DEFAULT_MUSIC_VOLUME 5
 #define DEFAULT_SFX_VOLUME 10
 
 namespace cge {
