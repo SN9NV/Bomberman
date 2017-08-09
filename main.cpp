@@ -61,12 +61,12 @@ int main() {
 					std::cout << "Camera:\n" << camera << "\n";
 				}
 
-				bomber1.addRotation({0.0f, 0.025f, 0.0f});
-				bomber1.update(true);
+//				bomber1.addRotation({0.0f, 0.025f, 0.0f});
 //				bomber2.addRotation({0.05f, 0.0f, 0.0f});
 //				cube.addRotation({0.0f, 0.0f, 0.05f});
 
 				shader.start();
+				bomber1.update(shader, true);
 				renderer.prepare();
 				camera.update(shader);
 

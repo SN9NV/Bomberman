@@ -16,17 +16,17 @@ namespace cge {
 
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 
-		void			update(bool updateAnimation);
+		void			update(cge::GLSLProgram &shader, bool updateAnimation = true);
 //		virtual void 	update(const cge::InputManager &inputManager, bool updateAnimation) = 0;
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);
 		void			setRotation(const glm::vec3 &rotation);
 
-		Model		&getModel();
-		glm::vec3	getPosition() const;
-		glm::vec3	getRotation() const;
-		float 		getScale() const;
+		Model			&getModel();
+		glm::vec3		getPosition() const;
+		glm::vec3		getRotation() const;
+		float 			getScale() const;
 
 	protected:
 		Model			&_model;
@@ -48,8 +48,19 @@ namespace cge {
 			glm::quat	rotation;
 		};
 
-		void			_applyAnimation();
+		struct Quaternion {
+			float	x;
+			float	y;
+			float	z;
+			float	w;
+		};
+
+		void					_applyAnimation(cge::GLSLProgram &shader);
+		std::vector<glm::mat4>	_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
+												   std::vector<tinygltf::Node> &nodes, int startNodeIndex, int rootNodeIndex,
+												   const glm::mat4 *inverseMatrices/*, std::vector<glm::mat4> &animatedMatrices*/);
 	};
 }
+
 
 #endif //NEW_ENTITY_HPP
