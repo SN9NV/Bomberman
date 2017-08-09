@@ -4,11 +4,12 @@
 
 #include "MainMenuScreen.hpp"
 
-cge::MainMenuScreen::MainMenuScreen(cge::Window &win, int* gameState, cge::Sounds* snds) :
+cge::MainMenuScreen::MainMenuScreen(cge::Window &win, int* gameState, int* prevState, cge::Sounds* snds) :
 	_sdlWindow(win)
 {
 	this->_initUI();
 	this->_gameState = gameState;
+	this->_prevGameState = prevState;
 	this->_sounds = snds;
 
 	this->btn_NewGame = this->_gui.getChildFromRoot<CEGUI::PushButton>("btn_NewGame");
@@ -117,6 +118,7 @@ bool cge::MainMenuScreen::btn_NewGame_Clicked(const CEGUI::EventArgs &e) {
 bool cge::MainMenuScreen::btn_LoadGame_Clicked(const CEGUI::EventArgs &e) {
 	(void)e;
 	this->_sounds->PlaySfx(cge::Sounds::Sfx::Menu_Validate);
+	*this->_prevGameState = *this->_gameState;
 	*this->_gameState = cge::GameState::PLAY_LOAD_GAME;
 	return (true);
 }
@@ -124,6 +126,7 @@ bool cge::MainMenuScreen::btn_LoadGame_Clicked(const CEGUI::EventArgs &e) {
 bool cge::MainMenuScreen::btn_Options_Clicked(const CEGUI::EventArgs &e) {
 	(void)e;
 	this->_sounds->PlaySfx(cge::Sounds::Sfx::Menu_Validate);
+	*this->_prevGameState = *this->_gameState;
 	*this->_gameState = cge::GameState::PLAY_OPTIONS;
 	return (true);
 }

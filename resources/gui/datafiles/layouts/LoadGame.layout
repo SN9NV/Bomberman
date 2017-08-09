@@ -15,7 +15,7 @@
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_MainMenu" >
             <Property name="Area" value="{{0.025,0},{0.92,0},{0,200},{0.92,32}}" />
-            <Property name="Text" value="Main Menu" />
+            <Property name="Text" value="Back" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_LoadGame" >
             <Property name="Area" value="{{0.025,200},{0.92,0},{0,400},{0.92,32}}" />

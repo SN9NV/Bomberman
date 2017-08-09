@@ -5,9 +5,10 @@
 #include <dirent.h>
 #include "LoadGameScreen.hpp"
 
-cge::LoadGameScreen::LoadGameScreen(cge::Window &win, int *gameState, cge::Sounds *snds) :
+cge::LoadGameScreen::LoadGameScreen(cge::Window &win, int *gameState, int* prevState, cge::Sounds *snds) :
 	_sdlWindow(win)
 {
+	this->_prevGameState = prevState;
 	this->_gameState = gameState;
 	this->_sounds = snds;
 
@@ -80,13 +81,15 @@ bool cge::LoadGameScreen::btn_All_EnterArea(const CEGUI::EventArgs &e) {
 bool cge::LoadGameScreen::btn_MainMenu_Clicked(const CEGUI::EventArgs &e) {
 	(void)e;
 	this->_sounds->PlaySfx(cge::Sounds::Sfx::Menu_Validate);
-	*this->_gameState = cge::GameState::PLAY_MAINMENU;
+	*this->_gameState = *this->_prevGameState;
 	return (true);
 }
 
 bool cge::LoadGameScreen::btn_LoadGame_Clicked(const CEGUI::EventArgs &e) {
 	(void)e;
 	this->_sounds->PlaySfx(cge::Sounds::Sfx::Menu_Validate);
+	this->_gui.showMessageBox(this->lb_SavedGames->getFirstSelectedItem()->getText().c_str());
+	*this->_gameState = cge::GameState::PLAY_GAME_PLAY;
 	return (true);
 }
 

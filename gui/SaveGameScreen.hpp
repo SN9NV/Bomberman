@@ -1,30 +1,29 @@
 //
-// Created by owen on 2017/08/08.
+// Created by owen on 2017/08/09.
 //
 
-#ifndef BOMBERMAN_LOADGAMESCREEN_HPP
-#define BOMBERMAN_LOADGAMESCREEN_HPP
+#ifndef BOMBERMAN_SAVEGAMESCREEN_HPP
+#define BOMBERMAN_SAVEGAMESCREEN_HPP
 
 #include "../io/Window.hpp"
 #include "../sounds/Sounds.hpp"
-#include "../shared.hpp"
 #include "GUI.hpp"
-
-#define SAVE_GAMES_PATH "./resources/saves"
+#include "../shared.hpp"
+#include "LoadGameScreen.hpp"
+#include <dirent.h>
 
 namespace cge {
-	class LoadGameScreen {
+	class SaveGameScreen {
 	public:
-		LoadGameScreen(cge::Window& win, int *gameState, int* prevState, cge::Sounds* snds);;
+		SaveGameScreen(cge::Window& win, int *gameState, cge::Sounds* snds);;
 
-		~LoadGameScreen();
+		~SaveGameScreen();
 
 		void DrawScreen();
 
 	private:
-		LoadGameScreen();
+		SaveGameScreen();
 
-		int*				_prevGameState;
 		int*				_gameState;
 		cge::Sounds*		_sounds;
 		cge::Window&		_sdlWindow;
@@ -36,15 +35,16 @@ namespace cge {
 
 		void				_getSavedGames(void);
 
+		CEGUI::Editbox*		txtb_SaveGame;
 		CEGUI::PushButton* 	btn_MainMenu;
-		CEGUI::PushButton* 	btn_LoadGame;
+		CEGUI::PushButton* 	btn_SaveGame;
 		CEGUI::Listbox*		lb_SavedGames;
 
 		bool				btn_All_EnterArea(const CEGUI::EventArgs& e);
 		bool				btn_MainMenu_Clicked(const CEGUI::EventArgs& e);
-		bool				btn_LoadGame_Clicked(const CEGUI::EventArgs& e);
+		bool				btn_SaveGame_Clicked(const CEGUI::EventArgs& e);
 	};
 }
 
 
-#endif //BOMBERMAN_LOADGAMESCREEN_HPP
+#endif //BOMBERMAN_SAVEGAMESCREEN_HPP

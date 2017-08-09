@@ -13,7 +13,7 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="AlfiskoSkin/HorizontalSlider" name="sl_MusicVolume" >
-            <Property name="Area" value="{{0,180},{0,30},{0,440},{0,62}}" />
+            <Property name="Area" value="{{0.17,0},{0,30},{0.42,0},{0,62}}" />
             <Property name="MaximumValue" value="100" />
         </Window>
         <Window type="AlfiskoSkin/Label" name="lbl_SfxVolume" >
@@ -23,27 +23,28 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="AlfiskoSkin/HorizontalSlider" name="sl_SfxVolume" >
-            <Property name="Area" value="{{0,180},{0,90},{0,440},{0,122}}" />
+            <Property name="Area" value
+            ="{{0.17,0},{0,90},{0.42,0},{0,122}}" />
             <Property name="MaximumValue" value="100" />
         </Window>
         <Window type="AlfiskoSkin/Label" name="lbl_CurrMusicVolume" >
-            <Property name="Area" value="{{0,450},{0,30},{0,530},{0,62}}" />
+            <Property name="Area" value="{{0.43,0},{0,30},{0.51,0},{0,62}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="(00)" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="AlfiskoSkin/Label" name="lbl_CurrSfxVolume" >
-            <Property name="Area" value="{{0,450},{0,90},{0,530},{0,122}}" />
+            <Property name="Area" value="{{0.43,0},{0,90},{0.51,0},{0,122}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="(00)" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_MainMenu" >
-            <Property name="Area" value="{{0,30},{0,700},{0,190},{0,732}}" />
-            <Property name="Text" value="Main Menu" />
+            <Property name="Area" value="{{0.025,0},{0.925,0},{0,190},{0.925,32}}" />
+            <Property name="Text" value="Back" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="btn_Save" >
-            <Property name="Area" value="{{0,800},{0,700},{0,970},{0,732}}" />
+            <Property name="Area" value="{{0.78,0},{0.925,0},{0.78,190},{0.925, 32}}" />
             <Property name="Text" value="Save Settings" />
         </Window>
     </Window>

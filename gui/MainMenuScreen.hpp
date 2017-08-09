@@ -18,13 +18,14 @@
 namespace cge {
 	class MainMenuScreen {
 	public:
-		MainMenuScreen(cge::Window& win, int *gameState, cge::Sounds* snds);
+		MainMenuScreen(cge::Window& win, int *gameState, int* prevState, cge::Sounds* snds);
 		~MainMenuScreen();
 
 		void				DrawScreen(cge::Entity& bomberman);
 	private:
 		MainMenuScreen();
 
+		int*				_prevGameState;
 		int*				_gameState;
 		cge::Sounds*		_sounds;
 		cge::Window&		_sdlWindow;

@@ -4,25 +4,31 @@
     <Window type="DefaultWindow" name="SaveGame" >
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
+
         <Window type="AlfiskoSkin/Editbox" name="txtb_SaveName" >
-            <Property name="Area" value="{{0,30},{0,70},{0,360},{0,102}}" />
+            <Property name="Area" value="{{0.03,0},{0.05,0},{0.35,0},{0.05,32}}" />
         </Window>
+
         <Window type="AlfiskoSkin/Button" name="btn_Save" >
-            <Property name="Area" value="{{0,380},{0,70},{0,476},{0,102}}" />
+            <Property name="Area" value="{{0.36, 0},{0.05,0},{0.36,180},{0.05,32}}" />
             <Property name="Text" value="Save" />
         </Window>
+
         <Window type="AlfiskoSkin/Label" name="lbl_SaveGame" >
-            <Property name="Area" value="{{0,30},{0,20},{0,158},{0,52}}" />
+            <Property name="Area" value="{{0.03,0},{0.02,0},{0.15,0},{0.02,22}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Save Game:" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
+
         <Window type="TaharezLook/Listbox" name="lb_SaveGames" >
-            <Property name="Area" value="{{0,30},{0,120},{0,1250},{0,650}}" />
+            <Property name="Area" value="{{0.03,0},{0.1,0},{0.97,0},{0.92,0}}" />
         </Window>
+
         <Window type="AlfiskoSkin/Button" name="btn_MainMenu" >
-            <Property name="Area" value="{{0,30},{0,670},{0,210},{0,702}}" />
+            <Property name="Area" value="{{0.03,0},{0,670},{0,210},{0,702}}" />
             <Property name="Text" value="Main Menu" />
         </Window>
+
     </Window>
 </GUILayout>

@@ -34,7 +34,10 @@ set(SOURCE_FILES
 		sounds/Sounds.cpp sounds/Sounds.hpp
 		gui/GUI.cpp gui/GUI.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
-		gui/LoadGameScreen.cpp gui/LoadGameScreen.hpp)
+		gui/LoadGameScreen.cpp gui/LoadGameScreen.hpp
+		gui/OptionsScreen.cpp gui/OptionsScreen.hpp
+		gui/GameHUD.cpp gui/GameHUD.hpp
+		gui/SaveGameScreen.cpp gui/SaveGameScreen.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

@@ -4,6 +4,8 @@
 
 #include <glm/vec2.hpp>
 #include <unordered_map>
+#include <caca++.h>
+#include <SDL_events.h>
 
 namespace cge {
 	class InputManager {
@@ -17,6 +19,8 @@ namespace cge {
 
 		glm::vec2	getMouseCoordinates() const;
 		bool 		isKeyPressed(int keysym) const;
+
+		SDL_Event	event;
 
 	private:
 		std::unordered_map<int, bool>	_keyMap;
