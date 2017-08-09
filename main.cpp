@@ -26,13 +26,14 @@ int main()
 	cge::Model BomberMan;
 	LevelRunner *levelRunner;
 	std::vector<std::string> map = {
+			"6",
 			"wwwwwwwwwwwwwww",
 			"w.............w",
-			"w..d.d.d.d.d..w",
+			"w..dwdwdwdwd..w",
 			"w.............w",
-			"w..d.......d..w",
+			"w..d..w.w..d..w",
 			"w......p......w",
-			"w..d.......d..w",
+			"w..d..w.w..d..w",
 			"w.............w",
 			"w..d.d.d.d....w",
 			"w.............w",

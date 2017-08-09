@@ -9,11 +9,12 @@
 class Player : public Being
 {
 private:
-
+	int _lives;
 public:
+	int getLives() const;
 	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed);
 	void update(const cge::InputManager &input, unsigned lastFrameTime);
-
+	int loseLife();
 
 
 };

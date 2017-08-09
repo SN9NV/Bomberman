@@ -58,6 +58,11 @@ bool Being::checkBombDeterNation(Bomb *bomb)
 	return false;
 }
 
+void Being::setMoveDir(glm::vec3 newDir)
+{
+	_n_moveDir = newDir;
+}
+
 
 
 /*void Being::render() {

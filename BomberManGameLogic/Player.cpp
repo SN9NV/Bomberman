@@ -19,7 +19,6 @@ void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 
 	if (input.isKeyPressed(SDLK_b) && _bombs.size() < _maxBomb)
 	{
-		std::cout << "_bombs.size " << _bombs.size() << " maxBombs";
 		_plaseBomb = true;
 	}
 
@@ -29,7 +28,17 @@ void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 }
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
-		: Being(position, rotation, scale, model, speed)
+		: Being(position, rotation, scale, model, speed), _lives(3)
 {}
+
+int Player::getLives() const
+{
+	return _lives;
+}
+
+int Player::loseLife()
+{
+	return --_lives;
+}
 
 

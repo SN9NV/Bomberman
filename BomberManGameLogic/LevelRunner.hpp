@@ -16,7 +16,9 @@
 enum levelState
 {
 	PLAY,
-	WANTS_QUIT
+	WANTS_QUIT,
+	FAIL,
+	COMPLEAT
 };
 
 class LevelRunner
@@ -36,15 +38,19 @@ private:
 	cge::InputManager _inputManager;
 	cge::Renderer _renderer;
 	cge::Camera _camera;
-	int state = levelState::PLAY;
+	int _state = levelState::PLAY;
+	int _dwalls;
+	bool _gate;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();
 	void loadMapEntitys();
 	cge::Model *getModel(std::string name);
+	void checkBeingBlast(int x, int y);
+	void checkWallBlast(int x, int y);
 public:
 	LevelRunner(cge::Loader &_loader, Player *_player, const cge::Window &_window);
-	void runLevel(std::vector<std::string> map);
+	int runLevel(std::vector<std::string> map);
 };
 
 

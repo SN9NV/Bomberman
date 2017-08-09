@@ -31,10 +31,12 @@ public:
 	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
 		  float speed);
 
-	void update(const cge::InputManager &input, unsigned lastFrameTime) override;
+	Being() = default;
+
+	virtual void update(const cge::InputManager &input, unsigned lastFrameTime) override;
 
 	void setRotation();
-
+	void setMoveDir(glm::vec3 newDir);
 	float getDirAngle();
 //	void render();
 };
