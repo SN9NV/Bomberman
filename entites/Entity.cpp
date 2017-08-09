@@ -82,10 +82,10 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	for (auto &channel : animation.channels) {
 		tinygltf::AnimationSampler animationSampler = animation.samplers[channel.sampler];
 
-		// Array of keyframe times in seconds
+		/// Array of keyframe times in seconds
 		tinygltf::Accessor		inAccessor	= model.accessors[animationSampler.input];
 		tinygltf::BufferView	inBuffView	= model.bufferViews[inAccessor.bufferView];
-		// Array of values for each keyframe
+		/// Array of values for each keyframe
 		tinygltf::Accessor		outAccessor	= model.accessors[animationSampler.output];
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
@@ -147,14 +147,14 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 
 	auto *inverseMatrices = reinterpret_cast<glm::mat4 *>(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
 	std::vector<glm::mat4>	animatedMatrices;
-	animatedMatrices.resize(model.nodes.size()/* - rootJointIndex*/);
+	animatedMatrices.resize(model.nodes.size() - rootJointIndex);
 
 	auto skeleton = model.nodes[skin.skeleton];
 	glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
 	glm::mat4	skeletonTransformation;
 	skeletonTransformation = glm::translate(skeletonTransformation, skeletonTranslation);
 
-	for (auto &joint : model.nodes[skin.skeleton].children /*skin.joints*/) {
+	for (auto &joint : model.nodes[skin.skeleton].children) {
 		if (joint < skin.skeleton) {
 			continue;
 		}
