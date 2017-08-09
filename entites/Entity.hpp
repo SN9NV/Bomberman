@@ -48,17 +48,11 @@ namespace cge {
 			glm::quat	rotation;
 		};
 
-		struct Quaternion {
-			float	x;
-			float	y;
-			float	z;
-			float	w;
-		};
-
-		void					_applyAnimation(cge::GLSLProgram &shader);
-		std::vector<glm::mat4>	_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
-												   std::vector<tinygltf::Node> &nodes, int startNodeIndex, int rootNodeIndex,
-												   const glm::mat4 *inverseMatrices/*, std::vector<glm::mat4> &animatedMatrices*/);
+		void	_applyAnimation(cge::GLSLProgram &shader);
+		void	_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
+								 const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
+								 int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
+								 std::vector<glm::mat4> &animatedMatrices);
 	};
 }
 
