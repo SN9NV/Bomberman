@@ -17,4 +17,5 @@ void main() {
 	vec4 diffuse = vec4(vec3(brightness), 1.0);
 
 	colour = diffuse * texture(samplerUV, fragmentUV);
+//	colour *= vec4(1, 1, 1, 0.5); ///> Makes the model half invisable
 }

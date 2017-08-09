@@ -147,7 +147,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 
 	auto *inverseMatrices = reinterpret_cast<glm::mat4 *>(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
 	std::vector<glm::mat4>	animatedMatrices;
-	animatedMatrices.resize(model.nodes.size() - rootJointIndex);
+	animatedMatrices.resize(model.nodes.size()/* - rootJointIndex*/);
 
 	auto skeleton = model.nodes[skin.skeleton];
 	glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
@@ -179,35 +179,27 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 									  std::vector<glm::mat4> &animatedMatrices) {
 	(void)nodes; ///> TODO remove
 	(void)parentTransform; ///> TODO remove
+	(void)inverseMatrices; ///> TODO remove
 
-	glm::mat4		inverseMatrix = inverseMatrices[startNodeIndex - rootNodeIndex];
+	glm::mat4	inverseMatrix = inverseMatrices[startNodeIndex - rootNodeIndex];
+	(void)inverseMatrix; ///> TODO remove
 
-	glm::mat4		localTransform;
-	if (!nodes[startNodeIndex].translation.empty()) {
-		localTransform = glm::translate(localTransform, glm::vec3(
-				(float)nodes[startNodeIndex].translation[0],
-				(float)nodes[startNodeIndex].translation[1],
-				(float)nodes[startNodeIndex].translation[2]
-		));
+	glm::mat4		globalJointTransform;
+	auto			jointTransform = transformationMap.find(startNodeIndex);
+
+	glm::mat4	currentTransform;
+	if (jointTransform == transformationMap.end()) {
+		currentTransform = parentTransform;
+	} else {
+		globalJointTransform = glm::translate(globalJointTransform, jointTransform->second.translation);
+		globalJointTransform *= glm::mat4_cast(jointTransform->second.rotation);
+
+		currentTransform = parentTransform * globalJointTransform;
 	}
 
-	if (!nodes[startNodeIndex].rotation.empty()) {
-		localTransform *= glm::mat4_cast(glm::quat(
-				(float)nodes[startNodeIndex].rotation[0],
-				(float)nodes[startNodeIndex].rotation[1],
-				(float)nodes[startNodeIndex].rotation[2],
-				(float)nodes[startNodeIndex].rotation[3]
-		));
+	for (auto &child : nodes[startNodeIndex].children) {
+		this->_animateSkeleton(transformationMap, currentTransform, nodes, child, rootNodeIndex, inverseMatrices, animatedMatrices);
 	}
 
-	glm::mat4		transformation;
-	transformation = glm::translate(transformation, transformationMap.find(startNodeIndex)->second.translation);
-	transformation *= glm::mat4_cast(transformationMap.find(startNodeIndex)->second.rotation);
-
-	glm::mat4	currentTransform = /*localTransform **/ parentTransform * transformation * inverseMatrix;
-	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform;
-
-//	for (auto &child : nodes[startNodeIndex].children) {
-//		this->_animateSkeleton(transformationMap, currentTransform, nodes, child, rootNodeIndex, inverseMatrices, animatedMatrices);
-//	}
+	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
 }
