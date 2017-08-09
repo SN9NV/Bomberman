@@ -177,12 +177,7 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 									  const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
 									  int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
 									  std::vector<glm::mat4> &animatedMatrices) {
-	(void)nodes; ///> TODO remove
-	(void)parentTransform; ///> TODO remove
-	(void)inverseMatrices; ///> TODO remove
-
 	glm::mat4	inverseMatrix = inverseMatrices[startNodeIndex - rootNodeIndex];
-	(void)inverseMatrix; ///> TODO remove
 
 	glm::mat4		globalJointTransform;
 	auto			jointTransform = transformationMap.find(startNodeIndex);
