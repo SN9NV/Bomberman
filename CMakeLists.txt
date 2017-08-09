@@ -35,7 +35,11 @@ set(SOURCE_FILES
 		BomberManGameLogic/Being.h
 		BomberManGameLogic/Player.cpp
 		BomberManGameLogic/Player.hpp
-		BomberManGameLogic/RunLevel.cpp BomberManGameLogic/GameLogic.h)
+		BomberManGameLogic/GameLogic.h
+        BomberManGameLogic/Bomb.cpp
+        BomberManGameLogic/Bomb.hpp
+        BomberManGameLogic/LevelRunner.cpp
+        BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)

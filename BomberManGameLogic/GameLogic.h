@@ -7,8 +7,9 @@
 
 #include "../io/Window.hpp"
 #include "../loaders/Loader.hpp"
+#include "Player.hpp"
 
 
-void runLevel(std::string &levelPath, cge::Loader &loader, cge::Window	window);
+void runLevel(Player *player,std::string levelPath, cge::Loader &loader, cge::Window	window);
 
 #endif //BOMBERMAN_GAMELOGIC_H

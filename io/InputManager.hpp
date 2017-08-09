@@ -21,7 +21,7 @@ namespace cge {
 		bool 		isExitCase() const;
 
 	private:
-		bool 							_exitCase;
+		bool 							_exitCase = false;
 		std::unordered_map<int, bool>	_keyMap;
 		glm::vec2						_mouseCoordinates;
 	};
