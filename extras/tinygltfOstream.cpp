@@ -33,6 +33,7 @@ std::ostream &operator<<(std::ostream &out, const std::vector<double> &vector) {
 }
 
 std::ostream &operator<<(std::ostream &out, const tinygltf::Model &model) {
+	out << "::::MODEL::::\n";
 	out << "Accessors: " << model.accessors.size() << "\n";
 	out << "Animations: " << model.animations.size() << "\n";
 	out << "Buffers: " << model.buffers.size() << "\n";
@@ -46,7 +47,76 @@ std::ostream &operator<<(std::ostream &out, const tinygltf::Model &model) {
 	out << "Sampler: " << model.samplers.size() << "\n";
 	out << "Cameras: " << model.cameras.size() << "\n";
 	out << "Scenes: " << model.scenes.size() << "\n";
-	out << "Default Scene: " << model.defaultScene;
+	out << "Default Scene: " << model.defaultScene << "\n\n";
+
+	tinygltf::Buffer buffer = model.buffers[0];
+
+	out << "::::NODES::::\n";
+	for (auto &node : model.nodes) {
+		out << node << "\n\n";
+	}
+
+	out << "::::SKINS::::\n";
+	for (auto &skin : model.skins) {
+		out << skin << "\n\n";
+	}
+
+	out << "::::ANIMATIONS::::\n";
+	for (auto &animation : model.animations) {
+		out << "Name: " << animation.name << "\n";
+
+		out << "Animation Channels:\n";
+		for (auto &channel : animation.channels) {
+			out << "=================\nAnimation Channel\n=================\n";
+			out << channel << "\n\n";
+
+			out << "::::Sampler::::\n";
+			tinygltf::AnimationSampler animationSampler = animation.samplers[channel.sampler];
+			out << animationSampler << "\n\n";
+
+			tinygltf::Accessor inputAccessor = model.accessors[animationSampler.input];
+			tinygltf::Accessor outputAccessor = model.accessors[animationSampler.output];
+			tinygltf::BufferView inputBufferView = model.bufferViews[inputAccessor.bufferView];
+			tinygltf::BufferView outputBufferView = model.bufferViews[outputAccessor.bufferView];
+
+			out << "::::Input Accessor::::\n";
+			out << inputAccessor << "\n\n";
+
+			out << "::::Input Buffer::::\n";
+			out << inputBufferView << "\n\n";
+
+			out << "::::DATA::::\n";
+			auto *inBuffData = (float *)(buffer.data.data() + inputBufferView.byteOffset);
+
+			out << "[ ";
+			for (unsigned i = 0; i < inputBufferView.byteLength / sizeof(float); i++) {
+				out << inBuffData[i] - inBuffData[0];
+
+				if (i+1 < inputBufferView.byteLength / sizeof(float)) {
+					out << ", ";
+				}
+			}
+			out << " ]\n\n";
+
+			out << "::::Input Accessor::::\n";
+			out << outputAccessor << "\n\n";
+
+			out << "::::Output Buffer::::\n";
+			out << outputBufferView << "\n\n";
+
+			out << "::::DATA::::\n";
+			auto *outBuffData = (float *)(buffer.data.data() + outputBufferView.byteOffset);
+
+			out << "[ ";
+			for (unsigned i = 0; i < outputBufferView.byteLength / sizeof(float); i++) {
+				out << outBuffData[i];
+				if (i+1 < outputBufferView.byteLength / sizeof(float)) {
+					out << ", ";
+				}
+			}
+			out << " ]\n\n";
+		}
+	}
 
 	return out;
 }

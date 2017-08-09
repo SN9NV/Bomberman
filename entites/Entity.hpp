@@ -5,6 +5,8 @@
 #include "Model.hpp"
 #include "../rendering/GLSLProgram.hpp"
 #include "../io/InputManager.hpp"
+#include <glm/gtc/quaternion.hpp>
+
 
 namespace cge {
 	class Entity {
@@ -15,7 +17,7 @@ namespace cge {
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 
 		void			update(bool updateAnimation);
-		virtual void 	update(const cge::InputManager &inputManager, bool updateAnimation) = 0;
+//		virtual void 	update(const cge::InputManager &inputManager, bool updateAnimation) = 0;
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);
@@ -40,6 +42,11 @@ namespace cge {
 		bool			_hasAnimation;
 
 		bool			_needsTransformationUpdate;
+
+		struct Transformation {
+			glm::vec3	translation;
+			glm::quat	rotation;
+		};
 
 		void			_applyAnimation();
 	};
