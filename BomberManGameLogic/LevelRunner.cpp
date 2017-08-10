@@ -7,6 +7,7 @@
 #include "Gate.hpp"
 #include "Balloon.hpp"
 #include "../extras/Maths.hpp"
+#include "../gui/GuiManager.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 const cge::Window &_window) : _loader(_loader), _player(_player),
@@ -387,40 +388,61 @@ int LevelRunner::runLevel(std::vector<std::string> map)
 	//std::cout << levelPath << "\n";
 	_map = map;
 	_gate = nullptr;
-	_state = levelState::PLAY;
+	_state = levelState::PLAY_MENU;
 	loadMapEntitys();
 
+	cge::GuiManager* guiManager = cge::GuiManager::getSingleton();
 
-	while (_state == levelState::PLAY)
+	bool run = true;
+	while (run)
 	{
-		_inputManager.poolKeyEvnt();
-		if (_inputManager.isExitCase() || _inputManager.isKeyPressed(SDLK_ESCAPE) || _player->getLives() <= 0)
-		{
-			_state = levelState::WANTS_QUIT;
-		}
-		if (_beings.size() == 1 && _gate != nullptr)
-			_gate->actervate();
-		beingWorldInteraction();
-		bombWorldInteraction();
-		glm::vec3 plpos = _player->getPosition();
-		_camera.setPosition({plpos.x, 10, plpos.z});
-		_shader.start();
-		_renderer.prepare();
-		_camera.update(_shader);
-		for (auto &vecit : _level)
-		{
-			for (auto &entit : vecit)
-			{
-				if (entit)
-					_renderer.render(*entit);
+		switch (_state){
+			case (levelState::WANTS_QUIT):
+			case (levelState::COMPLEAT):
+			case (levelState::FAIL):
+				run = false;
+				break;
+			case (levelState::PLAY): {
+				_inputManager.poolKeyEvnt();
+				if (_inputManager.isExitCase() || _inputManager.isKeyPressed(SDLK_ESCAPE) || _player->getLives() <= 0)
+				{
+					_state = levelState::WANTS_QUIT;
+				}
+				if (_beings.size() == 1 && _gate != nullptr)
+					_gate->actervate();
+				beingWorldInteraction();
+				bombWorldInteraction();
+				glm::vec3 plpos = _player->getPosition();
+				_camera.setPosition({plpos.x, 10, plpos.z});
+				_shader.start();
+				_renderer.prepare();
+				_camera.update(_shader);
+				for (auto &vecit : _level)
+				{
+					for (auto &entit : vecit)
+					{
+						if (entit)
+							_renderer.render(*entit);
+					}
+				}
+				for (auto being : _beings)
+					_renderer.render(*being);
+				if (_gate != nullptr)
+					_renderer.render(*_gate);
+				_shader.end();
+				_window.swapBuffers();
+				break;
 			}
+			case (levelState::PLAY_MENU):
+			default:
+				glDisable(GL_SCISSOR_TEST);
+				glDisable(GL_DEPTH_TEST);
+
+				guiManager->drawScreen(_state);
+				_window.swapBuffers();
+				break;
 		}
-		for (auto being : _beings)
-			_renderer.render(*being);
-		if (_gate != nullptr)
-			_renderer.render(*_gate);
-		_shader.end();
-		_window.swapBuffers();
+
 	}
 	endlevel();
 	return _state;

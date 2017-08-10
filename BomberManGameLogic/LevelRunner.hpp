@@ -17,6 +17,7 @@
 enum levelState
 {
 	PLAY,
+	PLAY_MENU,
 	WANTS_QUIT,
 	FAIL,
 	COMPLEAT

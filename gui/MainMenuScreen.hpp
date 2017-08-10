@@ -1,12 +1,11 @@
 //
-// Created by Owen EXALL on 2017/08/10.
+// Created by owen on 2017/08/10.
 //
 
-#ifndef BOMBERMAN_GUI_HPP
-#define BOMBERMAN_GUI_HPP
+#ifndef BOMBERMAN_MAINMENUSCREEN_HPP
+#define BOMBERMAN_MAINMENUSCREEN_HPP
 
 #include "../io/Window.hpp"
-
 #include <nanogui/screen.h>
 #include <nanogui/window.h>
 #include <nanogui/layout.h>
@@ -26,19 +25,21 @@
 #include <nanogui/vscrollpanel.h>
 #include <nanogui/colorwheel.h>
 #include <nanogui/graph.h>
-#include <nanogui/tabwidget.h>
 #include <nanogui/formhelper.h>
 
 namespace cge {
-	class GUI {
-	public:
-		GUI(cge::Window& win);
-		~GUI();
+	namespace GUI {
+		class MainMenuScreen {
+		public:
+			MainMenuScreen(cge::Window& win);
+			~MainMenuScreen();
 
-		void DrawScreen();
-	private:
-		cge::Window& _sdlWindow;
-	};
+			void drawScreen();
+		private:
+			nanogui::Screen* screen;
+		};
+	}
 }
 
-#endif //BOMBERMAN_GUI_HPP
+
+#endif //BOMBERMAN_MAINMENUSCREEN_HPP

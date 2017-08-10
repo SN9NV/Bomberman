@@ -6,19 +6,26 @@
 #define BOMBERMAN_GUIMANAGER_HPP
 
 #include "../io/Window.hpp"
+#include "MainMenuScreen.hpp"
 
 namespace cge {
 	class GuiManager {
 	public:
-		static cge::GuiManager* getSingleton(cge::Window& win);
+		static bool			initialise(cge::Window& win);
+		static GuiManager*	getSingleton();
 
-		GuiManager(cge::Window& win);
+		explicit GuiManager(cge::Window& win);
 		~GuiManager();
 
-	private:
-		static cge::GuiManager*	s_instance;
+		void drawScreen(int screen);
 
-		cge::Window&			_sdlWindow;
+	private:
+		static cge::GuiManager*		s_instance;
+
+		cge::Window&				_sdlWindow;
+
+		cge::GUI::MainMenuScreen*	_mainMenuScreen;
+		void 						setMainMenuScreen(cge::GUI::MainMenuScreen*	mainMenuScreen);
 	};
 }
 
