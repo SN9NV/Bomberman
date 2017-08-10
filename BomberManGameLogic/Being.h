@@ -26,9 +26,15 @@ public:
 	const glm::vec3 &get_n_moveDir() const;
 
 	bool is_placeBomb() const;
+
 	void placeBomb(Bomb *bomb);
+
 	bool checkBombDeterNation(Bomb *bomb);
+
 	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
+		  float speed);
+
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox,
 		  float speed);
 
 	Being() = default;
@@ -36,7 +42,9 @@ public:
 	virtual void update(const cge::InputManager &input, unsigned lastFrameTime) override;
 
 	void setRotation();
+
 	void setMoveDir(glm::vec3 newDir);
+
 	float getDirAngle();
 //	void render();
 };

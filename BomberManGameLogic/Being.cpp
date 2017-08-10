@@ -12,6 +12,13 @@ Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, float speed) :
+		Entity(position, rotation, scale, model, hitBox),
+		_speed(speed), _maxBomb(1), _plaseBomb(false)
+{
+	this->_n_moveDir = glm::vec3(0, 0, 0);
+}
+
 void Being::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
 	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)

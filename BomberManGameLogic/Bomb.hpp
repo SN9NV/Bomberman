@@ -19,6 +19,7 @@ private:
 	float _ticks;
 public:
 	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, int _bombradius);
+	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, int _bombradius);
 	void update(const cge::InputManager &input, unsigned lastFrameTime);
 	bool isDeternate();
 };

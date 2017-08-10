@@ -31,6 +31,10 @@ Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale
 		: Being(position, rotation, scale, model, speed), _lives(3)
 {}
 
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, float speed)
+		: Being(position, rotation, scale, model, hitBox, speed), _lives(3)
+{}
+
 int Player::getLives() const
 {
 	return _lives;

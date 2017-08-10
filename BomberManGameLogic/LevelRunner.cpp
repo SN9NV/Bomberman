@@ -9,29 +9,30 @@
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 const cge::Window &_window) : _loader(_loader), _player(_player),
+													   _gate(nullptr),
 													   _window(_window),
 													   _shader("../shaders/vertex.glsl", "../shaders/fragment.glsl"),
 													   _renderer(_shader),
-													   _camera(glm::vec3(0.0f, 20.0f, 0.0f),
-															   glm::vec3(1.4f, 0.0f, 0.0f), _window),
-													   _gate(false)
+													   _camera(glm::vec3(0.0f, 3.0f, 0.0f),
+															   glm::vec3(1.4f, 0.0f, 0.0f), _window)
 {
 	_models.emplace("Wall",
 					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
-							   _loader));
+							   this->_loader));
 	_models.emplace("DestructWall", cge::Model("../resources/models/DestructWall.glb",
-											   "../resources/models/DestructWallDiffuseColor.png", _loader));
+											   "../resources/models/DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb",
-					cge::Model("../resources/models/Bomb.glb", "../resources/models/BombDiffuseColor.png", _loader));
+					cge::Model("../resources/models/Bomb.glb", "../resources/models/BombDiffuseColor.png",
+							   this->_loader));
 	_models.emplace("Bomber",
 					cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							   _loader));
+							   this->_loader));
 	_models.emplace("Balloon",
 					cge::Model("../resources/models/Balloon.glb", "../resources/models/BalloonDiffuseColor.png",
-							   _loader));
+							   this->_loader));
 	_models.emplace("Gate",
 					cge::Model("../resources/models/Gate.glb", "../resources/models/GateDiffuseColor.png",
-							   _loader));
+							   this->_loader));
 }
 
 cge::Model *LevelRunner::getModel(std::string name)
@@ -42,46 +43,120 @@ cge::Model *LevelRunner::getModel(std::string name)
 	return (nullptr);
 }
 
+void LevelRunner::bumpBeing(Being *being)
+{
+	glm::vec3 pos;
+	int x;
+	int y;
+	float minBoxDist;
+	float dist;
+
+	pos = being->getPosition();
+	x = (int) (round(pos.x));
+	y = (int) (round(pos.z));
+	//colision box up
+	if ((y - 1) > -1 && _level[y - 1][x] != nullptr)
+	{
+		minBoxDist = being->getHitBox().z + _level[y - 1][x]->getHitBox().z;
+		dist = (float) (fabs(_level[y - 1][x]->getPosition().z - pos.z));
+		if (dist < minBoxDist)
+		{
+			being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
+			being->setMoveDir({0, 0, 0});
+		}
+	}
+	//colision box down
+	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr)
+	{
+		minBoxDist = being->getHitBox().z + _level[y + 1][x]->getHitBox().z;
+		dist = (float) (fabs(_level[y + 1][x]->getPosition().z - pos.z));
+		if (dist < minBoxDist)
+		{
+			being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
+			being->setMoveDir({0, 0, 0});
+		}
+	}
+	//colision box left
+	if (x - 1 > -1 && _level[y][x - 1] != nullptr)
+	{
+		minBoxDist = being->getHitBox().x + _level[y][x - 1]->getHitBox().x;
+		dist = (float) (fabs(_level[y][x - 1]->getPosition().x - pos.x));
+		if (dist < minBoxDist)
+		{
+			being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
+			being->setMoveDir({0, 0, 0});
+		}
+	}
+	//colision box right
+	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr)
+	{
+		minBoxDist = being->getHitBox().x + _level[y][x + 1]->getHitBox().x;
+		dist = (float) (fabs(_level[y][x + 1]->getPosition().x - pos.x));
+		if (dist < minBoxDist)
+		{
+			being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
+			being->setMoveDir({0, 0, 0});
+		}
+	}
+}
+
 void LevelRunner::beingWorldInteraction()
 {
 	glm::vec3 oldpos;
 	glm::vec3 pos;
 	cge::Model *tmpmdl;
-	Gate *gate;
+	int x;
+	int y;
+
 
 	for (auto &being : _beings)
 	{
 		oldpos = being->getPosition();
 		being->update(_inputManager, _window.getFrameTime());
 		pos = being->getPosition();
+		x = (int) (round(pos.x));
+		y = (int) (round(pos.z));
 		if (being->get_n_moveDir().x != 0 || being->get_n_moveDir().z != 0 || being->is_placeBomb())
 		{
-			if (_level[(int) (round(pos.z))][(int) (round(pos.x))] != nullptr)
+			if (being == _player)
 			{
-				if ((gate = dynamic_cast<Gate *>(_level[(int) (round(pos.z))][(int) (round(pos.x))])) != NULL)
+				if (_gate && _gate->isActive() && y == _gate->getPosition().z &&
+					x == _gate->getPosition().x)
+					_state = levelState::COMPLEAT;
+				for (auto &colBeing : _beings)
 				{
-					if (_beings.size() == 1)
-						gate->actervate();
-					if (being == _player && gate->isActive())
-						_state = levelState::COMPLEAT;
-				} else if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr)
-				{
-					being->setPosition(oldpos);
-					being->setMoveDir({0,0,0});
-				}
-				else if ((int) (round(oldpos.z)) != (int) (round(pos.z)) ||
-						 (int) (round(oldpos.x)) != (int) (round(pos.x)))
-				{
-					being->setPosition(oldpos);
-					being->setMoveDir({0,0,0});
+					if (colBeing != _player)
+					{
+						if (glm::length(_player->getPosition() - colBeing->getPosition()) < glm::length(_player->getHitBox() + colBeing->getHitBox()))
+						{
+							std::cout << "player being collision" << std::endl;
+							_state = levelState ::FAIL;
+							_player->loseLife();
+						}
+					}
 				}
 			}
+			if (_level[y][x] != nullptr)
+			{
+				if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr)
+				{
+					being->setPosition(oldpos);
+					being->setMoveDir({0, 0, 0});
+				} else if ((int) (round(oldpos.z)) != y ||
+						   (int) (round(oldpos.x)) != x)
+				{
+					being->setPosition(oldpos);
+					being->setMoveDir({0, 0, 0});
+				}
+			}
+			bumpBeing(being);
 			pos = being->getPosition();
+			x = (int) (round(pos.x));
+			y = (int) (round(pos.z));
 			if (being->is_placeBomb() && (tmpmdl = getModel("Bomb")) != nullptr)
 			{
-				std::cout << "plaving bomb" << std::endl;
-				Bomb *nbomb = new Bomb({(int) (round(pos.x)), 0, (int) (round(pos.z))}, {0, 0, 0}, 1, *tmpmdl, 2);
-				_level[(int) (round(pos.z))][(int) (round(pos.x))] = nbomb;
+				Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, 2);
+				_level[y][x] = nbomb;
 				_bombs.push_back(nbomb);
 				being->placeBomb(nbomb);
 			}
@@ -210,7 +285,7 @@ void LevelRunner::loadMapEntitys()
 				case 'w':
 					if ((tmpMdl = getModel("Wall")) != nullptr)
 					{
-						tmpEnt = new cge::Entity({j, 0, i}, {0, 0, 0}, 1, *tmpMdl);
+						tmpEnt = new cge::Entity({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, {0.5f, 0.0f, 0.5f});
 						_level[i][j] = tmpEnt;
 					}
 					break;
@@ -222,7 +297,7 @@ void LevelRunner::loadMapEntitys()
 				case 'd':
 					if ((tmpMdl = getModel("DestructWall")) != nullptr)
 					{
-						tmpEnt = new DestructWall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl);
+						tmpEnt = new DestructWall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, {0.5f, 0.0f, 0.5f});
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
@@ -231,11 +306,11 @@ void LevelRunner::loadMapEntitys()
 					if (enemys > 0)
 					{
 
-						if (rand()%6 == 1)
+						if (rand() % 6 == 1)
 						{
 							if ((tmpMdl = getModel("Balloon")) != nullptr)
 							{
-								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl));
+								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, {0.23f, 0.0f, 0.23f}));
 								enemys--;
 							}
 						}
@@ -249,7 +324,6 @@ void LevelRunner::loadMapEntitys()
 void LevelRunner::checkWallBlast(int x, int y)
 {
 	cge::Model *tmpMdl;
-	cge::Entity *tmpEnt;
 
 	if (dynamic_cast<DestructWall *>(_level[y][x]) != NULL)
 	{
@@ -257,29 +331,46 @@ void LevelRunner::checkWallBlast(int x, int y)
 		_level[y][x] = nullptr;
 		_dwalls--;
 		srand((unsigned int) time(NULL) + _dwalls);
-		if (!_gate)
+		if (_gate == nullptr)
 		{
 			if (_dwalls == 0)
 			{
 				if ((tmpMdl = getModel("Gate")) != nullptr)
-				{
-					tmpEnt = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
-					_level[y][x] = tmpEnt;
-				}
-				_gate = true;
+					_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 				std::cout << "make gate" << std::endl;
 			} else if (rand() % 2 == 1)
 			{
 				if ((tmpMdl = getModel("Gate")) != nullptr)
-				{
-					tmpEnt = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
-					_level[y][x] = tmpEnt;
-				}
-				_gate = true;
-				std::cout << "make gate" << std::endl;
+					_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 			}
 		}
 
+	}
+}
+
+void LevelRunner::endlevel()
+{
+	unsigned endTime = 0;
+	while (endTime < 1000)
+	{
+		_shader.start();
+		_renderer.prepare();
+		_camera.update(_shader);
+		for (auto &vecit : _level)
+		{
+			for (auto &entit : vecit)
+			{
+				if (entit != nullptr)
+					_renderer.render(*entit);
+			}
+		}
+		for (auto being : _beings)
+			_renderer.render(*being);
+		if (_gate != nullptr)
+			_renderer.render(*_gate);
+		_shader.end();
+		_window.swapBuffers();
+		endTime += _window.getFrameTime();
 	}
 }
 
@@ -287,8 +378,10 @@ int LevelRunner::runLevel(std::vector<std::string> map)
 {
 	//std::cout << levelPath << "\n";
 	_map = map;
+	_gate = nullptr;
 	_state = levelState::PLAY;
 	loadMapEntitys();
+
 
 	while (_state == levelState::PLAY)
 	{
@@ -297,29 +390,37 @@ int LevelRunner::runLevel(std::vector<std::string> map)
 		{
 			_state = levelState::WANTS_QUIT;
 		}
-
+		if (_beings.size() == 1 && _gate != nullptr)
+			_gate->actervate();
 		beingWorldInteraction();
 		bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
-		_camera.setPosition({plpos.x, 20, plpos.z});
+		_camera.setPosition({plpos.x, 10, plpos.z});
 		_shader.start();
 		_renderer.prepare();
 		_camera.update(_shader);
-		for (std::vector<std::vector<cge::Entity *>>::iterator vecit = _level.begin(); vecit != _level.end(); vecit++)
+		for (auto &vecit : _level)
 		{
-			for (std::vector<cge::Entity *>::iterator entit = (*vecit).begin(); entit != (*vecit).end(); entit++)
+			for (auto &entit : vecit)
 			{
-				if ((*entit))
-					_renderer.render(*(*entit));
+				if (entit)
+					_renderer.render(*entit);
 			}
 		}
 		for (auto being : _beings)
 			_renderer.render(*being);
+		if (_gate != nullptr)
+			_renderer.render(*_gate);
 		_shader.end();
 		_window.swapBuffers();
 	}
+	endlevel();
 	return _state;
 }
+
+
+
+
 
 
 

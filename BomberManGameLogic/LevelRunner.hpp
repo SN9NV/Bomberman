@@ -11,6 +11,7 @@
 #include "Being.h"
 #include "Player.hpp"
 #include "../entites/Camera.hpp"
+#include "Gate.hpp"
 
 
 enum levelState
@@ -25,14 +26,13 @@ class LevelRunner
 {
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
-	std::vector<cge::Entity *> _walls;
-	std::vector<cge::Entity *> _destructWalls;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
 	std::map<std::string, cge::Model> _models;
 	std::vector<std::string> _map;
 	cge::Loader &_loader;
 	Player *_player;
+	Gate	*_gate;
 	cge::Window _window;
 	cge::GLSLProgram _shader;
 	cge::InputManager _inputManager;
@@ -40,7 +40,6 @@ private:
 	cge::Camera _camera;
 	int _state = levelState::PLAY;
 	int _dwalls;
-	bool _gate;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();
@@ -48,6 +47,9 @@ private:
 	cge::Model *getModel(std::string name);
 	void checkBeingBlast(int x, int y);
 	void checkWallBlast(int x, int y);
+	void bumpBeing(Being *);
+	void endlevel();
+
 public:
 	LevelRunner(cge::Loader &_loader, Player *_player, const cge::Window &_window);
 	int runLevel(std::vector<std::string> map);

@@ -13,23 +13,29 @@ namespace cge {
 		virtual ~Entity() = default;
 
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, glm::vec3 hitBox);
 
 		virtual void	update(const cge::InputManager &input, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);
 		void			setRotation(const glm::vec3 &rotation);
+		void 			setHitBox(const glm::vec3 &hitBox);
+		void 			setScale(float scale);
 
-		Model		&getModel();
-		glm::vec3	getPosition() const;
-		glm::vec3	getRotation() const;
-		float 		getScale() const;
+
+		glm::vec3 		getHitBox() const;
+		Model			&getModel();
+		glm::vec3		getPosition() const;
+		glm::vec3		getRotation() const;
+		float 			getScale() const;
 
 	protected:
 		Model		&_model;
 		glm::vec3	_position;
 		glm::vec3	_rotation;
 		float 		_scale;
+		glm::vec3	_hitBox;
 		glm::mat4	_transformation;
 		GLint		_transformationLocation;
 

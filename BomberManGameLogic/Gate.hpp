@@ -16,6 +16,7 @@ public:
 	void actervate();
 	bool isActive() const;
 	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
+	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox);
 };
 
 

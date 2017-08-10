@@ -29,24 +29,24 @@ int main()
 			"6",
 			"wwwwwwwwwwwwwww",
 			"w.............w",
-			"w..dwdwdwdwd..w",
+			"w.ddwdwdwdwdd.w",
 			"w.............w",
-			"w..d..w.w..d..w",
+			"w..dw.w.w..d..w",
 			"w......p......w",
-			"w..d..w.w..d..w",
+			"w..dw.w.w..d..w",
 			"w.............w",
-			"w..d.d.d.d....w",
+			"w..dwdwdwd.w..w",
 			"w.............w",
+			"w..w.w.w.w.w..w",
 			"w.............w",
-			"w.............w",
-			"w.............w",
+			"w..w.w.w.w.w..w",
 			"w...........d.w",
 			"wwwwwwwwwwwwwww"
 	};
 
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
-	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.01f);
+	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);
 	levelRunner = new LevelRunner(loader,player, window);
 	levelRunner->runLevel(map);
 	return 0;

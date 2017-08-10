@@ -23,7 +23,7 @@ namespace cge {
 		this->_lastFrameTime = SDL_GetTicks();
 
 		Uint32	flags = SDL_WINDOW_OPENGL;
-
+		SDL_Init(SDL_INIT_EVERYTHING);
 		flags |= static_cast<bool>((windowFlags & Window::Flags::INVISABLE)) ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN;
 
 		if (static_cast<bool>(windowFlags & Window::Flags::FULLSCREEN)) {
