@@ -78,7 +78,7 @@ int main() {
 				shader.end();
 				window.swapBuffers();
 
-				SDL_Delay(100);
+//				SDL_Delay(100);
 				break;
 			}
 			default:
