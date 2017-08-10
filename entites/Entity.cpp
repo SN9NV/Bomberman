@@ -56,9 +56,14 @@ float cge::Entity::getScale() const {
 	return this->_scale;
 }
 
-void cge::Entity::update(cge::GLSLProgram &shader, bool updateAnimation) {
+void cge::Entity::update(cge::GLSLProgram &shader, bool updateAnimation, int frameTime) {
 	unsigned currentTicks = SDL_GetTicks();
-	this->_ticksDelta = currentTicks - this->_lastTicks;
+	if (frameTime >= 0) {
+		this->_ticksDelta = static_cast<unsigned>(frameTime);
+	} else {
+		this->_ticksDelta = currentTicks - this->_lastTicks;
+	}
+
 	this->_lastTicks = currentTicks;
 
 	if (updateAnimation && this->_hasAnimation) {
@@ -85,13 +90,13 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		/// Array of keyframe times in seconds
 		tinygltf::Accessor		inAccessor	= model.accessors[animationSampler.input];
 		tinygltf::BufferView	inBuffView	= model.bufferViews[inAccessor.bufferView];
+
 		/// Array of values for each keyframe
 		tinygltf::Accessor		outAccessor	= model.accessors[animationSampler.output];
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
 		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
 		this->_animationTicks %= static_cast<unsigned>((keyFrames[inAccessor.count-1] - keyFrames[0]) * 1000);
-
 
 		/// Find the top of the frame we're in
 		unsigned upperKeyframe = 0;
@@ -191,10 +196,10 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 
 		currentTransform = parentTransform * globalJointTransform;
 	}
+	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
 
 	for (auto &child : nodes[startNodeIndex].children) {
 		this->_animateSkeleton(transformationMap, currentTransform, nodes, child, rootNodeIndex, inverseMatrices, animatedMatrices);
 	}
 
-	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
 }

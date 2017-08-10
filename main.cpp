@@ -48,6 +48,8 @@ int main() {
 //	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
 //	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
 
+	unsigned debounce = SDL_GetTicks();
+
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
 			gameState = GameState::WANTS_QUIT;
@@ -57,7 +59,7 @@ int main() {
 			case (GameState::PLAY_GAME): {
 //				sounds.PlayMusic(cge::Sounds::Music::Menu);
 
-				if (inputManager.isKeyPressed(SDLK_c)) {
+				if (inputManager.isKeyPressed(SDLK_c) && (debounce + 1000) > SDL_GetTicks()) {
 					std::cout << "Camera:\n" << camera << "\n";
 				}
 
@@ -66,7 +68,7 @@ int main() {
 //				cube.addRotation({0.0f, 0.0f, 0.05f});
 
 				shader.start();
-				bomber1.update(shader, true);
+				bomber1.update(shader, true, 1);
 				renderer.prepare();
 				camera.update(shader);
 
@@ -75,6 +77,8 @@ int main() {
 //				renderer.render(cube);
 				shader.end();
 				window.swapBuffers();
+
+				SDL_Delay(100);
 				break;
 			}
 			default:
