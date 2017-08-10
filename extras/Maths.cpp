@@ -27,5 +27,10 @@ namespace cge {
 
 			return viewMatrix;
 		}
+
+		float 		vec3Len(glm::vec3 vec)
+		{
+			return ((float)sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+		}
 	}
 }

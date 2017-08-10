@@ -6,6 +6,7 @@
 #include "DestructWall.hpp"
 #include "Gate.hpp"
 #include "Balloon.hpp"
+#include "../extras/Maths.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 const cge::Window &_window) : _loader(_loader), _player(_player),
@@ -14,7 +15,7 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 													   _shader("../shaders/vertex.glsl", "../shaders/fragment.glsl"),
 													   _renderer(_shader),
 													   _camera(glm::vec3(0.0f, 3.0f, 0.0f),
-															   glm::vec3(1.4f, 0.0f, 0.0f), _window)
+															   glm::vec3(1.4f, 0.0f, 0.1f), _window)
 {
 	_models.emplace("Wall",
 					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
@@ -109,6 +110,7 @@ void LevelRunner::beingWorldInteraction()
 	int y;
 
 
+
 	for (auto &being : _beings)
 	{
 		oldpos = being->getPosition();
@@ -123,18 +125,7 @@ void LevelRunner::beingWorldInteraction()
 				if (_gate && _gate->isActive() && y == _gate->getPosition().z &&
 					x == _gate->getPosition().x)
 					_state = levelState::COMPLEAT;
-				for (auto &colBeing : _beings)
-				{
-					if (colBeing != _player)
-					{
-						if (glm::length(_player->getPosition() - colBeing->getPosition()) < glm::length(_player->getHitBox() + colBeing->getHitBox()))
-						{
-							std::cout << "player being collision" << std::endl;
-							_state = levelState ::FAIL;
-							_player->loseLife();
-						}
-					}
-				}
+
 			}
 			if (_level[y][x] != nullptr)
 			{
@@ -160,6 +151,23 @@ void LevelRunner::beingWorldInteraction()
 				_bombs.push_back(nbomb);
 				being->placeBomb(nbomb);
 			}
+		}
+	}
+	for (auto &colBeing : _beings)
+	{
+		if (colBeing != _player)
+		{
+			glm::vec3 dist =_player->getPosition() - colBeing->getPosition();
+			float fdist = cge::Maths::vec3Len(dist);
+			glm::vec3 hit = _player->getHitBox() + colBeing->getHitBox();
+			float fhit = cge::Maths::vec3Len(hit);
+			std::cout << "pos len: " << fdist << " hit len " << fhit << std::endl;
+			/*if (glm::length() < glm::length())
+			{
+				std::cout << "player being collision" << std::endl;
+				_state = levelState ::FAIL;
+				_player->loseLife();
+			}*/
 		}
 	}
 }
@@ -310,7 +318,7 @@ void LevelRunner::loadMapEntitys()
 						{
 							if ((tmpMdl = getModel("Balloon")) != nullptr)
 							{
-								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, {0.23f, 0.0f, 0.23f}));
+								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, {0.5f, 0.0f, 0.5f}));
 								enemys--;
 							}
 						}
