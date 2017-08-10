@@ -31,6 +31,7 @@ namespace cge {
 		unsigned	getWidth() const;
 		unsigned	getHeight() const;
 		unsigned	getFrameTime() const;
+		SDL_Window	*getSDLWindow();
 
 	private:
 		unsigned	_width;

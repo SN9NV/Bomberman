@@ -104,4 +104,8 @@ namespace cge {
 	unsigned Window::getFrameTime() const {
 		return this->_deltaFrameTime;
 	}
+
+	SDL_Window *Window::getSDLWindow() {
+		return (this->_window);
+	}
 }
