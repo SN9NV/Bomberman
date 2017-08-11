@@ -40,11 +40,13 @@ int main() {
 	int gameState = GameState::PLAY_GAME;
 
 //	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("resources/moddels/Bomber2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/moddels/BombDer2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+	cge::Model dumbModel = cge::Model("resources/moddels/dumb.glb", "resources/moddels/image.png", loader);
 
 //	std::cout << bomberModel.getTinygltfModel();
 
-	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+//	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+	cge::Entity	dumb({0, 0, 0}, {0, 0, 0}, 1, dumbModel);
 //	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
 //	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
 
@@ -68,11 +70,13 @@ int main() {
 //				cube.addRotation({0.0f, 0.0f, 0.05f});
 
 				shader.start();
-				bomber1.update(shader, true, 1);
+//				bomber1.update(shader, true, 1);
+				dumb.update(shader, true, 1);
 				renderer.prepare();
 				camera.update(shader);
 
-				renderer.render(bomber1);
+//				renderer.render(bomber1);
+				renderer.render(dumb);
 //				renderer.render(bomber2);
 //				renderer.render(cube);
 				shader.end();
