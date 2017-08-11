@@ -36,7 +36,7 @@ private:
 	Gate	*_gate;
 	cge::Window _window;
 	cge::GLSLProgram _shader;
-	cge::InputManager _inputManager;
+	cge::InputManager* _inputManager;
 	cge::Renderer _renderer;
 	cge::Camera _camera;
 	int _state = levelState::PLAY;

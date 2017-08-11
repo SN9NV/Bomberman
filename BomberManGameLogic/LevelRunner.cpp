@@ -7,7 +7,6 @@
 #include "Gate.hpp"
 #include "Balloon.hpp"
 #include "../extras/Maths.hpp"
-#include "../gui/GuiManager.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 const cge::Window &_window) : _loader(_loader), _player(_player),
@@ -18,6 +17,8 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 													   _camera(glm::vec3(0.0f, 3.0f, 0.0f),
 															   glm::vec3(1.4f, 0.0f, 0.1f), _window)
 {
+	this->_inputManager = new cge::InputManager(_window);
+
 	_models.emplace("Wall",
 					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
 							   this->_loader));
@@ -115,7 +116,7 @@ void LevelRunner::beingWorldInteraction()
 	for (auto &being : _beings)
 	{
 		oldpos = being->getPosition();
-		being->update(_inputManager, _window.getFrameTime());
+		being->update(*_inputManager, _window.getFrameTime());
 		pos = being->getPosition();
 		x = (int) (round(pos.x));
 		y = (int) (round(pos.z));
@@ -213,7 +214,7 @@ void LevelRunner::bombWorldInteraction()
 
 	while (bomb != _bombs.end())
 	{
-		(*bomb)->update(_inputManager, _window.getFrameTime());
+		(*bomb)->update(*_inputManager, _window.getFrameTime());
 		if ((*bomb)->isDeternate())
 		{
 			found = false;
@@ -391,58 +392,36 @@ int LevelRunner::runLevel(std::vector<std::string> map)
 	_state = levelState::PLAY_MENU;
 	loadMapEntitys();
 
-	cge::GuiManager* guiManager = cge::GuiManager::getSingleton();
-
-	bool run = true;
-	while (run)
+	while (_state == levelState::PLAY_MENU)
 	{
-		switch (_state){
-			case (levelState::WANTS_QUIT):
-			case (levelState::COMPLEAT):
-			case (levelState::FAIL):
-				run = false;
-				break;
-			case (levelState::PLAY): {
-				_inputManager.poolKeyEvnt();
-				if (_inputManager.isExitCase() || _inputManager.isKeyPressed(SDLK_ESCAPE) || _player->getLives() <= 0)
-				{
-					_state = levelState::WANTS_QUIT;
-				}
-				if (_beings.size() == 1 && _gate != nullptr)
-					_gate->actervate();
-				beingWorldInteraction();
-				bombWorldInteraction();
-				glm::vec3 plpos = _player->getPosition();
-				_camera.setPosition({plpos.x, 10, plpos.z});
-				_shader.start();
-				_renderer.prepare();
-				_camera.update(_shader);
-				for (auto &vecit : _level)
-				{
-					for (auto &entit : vecit)
-					{
-						if (entit)
-							_renderer.render(*entit);
-					}
-				}
-				for (auto being : _beings)
-					_renderer.render(*being);
-				if (_gate != nullptr)
-					_renderer.render(*_gate);
-				_shader.end();
-				_window.swapBuffers();
-				break;
-			}
-			case (levelState::PLAY_MENU):
-			default:
-				glDisable(GL_SCISSOR_TEST);
-				glDisable(GL_DEPTH_TEST);
-
-				guiManager->drawScreen(_state);
-				_window.swapBuffers();
-				break;
+		_inputManager->poolKeyEvnt();
+		if (_inputManager->isExitCase() || _inputManager->isKeyPressed(GLFW_KEY_ESCAPE) || _player->getLives() <= 0)
+		{
+			_state = levelState::WANTS_QUIT;
 		}
-
+		if (_beings.size() == 1 && _gate != nullptr)
+			_gate->actervate();
+		beingWorldInteraction();
+		bombWorldInteraction();
+		glm::vec3 plpos = _player->getPosition();
+		_camera.setPosition({plpos.x, 10, plpos.z});
+		_shader.start();
+		_renderer.prepare();
+		_camera.update(_shader);
+		for (auto &vecit : _level)
+		{
+			for (auto &entit : vecit)
+			{
+				if (entit)
+					_renderer.render(*entit);
+			}
+		}
+		for (auto being : _beings)
+			_renderer.render(*being);
+		if (_gate != nullptr)
+			_renderer.render(*_gate);
+		_shader.end();
+		_window.swapBuffers();
 	}
 	endlevel();
 	return _state;

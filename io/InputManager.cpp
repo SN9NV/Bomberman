@@ -1,7 +1,12 @@
-#include <SDL_events.h>
+
 #include "InputManager.hpp"
 
 namespace cge {
+	InputManager::InputManager(const cge::Window& win) :
+		_window(win)
+	{
+	}
+
 	void InputManager::pressKey(int keysym) {
 		this->_keyMap[keysym] = true;
 	}
@@ -23,8 +28,9 @@ namespace cge {
 
 		return (it != this->_keyMap.end()) ? it->second : false;
 	}
+
 	void InputManager::poolKeyEvnt() {
-		SDL_Event	event = {};
+		/*SDL_Event	event = {};
 
 		while (SDL_PollEvent(&event) > 0) {
 			switch (event.type) {
@@ -41,6 +47,16 @@ namespace cge {
 				default:
 					break;
 			}
+		}*/
+
+		glfwPollEvents();
+		glfwSetInputMode(this->_window.getGLFWWindow(), GLFW_STICKY_KEYS, 1);
+		for (int i = 65; i <= 90; i++) {
+			int state = glfwGetKey(this->_window.getGLFWWindow(), i);
+			if (state == GLFW_PRESS)
+				this->pressKey(i);
+			else if (state == GLFW_RELEASE)
+				this->releaseKey(i);
 		}
 	}
 

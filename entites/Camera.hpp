@@ -1,11 +1,11 @@
 #ifndef NEW_CAMERA_HPP
 #define NEW_CAMERA_HPP
 
-#include <glm/glm.hpp>
 
+#include "../io/Window.hpp"
+#include <glm/glm.hpp>
 #include "../io/InputManager.hpp"
 #include "../rendering/GLSLProgram.hpp"
-#include "../io/Window.hpp"
 
 namespace cge {
 	class Camera {

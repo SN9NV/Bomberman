@@ -39,9 +39,10 @@ set(SOURCE_FILES
         BomberManGameLogic/Bomb.cpp
         BomberManGameLogic/Bomb.hpp
         BomberManGameLogic/LevelRunner.cpp
-        BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp gui/GUI.cpp gui/GUI.hpp
-		gui/GUI.cpp gui/GUI.hpp
-		gui/GuiManager.cpp gui/GuiManager.hpp)
+        BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp
+		#gui/GuiManager.cpp gui/GuiManager.hpp
+		#gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
+		)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
@@ -51,24 +52,23 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(GLEW	REQUIRED glew)
 pkg_search_module(GLM	REQUIRED glm)
 pkg_search_module(SDL2	REQUIRED sdl2)
+pkg_search_module(GLFW3	REQURIED glfw3)
 
 # Directories to find the header files
 include_directories(
         includes
-		dependencies/nanogui-sdl/include
-		dependencies/nanogui-sdl/ext/eigen
-		dependencies/nanogui-sdl/ext
         ${GLEW_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
         ${GLM_INCLUDE_DIRS}
+        ${GLFW3_INCLUDE_DIRS}
 )
 
 # Directories to find the libraries
 link_directories(
-		${PROJECT_SOURCE_DIR}/dependencies/nanogui-sdl/build_static
         ${GLEW_LIBRARY_DIRS}
         ${SDL2_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
+		${GLFW3_LIBRARY_DIRS}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -79,5 +79,5 @@ target_link_libraries(${PROJECT_NAME}
         ${GLEW_LIBRARIES}
         ${SDL2_LIBRARIES}
         ${GLM_LIBRARIES}
-		nanogui
+		${GLFW3_LIBRARIES}
 )

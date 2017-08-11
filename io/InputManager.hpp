@@ -1,14 +1,15 @@
 #ifndef NEW_INPUTMANAGER_HPP
 #define NEW_INPUTMANAGER_HPP
 
-
+#include "Window.hpp"
+#include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 #include <unordered_map>
 
 namespace cge {
 	class InputManager {
 	public:
-		InputManager() = default;
+		InputManager(const cge::Window& win);
 		~InputManager() = default;
 
 		void 	poolKeyEvnt();
@@ -21,9 +22,14 @@ namespace cge {
 		bool 		isExitCase() const;
 
 	private:
+		const cge::Window&				_window;
+
 		bool 							_exitCase = false;
 		std::unordered_map<int, bool>	_keyMap;
 		glm::vec2						_mouseCoordinates;
+
+		void (InputManager::*pKey)(int);
+		void (InputManager::*rKey)(int);
 	};
 }
 

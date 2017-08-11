@@ -20,11 +20,12 @@ static constexpr unsigned WIDTH = 1024;
 int main()
 {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::InputManager inputManager;
+	cge::InputManager inputManager(window);
 	cge::Loader loader;
 	Player *player;
 	cge::Model BomberMan;
 	LevelRunner *levelRunner;
+
 	std::vector<std::string> map = {
 			"6",
 			"wwwwwwwwwwwwwww",

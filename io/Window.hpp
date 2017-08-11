@@ -3,6 +3,9 @@
 
 #include <string>
 #include <SDL.h>
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "../error_handling/Exceptions.hpp"
 
 namespace cge {
@@ -31,7 +34,7 @@ namespace cge {
 		unsigned	getWidth() const;
 		unsigned	getHeight() const;
 		unsigned	getFrameTime() const;
-		SDL_Window	*getSDLWindow();
+		GLFWwindow	*getGLFWWindow() const;
 
 	private:
 		unsigned	_width;
@@ -39,7 +42,7 @@ namespace cge {
 		unsigned	_lastFrameTime;
 		unsigned	_deltaFrameTime;
 
-		SDL_Window	*_window;
+		GLFWwindow	*_glfwWindow;
 	};
 }
 
