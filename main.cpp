@@ -28,6 +28,7 @@ int main()
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.01f);
+	player->setDamage(3);
 	levelRunner = new LevelRunner(loader,player, window);
 	int exit_state = levelRunner->runLevel("../resources/Maps/Map1");
 	std::cout << "level exit state " << exit_state << std::endl;

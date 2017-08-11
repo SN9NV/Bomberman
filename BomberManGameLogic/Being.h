@@ -20,6 +20,7 @@ protected:
 	std::vector<Bomb *> _bombs;
 	bool _plaseBomb;
 	int	_damage;
+	unsigned _deathTimeout;
 
 public:
 	int getDamage() const;

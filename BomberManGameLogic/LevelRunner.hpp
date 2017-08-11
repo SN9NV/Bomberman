@@ -28,6 +28,7 @@ class LevelRunner
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
 	std::vector<Being *> _beings;
+	std::vector<Being *> _dead;
 	std::vector<Bomb *> _bombs;
 	std::map<std::string, cge::Model> _models;
 	std::vector<std::string> _map;
@@ -49,7 +50,7 @@ private:
 	void loadMapEntitys();
 	cge::Model *getModel(std::string name);
 	void checkBeingBlast(int x, int y);
-	void checkWallBlast(int x, int y);
+	bool checkWallBlast(int x, int y);
 	void bumpBeing(Being *);
 	void endlevel();
 	bool checkMapWall();
