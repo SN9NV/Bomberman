@@ -10,7 +10,7 @@ Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float sca
 
 }
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox)
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox)
 		: Being(position, rotation, scale, model, hitBox, 0.002f)
 {
 

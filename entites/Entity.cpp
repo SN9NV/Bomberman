@@ -8,7 +8,7 @@ namespace cge
 			_position(position),
 			_rotation(rotation),
 			_scale(scale),
-			_hitBox({0, 0, 0}),
+			_hitBoxRadius(0),
 			_transformation(1.0),
 			_transformationLocation(0),
 			_needsTransformationUpdate(true)
@@ -16,12 +16,12 @@ namespace cge
 
 	}
 
-	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, glm::vec3 hitBox) :
+	Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, float hitBox) :
 			_model(model),
 			_position(position),
 			_rotation(rotation),
 			_scale(scale),
-			_hitBox(hitBox * _scale),
+			_hitBoxRadius(hitBox * _scale),
 			_transformation(1.0),
 			_transformationLocation(0),
 			_needsTransformationUpdate(true)
@@ -79,14 +79,14 @@ namespace cge
 		(void) input;
 	}
 
-	glm::vec3 Entity::getHitBox() const
+	float Entity::getHitBoxRadius() const
 	{
-		return _hitBox;
+		return _hitBoxRadius;
 	}
 
-	void Entity::setHitBox(const glm::vec3 &hitBox)
+	void Entity::setHitBoxRadius(const float &hitBox)
 	{
-		_hitBox = hitBox * _scale;
+		_hitBoxRadius = hitBox * _scale;
 
 	}
 
@@ -94,7 +94,7 @@ namespace cge
 	{
 		_scale = scale;
 		this->_needsTransformationUpdate = true;
-		_hitBox = _hitBox * _scale;
+		_hitBoxRadius = _hitBoxRadius * _scale;
 	}
 
 

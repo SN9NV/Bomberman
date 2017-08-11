@@ -15,14 +15,17 @@ class Being : public cge::Entity
 {
 protected:
 	float _speed;
-	//cge::GLSLProgram _shader;
-	//cge::Renderer _renderer;
 	glm::vec3 _n_moveDir;
 	size_t _maxBomb;
 	std::vector<Bomb *> _bombs;
 	bool _plaseBomb;
+	int	_damage;
 
 public:
+	int getDamage() const;
+
+	void setDamage(int _damage);
+
 	const glm::vec3 &get_n_moveDir() const;
 
 	bool is_placeBomb() const;
@@ -34,8 +37,11 @@ public:
 	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
 		  float speed);
 
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox,
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
 		  float speed);
+
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius,
+		  float _speed, int _damage);
 
 	Being() = default;
 
@@ -46,7 +52,6 @@ public:
 	void setMoveDir(glm::vec3 newDir);
 
 	float getDirAngle();
-//	void render();
 };
 
 

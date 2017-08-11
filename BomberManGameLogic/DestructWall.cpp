@@ -7,5 +7,5 @@
 DestructWall::DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model)
 		: Entity(position, rotation, scale, model) {}
 
-DestructWall::DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox)
+DestructWall::DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox)
 		: Entity(position, rotation, scale, model, hitBox) {}

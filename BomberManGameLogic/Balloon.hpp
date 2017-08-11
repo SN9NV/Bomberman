@@ -13,7 +13,7 @@ class Balloon : public  Being
 
 public:
 	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
-	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox);
+	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox);
 	void update(const cge::InputManager &input, unsigned lastFrameTime);
 };
 

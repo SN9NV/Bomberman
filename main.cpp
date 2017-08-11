@@ -25,29 +25,11 @@ int main()
 	Player *player;
 	cge::Model BomberMan;
 	LevelRunner *levelRunner;
-	std::vector<std::string> map = {
-			"6",
-			"wwwwwwwwwwwwwww",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.d...d....w",
-			"w.wdwdwdwdwdw.w",
-			"w....d........w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.....d....w",
-			"w.wdwdwdwdwdw.w",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d...d...d..w",
-			"w.wdwdwdwdwdw.w",
-			"wp.d........d.w",
-			"wwwwwwwwwwwwwww"
-	};
-
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
-	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);
+	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.01f);
 	levelRunner = new LevelRunner(loader,player, window);
-	levelRunner->runLevel(map);
+	int exit_state = levelRunner->runLevel("../resources/Maps/Map1");
+	std::cout << "level exit state " << exit_state << std::endl;
 	return 0;
 }

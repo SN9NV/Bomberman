@@ -16,10 +16,11 @@
 
 enum levelState
 {
-	PLAY,
+	PLAY = 1,
 	WANTS_QUIT,
 	FAIL,
-	COMPLEAT
+	COMPLEAT,
+	FAIL_MAP_LOAD,
 };
 
 class LevelRunner
@@ -40,6 +41,8 @@ private:
 	cge::Camera _camera;
 	int _state = levelState::PLAY;
 	int _dwalls;
+	int _balloons;
+	int _onil;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();
@@ -49,10 +52,14 @@ private:
 	void checkWallBlast(int x, int y);
 	void bumpBeing(Being *);
 	void endlevel();
+	bool checkMapWall();
 
 public:
+	int getState() const;
 	LevelRunner(cge::Loader &_loader, Player *_player, const cge::Window &_window);
-	int runLevel(std::vector<std::string> map);
+	int runLevel(std::string path);
+//todo: move loadMapfrom file to private
+	void loadMapFromFile(std::string path);
 };
 
 

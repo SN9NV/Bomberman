@@ -7,14 +7,21 @@
 
 Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed) :
 		Entity(position, rotation, scale, model),
-		_speed(speed), _maxBomb(1), _plaseBomb(false)
+		_speed(speed), _maxBomb(1), _plaseBomb(false),  _damage(2)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, float speed) :
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, float speed) :
 		Entity(position, rotation, scale, model, hitBox),
-		_speed(speed), _maxBomb(1), _plaseBomb(false)
+		_speed(speed), _maxBomb(1), _plaseBomb(false), _damage(2)
+{
+	this->_n_moveDir = glm::vec3(0, 0, 0);
+}
+
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius,
+			 float _speed, int _damage) : Entity(position, rotation, scale, model, hitBoxRadius), _speed(_speed),
+										  _maxBomb(1), _plaseBomb(false), _damage(_damage)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
@@ -29,7 +36,7 @@ void Being::update(const cge::InputManager &input, unsigned lastFrameTime)
 
 void Being::setRotation()
 {
-	float angle = atan2(_n_moveDir.x, _n_moveDir.z);
+	float angle = (float)atan2(_n_moveDir.x, _n_moveDir.z);
 	cge::Entity::setRotation({0,angle, 0});
 }
 
@@ -69,6 +76,22 @@ void Being::setMoveDir(glm::vec3 newDir)
 {
 	_n_moveDir = newDir;
 }
+
+int Being::getDamage() const
+{
+	return _damage;
+}
+
+void Being::setDamage(int damage)
+{
+	Being::_damage = damage;
+	if (_damage < 2)
+		_damage = 2;
+	if (_damage > 5)
+		_damage = 5;
+}
+
+
 
 
 
