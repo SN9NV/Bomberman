@@ -48,17 +48,19 @@ set(SOURCE_FILES shared.hpp
         BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp
 		#gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
-		)
+		io/audio/AudioManager.cpp io/audio/AudioManager.hpp
+		io/audio/AudioListener.cpp io/audio/AudioListener.hpp io/audio/AudioSource.cpp io/audio/AudioSource.hpp io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 # Find the dependencies for the project
-pkg_search_module(GLEW	REQUIRED glew)
-pkg_search_module(GLM	REQUIRED glm)
-pkg_search_module(SDL2	REQUIRED sdl2)
-pkg_search_module(GLFW3	REQURIED glfw3)
+pkg_search_module(GLEW		REQUIRED glew)
+pkg_search_module(GLM		REQUIRED glm)
+pkg_search_module(GLFW3		REQURIED glfw3)
+pkg_search_module(OPENAL	REQURIED openal)
+pkg_search_module(SNDFILE	REQURIED sndfile) #> libsndfile1-dev
 
 # Directories to find the header files
 include_directories(
@@ -68,18 +70,20 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/nanovg/src
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/eigen
         ${GLEW_INCLUDE_DIRS}
-        ${SDL2_INCLUDE_DIRS}
         ${GLM_INCLUDE_DIRS}
         ${GLFW3_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIRS}
 )
 
 # Directories to find the libraries
 link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
         ${GLEW_LIBRARY_DIRS}
-        ${SDL2_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
 		${GLFW3_LIBRARY_DIRS}
+		${OPENAL_LIBRARY_DIRS}
+		${SNDFILE_LIBRARY_DIRS}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -88,9 +92,10 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME}
         ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES}
-        ${SDL2_LIBRARIES}
         ${GLM_LIBRARIES}
 		${GLFW3_LIBRARIES}
+		${OPENAL_LIBRARIES}
+		${SNDFILE_LIBRARIES}
 		nanogui
 )
 

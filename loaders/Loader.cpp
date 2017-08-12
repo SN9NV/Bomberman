@@ -65,4 +65,8 @@ namespace cge {
 
 		return foundModel->second;
 	}
+
+	ALuint Loader::loadAudio(const std::string &audioPath) {
+		return 0;
+	}
 }

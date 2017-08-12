@@ -8,12 +8,14 @@
 #include <string>
 
 namespace cge {
-	class AudioManager {
-		AudioManager();
-		~AudioManager();
+	namespace Audio {
+		class Manager {
+		public:
 
-		std::vector<std::string>	listDevices();
-	};
+		private:
+
+		};
+	}
 }
 
 #endif //BOMBERMAN_AUDIOMANAGER_HPP

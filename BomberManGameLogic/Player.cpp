@@ -1,4 +1,3 @@
-#include <SDL_keycode.h>
 #include "Player.hpp"
 
 void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
