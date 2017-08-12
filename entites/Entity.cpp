@@ -8,7 +8,6 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_position(position),
 		_rotation(rotation),
 		_scale(scale),
-		_transformation(1.0),
 		_transformationLocation(0),
 		_lastTicks(SDL_GetTicks()),
 		_ticksDelta(0),
@@ -205,4 +204,8 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 
 bool cge::Entity::isAnimated() const {
 	return this->_hasAnimation;
+}
+
+void cge::Entity::setAnimationTicks(unsigned ticks) {
+	this->_animationTicks = ticks;
 }

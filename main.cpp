@@ -40,8 +40,7 @@ int main() {
 	int gameState = GameState::PLAY_GAME;
 
 //	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
-//	cge::Model bomberModel = cge::Model("resources/moddels/Bomber2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
-	cge::Model bomberModel = cge::Model("resources/moddels/Bomber3.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+	cge::Model bomberModel = cge::Model("resources/moddels/Bomber2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/moddels/WingBoot.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/moddels/run.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/moddels/dumb.glb", "resources/moddels/image.png", loader);
@@ -88,6 +87,9 @@ int main() {
 				}
 				if (inputManager.isKeyPressed(SDLK_d)) {
 					camera.addRotation({0.1, 0, 0});
+				}
+				if (inputManager.isKeyPressed(SDLK_r)) {
+					bomber1.setAnimationTicks(0);
 				}
 
 //				bomber1.addRotation({0.0f, 0.025f, 0.0f});

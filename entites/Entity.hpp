@@ -22,6 +22,7 @@ namespace cge {
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);
 		void			setRotation(const glm::vec3 &rotation);
+		void			setAnimationTicks(unsigned ticks);
 
 		Model			&getModel();
 		glm::vec3		getPosition() const;
@@ -34,7 +35,6 @@ namespace cge {
 		glm::vec3		_position;
 		glm::vec3		_rotation;
 		float 			_scale;
-		glm::mat4		_transformation;
 		GLint			_transformationLocation;
 		unsigned		_lastTicks;
 		unsigned		_ticksDelta;
