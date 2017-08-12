@@ -40,15 +40,26 @@ int main() {
 	int gameState = GameState::PLAY_GAME;
 
 //	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
-//	cge::Model bomberModel = cge::Model("resources/moddels/BombDer2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
-	cge::Model dumbModel = cge::Model("resources/moddels/dumb.glb", "resources/moddels/image.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/moddels/Bomber2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+	cge::Model bomberModel = cge::Model("resources/moddels/Bomber3.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/moddels/WingBoot.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/moddels/run.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/moddels/dumb.glb", "resources/moddels/image.png", loader);
 
 //	std::cout << bomberModel.getTinygltfModel();
 
-//	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
-	cge::Entity	dumb({0, 0, 0}, {0, 0, 0}, 1, dumbModel);
+	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 1, bomberModel);
+//	cge::Entity	bomber1({0, 0, 0}, {0, 0, 0}, 0.5, dumbModel);
 //	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
 //	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
+
+	bool	showWeights = false;
+	bool	isInvisible = false;
+
+	shader.start();
+		shader.uploadBool(shader.getUniformLocation("showWeights"), showWeights);
+		shader.uploadBool(shader.getUniformLocation("isInvisible"), isInvisible);
+	shader.end();
 
 	unsigned debounce = SDL_GetTicks();
 
@@ -61,8 +72,22 @@ int main() {
 			case (GameState::PLAY_GAME): {
 //				sounds.PlayMusic(cge::Sounds::Music::Menu);
 
-				if (inputManager.isKeyPressed(SDLK_c) && (debounce + 1000) > SDL_GetTicks()) {
+				if (inputManager.isKeyPressed(SDLK_c) && debounce + 1000 < SDL_GetTicks()) {
 					std::cout << "Camera:\n" << camera << "\n";
+					debounce = SDL_GetTicks();
+				}
+
+				if (inputManager.isKeyPressed(SDLK_w)) {
+					camera.addRotation({0, 0.1, 0});
+				}
+				if (inputManager.isKeyPressed(SDLK_a)) {
+					camera.addRotation({-0.1, 0, 0});
+				}
+				if (inputManager.isKeyPressed(SDLK_s)) {
+					camera.addRotation({0, -0.1, 0});
+				}
+				if (inputManager.isKeyPressed(SDLK_d)) {
+					camera.addRotation({0.1, 0, 0});
 				}
 
 //				bomber1.addRotation({0.0f, 0.025f, 0.0f});
@@ -70,13 +95,26 @@ int main() {
 //				cube.addRotation({0.0f, 0.0f, 0.05f});
 
 				shader.start();
-//				bomber1.update(shader, true, 1);
-				dumb.update(shader, true, 1);
+
+				if (inputManager.isKeyPressed(SDLK_x) && debounce + 1000 < SDL_GetTicks()) {
+					showWeights = !showWeights;
+					shader.uploadBool(shader.getUniformLocation("showWeights"), showWeights);
+					debounce = SDL_GetTicks();
+				}
+
+				if (inputManager.isKeyPressed(SDLK_z) && debounce + 1000 < SDL_GetTicks()) {
+					isInvisible = !isInvisible;
+					shader.uploadBool(shader.getUniformLocation("isInvisible"), isInvisible);
+					debounce = SDL_GetTicks();
+				}
+
+				bomber1.update(shader, true);
+//				dumb.update(shader, true, 1);
 				renderer.prepare();
 				camera.update(shader);
 
-//				renderer.render(bomber1);
-				renderer.render(dumb);
+				renderer.render(bomber1);
+//				renderer.render(dumb);
 //				renderer.render(bomber2);
 //				renderer.render(cube);
 				shader.end();

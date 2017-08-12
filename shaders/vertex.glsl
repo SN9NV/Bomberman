@@ -11,8 +11,10 @@ layout(location = 4) in vec4	vertexWeights;
 
 out vec3	fragmentNormal;
 out vec2	fragmentUV;
+out vec4	fragmentWeights;
 out vec3	toLight;
 
+uniform bool	isAnimated;
 uniform mat4	jointTransforms[MAX_JOINTS];
 uniform mat4	transformation;
 uniform mat4	view;
@@ -20,14 +22,19 @@ uniform mat4	view;
 const vec3 lightLocation = vec3(5.0, 5.0, 5.0);
 
 void main() {
-	mat4 skinMatrix =	vertexWeights.x * jointTransforms[int(vertexJointIncides.x)] +
+	mat4 skinMatrix;
+
+	if (isAnimated) {
+		skinMatrix =	vertexWeights.x * jointTransforms[int(vertexJointIncides.x)] +
 						vertexWeights.y * jointTransforms[int(vertexJointIncides.y)] +
 						vertexWeights.z * jointTransforms[int(vertexJointIncides.z)] +
 						vertexWeights.w * jointTransforms[int(vertexJointIncides.w)];
+	}
 
 	gl_Position = view * skinMatrix * transformation * vec4(vertexPosition, 1.0);
 
 	fragmentNormal = (skinMatrix * transformation * vec4(vertexNormal, 0.0)).xyz;
 	fragmentUV = vertexUV;
+	fragmentWeights = vertexWeights;
 	toLight = lightLocation - (skinMatrix * transformation * vec4(vertexPosition, 1.0)).xyz;
 }

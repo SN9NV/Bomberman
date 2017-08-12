@@ -27,6 +27,7 @@ namespace cge {
 		glm::vec3		getPosition() const;
 		glm::vec3		getRotation() const;
 		float 			getScale() const;
+		bool 			isAnimated() const;
 
 	protected:
 		Model			&_model;
@@ -52,7 +53,7 @@ namespace cge {
 		void	_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
 								 const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
 								 int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
-								 std::vector<glm::mat4> &animatedMatrices);
+								 std::map<int, glm::mat4> &animatedMatrices);
 	};
 }
 

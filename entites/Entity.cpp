@@ -128,14 +128,10 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 
 		if (channel.target_path == "translation") {
 			auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
-			transformationMap[channel.target_node].translation =
-					glm::mix(translation[upperKeyframe-1], translation[upperKeyframe], interpolant);
+			transformationMap[channel.target_node].translation = glm::mix(translation[upperKeyframe-1], translation[upperKeyframe], interpolant);
 		} else if (channel.target_path == "rotation") {
 			auto *rotation = reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
-			transformationMap[channel.target_node].rotation =
-					glm::lerp(rotation[upperKeyframe-1],
-							  rotation[upperKeyframe],
-							  interpolant);
+			transformationMap[channel.target_node].rotation = glm::lerp(rotation[upperKeyframe-1], rotation[upperKeyframe], interpolant);
 		}
 	}
 
@@ -147,17 +143,20 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 //		std::cout << "Rotation: " << transformation.second.rotation << "\n\n";
 //	}
 
-	tinygltf::Skin	skin = model.skins[0];
+	tinygltf::Skin	&skin = model.skins[0];
 	int rootJointIndex = skin.joints[0];
 
-	auto *inverseMatrices = reinterpret_cast<glm::mat4 *>(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
-	std::vector<glm::mat4>	animatedMatrices;
-	animatedMatrices.resize(model.nodes.size() - rootJointIndex);
+	auto						*inverseMatrices = (glm::mat4 *)(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
+	glm::mat4					skeletonTransformation;
+	std::map<int, glm::mat4>	animatedMatrices;
 
-	auto skeleton = model.nodes[skin.skeleton];
-	glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
-	glm::mat4	skeletonTransformation;
-	skeletonTransformation = glm::translate(skeletonTransformation, skeletonTranslation);
+
+	tinygltf::Node &skeleton = model.nodes[skin.skeleton];
+
+	if (!skeleton.translation.empty()) {
+		glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
+		skeletonTransformation = glm::translate(skeletonTransformation, skeletonTranslation);
+	}
 
 	for (auto &joint : model.nodes[skin.skeleton].children) {
 		if (joint < skin.skeleton) {
@@ -174,14 +173,14 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	const unsigned MAX_JOINTS = 50;
 	for (unsigned i = 0; i < MAX_JOINTS; i++) {
 		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
-							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4(1.0));
+							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4());
 	}
 }
 
 void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
 									  const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
 									  int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
-									  std::vector<glm::mat4> &animatedMatrices) {
+									  std::map<int, glm::mat4> &animatedMatrices) {
 	glm::mat4	inverseMatrix = inverseMatrices[startNodeIndex - rootNodeIndex];
 
 	glm::mat4		globalJointTransform;
@@ -191,15 +190,19 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 	if (jointTransform == transformationMap.end()) {
 		currentTransform = parentTransform;
 	} else {
-		globalJointTransform = glm::translate(globalJointTransform, jointTransform->second.translation);
-		globalJointTransform *= glm::mat4_cast(jointTransform->second.rotation);
-
-		currentTransform = parentTransform * globalJointTransform;
+		currentTransform =
+				parentTransform *
+				glm::translate(glm::mat4(), jointTransform->second.translation) *
+				glm::mat4_cast(glm::normalize(jointTransform->second.rotation));
 	}
-	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
 
 	for (auto &child : nodes[startNodeIndex].children) {
 		this->_animateSkeleton(transformationMap, currentTransform, nodes, child, rootNodeIndex, inverseMatrices, animatedMatrices);
 	}
 
+	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
+}
+
+bool cge::Entity::isAnimated() const {
+	return this->_hasAnimation;
 }

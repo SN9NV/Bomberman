@@ -57,6 +57,17 @@ glm::mat4 cge::Camera::getViewMatrix() const {
 	return this->_viewMatrix;
 }
 
+void cge::Camera::addPosition(const glm::vec3 &delta) {
+	this->_position += delta;
+	this->_needsUpdate = true;
+
+}
+
+void cge::Camera::addRotation(const glm::vec3 &delta) {
+	this->_position += delta;
+	this->_needsUpdate = true;
+}
+
 std::ostream &operator<<(std::ostream &out, const cge::Camera &rhs) {
 	glm::vec3 position = rhs.getPosition();
 	glm::vec3 rotation = rhs.getRotation();
