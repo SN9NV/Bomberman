@@ -16,6 +16,7 @@ namespace cge {
 		void	pressKey(int keysym);
 		void	releaseKey(int keysym);
 		void	setMouseCoordinates(const glm::vec2 &mouseCoordinates);
+		void	setInputCallBacks();
 
 		glm::vec2	getMouseCoordinates() const;
 		bool 		isKeyPressed(int keysym) const;

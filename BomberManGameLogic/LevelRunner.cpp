@@ -425,7 +425,7 @@ int LevelRunner::runLevel(std::vector<std::string> map)
 		_shader.end();
 		_window.swapBuffers();
 	}
-	endlevel();
+	//endlevel();
 	return _state;
 }
 

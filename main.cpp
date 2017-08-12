@@ -12,6 +12,8 @@
 #include "BomberManGameLogic/GameLogic.h"
 #include "BomberManGameLogic/Player.hpp"
 #include "BomberManGameLogic/LevelRunner.hpp"
+#include "shared.hpp"
+#include "gui/MainMenuScreen.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
@@ -24,7 +26,8 @@ int main()
 	cge::Loader loader;
 	Player *player;
 	cge::Model BomberMan;
-	LevelRunner *levelRunner;
+	LevelRunner *level1Runner;
+	cge::GameState gameState = cge::GameState::PLAY_MENU;
 
 	std::vector<std::string> map = {
 			"6",
@@ -48,7 +51,22 @@ int main()
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);
-	levelRunner = new LevelRunner(loader,player, window);
-	levelRunner->runLevel(map);
+	level1Runner = new LevelRunner(loader,player, window);
+
+	//cge::GUI::MainMenuScreen mmScreen(window);
+
+	while (gameState != cge::WANTS_QUIT) {
+		switch (gameState) {
+			case (cge::PLAY_MENU):
+			default:
+				//mmScreen.setInputCallbacks();
+				//mmScreen.drawScreen();
+				level1Runner->runLevel(map);
+				break;
+		}
+	}
+
+
+	level1Runner->runLevel(map);
 	return 0;
 }

@@ -4,7 +4,7 @@ project(Bomberman)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
-set(SOURCE_FILES
+set(SOURCE_FILES shared.hpp
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
         tinyGLTF/tiny_gltf.h
@@ -41,7 +41,7 @@ set(SOURCE_FILES
         BomberManGameLogic/LevelRunner.cpp
         BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp
 		#gui/GuiManager.cpp gui/GuiManager.hpp
-		#gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
+		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
 		)
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -57,6 +57,10 @@ pkg_search_module(GLFW3	REQURIED glfw3)
 # Directories to find the header files
 include_directories(
         includes
+		${PROJECT_SOURCE_DIR}/dependencies/nanogui/include
+		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext
+		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/nanovg/src
+		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/eigen
         ${GLEW_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
         ${GLM_INCLUDE_DIRS}
@@ -65,6 +69,7 @@ include_directories(
 
 # Directories to find the libraries
 link_directories(
+		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
         ${GLEW_LIBRARY_DIRS}
         ${SDL2_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
@@ -80,4 +85,5 @@ target_link_libraries(${PROJECT_NAME}
         ${SDL2_LIBRARIES}
         ${GLM_LIBRARIES}
 		${GLFW3_LIBRARIES}
+		nanogui
 )

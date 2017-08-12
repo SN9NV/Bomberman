@@ -5,7 +5,7 @@ namespace cge {
 	Window::Window() :
 			_width(0),
 			_height(0),
-			_lastFrameTime(SDL_GetTicks()),
+			_lastFrameTime((glfwGetTime() * 1000)),
 			_glfwWindow(nullptr)
 	{
 
@@ -17,12 +17,12 @@ namespace cge {
 	}
 
 	void Window::create(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
-		this->_width = width;
-		this->_height = height;
-		this->_lastFrameTime = glfwGetTime();
 
 		glfwInit();
-		glfwSetTime(0);
+
+		this->_width = width;
+		this->_height = height;
+		this->_lastFrameTime = (glfwGetTime() * 1000);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -68,7 +68,7 @@ namespace cge {
 	}
 
 	void Window::swapBuffers() {
-		unsigned currentTime = (unsigned int)glfwGetTime();
+		unsigned currentTime = (unsigned)(glfwGetTime() * 1000);
 		this->_deltaFrameTime = currentTime - this->_lastFrameTime;
 		this->_lastFrameTime = currentTime;
 

@@ -5,27 +5,7 @@ namespace cge {
 	InputManager::InputManager(const cge::Window& win) :
 		_window(win)
 	{
-		glfwSetWindowUserPointer(win.getGLFWWindow(), this);
 
-		glfwSetKeyCallback(win.getGLFWWindow(),
-        [](GLFWwindow *glfwWindow, int key, int scancode, int action, int mods) {
-			(void)scancode;
-			(void)mods;
-			cge::InputManager* iManager = (cge::InputManager*)glfwGetWindowUserPointer(glfwWindow);
-
-			std::cout << "Key:      " << key << std::endl
-					  << "ScanCode: " << scancode << std::endl
-					  << "Action:   " << action << std::endl
-					  << "Mods:     " << mods << std::endl;
-
-			if (key == GLFW_KEY_ESCAPE)
-				iManager->_exitCase = true;
-
-			if (action == GLFW_PRESS || action == GLFW_REPEAT)
-				iManager->pressKey(key);
-			else if (action == GLFW_RELEASE)
-				iManager->releaseKey(key);
-        });
 	}
 
 	void InputManager::pressKey(int keysym) {
@@ -69,11 +49,36 @@ namespace cge {
 					break;
 			}
 		}*/
+		this->setInputCallBacks();
 		glfwPollEvents();
 	}
 
 	bool InputManager::isExitCase() const
 	{
 		return _exitCase;
+	}
+
+	void InputManager::setInputCallBacks() {
+		glfwSetWindowUserPointer(this->_window.getGLFWWindow(), this);
+
+		glfwSetKeyCallback(this->_window.getGLFWWindow(),
+        [](GLFWwindow *glfwWindow, int key, int scancode, int action, int mods) {
+			(void)scancode;
+			(void)mods;
+			cge::InputManager* iManager = (cge::InputManager*)glfwGetWindowUserPointer(glfwWindow);
+
+			std::cout << "Key:      " << key << std::endl
+					  << "ScanCode: " << scancode << std::endl
+					  << "Action:   " << action << std::endl
+					  << "Mods:     " << mods << std::endl;
+
+			if (key == GLFW_KEY_ESCAPE)
+				iManager->_exitCase = true;
+
+			if (action == GLFW_PRESS || action == GLFW_REPEAT)
+				iManager->pressKey(key);
+			else if (action == GLFW_RELEASE)
+				iManager->releaseKey(key);
+        });
 	}
 }
