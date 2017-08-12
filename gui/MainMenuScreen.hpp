@@ -6,13 +6,14 @@
 #define BOMBERMAN_MAINMENUSCREEN_HPP
 
 #include "../io/Window.hpp"
+#include "../shared.hpp"
 #include <nanogui/nanogui.h>
 
 namespace cge {
 	namespace GUI {
 		class MainMenuScreen {
 		public:
-			MainMenuScreen(cge::Window& win);
+			MainMenuScreen(cge::Window& win, cge::GameState* _currState);
 			~MainMenuScreen();
 
 			nanogui::Screen* getScreen();

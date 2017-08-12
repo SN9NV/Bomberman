@@ -5,13 +5,15 @@
 #include <iostream>
 #include "MainMenuScreen.hpp"
 
-cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win) :
+cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState* currState) :
 	_window(win)
 {
 	this->screen = new nanogui::Screen();
 	this->screen->initialize(win.getGLFWWindow(), true);
+	this->screen->setWidth(win.getWidth());
+	this->screen->setHeight(win.getHeight());
 
-	enum test_enum {
+	/*enum test_enum {
 		Item1 = 0,
 		Item2,
 		Item3
@@ -23,37 +25,39 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win) :
 	float fvar = (float)dvar;
 	std::string strval = "A string";
 	test_enum enumval = Item2;
-	nanogui::Color colval(0.5f, 0.5f, 0.7f, 1.f);
+	nanogui::Color colval(0.5f, 0.5f, 0.7f, 1.f);*/
 
     int width, height;
 	glfwGetFramebufferSize(win.getGLFWWindow(), &width, &height);
     glViewport(0, 0, width, height);
 
 	//create NanoGUI
-	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(this->screen);
+	gui->setFixedSize(Eigen::Vector2i(win.getWidth(), win.getHeight()));
+
 	nanogui::ref<nanogui::Window> nanoguiWindow =
 			gui->addWindow(Eigen::Vector2i(this->_window.getWidth(),
 					this->_window.getHeight()),
 					"Main Menu");
+	nanoguiWindow->setLayout(new nanogui::GroupLayout());
+
+	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
+	btn_NewGame->setTooltip("Starts a new game.");
+	btn_NewGame->setWidth(200);
+	btn_NewGame->setCallback([currState] { *currState = cge::GameState::PLAY_GAME; });
+
+	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
+	btn_LoadGame->setTooltip("Options for loading game.");
+
+	nanogui::Button *btn_Settigns = new nanogui::Button(nanoguiWindow, "Settings");
+	btn_Settigns->setTooltip("Game Settings");
+
+	gui->addGroup("");
+	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Quit");
+	btn_Quit->setTooltip("Quit the game.");
+	btn_Quit->setCallback([currState] { *currState = cge::GameState ::WANTS_QUIT; });
 
 
-
-	gui->addGroup("Basic types");
-    gui->addVariable("bool", bvar)->setTooltip("Test tooltip.");
-    gui->addVariable("string", strval);
-
-    gui->addGroup("Validating fields");
-    gui->addVariable("int", ivar)->setSpinnable(true);
-    gui->addVariable("float", fvar)->setTooltip("Test.");
-    gui->addVariable("double", dvar)->setSpinnable(true);
-
-    gui->addGroup("Complex types");
-    gui->addVariable("Enumeration", enumval, enabled)->setItems({ "Item 1", "Item 2", "Item 3" });
-    gui->addVariable("Color", colval);
-
-    gui->addGroup("Other widgets");
-    gui->addButton("A button", []() { std::cout << "Button pressed." << std::endl; })->setTooltip("Testing a much longer tooltip, that will wrap around to new lines multiple times.");;
 
     screen->setVisible(true);
     screen->performLayout();
@@ -79,6 +83,7 @@ void cge::GUI::MainMenuScreen::drawScreen() {
 }
 
 void cge::GUI::MainMenuScreen::setInputCallbacks() {
+	glfwSetWindowUserPointer(_window.getGLFWWindow(), nullptr);
 	glfwSetWindowUserPointer(_window.getGLFWWindow(), this);
 
 	glfwSetCursorPosCallback(_window.getGLFWWindow(),
@@ -90,7 +95,7 @@ void cge::GUI::MainMenuScreen::setInputCallbacks() {
         }
     );
 
-     glfwSetMouseButtonCallback(_window.getGLFWWindow(),
+	glfwSetMouseButtonCallback(_window.getGLFWWindow(),
         [](GLFWwindow *win, int button, int action, int modifiers) {
             cge::GUI::MainMenuScreen* screen;
 			screen = (cge::GUI::MainMenuScreen*)glfwGetWindowUserPointer(win);

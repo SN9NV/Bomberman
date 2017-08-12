@@ -31,24 +31,6 @@ namespace cge {
 	}
 
 	void InputManager::poolKeyEvnt() {
-		/*SDL_Event	event = {};
-
-		while (SDL_PollEvent(&event) > 0) {
-			switch (event.type) {
-				case SDL_QUIT:
-					_exitCase = true;
-				case SDL_KEYDOWN:
-					if (event.key.repeat == 0) {
-						this->pressKey(event.key.keysym.sym);
-					}
-					break;
-				case SDL_KEYUP:
-					this->releaseKey(event.key.keysym.sym);
-					break;
-				default:
-					break;
-			}
-		}*/
 		this->setInputCallBacks();
 		glfwPollEvents();
 	}
@@ -59,6 +41,17 @@ namespace cge {
 	}
 
 	void InputManager::setInputCallBacks() {
+		/*These are all the menu's callbacks. Set them to null
+		 * so that they aren't called during game play.*/
+		glfwSetCursorPosCallback(_window.getGLFWWindow(),nullptr);
+		glfwSetMouseButtonCallback(_window.getGLFWWindow(), nullptr);
+		//glfwSetKeyCallback(_window.getGLFWWindow(), nullptr); // Changing this one.
+		glfwSetCharCallback(_window.getGLFWWindow(), nullptr);
+		glfwSetDropCallback(_window.getGLFWWindow(), nullptr);
+		glfwSetScrollCallback(_window.getGLFWWindow(), nullptr);
+		glfwSetFramebufferSizeCallback(_window.getGLFWWindow(), nullptr);
+
+		glfwSetWindowUserPointer(this->_window.getGLFWWindow(), nullptr);
 		glfwSetWindowUserPointer(this->_window.getGLFWWindow(), this);
 
 		glfwSetKeyCallback(this->_window.getGLFWWindow(),
