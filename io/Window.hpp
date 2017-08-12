@@ -42,7 +42,7 @@ namespace cge {
 		unsigned	_lastFrameTime;
 		unsigned	_deltaFrameTime;
 
-		GLFWwindow	*_glfwWindow;
+		GLFWwindow*	_glfwWindow;
 	};
 }
 

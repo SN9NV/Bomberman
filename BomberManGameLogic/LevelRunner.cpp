@@ -163,7 +163,9 @@ void LevelRunner::beingWorldInteraction()
 			float fdist = cge::Maths::vec3Len(dist);
 			glm::vec3 hit = _player->getHitBox() + colBeing->getHitBox();
 			float fhit = cge::Maths::vec3Len(hit);
-			std::cout << "pos len: " << fdist << " hit len " << fhit << std::endl;
+			(void)fdist;
+			(void)fhit;
+			//std::cout << "pos len: " << fdist << " hit len " << fhit << std::endl;
 			/*if (glm::length() < glm::length())
 			{
 				std::cout << "player being collision" << std::endl;

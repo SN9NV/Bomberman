@@ -4,20 +4,20 @@
 void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
 	_plaseBomb = false;
-	if (input.isKeyPressed(SDLK_w))
+	if (input.isKeyPressed(GLFW_KEY_W))
 			this->_n_moveDir.z = -1;
-	else if (input.isKeyPressed(SDLK_s))
+	else if (input.isKeyPressed(GLFW_KEY_S))
 		this->_n_moveDir.z = 1;
 	else
 		this->_n_moveDir.z = 0;
-	if (input.isKeyPressed(SDLK_d))
+	if (input.isKeyPressed(GLFW_KEY_D))
 		this->_n_moveDir.x = 1;
-	else if (input.isKeyPressed(SDLK_a))
+	else if (input.isKeyPressed(GLFW_KEY_A))
 		this->_n_moveDir.x = -1;
 	else
 		this->_n_moveDir.x = 0;
 
-	if (input.isKeyPressed(SDLK_b) && _bombs.size() < _maxBomb)
+	if (input.isKeyPressed(GLFW_KEY_B) && _bombs.size() < _maxBomb)
 	{
 		_plaseBomb = true;
 	}

@@ -22,6 +22,7 @@ namespace cge {
 		this->_lastFrameTime = glfwGetTime();
 
 		glfwInit();
+		glfwSetTime(0);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -67,7 +68,7 @@ namespace cge {
 	}
 
 	void Window::swapBuffers() {
-		unsigned currentTime = glfwGetTime();
+		unsigned currentTime = (unsigned int)glfwGetTime();
 		this->_deltaFrameTime = currentTime - this->_lastFrameTime;
 		this->_lastFrameTime = currentTime;
 
