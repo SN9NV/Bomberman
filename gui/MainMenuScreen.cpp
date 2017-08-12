@@ -59,7 +59,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win) :
     screen->performLayout();
     nanoguiWindow->center();
 
-	this->setInputCallbacks();
+	//this->setInputCallbacks();
 }
 
 cge::GUI::MainMenuScreen::~MainMenuScreen() {

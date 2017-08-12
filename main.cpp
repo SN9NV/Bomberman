@@ -53,15 +53,15 @@ int main()
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);
 	level1Runner = new LevelRunner(loader,player, window);
 
-	//cge::GUI::MainMenuScreen mmScreen(window);
+	cge::GUI::MainMenuScreen mmScreen(window);
 
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
 			case (cge::PLAY_MENU):
 			default:
-				//mmScreen.setInputCallbacks();
-				//mmScreen.drawScreen();
-				level1Runner->runLevel(map);
+				mmScreen.setInputCallbacks();
+				mmScreen.drawScreen();
+				//level1Runner->runLevel(map);
 				break;
 		}
 	}
