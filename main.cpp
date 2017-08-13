@@ -39,11 +39,11 @@ int main() {
 
 	int gameState = GameState::PLAY_GAME;
 
-//	cge::Model cubeModel = cge::Model("resources/moddels/companion.glb", "resources/moddels/companion.png", loader);
-	cge::Model bomberModel = cge::Model("resources/moddels/Bomber2.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
-//	cge::Model bomberModel = cge::Model("resources/moddels/WingBoot.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
-//	cge::Model bomberModel = cge::Model("resources/moddels/run.glb", "resources/moddels/BomberManTextureDiffuseColor.png", loader);
-//	cge::Model bomberModel = cge::Model("resources/moddels/dumb.glb", "resources/moddels/image.png", loader);
+//	cge::Model cubeModel = cge::Model("resources/models/companion.glb", "resources/models/companion.png", loader);
+	cge::Model bomberModel = cge::Model("resources/models/Bomber2.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/models/WingBoot.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/models/run.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
+//	cge::Model bomberModel = cge::Model("resources/models/dumb.glb", "resources/models/image.png", loader);
 
 //	std::cout << bomberModel.getTinygltfModel();
 
