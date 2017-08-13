@@ -13,7 +13,7 @@
 #include "tinyGLTF/tiny_gltf.h"
 
 static constexpr unsigned HEIGHT = 720;
-static constexpr unsigned WIDTH = 1024;
+static constexpr unsigned WIDTH = 1280;
 
 bool	processInput(cge::InputManager &inputManager);
 
