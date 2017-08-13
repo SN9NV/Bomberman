@@ -25,7 +25,7 @@ int main() {
 	cge::Loader			loader;
 //	cge::Sounds			sounds;
 
-	cge::Camera camera(glm::vec3(2.0f, 4.75f, 4.5f), glm::vec3(0.5f, -0.4f, 0.0f), window);
+	cge::Camera camera(glm::vec3(0.8f, 1.6f, 1.75f), glm::vec3(0.5f, -0.4f, 0.0f), window);
 
 	enum GameState {
 		PLAY_GAME,
@@ -40,7 +40,7 @@ int main() {
 	int gameState = GameState::PLAY_GAME;
 
 //	cge::Model cubeModel = cge::Model("resources/models/companion.glb", "resources/models/companion.png", loader);
-	cge::Model bomberModel = cge::Model("resources/models/Bomber2.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
+	cge::Model bomberModel = cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/models/WingBoot.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/models/run.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
 //	cge::Model bomberModel = cge::Model("resources/models/dumb.glb", "resources/models/image.png", loader);

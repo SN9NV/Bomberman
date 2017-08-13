@@ -162,6 +162,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			continue;
 		}
 
+		std::cout << "Animating joints: " << model.nodes.size() << "\n";
 		this->_animateSkeleton(transformationMap, skeletonTransformation, model.nodes, joint, rootJointIndex, inverseMatrices, animatedMatrices);
 	}
 
@@ -173,6 +174,8 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	for (unsigned i = 0; i < MAX_JOINTS; i++) {
 		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
 							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4());
+
+//		std::cout << animatedMatrices[i] << "\n\n";
 	}
 }
 
