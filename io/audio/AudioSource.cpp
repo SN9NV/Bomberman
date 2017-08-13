@@ -116,3 +116,22 @@ unsigned cge::Audio::Source::getPlayOffset(cge::Audio::Source::Offset offsetType
 
 	return static_cast<unsigned>(offset);
 }
+
+void cge::Audio::Source::setPlayOffset(cge::Audio::Source::Offset offsetType, unsigned offset) {
+	if (offsetType == cge::Audio::Source::Offset::MILLISECONDS) {
+		alSourcef(this->_sourceID, static_cast<ALenum>(offsetType), offset / 1000.0f);
+	} else {
+		alSourcei(this->_sourceID, static_cast<ALenum>(offsetType), static_cast<ALint>(offset));
+	}
+}
+
+unsigned cge::Audio::Source::getFileSize(cge::Audio::Source::Offset offsetType) const {
+	switch (offsetType) {
+		case cge::Audio::Source::Offset::MILLISECONDS:
+			return static_cast<unsigned>(this->_sfInfo.frames * this->_sfInfo.samplerate);
+		case cge::Audio::Source::Offset::SAMPLES:
+			return static_cast<unsigned>(this->_sfInfo.frames);
+		case cge::Audio::Source::Offset::BYTES:
+			return static_cast<unsigned>(this->_sfInfo.frames * this->_sfInfo.channels * sizeof(int16_t));
+	}
+}

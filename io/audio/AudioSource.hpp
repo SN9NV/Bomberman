@@ -14,7 +14,7 @@ namespace cge {
 		public:
 			enum class Offset {
 				MILLISECONDS = AL_SEC_OFFSET,
-				SAMPLE = AL_SAMPLE_OFFSET,
+				SAMPLES = AL_SAMPLE_OFFSET,
 				BYTES = AL_BYTE_OFFSET
 			};
 
@@ -37,6 +37,7 @@ namespace cge {
 			glm::vec3	&getPosition() const;
 			glm::vec3	&getVelocity() const;
 			bool 		isLooping() const;
+			unsigned	getFileSize(cge::Audio::Source::Offset offsetType) const;
 
 			void		setPlay(bool play);
 			bool 		isPlaying();
