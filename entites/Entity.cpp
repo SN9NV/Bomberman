@@ -162,7 +162,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			continue;
 		}
 
-		std::cout << "Animating joints: " << model.nodes.size() << "\n";
+//		std::cout << "Animating joints: " << model.nodes.size() << "\n";
 		this->_animateSkeleton(transformationMap, skeletonTransformation, model.nodes, joint, rootJointIndex, inverseMatrices, animatedMatrices);
 	}
 
