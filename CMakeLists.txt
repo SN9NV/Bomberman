@@ -53,14 +53,15 @@ set(SOURCE_FILES shared.hpp
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
+find_package(OpenAL REQUIRED)	#> Linux => libopenal-dev
 find_package(PkgConfig REQUIRED)
 
-# Find the dependencies for the project
-pkg_search_module(GLEW		REQUIRED glew)
-pkg_search_module(GLM		REQUIRED glm)
-pkg_search_module(GLFW3		REQURIED glfw3)
-pkg_search_module(OPENAL	REQURIED openal)
-pkg_search_module(SNDFILE	REQURIED sndfile) #> libsndfile1-dev
+# Find the dependencies for the project				Mac				Linux
+pkg_search_module(GLEW		REQUIRED glew)		#> 	glew			libglew-dev
+pkg_search_module(GLM		REQUIRED glm)		#> 	glm				Install from source (https://github.com/g-truc/glm)
+pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
+#pkg_search_module(OPENAL	REQURIED openal)	#> 					libopenal-dev
+pkg_search_module(SNDFILE	REQURIED sndfile)	#> 	sndfile?		libsndfile1-dev
 
 # Directories to find the header files
 include_directories(

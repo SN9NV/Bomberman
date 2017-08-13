@@ -7,23 +7,29 @@
 
 #include <GL/glew.h>
 #include <al.h>
+#include <sndfile.h>
 
 #include "../entites/Model.hpp"
 
 namespace cge {
 	class Loader {
 	public:
+		struct AudioFile {
+			ALuint	bufferID;
+			SF_INFO	info;
+		};
+
 		Loader() = default;
 		~Loader();
 
-		Texture			loadTexture(const std::string &texturePath);
-		tinygltf::Model	&loadGLTFModel(const std::string &modelPath);
-		ALuint			loadAudio(const std::string &audioPath);
+		cge::Texture			loadTexture(const std::string &texturePath);
+		tinygltf::Model			&loadGLTFModel(const std::string &modelPath);
+		cge::Loader::AudioFile	loadAudio(const std::string &audioPath);
 
 	private:
-		std::map<std::string, GLuint>			_textures;
-		std::map<std::string, tinygltf::Model>	_models;
-		std::map<std::string, ALuint>			_audioFiles;
+		std::map<std::string, GLuint>					_textures;
+		std::map<std::string, tinygltf::Model>			_models;
+		std::map<std::string, cge::Loader::AudioFile>	_audioFiles;
 
 		tinygltf::TinyGLTF						_gltfLoader;
 	};

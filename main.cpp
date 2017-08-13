@@ -14,7 +14,8 @@
 #include "BomberManGameLogic/LevelRunner.hpp"
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
-#include "io/Audio/AudioManager.hpp"
+#include "io/audio/AudioManager.hpp"
+#include "io/audio/AudioDevice.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
@@ -23,14 +24,13 @@ static constexpr unsigned WIDTH = 1024;
 int main()
 {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::AudioManager	audioManager;
 	cge::InputManager inputManager(window);
 	cge::Loader loader;
 	Player *player;
 	cge::Model BomberMan;
 	LevelRunner *level1Runner;
 	cge::GameState gameState = cge::GameState::PLAY_MENU;
-	(void)gameState; ///> TODO removessss
+	(void)gameState; ///> TODO remove
 
 	std::vector<std::string> map = {
 			"6",
@@ -72,12 +72,12 @@ int main()
 //		}
 //	}
 
-	auto devices = audioManager.listDevices();
+	auto devices = cge::Audio::Device::listDevices();
 	for (auto &device : devices) {
 		std::cout << device << "\n";
 	}
 
-	audioManager.setDevice(devices[0]);
+//	audioManager.setDevice(devices[0]);
 
 	level1Runner->runLevel(map);
 	return 0;

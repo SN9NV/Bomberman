@@ -43,6 +43,10 @@ namespace cge {
 		for (auto &texture : this->_textures) {
 			glDeleteTextures(1, &(texture.second));
 		}
+
+		for (auto &audioBuffer : this->_audioFiles) {
+			alDeleteBuffers(1, &(audioBuffer.second.bufferID));
+		}
 	}
 
 	tinygltf::Model &Loader::loadGLTFModel(const std::string &modelPath) {
@@ -66,7 +70,54 @@ namespace cge {
 		return foundModel->second;
 	}
 
-	ALuint Loader::loadAudio(const std::string &audioPath) {
-		return 0;
+	cge::Loader::AudioFile Loader::loadAudio(const std::string &audioPath) {
+		(void)audioPath; ///> TODO remove
+		auto foundAudio = this->_audioFiles.find(audioPath);
+
+		if (foundAudio == this->_audioFiles.end()) {
+			/// SF_INFO holds info on the audio file
+			SF_INFO	sfInfo = {};
+
+			///	Open audio file
+			SNDFILE	*file = sf_open(audioPath.c_str(), SFM_READ, &sfInfo);
+
+			if (file == nullptr) {
+				std::cerr << "Could not open audio file: " << audioPath << "\n";
+				exit(1);
+			}
+
+			std::vector<uint16_t>		fileBuffer;
+
+			sf_count_t readSize = 8192 * sfInfo.channels;
+			std::array<int16_t, readSize>	readBuffer = {};
+
+			while((readSize = sf_read_short(file, readBuffer.data(), readBuffer.size())) != 0) {
+				fileBuffer.insert(fileBuffer.end(), readBuffer.begin(), readBuffer.begin() + readSize);
+			}
+
+			/// Generate buffer to store audio
+			ALuint	bufferID = 0;
+
+			alGenBuffers(1, &bufferID);
+			if (bufferID == AL_INVALID_VALUE) {
+				std::cerr << "Error creating buffer\n";
+				exit(1);
+			}
+
+			alBufferData(
+					bufferID,
+					(sfInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+					fileBuffer.data(),
+					static_cast<ALsizei>(fileBuffer.size() * sizeof(uint16_t)),
+					sfInfo.samplerate
+			);
+
+			cge::Loader::AudioFile	ret = { bufferID, sfInfo };
+			this->_audioFiles[audioPath] = ret;
+
+			return ret;
+		}
+
+		return foundAudio->second;
 	}
 }
