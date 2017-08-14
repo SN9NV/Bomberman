@@ -15,19 +15,37 @@
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
 
+#if defined(NANOGUI_GLAD)
+#if defined(NANOGUI_SHARED) && !defined(GLAD_GLAPI_EXPORT)
+#define GLAD_GLAPI_EXPORT
+#endif
+
+#include <glad/glad.h>
+#else
+#if defined(__APPLE__)
+#define GLFW_INCLUDE_GLCOREARB
+#else
+#define GL_GLEXT_PROTOTYPES
+#endif
+#endif
+
+#include <GLFW/glfw3.h>
+
+#include <nanogui/nanogui.h>
+#include <iostream>
+
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
 
-int main()
-{
+int main() {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::GameState gameState = cge::GameState::PLAY_MENU;
 	cge::InputManager inputManager(window);
 	cge::Loader loader;
 	Player *player;
 	cge::Model BomberMan;
 	LevelRunner *level1Runner;
-	cge::GameState gameState = cge::GameState::PLAY_MENU;
 
 	std::vector<std::string> map = {
 			"6",
@@ -50,15 +68,18 @@ int main()
 
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
-	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);
-	level1Runner = new LevelRunner(loader,player, window);
+	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f, 0.0f, 0.5f}, 0.01f);
+	level1Runner = new LevelRunner(loader, player, window);
 
 	cge::GUI::MainMenuScreen mmScreen(window, &gameState);
 
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
 			case (cge::PLAY_GAME):
-				level1Runner->runLevel(map);
+				if (player->getLives() > 0)
+					int state = level1Runner->runLevel(map);
+				else
+					gameState = cge::PLAY_MENU;
 				break;
 			case (cge::PLAY_MENU):
 				mmScreen.setInputCallbacks();
@@ -68,8 +89,5 @@ int main()
 				throw std::exception();
 		}
 	}
-
-
-	level1Runner->runLevel(map);
 	return 0;
 }
