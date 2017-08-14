@@ -12,7 +12,8 @@ namespace cge {
 	}
 
 	Window::~Window() {
-		glfwDestroyWindow(this->_glfwWindow);
+		if (this->_glfwWindow != nullptr)
+			glfwDestroyWindow(this->_glfwWindow);
 		glfwTerminate();
 	}
 

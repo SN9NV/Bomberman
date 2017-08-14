@@ -21,6 +21,7 @@ enum levelState
 	FAIL,
 	COMPLEAT,
 	FAIL_MAP_LOAD,
+	PAUSE
 };
 
 class LevelRunner
@@ -51,7 +52,7 @@ private:
 	void checkBeingBlast(int x, int y);
 	bool checkWallBlast(int x, int y);
 	void bumpBeing(Being *);
-	void endlevel();
+	void endLevel();
 	bool checkMapWall();
 
 public:
