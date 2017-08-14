@@ -95,46 +95,54 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
 		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
-		float ticks = std::fmod(this->_animationTicks / 1000.0f, keyFrames[inAccessor.count-1] - keyFrames[0]);
-//		std::cout << ticks << "\n";
+		float ticks = std::fmod(this->_animationTicks / 1000.0f, inAccessor.count * (keyFrames[1] - keyFrames[0])/*keyFrames[inAccessor.count-1] - keyFrames[0]*/);
 
 		/// Find the top of the frame we're in
 		unsigned upperKeyframe = 0;
-		while (ticks > keyFrames[upperKeyframe] - keyFrames[0]) {
-			++upperKeyframe;
+		if (ticks < keyFrames[inAccessor.count-1]) {
+			while (ticks > keyFrames[upperKeyframe] - keyFrames[0]) {
+				++upperKeyframe;
+			}
 		}
+
+		unsigned lowerKeyframe = (upperKeyframe == 0) ? static_cast<unsigned>(inAccessor.count - 1) : upperKeyframe - 1;
+
 
 		auto transformation = transformationMap.find(channel.target_node);
 		if (transformation == transformationMap.end()) {
 			transformationMap[channel.target_node] = { glm::vec3(), glm::quat() };
 		}
 
-		/// If upperKeyframe == 0, that means that the transformation is 0 and no need for interpolation to be calculated.
-		if (upperKeyframe == 0) {
-			if (channel.target_path == "translation") {
-				transformationMap[channel.target_node].translation = *reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
-			} else if (channel.target_path == "rotation") {
-				transformationMap[channel.target_node].rotation = *reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
-			}
-
-			continue;
-		}
+//		/// If upperKeyframe == 0, that means that the transformation is 0 and no need for interpolation to be calculated.
+//		if (upperKeyframe == 0) {
+//			if (channel.target_path == "translation") {
+//				transformationMap[channel.target_node].translation = *reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
+//			} else if (channel.target_path == "rotation") {
+//				transformationMap[channel.target_node].rotation = *reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
+//			}
+//
+//			continue;
+//		}
 
 		/// Find how far through the bottom frame we are
 		/// Interpolant = (x - a)/(b - a) where a < x < b
-		float interpolant =
-				(ticks - (keyFrames[upperKeyframe-1] - keyFrames[0])) /
-				((keyFrames[upperKeyframe] - keyFrames[0]) - (keyFrames[upperKeyframe-1] - keyFrames[0]));
+		float upperKeyframeTime =
+				(upperKeyframe == 0) ?
+				inAccessor.count * (keyFrames[1] - keyFrames[0]) :
+				keyFrames[upperKeyframe] - keyFrames[0];
+		float lowerKeyframeTime = keyFrames[lowerKeyframe] - keyFrames[0];
+		float interpolant = (ticks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
 
-//		std::cout << (keyFrames[upperKeyframe-1] - keyFrames[0]) << ", " << (keyFrames[upperKeyframe] - keyFrames[0]) << "\n";
-//		std::cout << "Interpolant: " << interpolant << "\n";
+		if (inBuffView.target == 3) {
+			std::cout << lowerKeyframe << "(" << lowerKeyframeTime << "), " << upperKeyframe << "(" << upperKeyframeTime << "), " << interpolant << "\n";
+		}
 
 		if (channel.target_path == "translation") {
 			auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
-			transformationMap[channel.target_node].translation = glm::mix(translation[upperKeyframe-1], translation[upperKeyframe], interpolant);
+			transformationMap[channel.target_node].translation = glm::mix(translation[lowerKeyframe], translation[upperKeyframe], interpolant);
 		} else if (channel.target_path == "rotation") {
 			auto *rotation = reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
-			transformationMap[channel.target_node].rotation = glm::lerp(rotation[upperKeyframe-1], rotation[upperKeyframe], interpolant);
+			transformationMap[channel.target_node].rotation = glm::slerp(rotation[lowerKeyframe], rotation[upperKeyframe], interpolant);
 		}
 	}
 

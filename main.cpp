@@ -62,6 +62,8 @@ int main() {
 
 	unsigned debounce = SDL_GetTicks();
 
+	bool	paused = false;
+
 	while (gameState != GameState::WANTS_QUIT) {
 		if (processInput(inputManager)) {
 			gameState = GameState::WANTS_QUIT;
@@ -110,8 +112,16 @@ int main() {
 					debounce = SDL_GetTicks();
 				}
 
-				bomber1.update(shader, true, 1);
-//				dumb.update(shader, true, 1);
+				if (inputManager.isKeyPressed(SDLK_p) && debounce + 1000 < SDL_GetTicks()) {
+					paused = !paused;
+					debounce = SDL_GetTicks();
+				}
+
+				if (!paused) {
+					bomber1.update(shader, true, 1);
+//					dumb.update(shader, true, 1);
+				}
+
 				renderer.prepare();
 				camera.update(shader);
 
@@ -122,7 +132,7 @@ int main() {
 				shader.end();
 				window.swapBuffers();
 
-				SDL_Delay(50);
+				SDL_Delay(0);
 				break;
 			}
 			default:
