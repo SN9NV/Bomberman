@@ -6,15 +6,19 @@
 #define BOMBERMAN_GUIMANAGER_HPP
 
 #include "../io/Window.hpp"
+#include "../BomberManGameLogic/Player.hpp"
 #include "MainMenuScreen.hpp"
 
 namespace cge {
 	class GuiManager {
 	public:
-		static bool			initialise(cge::Window& win);
+		static bool			initialise(cge::Window& ,
+										cge::GameState* state,
+										Player* player);
 		static GuiManager*	getSingleton();
 
-		explicit GuiManager(cge::Window& win);
+		explicit GuiManager(cge::Window& win,
+							Player* player);
 		~GuiManager();
 
 		void drawScreen(int screen);
@@ -22,7 +26,8 @@ namespace cge {
 	private:
 		static cge::GuiManager*		s_instance;
 
-		cge::Window&				_sdlWindow;
+		cge::Window&				_window;
+		Player*						_player;
 
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
 		void 						setMainMenuScreen(cge::GUI::MainMenuScreen*	mainMenuScreen);

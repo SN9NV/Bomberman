@@ -14,6 +14,7 @@
 #include "BomberManGameLogic/LevelRunner.hpp"
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
+#include "gui/GuiManager.hpp"
 
 #if defined(NANOGUI_GLAD)
 #if defined(NANOGUI_SHARED) && !defined(GLAD_GLAPI_EXPORT)
@@ -39,37 +40,36 @@ static constexpr unsigned WIDTH = 1024;
 
 
 int main() {
-	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GameState gameState = cge::GameState::PLAY_MENU;
-	cge::InputManager inputManager(window);
-	cge::Loader loader;
-	Player *player;
-	cge::Model BomberMan;
-	LevelRunner *levelRunner;
-	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							loader));
+	cge::Window 		window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::GameState 		gameState = cge::GameState::PLAY_MENU;
+	cge::InputManager	inputManager(window);
+	cge::Loader			loader;
+	Player				*player;
+	cge::Model			BomberMan;
+	LevelRunner			*levelRunner;
+
+	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png", loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
 	player->setDamage(3);
 	levelRunner = new LevelRunner(loader,player, window);
 
-	cge::GUI::MainMenuScreen mmScreen(window, &gameState);
+	cge::GuiManager::initialise(window, &gameState, player);
 
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
 			case (cge::PLAY_GAME):
+				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				if (player->getLives() > 0) {
 					int state = levelRunner->runLevel("../resources/Maps/Map1");
 					std::cout << "level exit state " << state << std::endl;
+					std::cout << "Player Lives: " << player->getLives() << std::endl;
 				}
 				else
 					gameState = cge::PLAY_MENU;
 				break;
-			case (cge::PLAY_MENU):
-				mmScreen.setInputCallbacks();
-				mmScreen.drawScreen();
-				break;
 			default:
-				throw std::exception();
+				cge::GuiManager::getSingleton()->drawScreen(gameState);
+				break;
 		}
 	}
 	return 0;

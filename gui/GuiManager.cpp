@@ -2,16 +2,18 @@
 // Created by Owen EXALL on 2017/08/10.
 //
 
-#include <SDL_opengl.h>
 #include "GuiManager.hpp"
 
 cge::GuiManager *cge::GuiManager::s_instance = nullptr;
 
-bool cge::GuiManager::initialise(cge::Window& win) {
+bool cge::GuiManager::initialise(cge::Window& win,
+								cge::GameState *state,
+								Player* player)
+{
 	if (s_instance == nullptr) {
-		s_instance = new GuiManager(win);
+		s_instance = new GuiManager(win, player);
 
-		s_instance->setMainMenuScreen(new cge::GUI::MainMenuScreen(win));
+		s_instance->setMainMenuScreen(new cge::GUI::MainMenuScreen(win, state, player));
 	}
 	return (true);
 }
@@ -23,8 +25,9 @@ cge::GuiManager *cge::GuiManager::getSingleton() {
 	return (s_instance);
 }
 
-cge::GuiManager::GuiManager(cge::Window &win):
-	_sdlWindow(win)
+cge::GuiManager::GuiManager(cge::Window &win, Player* player):
+	_window(win),
+	_player(player)
 {
 }
 
@@ -33,12 +36,11 @@ cge::GuiManager::~GuiManager() {
 }
 
 void cge::GuiManager::drawScreen(int screen) {
-	glClearColor(0.9f, 0.9f, 0.9f, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	glfwSetInputMode(this->_window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	switch (screen) {
-		case (1):
+		case (cge::GameState::PLAY_MENU):
 		default:
+			this->_mainMenuScreen->setInputCallbacks();
 			this->_mainMenuScreen->drawScreen();
 			break;
 	}

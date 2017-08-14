@@ -5,8 +5,10 @@
 #include "MainMenuScreen.hpp"
 
 
-cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currState) :
-_window(win) {
+cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currState, Player* player) :
+		_window(win),
+		_player(player)
+{
 
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -24,13 +26,16 @@ _window(win) {
 	// Create nanogui gui
 	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
+	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
 	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setWidth(200);
-	btn_NewGame->setCallback([currState] { *currState = cge::GameState::PLAY_GAME; });
+	btn_NewGame->setCallback([currState, player] {
+		*currState = cge::GameState::PLAY_GAME;
+		player->setLives(3);
+	});
 
 	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
@@ -69,66 +74,66 @@ void cge::GUI::MainMenuScreen::setInputCallbacks() {
 	glfwSetWindowUserPointer(_window.getGLFWWindow(), this);
 
 	glfwSetCursorPosCallback(_window.getGLFWWindow(),
-							 [](GLFWwindow *win, double x, double y) {
-								 cge::GUI::MainMenuScreen *screen;
-								 screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+		[](GLFWwindow *win, double x, double y) {
+			 cge::GUI::MainMenuScreen *screen;
+			 screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-								 screen->getScreen()->cursorPosCallbackEvent(x, y);
-							 }
+			 screen->getScreen()->cursorPosCallbackEvent(x, y);
+		 }
 	);
 
 	glfwSetMouseButtonCallback(_window.getGLFWWindow(),
-							   [](GLFWwindow *win, int button, int action, int modifiers) {
-								   cge::GUI::MainMenuScreen *screen;
-								   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int button, int action, int modifiers) {
+		   cge::GUI::MainMenuScreen *screen;
+		   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-								   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
-							   }
+		   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
+	   }
 	);
 
 	glfwSetKeyCallback(_window.getGLFWWindow(),
-					   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
-						   cge::GUI::MainMenuScreen *screen;
-						   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
+		   cge::GUI::MainMenuScreen *screen;
+		   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-						   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
-					   }
+		   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
+	   }
 	);
 
 	glfwSetCharCallback(_window.getGLFWWindow(),
-						[](GLFWwindow *win, unsigned int codepoint) {
-							cge::GUI::MainMenuScreen *screen;
-							screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+		[](GLFWwindow *win, unsigned int codepoint) {
+			cge::GUI::MainMenuScreen *screen;
+			screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-							screen->getScreen()->charCallbackEvent(codepoint);
-						}
+			screen->getScreen()->charCallbackEvent(codepoint);
+		}
 	);
 
 	glfwSetDropCallback(_window.getGLFWWindow(),
-						[](GLFWwindow *win, int count, const char **filenames) {
-							cge::GUI::MainMenuScreen *screen;
-							screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+		[](GLFWwindow *win, int count, const char **filenames) {
+			cge::GUI::MainMenuScreen *screen;
+			screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-							screen->getScreen()->dropCallbackEvent(count, filenames);
-						}
+			screen->getScreen()->dropCallbackEvent(count, filenames);
+		}
 	);
 
 	glfwSetScrollCallback(_window.getGLFWWindow(),
-						  [](GLFWwindow *win, double x, double y) {
-							  cge::GUI::MainMenuScreen *screen;
-							  screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+	  [](GLFWwindow *win, double x, double y) {
+		  cge::GUI::MainMenuScreen *screen;
+		  screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-							  screen->getScreen()->scrollCallbackEvent(x, y);
-						  }
+		  screen->getScreen()->scrollCallbackEvent(x, y);
+	  }
 	);
 
 	glfwSetFramebufferSizeCallback(_window.getGLFWWindow(),
-								   [](GLFWwindow *win, int width, int height) {
-									   cge::GUI::MainMenuScreen *screen;
-									   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int width, int height) {
+		   cge::GUI::MainMenuScreen *screen;
+		   screen = (cge::GUI::MainMenuScreen *) glfwGetWindowUserPointer(win);
 
-									   screen->getScreen()->resizeCallbackEvent(width, height);
-								   }
+		   screen->getScreen()->resizeCallbackEvent(width, height);
+	   }
 	);
 }
 

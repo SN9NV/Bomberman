@@ -66,4 +66,12 @@ void Player::setSpecial(int _special)
 	Player::_special = _special;
 }
 
+void Player::setLives(int lives) {
+	Player::_lives = lives;
+}
+
+void Player::addLives(int lives) {
+	Player::_lives += lives;
+}
+
 

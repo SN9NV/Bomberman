@@ -55,7 +55,7 @@ set(SOURCE_FILES
 		BomberManGameLogic/Balloon.hpp
 		BomberManGameLogic/Wall.cpp
 		BomberManGameLogic/Wall.h
-		#gui/GuiManager.cpp gui/GuiManager.hpp
+		gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
 )
 
