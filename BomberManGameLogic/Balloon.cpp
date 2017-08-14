@@ -10,13 +10,13 @@ Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float sca
 
 }
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox)
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox)
 		: Being(position, rotation, scale, model, hitBox, 0.002f)
 {
 
 }
 
-void Balloon::update(const cge::InputManager &input, unsigned lastFrameTime)
+bool Balloon::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
 	srand((unsigned int) time(NULL));
 	if (_n_moveDir.x == 0 && _n_moveDir.z == 0)
@@ -27,5 +27,6 @@ void Balloon::update(const cge::InputManager &input, unsigned lastFrameTime)
 			_n_moveDir.z = (rand() % 3) - 1;
 	}
 	if (lastFrameTime < 500)
-		Being::update(input, lastFrameTime);
+		return (Being::update(input, lastFrameTime));
+	return (true);
 }

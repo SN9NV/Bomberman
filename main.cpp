@@ -45,39 +45,22 @@ int main() {
 	cge::Loader loader;
 	Player *player;
 	cge::Model BomberMan;
-	LevelRunner *level1Runner;
-
-	std::vector<std::string> map = {
-			"6",
-			"wwwwwwwwwwwwwww",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.d...d....w",
-			"w.wdwdwdwdwdw.w",
-			"w....d........w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.....d....w",
-			"w.wdwdwdwdwdw.w",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d...d...d..w",
-			"w.wdwdwdwdwdw.w",
-			"wp.d........d.w",
-			"wwwwwwwwwwwwwww"
-	};
-
+	LevelRunner *levelRunner;
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
-	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f, 0.0f, 0.5f}, 0.01f);
-	level1Runner = new LevelRunner(loader, player, window);
+	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
+	player->setDamage(3);
+	levelRunner = new LevelRunner(loader,player, window);
 
 	cge::GUI::MainMenuScreen mmScreen(window, &gameState);
 
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
 			case (cge::PLAY_GAME):
-				if (player->getLives() > 0)
-					int state = level1Runner->runLevel(map);
+				if (player->getLives() > 0) {
+					int state = levelRunner->runLevel("../resources/Maps/Map1");
+					std::cout << "level exit state " << state << std::endl;
+				}
 				else
 					gameState = cge::PLAY_MENU;
 				break;

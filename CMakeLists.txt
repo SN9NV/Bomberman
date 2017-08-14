@@ -38,8 +38,7 @@ set(SOURCE_FILES
 		loaders/picoPNG.cpp loaders/picoPNG.hpp
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/glError.cpp error_handling/glError.hpp
-		entites/Player.cpp entites/Player.hpp
-		BomberManGameLogic/Being.cpp
+        BomberManGameLogic/Being.cpp
 		BomberManGameLogic/Being.h
 		BomberManGameLogic/Player.cpp
 		BomberManGameLogic/Player.hpp
@@ -47,10 +46,18 @@ set(SOURCE_FILES
 		BomberManGameLogic/Bomb.cpp
 		BomberManGameLogic/Bomb.hpp
 		BomberManGameLogic/LevelRunner.cpp
-		BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp
+		BomberManGameLogic/LevelRunner.hpp
+		BomberManGameLogic/DestructWall.cpp
+		BomberManGameLogic/DestructWall.hpp
+		BomberManGameLogic/Gate.cpp
+		BomberManGameLogic/Gate.hpp
+		BomberManGameLogic/Balloon.cpp
+		BomberManGameLogic/Balloon.hpp
+		BomberManGameLogic/Wall.cpp
+		BomberManGameLogic/Wall.h
 		#gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
-		)
+)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

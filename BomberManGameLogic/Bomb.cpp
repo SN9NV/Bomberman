@@ -7,13 +7,14 @@
 Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, int _bombradius)
 		: Entity(position, rotation, scale, model), _bombradius(_bombradius), _ticks(1000) {}
 
-Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, int _bombradius)
+Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, int _bombradius)
 		: Entity(position, rotation, scale, model, hitBox), _bombradius(_bombradius), _ticks(1000) {}
 
 
-void Bomb::update(const cge::InputManager &input, unsigned lastFrameTime) {
+bool Bomb::update(const cge::InputManager &input, unsigned lastFrameTime) {
 	_ticks -= lastFrameTime;
 	(void)input;
+	return (_ticks > 0);
 }
 
 bool Bomb::isDeternate()

@@ -7,29 +7,49 @@
 
 Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed) :
 		Entity(position, rotation, scale, model),
-		_speed(speed), _maxBomb(1), _plaseBomb(false)
+		_speed(speed), _maxBomb(1), _plaseBomb(false),  _damage(2), _deathTimeout(1000), _alive(true)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox, float speed) :
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, float speed) :
 		Entity(position, rotation, scale, model, hitBox),
-		_speed(speed), _maxBomb(1), _plaseBomb(false)
+		_speed(speed), _maxBomb(1), _plaseBomb(false), _damage(2), _deathTimeout(1000), _alive(true)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-void Being::update(const cge::InputManager &input, unsigned lastFrameTime)
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius,
+			 float _speed, int _damage) : Entity(position, rotation, scale, model, hitBoxRadius), _speed(_speed),
+										  _maxBomb(1), _plaseBomb(false), _damage(_damage), _deathTimeout(1000), _alive(true)
 {
-	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
-		_n_moveDir = glm::normalize(_n_moveDir);
-	_position = _position + ((lastFrameTime * _speed) * _n_moveDir);
-	(void) input;
+	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-void Being::setRotation()
+bool Being::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
-	float angle = atan2(_n_moveDir.x, _n_moveDir.z);
+	(void) input;
+	if (_alive)
+	{
+		if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
+			_n_moveDir = glm::normalize(_n_moveDir);
+		_position = _position + ((lastFrameTime * _speed) * _n_moveDir);
+		return (true);
+	}
+	else
+	{
+		if (_deathTimeout > lastFrameTime)
+			_deathTimeout -= lastFrameTime;
+		else
+			_deathTimeout = 0;
+		this->setScale( (float)_deathTimeout/1000.0f );
+		return (_deathTimeout > 0);
+	}
+}
+
+void Being::setDirection()
+{
+	float angle = (float)atan2(_n_moveDir.x, _n_moveDir.z);
 	cge::Entity::setRotation({0,angle, 0});
 }
 
@@ -69,6 +89,32 @@ void Being::setMoveDir(glm::vec3 newDir)
 {
 	_n_moveDir = newDir;
 }
+
+int Being::getDamage() const
+{
+	return _damage;
+}
+
+void Being::setDamage(int damage)
+{
+	Being::_damage = damage;
+	if (_damage < 2)
+		_damage = 2;
+	if (_damage > 5)
+		_damage = 5;
+}
+
+bool Being::isAlive() const
+{
+	return _alive;
+}
+
+void Being::setAlive(bool _alive)
+{
+	Being::_alive = _alive;
+}
+
+
 
 
 

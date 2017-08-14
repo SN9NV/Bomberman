@@ -8,7 +8,7 @@ Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 		Entity(position, rotation, scale, model), _active(false)
 {}
 
-Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, glm::vec3 hitBox) :
+Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox) :
 		Entity(position, rotation, scale, model, hitBox), _active(false)
 {}
 
