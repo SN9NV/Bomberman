@@ -110,7 +110,7 @@ int main() {
 					debounce = SDL_GetTicks();
 				}
 
-				bomber1.update(shader, true);
+				bomber1.update(shader, true, 1);
 //				dumb.update(shader, true, 1);
 				renderer.prepare();
 				camera.update(shader);
@@ -122,7 +122,7 @@ int main() {
 				shader.end();
 				window.swapBuffers();
 
-//				SDL_Delay(100);
+				SDL_Delay(50);
 				break;
 			}
 			default:

@@ -95,11 +95,12 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
 		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
-		this->_animationTicks %= static_cast<unsigned>((keyFrames[inAccessor.count-1] - keyFrames[0]) * 1000);
+		float ticks = std::fmod(this->_animationTicks / 1000.0f, keyFrames[inAccessor.count-1] - keyFrames[0]);
+//		std::cout << ticks << "\n";
 
 		/// Find the top of the frame we're in
 		unsigned upperKeyframe = 0;
-		while ((this->_animationTicks / 1000.0f) > keyFrames[upperKeyframe] - keyFrames[0]) {
+		while (ticks > keyFrames[upperKeyframe] - keyFrames[0]) {
 			++upperKeyframe;
 		}
 
@@ -122,8 +123,11 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		/// Find how far through the bottom frame we are
 		/// Interpolant = (x - a)/(b - a) where a < x < b
 		float interpolant =
-				((this->_animationTicks / 1000.0f) - (keyFrames[upperKeyframe-1] - keyFrames[0])) /
+				(ticks - (keyFrames[upperKeyframe-1] - keyFrames[0])) /
 				((keyFrames[upperKeyframe] - keyFrames[0]) - (keyFrames[upperKeyframe-1] - keyFrames[0]));
+
+//		std::cout << (keyFrames[upperKeyframe-1] - keyFrames[0]) << ", " << (keyFrames[upperKeyframe] - keyFrames[0]) << "\n";
+//		std::cout << "Interpolant: " << interpolant << "\n";
 
 		if (channel.target_path == "translation") {
 			auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
@@ -133,14 +137,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			transformationMap[channel.target_node].rotation = glm::lerp(rotation[upperKeyframe-1], rotation[upperKeyframe], interpolant);
 		}
 	}
-
-//	std::cout << "::::NEW FRAME::::\n"
-//			  << "Ticks: " << this->_animationTicks << "\n";
-//	for (auto &transformation : transformationMap) {
-//		std::cout << "Target Node: " << transformation.first << "\n";
-//		std::cout << "Translation: " << transformation.second.translation << "\n";
-//		std::cout << "Rotation: " << transformation.second.rotation << "\n\n";
-//	}
 
 	tinygltf::Skin	&skin = model.skins[0];
 	int rootJointIndex = skin.joints[0];
@@ -162,20 +158,13 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			continue;
 		}
 
-//		std::cout << "Animating joints: " << model.nodes.size() << "\n";
 		this->_animateSkeleton(transformationMap, skeletonTransformation, model.nodes, joint, rootJointIndex, inverseMatrices, animatedMatrices);
 	}
-
-//	for (auto &animatedMatrix : animatedMatrices) {
-//		std::cout << "Animation Matrix\n" << animatedMatrix << "\n\n";
-//	}
 
 	const unsigned MAX_JOINTS = 50;
 	for (unsigned i = 0; i < MAX_JOINTS; i++) {
 		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
 							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4());
-
-//		std::cout << animatedMatrices[i] << "\n\n";
 	}
 }
 
@@ -191,6 +180,7 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 	glm::mat4	currentTransform;
 	if (jointTransform == transformationMap.end()) {
 		currentTransform = parentTransform;
+		std::cout << "using parent transform\n";
 	} else {
 		currentTransform =
 				parentTransform *
