@@ -73,10 +73,11 @@ namespace cge
 		return this->_scale;
 	}
 
-	void Entity::update(const cge::InputManager &input, unsigned lastFrameTime)
+	bool Entity::update(const cge::InputManager &input, unsigned lastFrameTime)
 	{
 		(void) lastFrameTime;
 		(void) input;
+		return (true);
 	}
 
 	float Entity::getHitBoxRadius() const

@@ -20,7 +20,7 @@ private:
 public:
 	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, int _bombradius);
 	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, int _bombradius);
-	void update(const cge::InputManager &input, unsigned lastFrameTime);
+	bool update(const cge::InputManager &input, unsigned lastFrameTime);
 	bool isDeternate();
 };
 

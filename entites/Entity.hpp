@@ -15,7 +15,7 @@ namespace cge {
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, float hitBoxRadius);
 
-		virtual void	update(const cge::InputManager &input, unsigned lastFrameTime);
+		virtual bool	update(const cge::InputManager &input, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
 		void			setPosition(const glm::vec3 &position);
 		void			addRotation(const glm::vec3 &delta);

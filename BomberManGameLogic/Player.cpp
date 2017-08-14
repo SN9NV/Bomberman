@@ -1,7 +1,7 @@
 #include <SDL_keycode.h>
 #include "Player.hpp"
 
-void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
+bool Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 {
 	_plaseBomb = false;
 	if (input.isKeyPressed(_up))
@@ -24,8 +24,8 @@ void Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 	if (input.isKeyPressed(_menue))
 		_pauseMenue = true;
 	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
-		Being::setRotation();
-	Being::update(input, lastFrameTime);
+		Being::setDirection();
+	return (Being::update(input, lastFrameTime));
 }
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
@@ -46,22 +46,22 @@ int Player::loseLife()
 	return --_lives;
 }
 
-bool Player::is_pauseMenue() const
+bool Player::isPauseMenue() const
 {
 	return _pauseMenue;
 }
 
-void Player::set_pauseMenue(bool _pauseMenue)
+void Player::setPauseMenue(bool _pauseMenue)
 {
 	Player::_pauseMenue = _pauseMenue;
 }
 
-int Player::get_special() const
+int Player::getSpecial() const
 {
 	return _special;
 }
 
-void Player::set_special(int _special)
+void Player::setSpecial(int _special)
 {
 	Player::_special = _special;
 }

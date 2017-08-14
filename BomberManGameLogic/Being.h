@@ -21,8 +21,12 @@ protected:
 	bool _plaseBomb;
 	int	_damage;
 	unsigned _deathTimeout;
-
+	bool _alive;
 public:
+	bool isAlive() const;
+
+	void setAlive(bool _alive);
+
 	int getDamage() const;
 
 	void setDamage(int _damage);
@@ -46,9 +50,9 @@ public:
 
 	Being() = default;
 
-	virtual void update(const cge::InputManager &input, unsigned lastFrameTime) override;
+	virtual bool update(const cge::InputManager &input, unsigned lastFrameTime) override;
 
-	void setRotation();
+	void setDirection();
 
 	void setMoveDir(glm::vec3 newDir);
 

@@ -28,7 +28,6 @@ class LevelRunner
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
 	std::vector<Being *> _beings;
-	std::vector<Being *> _dead;
 	std::vector<Bomb *> _bombs;
 	std::map<std::string, cge::Model> _models;
 	std::vector<std::string> _map;
