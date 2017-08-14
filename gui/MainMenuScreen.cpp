@@ -9,11 +9,9 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currS
 		_window(win),
 		_player(player)
 {
-
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Create a nanogui screen and pass the glfw pointer to initialize
 	this->_screen = new nanogui::Screen();
 	this->_screen->initialize(this->_window.getGLFWWindow(), true);
 
@@ -39,14 +37,23 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currS
 
 	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
+	btn_LoadGame->setCallback([currState] { *currState = cge::GameState::PLAY_LOAD; });
 
 	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
+	btn_Settings->setCallback([currState] { *currState = cge::GameState::PLAY_OPTS; });
 
 	gui->addGroup("");
 	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Quit");
 	btn_Quit->setTooltip("Quit the game.");
-	btn_Quit->setCallback([currState] { *currState = cge::GameState::WANTS_QUIT; });
+	btn_Quit->setCallback([&] {
+		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning, "Quit",
+				"Do you wish to Quit?", "Yes", "No", true);
+		dlg->setCallback([currState](int result) {
+			if (result == 0)
+				*currState = cge::GameState::WANTS_QUIT;
+		});
+	});
 
 	_screen->setVisible(true);
 	_screen->performLayout();
