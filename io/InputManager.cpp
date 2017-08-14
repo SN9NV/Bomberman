@@ -60,10 +60,10 @@ namespace cge {
 			(void)mods;
 			cge::InputManager* iManager = (cge::InputManager*)glfwGetWindowUserPointer(glfwWindow);
 
-			std::cout << "Key:      " << key << std::endl
+			/*std::cout << "Key:      " << key << std::endl
 					  << "ScanCode: " << scancode << std::endl
 					  << "Action:   " << action << std::endl
-					  << "Mods:     " << mods << std::endl;
+					  << "Mods:     " << mods << std::endl;*/
 
 			if (key == GLFW_KEY_ESCAPE)
 				iManager->_exitCase = true;

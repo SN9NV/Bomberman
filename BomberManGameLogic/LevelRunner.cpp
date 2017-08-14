@@ -10,13 +10,14 @@
 #include "Wall.h"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
-						 cge::Window &_window) : _loader(_loader), _player(_player),
-													   _gate(nullptr),
-													   _window(_window),
-													   _shader("../shaders/vertex.glsl", "../shaders/fragment.glsl"),
-													   _renderer(_shader),
-													   _camera(glm::vec3(0.0f, 5.0f, 0.0f),
-															   glm::vec3(1.5f, 0.0f, 0.0f), _window)
+						 cge::Window &_window) : _loader(_loader),
+												 _player(_player),
+												 _gate(nullptr),
+												 _window(_window),
+												 _shader("../shaders/vertex.glsl", "../shaders/fragment.glsl"),
+												 _renderer(_shader),
+												 _camera(glm::vec3(0.0f, 5.0f, 0.0f),
+														 glm::vec3(1.5f, 0.0f, 0.0f), _window)
 {
 	_inputManager = new cge::InputManager(_window);
 
@@ -367,7 +368,7 @@ bool LevelRunner::checkWallBlast(int x, int y)
 	return false;
 }
 
-void LevelRunner::endlevel()
+void LevelRunner::endLevel()
 {
 	unsigned endTime = 0;
 	while (endTime < 1000)
@@ -375,7 +376,7 @@ void LevelRunner::endlevel()
 		_shader.start();
 		_renderer.prepare();
 		_camera.update(_shader);
-		_player->setRotation({0,endTime * M_PI / 180, 0});
+		_player->setRotation({0, endTime * M_PI / 180, 0});
 		for (auto &vecit : _level)
 		{
 			for (auto &entit : vecit)
@@ -391,6 +392,28 @@ void LevelRunner::endlevel()
 		_shader.end();
 		_window.swapBuffers();
 		endTime += _window.getFrameTime();
+	}
+	for (auto vecEnt : _level)
+	{
+		for (auto ent : vecEnt)
+		{
+			if (ent != nullptr)
+				delete (ent);
+		}
+		vecEnt.clear();
+	}
+	_level.clear();
+	for (auto &_bomb : _bombs)
+		delete (_bomb);
+	_bombs.clear();
+	for (auto &being : _beings)
+		if (being != _player)
+			delete (being);
+	_beings.clear();
+	if (_gate != nullptr)
+	{
+		delete (_gate);
+		_gate = nullptr;
 	}
 }
 
@@ -487,22 +510,22 @@ int LevelRunner::getState() const
 
 int LevelRunner::runLevel(std::string path)
 {
-	//std::cout << levelPath << "\n";
 	loadMapFromFile(path);
 	if (_state == levelState::FAIL_MAP_LOAD)
 		return (_state);
 	_gate = nullptr;
 	loadMapEntitys();
-
 	_state = levelState::PLAY;
 
 	while (_state == levelState::PLAY)
 	{
 		_inputManager->poolKeyEvnt();
-		if (_inputManager->isExitCase() || _inputManager->isKeyPressed(GLFW_KEY_ESCAPE) || _player->getLives() <= 0)
+		if (_inputManager->isExitCase() || _player->getLives() <= 0)
 		{
 			_state = levelState::WANTS_QUIT;
 		}
+		if (_inputManager->isKeyPressed(GLFW_KEY_ESCAPE))
+			_state = levelState::PAUSE;
 		if (_beings.size() == 1 && _gate != nullptr)
 			_gate->actervate();
 		beingWorldInteraction();
@@ -527,6 +550,7 @@ int LevelRunner::runLevel(std::string path)
 		_shader.end();
 		_window.swapBuffers();
 	}
-	endlevel();
+	endLevel();
+	std::cout << "about to eixit leve with state " << _state << std::endl;
 	return _state;
 }

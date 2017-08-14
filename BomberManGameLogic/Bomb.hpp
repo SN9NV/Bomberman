@@ -12,12 +12,10 @@ class Bomb :public  cge::Entity
 {
 private:
 	int _bombradius;
-public:
-	int getBombradius() const;
-
-private:
 	float _ticks;
 public:
+	int getBombradius() const;
+	virtual ~Bomb();
 	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, int _bombradius);
 	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, int _bombradius);
 	bool update(const cge::InputManager &input, unsigned lastFrameTime);

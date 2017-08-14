@@ -27,3 +27,8 @@ int Bomb::getBombradius() const
 	return _bombradius;
 }
 
+Bomb::~Bomb()
+{
+
+}
+
