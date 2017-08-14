@@ -376,7 +376,9 @@ void LevelRunner::endLevel()
 		_shader.start();
 		_renderer.prepare();
 		_camera.update(_shader);
-		_player->setRotation({0, endTime * M_PI / 180, 0});
+		_player->setRotation({0,endTime * M_PI / 180, 0});
+		if (_gate != nullptr && _gate->isActive())
+			_gate->setRotation({0,-(endTime * M_PI / 180), 0});
 		for (auto &vecit : _level)
 		{
 			for (auto &entit : vecit)

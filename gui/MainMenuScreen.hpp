@@ -7,6 +7,7 @@
 
 #include "../io/Window.hpp"
 #include "../shared.hpp"
+#include "../BomberManGameLogic/Player.hpp"
 #include <nanogui/nanogui.h>
 
 namespace cge {
@@ -14,7 +15,7 @@ namespace cge {
 		class MainMenuScreen {
 		public:
 			MainMenuScreen();
-			MainMenuScreen(cge::Window& win, cge::GameState* _currState);
+			MainMenuScreen(cge::Window& win, cge::GameState* _currState, Player *player);
 			~MainMenuScreen();
 
 			nanogui::Screen* getScreen();
@@ -24,6 +25,7 @@ namespace cge {
 		private:
 			nanogui::Screen* 	_screen;
 			cge::Window&		_window;
+			Player*				_player;
 		};
 	}
 }
