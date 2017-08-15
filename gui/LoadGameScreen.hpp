@@ -2,8 +2,8 @@
 // Created by Owen EXALL on 2017/08/15.
 //
 
-#ifndef BOMBERMAN_SETTINGSSCREEN_HPP
-#define BOMBERMAN_SETTINGSSCREEN_HPP
+#ifndef BOMBERMAN_LOADGAME_HPP
+#define BOMBERMAN_LOADGAME_HPP
 
 #include "../io/Window.hpp"
 #include "../shared.hpp"
@@ -12,11 +12,11 @@
 
 namespace cge {
 	namespace GUI {
-		class SettingsScreen {
+		class LoadGameScreen {
 		public:
-			SettingsScreen(cge::Window &win, cge::GameState *_currState, Player *player);
+			LoadGameScreen(cge::Window &win, cge::GameState *_currState, Player *player);
 
-			~SettingsScreen();
+			~LoadGameScreen();
 
 			nanogui::Screen *getScreen();
 
@@ -25,14 +25,14 @@ namespace cge {
 			void setInputCallbacks();
 
 		private:
-			SettingsScreen();
+			LoadGameScreen();
 
 			nanogui::Screen *_screen;
 			cge::Window &_window;
 			Player *_player;
 		};
-	};
-};
+	}
+}
 
 
-#endif //BOMBERMAN_SETTINGSSCREEN_HPP
+#endif //BOMBERMAN_LOADGAME_HPP

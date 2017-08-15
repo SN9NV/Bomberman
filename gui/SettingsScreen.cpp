@@ -40,6 +40,9 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::Button *btn_Save = new nanogui::Button(nanoguiWindow, "Save");
 	layout.setAnchor(btn_Save, nanogui::AdvancedGridLayout::Anchor(4, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
+	btn_Save->setCallback([&] {
+		std::cout << "Save Game Here." << std::endl;
+	});
 
 	nanogui::TabWidget* tabs = nanoguiWindow->add<nanogui::TabWidget>();
 	layout.setAnchor(tabs, nanogui::AdvancedGridLayout::Anchor(0, 0, 5, 4,

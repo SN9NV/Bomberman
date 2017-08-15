@@ -9,6 +9,7 @@
 #include "../BomberManGameLogic/Player.hpp"
 #include "MainMenuScreen.hpp"
 #include "SettingsScreen.hpp"
+#include "LoadGameScreen.hpp"
 
 namespace cge {
 	class GuiManager {
@@ -35,6 +36,7 @@ namespace cge {
 
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
 		cge::GUI::SettingsScreen*	_settingsScreen;
+		cge::GUI::LoadGameScreen*	_loadGameScreen;
 	};
 }
 

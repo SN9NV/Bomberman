@@ -32,6 +32,7 @@ cge::GuiManager::GuiManager(cge::Window &win,
 {
 	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, player);
 	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, player);
+	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, player);
 }
 
 cge::GuiManager::~GuiManager() {
@@ -44,6 +45,10 @@ void cge::GuiManager::drawScreen(int screen) {
 		case (cge::GameState::PLAY_OPTS):
 			this->_settingsScreen->setInputCallbacks();
 			this->_settingsScreen->drawScreen();
+			break;
+		case (cge::GameState::PLAY_LOAD):
+			this->_loadGameScreen->setInputCallbacks();
+			this->_loadGameScreen->drawScreen();
 			break;
 		case (cge::GameState::PLAY_MENU):
 		default:
