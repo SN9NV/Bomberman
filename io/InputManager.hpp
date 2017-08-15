@@ -12,7 +12,7 @@ namespace cge {
 		InputManager(const cge::Window& win);
 		~InputManager() = default;
 
-		void 	poolKeyEvnt();
+		void 	pollKeyEvnt();
 		void	pressKey(int keysym);
 		void	releaseKey(int keysym);
 		void	setMouseCoordinates(const glm::vec2 &mouseCoordinates);

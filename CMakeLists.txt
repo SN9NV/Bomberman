@@ -22,7 +22,7 @@ set(SOURCE_FILES
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
-		main.cpp
+		Testmain.cpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
 		entites/Entity.cpp entites/Entity.hpp
@@ -57,7 +57,12 @@ set(SOURCE_FILES
 		BomberManGameLogic/Wall.h
 		gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
-        entites/Partical.cpp entites/Partical.h)
+        entites/Partical.cpp
+		entites/Partical.hpp
+		rendering/ParticalRenderer.cpp
+		rendering/ParticalRenderer.hpp
+		entites/RawModel.cpp
+		entites/RawModel.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

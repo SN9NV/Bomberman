@@ -27,6 +27,7 @@ namespace cge {
 		glm::mat4	getViewMatrix() const;
 
 		void	update(const GLSLProgram &shader, bool printCameraChange = false);
+		void	update();
 	private:
 		glm::vec3	_position;
 		glm::vec3	_rotation;

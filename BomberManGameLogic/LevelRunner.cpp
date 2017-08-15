@@ -521,7 +521,7 @@ int LevelRunner::runLevel(std::string path)
 
 	while (_state == levelState::PLAY)
 	{
-		_inputManager->poolKeyEvnt();
+		_inputManager->pollKeyEvnt();
 		if (_inputManager->isExitCase() || _player->getLives() <= 0)
 		{
 			_state = levelState::WANTS_QUIT;

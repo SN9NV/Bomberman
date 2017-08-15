@@ -8,7 +8,7 @@ out vec3	fragmentNormal;
 out vec2	fragmentUV;
 out vec3	toLight;
 
-uniform mat4 transformation;
+
 uniform mat4 view;
 
 const vec3 lightLocation = vec3(5.0, 5.0, 5.0);

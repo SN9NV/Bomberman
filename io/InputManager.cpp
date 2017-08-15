@@ -30,7 +30,7 @@ namespace cge {
 		return (it != this->_keyMap.end()) ? it->second : false;
 	}
 
-	void InputManager::poolKeyEvnt() {
+	void InputManager::pollKeyEvnt() {
 		this->setInputCallBacks();
 		glfwPollEvents();
 	}

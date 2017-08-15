@@ -10,6 +10,7 @@ namespace cge {
 		glm::mat4	createTransformationMatrix(const glm::vec3 &translation, const glm::vec3 &rotation, float scale);
 		glm::mat4	createViewMatrix(const Camera &camera);
 		float 		vec3Len(glm::vec3 vec);
+		glm::vec3	scaleVec3(float scale, glm::vec3 vec);
 	}
 }
 
