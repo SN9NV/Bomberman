@@ -16,6 +16,7 @@
 #include "gui/MainMenuScreen.hpp"
 #include "io/audio/AudioManager.hpp"
 #include "io/audio/AudioDevice.hpp"
+#include "error_handling/printError.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
@@ -76,12 +77,29 @@ int main()
 //	}
 
 	auto devices = cge::Audio::Device::listDevices();
+
+	std::cout << "Number of devices: " << devices.size() << "\n";
+
 	for (auto &device : devices) {
 		std::cout << device << "\n";
 	}
 
+	ALCdevice	*device = alcOpenDevice(nullptr);
+		getALError();
+
+	(void)device;
+
+	ALboolean enumeration;
+
+	enumeration = alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT");
+
+	std::cout << (enumeration == AL_FALSE ? "FALSE" : "TRUE") << "\n";
+	getALError();
+
+	std::cout << "Default device: " << alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER) << "\n";
+
 //	audioManager.setDevice(devices[0]);
 
-	level1Runner->runLevel(map);
+//	level1Runner->runLevel(map);
 	return 0;
 }

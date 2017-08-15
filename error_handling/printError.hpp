@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 void	getGLError();
+void	getALError();
 
 
 #endif //NEW_GLERROR_HPP

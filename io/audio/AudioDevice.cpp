@@ -13,7 +13,7 @@ cge::Audio::Device::Device(const std::string &deviceName) {
 }
 
 std::vector<std::string> cge::Audio::Device::listDevices() {
-	const ALCchar				*device = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+	const ALCchar				*device = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
 	const ALCchar				*next = device + 1;
 	std::vector<std::string>	devices;
 

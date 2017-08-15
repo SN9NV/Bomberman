@@ -35,7 +35,7 @@ set(SOURCE_FILES shared.hpp
 		loaders/Loader.cpp loaders/Loader.hpp
 		loaders/picoPNG.cpp loaders/picoPNG.hpp
 		extras/glmOstream.cpp extras/glmOstream.hpp
-		error_handling/glError.cpp error_handling/glError.hpp
+		error_handling/printError.cpp error_handling/printError.hpp
 		entites/Player.cpp entites/Player.hpp
 		BomberManGameLogic/Being.cpp
 		BomberManGameLogic/Being.h
@@ -46,7 +46,7 @@ set(SOURCE_FILES shared.hpp
         BomberManGameLogic/Bomb.hpp
         BomberManGameLogic/LevelRunner.cpp
         BomberManGameLogic/LevelRunner.hpp BomberManGameLogic/DestructWall.cpp BomberManGameLogic/DestructWall.hpp BomberManGameLogic/Gate.cpp BomberManGameLogic/Gate.hpp BomberManGameLogic/Balloon.cpp BomberManGameLogic/Balloon.hpp
-		#gui/GuiManager.cpp gui/GuiManager.hpp
+#		gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
 		io/audio/AudioManager.cpp io/audio/AudioManager.hpp
 		io/audio/AudioListener.cpp io/audio/AudioListener.hpp
