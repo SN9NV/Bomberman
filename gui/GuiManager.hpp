@@ -8,6 +8,8 @@
 #include "../io/Window.hpp"
 #include "../BomberManGameLogic/Player.hpp"
 #include "MainMenuScreen.hpp"
+#include "SettingsScreen.hpp"
+#include "LoadGameScreen.hpp"
 
 namespace cge {
 	class GuiManager {
@@ -15,10 +17,12 @@ namespace cge {
 		static bool			initialise(cge::Window& ,
 										cge::GameState* state,
 										Player* player);
+		explicit GuiManager(cge::Window& win,
+							cge::GameState* state,
+							Player* player);
+
 		static GuiManager*	getSingleton();
 
-		explicit GuiManager(cge::Window& win,
-							Player* player);
 		~GuiManager();
 
 		void drawScreen(int screen);
@@ -26,11 +30,13 @@ namespace cge {
 	private:
 		static cge::GuiManager*		s_instance;
 
+		cge::GameState*				_state;
 		cge::Window&				_window;
 		Player*						_player;
 
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
-		void 						setMainMenuScreen(cge::GUI::MainMenuScreen*	mainMenuScreen);
+		cge::GUI::SettingsScreen*	_settingsScreen;
+		cge::GUI::LoadGameScreen*	_loadGameScreen;
 	};
 }
 

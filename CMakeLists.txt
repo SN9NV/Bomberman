@@ -55,14 +55,23 @@ set(SOURCE_FILES
 		BomberManGameLogic/Balloon.hpp
 		BomberManGameLogic/Wall.cpp
 		BomberManGameLogic/Wall.h
-		gui/GuiManager.cpp gui/GuiManager.hpp
-		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
+		gui/GuiManager.cpp
+		gui/GuiManager.hpp
+		gui/MainMenuScreen.cpp
+		gui/MainMenuScreen.hpp
+		gui/SettingsScreen.cpp
+		gui/SettingsScreen.hpp
+		gui/LoadGameScreen.cpp
+		gui/LoadGameScreen.hpp
         entites/Partical.cpp
 		entites/Partical.hpp
 		rendering/ParticalRenderer.cpp
 		rendering/ParticalRenderer.hpp
 		entites/RawModel.cpp
-		entites/RawModel.hpp)
+		entites/RawModel.hpp
+        entites/Partical.cpp
+		entites/Partical.h
+		)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
