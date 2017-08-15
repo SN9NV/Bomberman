@@ -10,10 +10,11 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_scale(scale),
 		_transformationLocation(0),
 		_lastTicks(SDL_GetTicks()),
-		_ticksDelta(0),
-		_animationTicks(0),
+		_ticksDelta(0.0),
+		_animationTicks(0.0),
 		_currentAnimation(0),
 		_hasAnimation(!model.getTinygltfModel().animations.empty()),
+		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
 
@@ -55,15 +56,16 @@ float cge::Entity::getScale() const {
 	return this->_scale;
 }
 
-void cge::Entity::update(cge::GLSLProgram &shader, bool updateAnimation, int frameTime) {
+void cge::Entity::update(cge::GLSLProgram &shader, bool updateAnimation, double frameTime) {
 	unsigned currentTicks = SDL_GetTicks();
-	if (frameTime >= 0) {
-		this->_ticksDelta = static_cast<unsigned>(frameTime);
+	if (frameTime >= 0.0) {
+		this->_ticksDelta = frameTime;
 	} else {
-		this->_ticksDelta = currentTicks - this->_lastTicks;
+		this->_ticksDelta = (currentTicks / 1000.0) - this->_lastTicks;
+		this->_animationTicks += (this->_ticksDelta * this->_animationSpeed);
 	}
 
-	this->_lastTicks = currentTicks;
+	this->_lastTicks = (currentTicks / 1000.0);
 
 	if (updateAnimation && this->_hasAnimation) {
 		this->_applyAnimation(shader);
@@ -75,8 +77,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	if (!this->_hasAnimation || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;
 	}
-
-	this->_animationTicks += this->_ticksDelta;
 
 	std::map<int, cge::Entity::Transformation>	transformationMap;
 
@@ -95,34 +95,28 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
 		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
-		float ticks = std::fmod(this->_animationTicks / 1000.0f, inAccessor.count * (keyFrames[1] - keyFrames[0])/*keyFrames[inAccessor.count-1] - keyFrames[0]*/);
+		float animationLength = inAccessor.count * (keyFrames[1] - keyFrames[0]);
+
+		if (this->_animationTicks < 0.0) {
+			this->_animationTicks += animationLength;
+		} else if (this->_animationTicks >= animationLength) {
+			this->_animationTicks -= animationLength;
+		}
 
 		/// Find the top of the frame we're in
 		unsigned upperKeyframe = 0;
-		if (ticks < keyFrames[inAccessor.count-1]) {
-			while (ticks > keyFrames[upperKeyframe] - keyFrames[0]) {
+		if (this->_animationTicks < keyFrames[inAccessor.count-1]) {
+			while (this->_animationTicks > keyFrames[upperKeyframe] - keyFrames[0]) {
 				++upperKeyframe;
 			}
 		}
 
 		unsigned lowerKeyframe = (upperKeyframe == 0) ? static_cast<unsigned>(inAccessor.count - 1) : upperKeyframe - 1;
 
-
 		auto transformation = transformationMap.find(channel.target_node);
 		if (transformation == transformationMap.end()) {
 			transformationMap[channel.target_node] = { glm::vec3(), glm::quat() };
 		}
-
-//		/// If upperKeyframe == 0, that means that the transformation is 0 and no need for interpolation to be calculated.
-//		if (upperKeyframe == 0) {
-//			if (channel.target_path == "translation") {
-//				transformationMap[channel.target_node].translation = *reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
-//			} else if (channel.target_path == "rotation") {
-//				transformationMap[channel.target_node].rotation = *reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
-//			}
-//
-//			continue;
-//		}
 
 		/// Find how far through the bottom frame we are
 		/// Interpolant = (x - a)/(b - a) where a < x < b
@@ -131,7 +125,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 				inAccessor.count * (keyFrames[1] - keyFrames[0]) :
 				keyFrames[upperKeyframe] - keyFrames[0];
 		float lowerKeyframeTime = keyFrames[lowerKeyframe] - keyFrames[0];
-		float interpolant = (ticks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
+		float interpolant = static_cast<float>(this->_animationTicks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
 
 		if (inBuffView.target == 3) {
 			std::cout << lowerKeyframe << "(" << lowerKeyframeTime << "), " << upperKeyframe << "(" << upperKeyframeTime << "), " << interpolant << "\n";
@@ -207,6 +201,14 @@ bool cge::Entity::isAnimated() const {
 	return this->_hasAnimation;
 }
 
-void cge::Entity::setAnimationTicks(unsigned ticks) {
+void cge::Entity::setAnimationTicks(double ticks) {
 	this->_animationTicks = ticks;
+}
+
+void cge::Entity::setAnimationSpeed(float speed) {
+	this->_animationSpeed = speed;
+}
+
+double cge::Entity::getAnimationSpeed() const {
+	return this->_animationSpeed;
 }

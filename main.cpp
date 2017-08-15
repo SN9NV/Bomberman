@@ -52,6 +52,8 @@ int main() {
 //	cge::Entity	bomber2({0.75, 2, -1}, {0, 0, 0}, 0.5, bomberModel);
 //	cge::Entity	cube({1.5, 0.42, 1}, {0, 0, 0}, 0.5, cubeModel);
 
+//	bomber1.setAnimationSpeed(2.0);
+
 	bool	showWeights = false;
 	bool	isInvisible = false;
 
@@ -91,7 +93,16 @@ int main() {
 					camera.addRotation({0.1, 0, 0});
 				}
 				if (inputManager.isKeyPressed(SDLK_r)) {
-					bomber1.setAnimationTicks(0);
+					bomber1.setAnimationTicks(0.0);
+				}
+				if (inputManager.isKeyPressed(SDLK_KP_PLUS)) {
+					bomber1.setAnimationSpeed(bomber1.getAnimationSpeed() + 1.0f);
+				}
+				if (inputManager.isKeyPressed(SDLK_KP_MINUS)) {
+					bomber1.setAnimationSpeed(bomber1.getAnimationSpeed() - 1.0f);
+				}
+				if (inputManager.isKeyPressed(SDLK_KP_0)) {
+					bomber1.setAnimationSpeed(1.0);
 				}
 
 //				bomber1.addRotation({0.0f, 0.025f, 0.0f});
@@ -118,7 +129,7 @@ int main() {
 				}
 
 				if (!paused) {
-					bomber1.update(shader, true, 1);
+					bomber1.update(shader, true);
 //					dumb.update(shader, true, 1);
 				}
 
