@@ -14,7 +14,6 @@ namespace cge {
 	namespace GUI {
 		class MainMenuScreen {
 		public:
-			MainMenuScreen();
 			MainMenuScreen(cge::Window& win, cge::GameState* _currState, Player *player);
 			~MainMenuScreen();
 
@@ -23,6 +22,8 @@ namespace cge {
 			void drawScreen();
 			void setInputCallbacks();
 		private:
+			MainMenuScreen();
+
 			nanogui::Screen* 	_screen;
 			cge::Window&		_window;
 			Player*				_player;

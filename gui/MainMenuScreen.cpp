@@ -22,7 +22,6 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currS
 	glfwSwapBuffers(this->_window.getGLFWWindow());
 
 	// Create nanogui gui
-	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
 	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
@@ -46,13 +45,8 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currS
 	gui->addGroup("");
 	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Quit");
 	btn_Quit->setTooltip("Quit the game.");
-	btn_Quit->setCallback([&] {
-		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning, "Quit",
-				"Do you wish to Quit?", "Yes", "No", true);
-		dlg->setCallback([currState](int result) {
-			if (result == 0)
-				*currState = cge::GameState::WANTS_QUIT;
-		});
+	btn_Quit->setCallback([currState] {
+		*currState = cge::GameState::WANTS_QUIT;
 	});
 
 	_screen->setVisible(true);

@@ -57,7 +57,7 @@ set(SOURCE_FILES
 		BomberManGameLogic/Wall.h
 		gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
-)
+		gui/SettingsScreen.cpp gui/SettingsScreen.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
