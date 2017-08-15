@@ -1,8 +1,8 @@
 #ifndef BOMBERMAN_AUDIODEVICE_HPP
 #define BOMBERMAN_AUDIODEVICE_HPP
 
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
 
 #include <string>
 #include <vector>

@@ -19,4 +19,6 @@ void cge::Audio::Listener::setVelocity(const glm::vec3 &velocity) {
 void cge::Audio::Listener::setOrientation(float *orientation) {
 	this->_orientation = orientation;
 	alListenerfv(AL_ORIENTATION, orientation);
+
+	(void)this->_device;
 }

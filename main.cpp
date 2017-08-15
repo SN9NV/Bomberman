@@ -34,22 +34,25 @@ int main()
 
 	std::vector<std::string> map = {
 			"6",
-			"wwwwwwwwwwwwwww",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.d...d....w",
-			"w.wdwdwdwdwdw.w",
-			"w....d........w",
-			"w.wdwdwdwdwdw.w",
-			"w..d.....d....w",
-			"w.wdwdwdwdwdw.w",
-			"w.............w",
-			"w.wdwdwdwdwdw.w",
-			"w..d...d...d..w",
-			"w.wdwdwdwdwdw.w",
-			"wp.d........d.w",
-			"wwwwwwwwwwwwwww"
+			"w w w w w w w w w w w w w w w",
+			"w . . . . . . . . . . . . . w",
+			"w . w d w d w d w d w d w . w",
+			"w . . d . d . . . d . . . . w",
+			"w . w d w d w d w d w d w . w",
+			"w . . . . d . . . . . . . . w",
+			"w . w d w d w d w d w d w . w",
+			"w . . d . . . . . d . . . . w",
+			"w . w d w d w d w d w d w . w",
+			"w . . . . . . . . . . . . . w",
+			"w . w d w d w d w d w d w . w",
+			"w . . d . . . d . . . d . . w",
+			"w . w d w d w d w d w d w . w",
+			"w p . d . . . . . . . . d . w",
+			"w w w w w w w w w w w w w w w"
 	};
+
+	for (auto &mapStr : map)
+		mapStr.erase(std::remove(mapStr.begin(), mapStr.end(), ' '), mapStr.end());
 
 	BomberMan = cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png", loader);
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, {0.5f ,0.0f, 0.5f}, 0.01f);

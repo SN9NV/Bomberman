@@ -1,3 +1,4 @@
+#include <array>
 #include "Loader.hpp"
 #include "IO.hpp"
 #include "picoPNG.hpp"
@@ -86,12 +87,11 @@ namespace cge {
 				exit(1);
 			}
 
-			std::vector<uint16_t>		fileBuffer;
+			sf_count_t				readSize = 8192 * sfInfo.channels;
+			std::vector<uint16_t>	fileBuffer;
+			std::vector<int16_t>	readBuffer(static_cast<unsigned long>(readSize));
 
-			sf_count_t readSize = 8192 * sfInfo.channels;
-			std::array<int16_t, readSize>	readBuffer = {};
-
-			while((readSize = sf_read_short(file, readBuffer.data(), readBuffer.size())) != 0) {
+			while((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0) {
 				fileBuffer.insert(fileBuffer.end(), readBuffer.begin(), readBuffer.begin() + readSize);
 			}
 

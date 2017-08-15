@@ -49,9 +49,11 @@ set(SOURCE_FILES shared.hpp
 		#gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
 		io/audio/AudioManager.cpp io/audio/AudioManager.hpp
-		io/audio/AudioListener.cpp io/audio/AudioListener.hpp io/audio/AudioSource.cpp io/audio/AudioSource.hpp io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp)
+		io/audio/AudioListener.cpp io/audio/AudioListener.hpp
+		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
+		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp)
 
-# Find OpenGL (for Mac mostly, Linux didn't need this)
+# Find OpenGL and OpenAL. They are default packages on Mac
 find_package(OpenGL REQUIRED)
 find_package(OpenAL REQUIRED)	#> Linux => libopenal-dev
 find_package(PkgConfig REQUIRED)
@@ -60,8 +62,7 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(GLEW		REQUIRED glew)		#> 	glew			libglew-dev
 pkg_search_module(GLM		REQUIRED glm)		#> 	glm				Install from source (https://github.com/g-truc/glm)
 pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
-#pkg_search_module(OPENAL	REQURIED openal)	#> 					libopenal-dev
-pkg_search_module(SNDFILE	REQURIED sndfile)	#> 	sndfile?		libsndfile1-dev
+pkg_search_module(SNDFILE	REQURIED sndfile)	#> 	libsndfile		libsndfile1-dev
 
 # Directories to find the header files
 include_directories(
@@ -82,7 +83,7 @@ link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
         ${GLEW_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
-		${GLFW3_LIBRARY_DIRS}
+#		${GLFW3_LIBRARY_DIRS}
 		${OPENAL_LIBRARY_DIRS}
 		${SNDFILE_LIBRARY_DIRS}
 )
@@ -92,10 +93,10 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # Link executable with libraries
 target_link_libraries(${PROJECT_NAME}
         ${OPENGL_LIBRARIES}
+		${OPENAL_LIBRARY}
         ${GLEW_LIBRARIES}
         ${GLM_LIBRARIES}
-		${GLFW3_LIBRARIES}
-		${OPENAL_LIBRARIES}
+#		${GLFW3_LIBRARIES}
 		${SNDFILE_LIBRARIES}
 		nanogui
 )

@@ -6,7 +6,7 @@
 #include <regex>
 
 #include <GL/glew.h>
-#include <al.h>
+#include <OpenAL/al.h>
 #include <sndfile.h>
 
 #include "../entites/Model.hpp"

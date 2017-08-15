@@ -68,11 +68,11 @@ ALfloat cge::Audio::Source::getGain() const {
 	return this->_gain;
 }
 
-glm::vec3 &cge::Audio::Source::getPosition() const {
+glm::vec3 cge::Audio::Source::getPosition() const {
 	return this->_position;
 }
 
-glm::vec3 &cge::Audio::Source::getVelocity() const {
+glm::vec3 cge::Audio::Source::getVelocity() const {
 	return this->_velocity;
 }
 

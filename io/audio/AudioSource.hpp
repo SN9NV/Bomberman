@@ -1,7 +1,7 @@
 #ifndef BOMBERMAN_AUDIOSOURCE_HPP
 #define BOMBERMAN_AUDIOSOURCE_HPP
 
-#include <al.h>
+#include <OpenAL/al.h>
 #include <glm/vec3.hpp>
 
 #include <string>
@@ -34,8 +34,8 @@ namespace cge {
 
 			ALfloat		getPitch() const;
 			ALfloat 	getGain() const;
-			glm::vec3	&getPosition() const;
-			glm::vec3	&getVelocity() const;
+			glm::vec3	getPosition() const;
+			glm::vec3	getVelocity() const;
 			bool 		isLooping() const;
 			unsigned	getFileSize(cge::Audio::Source::Offset offsetType) const;
 

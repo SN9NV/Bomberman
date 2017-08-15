@@ -28,9 +28,6 @@ namespace cge {
 		bool 							_exitCase = false;
 		std::unordered_map<int, bool>	_keyMap;
 		glm::vec2						_mouseCoordinates;
-
-		void (InputManager::*pKey)(int);
-		void (InputManager::*rKey)(int);
 	};
 }
 
