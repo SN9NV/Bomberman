@@ -305,7 +305,7 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
 						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 					std::cout << "make gate" << std::endl;
-				} else if (rand() % 2 == 1) {
+				} else if (rand() % 20 == 1) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
 						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 				}

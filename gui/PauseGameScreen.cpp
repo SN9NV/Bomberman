@@ -4,7 +4,7 @@
 
 #include "PauseGameScreen.h"
 
-cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, Player *player) :
+cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap) :
 		_window(win),
 		_player(player) {
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
@@ -34,30 +34,39 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
-	btn_NewGame->setCallback([&] {
+	btn_NewGame->setCallback([&, _currState, player, currMap] {
 		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 											  "New Game", "Any unsaved progress will be lost. Continue?", "Yes", "No",
 											  true);
-		dlg->setCallback([_currState, player](int result) {
+		dlg->setCallback([_currState, player, currMap](int result) {
 			if (result == 0) {
 				*_currState = cge::GameState::PLAY_GAME;
 				player->setLives(3);
 				player->setPauseMenue(false);
+				*currMap = 0;
 			}
 		});
 	});
 
 	nanogui::Button *btn_SaveGame = new nanogui::Button(nanoguiWindow, "Save Game");
 	btn_SaveGame->setTooltip("Options for saving game.");
-	btn_SaveGame->setCallback([_currState] { *_currState = cge::GameState::PLAY_SAVE; });
+	btn_SaveGame->setCallback([_currState] {
+		*_currState = cge::GameState::PLAY_SAVE;
+	});
 
 	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
-	btn_LoadGame->setCallback([_currState] { *_currState = cge::GameState::PLAY_LOAD; });
+	btn_LoadGame->setCallback([_currState, prevState] {
+		*prevState = *_currState;
+		*_currState = cge::GameState::PLAY_LOAD;
+	});
 
 	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
-	btn_Settings->setCallback([_currState] { *_currState = cge::GameState::PLAY_OPTS; });
+	btn_Settings->setCallback([_currState, prevState] {
+		*prevState = *_currState;
+		*_currState = cge::GameState::PLAY_OPTS;
+	});
 
 	gui->addGroup("");
 	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Main Menu");

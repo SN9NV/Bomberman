@@ -5,7 +5,11 @@
 #include "MainMenuScreen.hpp"
 
 
-cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currState, Player* player) :
+cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
+										 cge::GameState *currState,
+										 cge::GameState *prevState,
+										 Player* player,
+										 int* currMap) :
 		_window(win),
 		_player(player)
 {
@@ -29,19 +33,26 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currS
 	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
-	btn_NewGame->setCallback([currState, player] {
+	btn_NewGame->setCallback([currState, player, currMap] {
 		*currState = cge::GameState::PLAY_GAME;
 		player->setLives(3);
 		player->setPauseMenue(false);
+		*currMap = 0;
 	});
 
 	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
-	btn_LoadGame->setCallback([currState] { *currState = cge::GameState::PLAY_LOAD; });
+	btn_LoadGame->setCallback([currState, prevState] {
+		*prevState = *currState;
+		*currState = cge::GameState::PLAY_LOAD;
+	});
 
 	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
-	btn_Settings->setCallback([currState] { *currState = cge::GameState::PLAY_OPTS; });
+	btn_Settings->setCallback([currState, prevState] {
+		*prevState = *currState;
+		*currState = cge::GameState::PLAY_OPTS;
+	});
 
 	gui->addGroup("");
 	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Quit");

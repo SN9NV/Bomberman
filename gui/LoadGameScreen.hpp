@@ -14,7 +14,7 @@ namespace cge {
 	namespace GUI {
 		class LoadGameScreen {
 		public:
-			LoadGameScreen(cge::Window &win, cge::GameState *_currState, Player *player);
+			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player);
 
 			~LoadGameScreen();
 
