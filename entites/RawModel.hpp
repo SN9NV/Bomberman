@@ -26,7 +26,7 @@ namespace cge
 
 		GLuint getIbo() const;
 
-		RawModel(const std::vector<float> &data, const std::vector<unsigned int> &index);
+		RawModel(const std::vector<float> &data, const std::vector<unsigned int> &index, bool UV = false);
 
 		virtual ~RawModel();
 	};

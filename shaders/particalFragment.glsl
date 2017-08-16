@@ -1,7 +1,13 @@
 #version 330 core
 
+in vec2 outCurrTextureOff;
+in vec2 outNextTextureOff;
+in float outBlend;
+
 out vec4 colour;
 
+uniform sampler2D particalTexture;
+
 void main() {
-	colour = vec4(1.0f, 0.5f, 0.2f, 1.0f);;
+	colour = mix(texture(particalTexture, outCurrTextureOff), texture(particalTexture, outNextTextureOff), outBlend);
 }

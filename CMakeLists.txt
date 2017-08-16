@@ -22,7 +22,6 @@ set(SOURCE_FILES
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
-
 		main.cpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
@@ -71,8 +70,7 @@ set(SOURCE_FILES
 		entites/RawModel.cpp
 		entites/RawModel.hpp
         entites/Partical.cpp
-		entites/Partical.h
-		gui/SaveGameScreen.cpp gui/SaveGameScreen.h gui/PauseGameScreen.cpp gui/PauseGameScreen.h)
+		gui/SaveGameScreen.cpp gui/SaveGameScreen.h gui/PauseGameScreen.cpp gui/PauseGameScreen.h entites/TextureAtlas.cpp entites/TextureAtlas.h)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

@@ -14,12 +14,16 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 																				  _player(_player),
 																				  _gate(nullptr),
 																				  _window(_window),
-																				  _shader("../shaders/vertex.glsl",
-																						  "../shaders/fragment.glsl"),
-																				  _renderer(_shader),
+																				  _entShader("../shaders/vertex.glsl",
+																							 "../shaders/fragment.glsl"),
+																				  _partShader(
+																						  "../shaders/particalVertex.glsl",
+																						  "../shaders/particalFragment.glsl"),
+																				  _renderer(_entShader),
 																				  _camera(glm::vec3(0.0f, 5.0f, 0.0f),
 																						  glm::vec3(1.5f, 0.0f, 0.0f),
-																						  _window) {
+																						  _window),
+																				  _particalRenderer(_partShader) {
 	_inputManager = inputManager;
 
 	_models.emplace("Wall",
@@ -154,7 +158,7 @@ void LevelRunner::beingWorldInteraction() {
 			glm::vec3 dist = _player->getPosition() - colBeing->getPosition();
 			float fdist = cge::Maths::vec3Len(dist);
 			float hit = _player->getHitBoxRadius() + colBeing->getHitBoxRadius();
-			if (colBeing->isAlive() && fdist < hit) {
+			if (_state == levelState::PLAY && colBeing->isAlive() && fdist < hit) {
 				_state = levelState::FAIL;
 				_player->loseLife();
 			}
@@ -205,27 +209,58 @@ void LevelRunner::bombWorldInteraction() {
 				being++;
 			}
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
+			_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
+											{0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, 0.1, 0.2,
+											100, _loader.loadTextureAtlas(
+							"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
 			i = 0;
 			while (++i < (*bomb)->getBombradius()) {
 				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
+
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
 						sheild = sheild | 0b00000001;
+					else {
+						_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z + i}, {0.5, 0.5, 0.5},
+														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
+														 100, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
 
 				}
 				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0) {
+
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
 						sheild = sheild | 0b00000010;
+					else {
+						_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z - i}, {0.5, 0.5, 0.5},
+														 {0, 0.002, -0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
+														 100, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
 				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0) {
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
 						sheild = sheild | 0b00000100;
+					else {
+						_particalRenderer.partivalEffect({bombPos.x + i, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
+														 {0.00, 0.002, 0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
+														 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
 				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0) {
+
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
 						sheild = sheild | 0b00001000;
+					else {
+						_particalRenderer.partivalEffect({bombPos.x - i, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
+														 {-0.0, 0.002, 0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
+														 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+					}
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
 			}
@@ -319,9 +354,9 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 void LevelRunner::endLevel() {
 	unsigned endTime = 0;
 	while (endTime < 1000) {
-		_shader.start();
+		_entShader.start();
 		_renderer.prepare();
-		_camera.update(_shader);
+		_camera.update(_entShader);
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive())
 			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
@@ -335,7 +370,8 @@ void LevelRunner::endLevel() {
 			_renderer.render(*being);
 		if (_gate != nullptr)
 			_renderer.render(*_gate);
-		_shader.end();
+		_entShader.end();
+		_particalRenderer.updateRender(_camera, _window.getFrameTime());
 		_window.swapBuffers();
 		endTime += _window.getFrameTime();
 	}
@@ -437,6 +473,18 @@ int LevelRunner::runLevel(std::string path) {
 }
 
 void LevelRunner::cleanlevel() {
+	std::vector<Being *>::iterator being;
+	bool found;
+
+	for (auto bomb : _bombs) {
+		found = false;
+		being = _beings.begin();
+		while (being != _beings.end() && !found) {
+			if ((*being)->checkBombDeterNation((bomb)))
+				found = true;
+			being++;
+		}
+	}
 	for (auto vecEnt : _level) {
 		for (auto ent : vecEnt) {
 			if (ent != nullptr)
@@ -445,8 +493,6 @@ void LevelRunner::cleanlevel() {
 		vecEnt.clear();
 	}
 	_level.clear();
-	for (auto &_bomb : _bombs)
-		delete (_bomb);
 	_bombs.clear();
 	for (auto &being : _beings)
 		if (being != _player)
@@ -480,12 +526,13 @@ void LevelRunner::runlevelLoop() {
 		if (_beings.size() == 1 && _gate != nullptr)
 			_gate->actervate();
 		beingWorldInteraction();
-		bombWorldInteraction();
+		if (_state == levelState::PLAY)
+			bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
 		_camera.setPosition({plpos.x, 10, plpos.z});
-		_shader.start();
+		_entShader.start();
 		_renderer.prepare();
-		_camera.update(_shader);
+		_camera.update(_entShader);
 		for (auto &vecit : _level) {
 			for (auto &entit : vecit) {
 				if (entit)
@@ -496,7 +543,9 @@ void LevelRunner::runlevelLoop() {
 			_renderer.render(*being);
 		if (_gate != nullptr)
 			_renderer.render(*_gate);
-		_shader.end();
+		_entShader.end();
+		//_particalRenderer.prepare();
+		_particalRenderer.updateRender(_camera, _window.getFrameTime());
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 	}

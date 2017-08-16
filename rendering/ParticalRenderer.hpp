@@ -32,7 +32,7 @@ namespace cge
 		void partivalEffect(glm::vec3 position, glm::vec3 positionTolorence,
 							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
 							float gravityeffect, float gravertyTolerance, float lifetime,
-							float lifetimeTolorence, float scale, float scaleTolorence, int numParticals);
+							float lifetimeTolorence, float scale, float scaleTolorence, int numParticals, TextureAtlas texture);
 		void render(Partical &partical, Camera &camera);
 		void render(Camera &camera);
 		void update(unsigned lastframe);

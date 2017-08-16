@@ -12,6 +12,7 @@
 #include "Player.hpp"
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
+#include "../rendering/ParticalRenderer.hpp"
 
 
 enum levelState
@@ -36,10 +37,13 @@ private:
 	Player *_player;
 	Gate	*_gate;
 	cge::Window &_window;
-	cge::GLSLProgram _shader;
+	cge::GLSLProgram _entShader;
+	cge::GLSLProgram _partShader;
 	cge::InputManager *_inputManager;
 	cge::Renderer _renderer;
 	cge::Camera _camera;
+	cge::ParticalRenderer _particalRenderer;
+
 	int _state = levelState::PLAY;
 	int _dwalls;
 	int _balloons;

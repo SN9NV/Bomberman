@@ -24,7 +24,9 @@ int main()
 	cge::Camera camera(glm::vec3(0.0f, 0.0f, 10.0f),
 					   glm::vec3(0.0f, 0.0f, 0.0f), window);
 	cge::ParticalRenderer prender(shader);
-
+	prender.addPartical(cge::Partical({0,0,0},{0,0,0}, 0, 10000, 1));
+	prender.addPartical(cge::Partical({1,0,0},{0,0,0}, 0, 10000, 4));
+	prender.addPartical(cge::Partical({-1,0,0},{0,0,0}, 0, 10000, 0.5));
 	while (gameState != cge::WANTS_QUIT)
 	{
 		inputManager.pollKeyEvnt();

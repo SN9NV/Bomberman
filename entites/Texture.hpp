@@ -14,7 +14,7 @@ namespace cge {
 
 		GLuint		getID() const;
 
-	private:
+	protected:
 		GLuint	_textureID;
 
 	};

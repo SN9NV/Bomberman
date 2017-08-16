@@ -8,10 +8,11 @@
 #include "../extras/Maths.hpp"
 
 const std::vector<float> vert = {
-		0.1f, 0.1f, 0.0f,
-		-0.1f, 0.1f, 0.0f,
-		-0.1f, -0.1f, 0.0f,
-		0.1f, -0.1f, 0.0f,
+        // position             //UV
+		1.0f, 1.0f, 0.0f,     1.0,1.0,
+		-1.0f, 1.0f, 0.0f,    0, 1,
+		-1.0f, -1.0f, 0.0f,   0,0,
+		1.0f, -1.0f, 0.0f,    1, 0,
 };
 
 const std::vector<unsigned int> ind = {
@@ -19,24 +20,31 @@ const std::vector<unsigned int> ind = {
 		1, 2, 3
 };
 
-cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) : plane(vert, ind),
+cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) : plane(vert, ind, true),
 																	_shader(shader)
 {}
 
 void cge::ParticalRenderer::prepare() const
 {
 	glDisable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void cge::ParticalRenderer::render(Partical &partical, Camera &cam)
 {
 	_shader.start();
+	prepare();
 	cam.update();
 	glBindVertexArray(plane.getVao());
 	glEnableVertexAttribArray(0);
-	glm::mat4 model = Maths::createTransformationMatrix(partical.getPosition(), {0, 0, 0}, partical.getScale());
+	glEnableVertexAttribArray(1);
+	glBindTexture(GL_TEXTURE_2D, partical.getTexture().getID());
+	glm::mat4	model(1.0f);
+
+	model = glm::translate(model, partical.getPosition());
 	glm::mat4 view = cam.getViewMatrix();
 	model[0][0] = view[0][0];
 	model[0][1] = view[1][0];
@@ -47,11 +55,17 @@ void cge::ParticalRenderer::render(Partical &partical, Camera &cam)
 	model[2][0] = view[0][2];
 	model[2][1] = view[1][2];
 	model[2][2] = view[2][2];
+	model = glm::scale(model, glm::vec3(partical.getScale(), partical.getScale(), partical.getScale()));
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"), view * model);
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"), cam.getProjectionMatrix());
+	this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical.get_currOff());
+	this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical.get_nextOff());
+	this->_shader.uploadFloat(this->_shader.getUniformLocation("blend"), partical.get_blend());
+	this->_shader.uploadFloat(this->_shader.getUniformLocation("row"), partical.getTexture().getRow());
 	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, 0);
 	getGLError();
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	glBindVertexArray(0);
 	_shader.end();
 }
@@ -76,7 +90,6 @@ void cge::ParticalRenderer::update(unsigned lastframe)
 		if (!partical->update(lastframe))
 		{
 			_partiacals.erase(partical);
-			std::cout << "partical died\n";
 		} else
 			partical++;
 	}
@@ -101,7 +114,7 @@ void cge::ParticalRenderer::updateRender(cge::Camera &camera, unsigned lastframe
 void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positionTolorence,
 										   glm::vec3 verlocity, glm::vec3 verlocityTolorence,
 										   float gravityeffect, float gravertyTolerance, float lifetime,
-										   float lifetimeTolorence, float scale, float scaleTolorence, int numParticals)
+										   float lifetimeTolorence, float scale, float scaleTolorence, int numParticals, TextureAtlas texture)
 {
 
 	std::random_device rd;
@@ -133,7 +146,7 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 
 		scale = disscale(gen);
 
-		_partiacals.emplace_back(position, verlocity, gravityeffect, lifetime, scale);
+		_partiacals.emplace_back(position, verlocity, gravityeffect, lifetime, scale, texture);
 
 	}
 

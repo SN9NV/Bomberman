@@ -119,8 +119,8 @@ void Being::setAlive(bool _alive)
 
 
 /*void Being::render() {
-	_shader.start();
+	_entShader.start();
 	_renderer.prepare();
 	_renderer.render((cge::Entity&)this->getModel());
-	_shader.end();
+	_entShader.end();
 }*/

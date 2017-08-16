@@ -176,4 +176,12 @@ namespace cge {
 
 		glUniform1i(location, value);
 	}
+
+	void GLSLProgram::uploadvec2d(GLint location, const glm::vec2 &value) const {
+		if (!this->_isInUse) {
+			std::cerr << "Program is not in use\n";
+		}
+
+		glUniform2f(location, value.x, value.y);
+	}
 }

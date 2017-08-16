@@ -51,7 +51,7 @@ int main() {
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
 							loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
-	player->setDamage(3);
+	//player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
 	cge::GuiManager::initialise(window, &gameState, player);

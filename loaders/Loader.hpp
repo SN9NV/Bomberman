@@ -8,22 +8,26 @@
 #include <GL/glew.h>
 
 #include "../entites/Model.hpp"
+#include "../entites/TextureAtlas.h"
 
 namespace cge {
-	class Loader {
-	public:
-		Loader() = default;
-		~Loader();
+    class Loader {
+    public:
+        Loader() = default;
 
-		Texture			loadTexture(const std::string &texturePath);
-		tinygltf::Model	&loadGLTFModel(const std::string &modelPath);
+        ~Loader();
 
-	private:
-		std::map<std::string, GLuint>			_textures;
-		std::map<std::string, tinygltf::Model>	_models;
+        Texture loadTexture(const std::string &texturePath);
+        TextureAtlas loadTextureAtlas(const std::string &texturePath, int row);
+        tinygltf::Model &loadGLTFModel(const std::string &modelPath);
 
-		tinygltf::TinyGLTF						_gltfLoader;
-	};
+    private:
+        std::map<std::string, GLuint> _textures;
+        std::map<std::string, TextureAtlas> _textureAtlasas;
+        std::map<std::string, tinygltf::Model> _models;
+        tinygltf::TinyGLTF _gltfLoader;
+
+    };
 }
 
 #endif //NEW_LOADER_HPP

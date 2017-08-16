@@ -1,6 +1,7 @@
 #include "Loader.hpp"
 #include "IO.hpp"
 #include "picoPNG.hpp"
+#include "../entites/TextureAtlas.h"
 
 namespace cge {
 	Texture Loader::loadTexture(const std::string &texturePath) {
@@ -38,10 +39,49 @@ namespace cge {
 
 		return foundTexture->second;
 	}
+	TextureAtlas Loader::loadTextureAtlas(const std::string &texturePath, int row) {
+		auto foundTexture = this->_textureAtlasas.find(texturePath);
 
+		if (foundTexture == this->_textureAtlasas.end()) {
+			std::vector<unsigned char>	in;
+			std::vector<unsigned char>	out;
+			unsigned long	width;
+			unsigned long	height;
+			GLuint			textureID = 0;
+
+			if (IO::readFileToBuffer(texturePath, in)) {
+				std::cerr << "Failed to load image: " << texturePath << "\n";
+				exit(1);
+			}
+
+			if (PicoPNG::decodePNG(out, width, height, in.data(), in.size()) > 0) {
+				std::cerr << "Failed to decode PNG: " << texturePath << "\n";
+				exit(1);
+			}
+
+			glGenTextures(1, &textureID);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, GL_RGBA, GL_UNSIGNED_BYTE, out.data());
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			TextureAtlas tmp(textureID, row);
+			this->_textureAtlasas[texturePath] = tmp;
+			return tmp;
+		}
+
+		return foundTexture->second;
+	}
 	Loader::~Loader() {
 		for (auto &texture : this->_textures) {
 			glDeleteTextures(1, &(texture.second));
+		}
+		for (auto &texture : this->_textureAtlasas) {
+			GLuint id = texture.second.getID();
+			glDeleteTextures(1, &(id));
 		}
 	}
 

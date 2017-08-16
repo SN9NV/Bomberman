@@ -24,6 +24,7 @@ namespace cge {
 		void	upload1i(GLint location, GLint value) const;
 		void	uploadFloat(GLint location, float value) const;
 		void	uploadvec3d(GLint location, const glm::vec3 &value) const;
+		void	uploadvec2d(GLint location, const glm::vec2 &value) const;
 		void	uploadBool(GLint location, bool value) const;
 		void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
 
