@@ -8,10 +8,11 @@ cge::GuiManager *cge::GuiManager::s_instance = nullptr;
 
 bool cge::GuiManager::initialise(cge::Window& win,
 								cge::GameState *state,
+								cge::GameState *prevState,
 								Player* player)
 {
 	if (s_instance == nullptr) {
-		s_instance = new GuiManager(win, state, player);
+		s_instance = new GuiManager(win, state, prevState, player);
 	}
 	return (true);
 }
@@ -25,8 +26,10 @@ cge::GuiManager *cge::GuiManager::getSingleton() {
 
 cge::GuiManager::GuiManager(cge::Window &win,
 							cge::GameState *state,
+							cge::GameState *prevState,
 							Player* player):
 	_window(win),
+	_prevState(prevState),
 	_state(state),
 	_player(player)
 {

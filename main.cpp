@@ -42,6 +42,7 @@ static constexpr unsigned WIDTH = 1024;
 int main() {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
 	cge::GameState gameState = cge::GameState::PLAY_MENU;
+	cge::GameState prevGameState = gameState;
 	cge::InputManager inputManager(window);
 	cge::Loader loader;
 	Player *player;
@@ -54,7 +55,7 @@ int main() {
 	player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
-	cge::GuiManager::initialise(window, &gameState, player);
+	cge::GuiManager::initialise(window, &gameState, &prevGameState, player);
 int state;
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
@@ -73,6 +74,7 @@ int state;
 				cge::GuiManager::getSingleton()->drawScreen(cge::GameState::PLAY_PAUSE);
 				break;
 			case (cge::RESUME):
+				gameState = cge::GameState::PLAY_GAME;
 				player->setPauseMenue(false);
 				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();

@@ -439,7 +439,7 @@ int LevelRunner::runLevel(std::string path) {
 void LevelRunner::cleanlevel() {
 	for (auto vecEnt : _level) {
 		for (auto ent : vecEnt) {
-			if (ent != nullptr)
+			if (ent != nullptr )
 				delete (ent);
 		}
 		vecEnt.clear();

@@ -18,9 +18,11 @@ namespace cge {
 	public:
 		static bool			initialise(cge::Window& ,
 										cge::GameState* state,
+										cge::GameState *prevState,
 										Player* player);
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
+							cge::GameState *prevState,
 							Player* player);
 
 		static GuiManager*	getSingleton();
@@ -32,6 +34,7 @@ namespace cge {
 	private:
 		static cge::GuiManager*		s_instance;
 
+		cge::GameState*				_prevState;
 		cge::GameState*				_state;
 		cge::Window&				_window;
 		Player*						_player;
