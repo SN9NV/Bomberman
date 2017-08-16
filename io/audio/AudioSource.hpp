@@ -18,7 +18,7 @@ namespace cge {
 				BYTES = AL_BYTE_OFFSET
 			};
 
-			Source();
+			explicit Source();
 			Source(const std::string &audioPath, cge::Loader &loader);
 			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
 			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, const std::string &audioPath, cge::Loader &loader, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
@@ -40,8 +40,9 @@ namespace cge {
 			bool 		isLooping() const;
 			unsigned	getFileSize(cge::Audio::Source::Offset offsetType) const;
 			std::string	getName() const;
+			SF_INFO		getInfo() const;
 
-			void		setPlay(bool play);
+			void		setPlaying(bool play = true);
 			bool 		isPlaying();
 			unsigned	getPlayOffset(cge::Audio::Source::Offset offsetType);
 			void		setPlayOffset(cge::Audio::Source::Offset offsetType, unsigned offset);

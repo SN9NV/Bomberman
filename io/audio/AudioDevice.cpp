@@ -18,7 +18,7 @@ void cge::Audio::Device::_Init(const std::string &deviceName) {
 	this->_velocity		= { 0.0f, 0.0f, 0.0f };
 	this->_orientation	= { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-	this->makeCurrentContext();
+	this->setToCurrentContext();
 }
 
 std::vector<std::string> cge::Audio::Device::listDevices() {
@@ -52,12 +52,14 @@ std::string cge::Audio::Device::getDeviceName() const {
 	return this->_deviceName;
 }
 
-void cge::Audio::Device::makeCurrentContext() const {
+void cge::Audio::Device::setToCurrentContext() const {
 	if (alcMakeContextCurrent(this->_context) == AL_FALSE) {
 		std::cerr << "failed to make context current\n";
 		exit(1);
 	}
+}
 
+void cge::Audio::Device::update() const {
 	this->updateLocation();
 	this->updateVelocity();
 	this->updateOrientation();
@@ -123,3 +125,5 @@ glm::vec3 cge::Audio::Device::getVelocity() const {
 std::vector<float> cge::Audio::Device::getOrientation() const {
 	return this->_orientation;
 }
+
+

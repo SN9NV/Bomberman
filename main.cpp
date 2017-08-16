@@ -66,15 +66,47 @@ int main()
 //	cge::GUI::MainMenuScreen mmScreen(window);
 
 	cge::Audio::Device	defaultDevice;
-	cge::Audio::Source	source("resources/audio/MainTheme.ogg", loader);
+	cge::Audio::Source	defaultTheme("resources/audio/MainTheme.ogg", loader);
+	cge::Audio::Source	defaultMenuClick("resources/audio/menu_click.wav", loader);
 
-	source.setPlay(true);
-	while (source.isPlaying()) {
-		unsigned	offset = source.getPlayOffset(cge::Audio::Source::Offset::MILLISECONDS);
-		unsigned	size = source.getFileSize(cge::Audio::Source::Offset::MILLISECONDS);
-		double		percentage = offset / size * 100.0;
+	cge::Audio::Device	secondDevice(cge::Audio::Device::listDevices()[2]);
+	cge::Audio::Source	secondTheme("resources/audio/MainTheme.ogg", loader);
+	cge::Audio::Source	secondMenuClick("resources/audio/menu_click.wav", loader);
 
-		std::cout << "Playing " << source.getName() << " " << offset << "ms (" << percentage << "%)" << "\n\r";
+	defaultDevice.setToCurrentContext();
+	defaultTheme.setPlaying();
+
+	secondDevice.setToCurrentContext();
+	secondTheme.setPlaying();
+
+	bool playing = true;
+
+	while (playing) {
+		defaultDevice.setToCurrentContext();
+
+		bool defaultThemePlaying = defaultTheme.isPlaying();
+
+		if (defaultThemePlaying) {
+			unsigned	offset = defaultTheme.getPlayOffset(cge::Audio::Source::Offset::MILLISECONDS);
+			unsigned	size = defaultTheme.getFileSize(cge::Audio::Source::Offset::MILLISECONDS);
+			double		percentage = static_cast<double>(offset) / static_cast<double>(size) * 100.0;
+
+			std::cout << "Default device Playing: " << defaultTheme.getName() << " " << offset << "ms / " << size << "ms (" << percentage << "%)" << "\n";
+		}
+
+		secondDevice.setToCurrentContext();
+		bool secondMenuClickPlaying = secondTheme.isPlaying();
+
+		if (secondMenuClickPlaying) {
+			unsigned	offset = secondTheme.getPlayOffset(cge::Audio::Source::Offset::MILLISECONDS);
+			unsigned	size = secondTheme.getFileSize(cge::Audio::Source::Offset::MILLISECONDS);
+			double		percentage = static_cast<double>(offset) / static_cast<double>(size) * 100.0;
+
+			std::cout << "USB device Playing: " << secondTheme.getName() << " " << offset << "ms / " << size << "ms (" << percentage << "%)" << "\n";
+		}
+
+		playing = defaultThemePlaying || secondMenuClickPlaying;
+
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}

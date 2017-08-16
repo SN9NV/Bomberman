@@ -15,7 +15,7 @@ namespace cge {
 	class Loader {
 	public:
 		struct AudioFile {
-			ALuint	bufferID;
+			int16_t	*buffer;
 			SF_INFO	info;
 		};
 

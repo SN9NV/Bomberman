@@ -46,7 +46,8 @@ namespace cge {
 		}
 
 		for (auto &audioBuffer : this->_audioFiles) {
-			alDeleteBuffers(1, &(audioBuffer.second.bufferID));
+			delete[] audioBuffer.second.buffer;
+//			alDeleteBuffers(1, &(audioBuffer.second.bufferID));
 		}
 	}
 
@@ -75,10 +76,8 @@ namespace cge {
 		auto foundAudio = this->_audioFiles.find(audioPath);
 
 		if (foundAudio == this->_audioFiles.end()) {
-			/// SF_INFO holds info on the audio file
 			SF_INFO	sfInfo = {};
 
-			///	Open audio file
 			SNDFILE	*file = sf_open(audioPath.c_str(), SFM_READ, &sfInfo);
 
 			if (file == nullptr) {
@@ -86,29 +85,11 @@ namespace cge {
 				exit(1);
 			}
 
-			/// Read file info buffer
-			std::vector<int16_t>	buffer(static_cast<unsigned long>(sfInfo.channels * sfInfo.frames));
-			sf_readf_short(file, buffer.data(), sfInfo.frames);
+			auto	*buffer = new int16_t[sfInfo.channels * sfInfo.frames];
+			sf_readf_short(file, buffer, sfInfo.frames);
 			sf_close(file);
 
-			/// Generate buffer to store audio
-			ALuint	bufferID = 0;
-
-			alGenBuffers(1, &bufferID);
-			if (bufferID == AL_INVALID_VALUE) {
-				std::cerr << "Error creating buffer\n";
-				exit(1);
-			}
-
-			alBufferData(
-					bufferID,
-					(sfInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
-					buffer.data(),
-					static_cast<ALsizei>(buffer.size() * sizeof(uint16_t)),
-					sfInfo.samplerate
-			);
-
-			cge::Loader::AudioFile	ret = { bufferID, sfInfo };
+			cge::Loader::AudioFile	ret = { buffer, sfInfo };
 			this->_audioFiles[audioPath] = ret;
 
 			return ret;

@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <map>
+#include "AudioSource.hpp"
 
 namespace cge {
 	namespace Audio {
@@ -20,8 +22,8 @@ namespace cge {
 			static std::vector<std::string>	listDevices();
 			static std::string				defaultDevice();
 
-			/// Use to update all values
-			void				makeCurrentContext() const;
+			void	setToCurrentContext() const;
+			void	update() const;
 
 			std::string			getDeviceName() const;
 			const ALCdevice		*getDevice() const;
@@ -43,6 +45,8 @@ namespace cge {
 			std::string	_deviceName;
 			ALCdevice	*_device;
 			ALCcontext	*_context;
+
+			std::map<std::string, cge::Audio::Source>	_sources;
 
 			glm::vec3			_location;
 			glm::vec3			_velocity;

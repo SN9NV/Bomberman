@@ -1,21 +1,38 @@
 #include <iostream>
 #include "AudioSource.hpp"
 
-cge::Audio::Source::Source() {
+cge::Audio::Source::Source()
+{
 	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
 }
 
-cge::Audio::Source::Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch, ALfloat gain) {
+cge::Audio::Source::Source(
+		const glm::vec3 &position,
+		const glm::vec3 &velocity,
+		bool isLooping,
+		ALfloat pitch,
+		ALfloat gain)
+{
 	this->Init(position, velocity, isLooping, pitch, gain);
 }
 
-cge::Audio::Source::Source(const std::string &audioPath, cge::Loader &loader) {
+cge::Audio::Source::Source(
+		const std::string &audioPath,
+		cge::Loader &loader)
+{
 	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
 	this->setAudio(audioPath, loader);
 }
 
-cge::Audio::Source::Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping,
-						   const std::string &audioPath, cge::Loader &loader, ALfloat pitch, ALfloat gain) {
+cge::Audio::Source::Source(
+		const glm::vec3 &position,
+		const glm::vec3 &velocity,
+		bool isLooping,
+		const std::string &audioPath,
+		cge::Loader &loader,
+		ALfloat pitch,
+		ALfloat gain)
+{
 	this->Init(position, velocity, isLooping, pitch, gain);
 	this->setAudio(audioPath, loader);
 }
@@ -40,12 +57,25 @@ void cge::Audio::Source::Init(const glm::vec3 &position, const glm::vec3 &veloci
 void cge::Audio::Source::setAudio(const std::string &audioFilePath, cge::Loader &loader) {
 	cge::Loader::AudioFile audioFile = loader.loadAudio(audioFilePath);
 
-	this->_bufferID = audioFile.bufferID;
+	alGenBuffers(1, &this->_bufferID);
+	if (this->_bufferID == AL_INVALID_VALUE) {
+		std::cerr << "Error creating buffer\n";
+		exit(1);
+	}
+
+	alBufferData(
+			this->_bufferID,
+			(audioFile.info.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+			audioFile.buffer,
+			static_cast<ALsizei>(audioFile.info.channels * audioFile.info.frames * sizeof(uint16_t)),
+			audioFile.info.samplerate
+	);
+
 	this->_sfInfo = audioFile.info;
 	this->_audioPath = audioFilePath;
 
 	std::smatch	matches;
-	if (std::regex_match(audioFilePath, matches, std::regex(".*?/(.*?)\\..*?$"))) {
+	if (std::regex_match(audioFilePath, matches, std::regex(".*/(.*?)\\..*?$"))) {
 		this->_name = matches[1];
 	} else {
 		this->_name = "Unknown Audio File";
@@ -99,7 +129,7 @@ bool cge::Audio::Source::isLooping() const {
 	return this->_isLooping;
 }
 
-void cge::Audio::Source::setPlay(bool play) {
+void cge::Audio::Source::setPlaying(bool play) {
 	if (this->_bufferID == 0) {
 		std::cout << "No audio file is set\n";
 		return;
@@ -147,7 +177,8 @@ void cge::Audio::Source::setPlayOffset(cge::Audio::Source::Offset offsetType, un
 unsigned cge::Audio::Source::getFileSize(cge::Audio::Source::Offset offsetType) const {
 	switch (offsetType) {
 		case cge::Audio::Source::Offset::MILLISECONDS:
-			return static_cast<unsigned>(this->_sfInfo.frames * this->_sfInfo.samplerate);
+			return static_cast<unsigned>(static_cast<double>(this->_sfInfo.frames) /
+					static_cast<double>(this->_sfInfo.samplerate) * 1000.0);
 		case cge::Audio::Source::Offset::SAMPLES:
 			return static_cast<unsigned>(this->_sfInfo.frames);
 //		case cge::Audio::Source::Offset::BYTES:
@@ -158,4 +189,8 @@ unsigned cge::Audio::Source::getFileSize(cge::Audio::Source::Offset offsetType) 
 
 std::string cge::Audio::Source::getName() const {
 	return this->_name;
+}
+
+SF_INFO cge::Audio::Source::getInfo() const {
+	return this->_sfInfo;
 }
