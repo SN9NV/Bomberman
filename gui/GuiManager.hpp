@@ -10,6 +10,8 @@
 #include "MainMenuScreen.hpp"
 #include "SettingsScreen.hpp"
 #include "LoadGameScreen.hpp"
+#include "SaveGameScreen.h"
+#include "PauseGameScreen.h"
 
 namespace cge {
 	class GuiManager {
@@ -37,6 +39,8 @@ namespace cge {
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
 		cge::GUI::SettingsScreen*	_settingsScreen;
 		cge::GUI::LoadGameScreen*	_loadGameScreen;
+		cge::GUI::SaveGameScreen*	_saveGameScreen;
+		cge::GUI::PauseGameScreen*	_pauseGameScreen;
 	};
 }
 

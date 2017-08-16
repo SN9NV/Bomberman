@@ -23,7 +23,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	// Create nanogui gui
 	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Load Game");
+	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Save Game");
 	nanogui::AdvancedGridLayout layout(
 			{100, 100, 100, 100, 100},
 			{100, 100, 100, 100, 50},
@@ -52,8 +52,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot1 = new nanogui::TextBox(p_slot1);
 	txtb_Slot1->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot1->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot1 = new nanogui::Button(p_slot1, "Load");
-	btn_SaveSlot1->setTooltip("Load Game on Slot 1");
+	nanogui::Button *btn_SaveSlot1 = new nanogui::Button(p_slot1, "Save");
+	btn_SaveSlot1->setTooltip("Save Game on Slot 1");
 
 	/**Slot 2**/
 	nanogui::Widget *p_slot2 = new nanogui::Widget(saves);
@@ -63,8 +63,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot2 = new nanogui::TextBox(p_slot2);
 	txtb_Slot2->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot2->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot2 = new nanogui::Button(p_slot2, "Load");
-	btn_SaveSlot2->setTooltip("Load Game on Slot 2");
+	nanogui::Button *btn_SaveSlot2 = new nanogui::Button(p_slot2, "Save");
+	btn_SaveSlot2->setTooltip("Save Game on Slot 2");
 
 	/**Slot 3**/
 	nanogui::Widget *p_slot3 = new nanogui::Widget(saves);
@@ -74,8 +74,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot3 = new nanogui::TextBox(p_slot3);
 	txtb_Slot3->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot3->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot3 = new nanogui::Button(p_slot3, "Load");
-	btn_SaveSlot3->setTooltip("Load Game on Slot 3");
+	nanogui::Button *btn_SaveSlot3 = new nanogui::Button(p_slot3, "Save");
+	btn_SaveSlot3->setTooltip("Save Game on Slot 3");
 
 	/**Slot 4**/
 	nanogui::Widget *p_slot4 = new nanogui::Widget(saves);
@@ -85,8 +85,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot4 = new nanogui::TextBox(p_slot4);
 	txtb_Slot4->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot4->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot4 = new nanogui::Button(p_slot4, "Load");
-	btn_SaveSlot4->setTooltip("Load Game on Slot 4");
+	nanogui::Button *btn_SaveSlot4 = new nanogui::Button(p_slot4, "Save");
+	btn_SaveSlot4->setTooltip("Save Game on Slot 4");
 
 	/**Slot 5**/
 	nanogui::Widget *p_slot5 = new nanogui::Widget(saves);
@@ -96,8 +96,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot5 = new nanogui::TextBox(p_slot5);
 	txtb_Slot5->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot5->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot5 = new nanogui::Button(p_slot5, "Load");
-	btn_SaveSlot5->setTooltip("Load Game on Slot 5");
+	nanogui::Button *btn_SaveSlot5 = new nanogui::Button(p_slot5, "Save");
+	btn_SaveSlot5->setTooltip("Save Game on Slot 5");
 
 	/**Slot 6**/
 	nanogui::Widget *p_slot6 = new nanogui::Widget(saves);
@@ -107,8 +107,8 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot6 = new nanogui::TextBox(p_slot6);
 	txtb_Slot6->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot6->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot6 = new nanogui::Button(p_slot6, "Load");
-	btn_SaveSlot6->setTooltip("Load Game on Slot 6");
+	nanogui::Button *btn_SaveSlot6 = new nanogui::Button(p_slot6, "Save");
+	btn_SaveSlot6->setTooltip("Save Game on Slot 6");
 
 	_screen->setVisible(true);
 	_screen->performLayout();

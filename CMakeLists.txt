@@ -72,7 +72,7 @@ set(SOURCE_FILES
 		entites/RawModel.hpp
         entites/Partical.cpp
 		entites/Partical.h
-		gui/SaveGameScreen.cpp gui/SaveGameScreen.h)
+		gui/SaveGameScreen.cpp gui/SaveGameScreen.h gui/PauseGameScreen.cpp gui/PauseGameScreen.h)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

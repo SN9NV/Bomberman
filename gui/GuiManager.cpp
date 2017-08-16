@@ -33,10 +33,16 @@ cge::GuiManager::GuiManager(cge::Window &win,
 	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, player);
 	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, player);
 	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, player);
+	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player);
+	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, player);
 }
 
 cge::GuiManager::~GuiManager() {
 	delete this->_mainMenuScreen;
+	delete this->_settingsScreen;
+	delete this->_loadGameScreen;
+	delete this->_saveGameScreen;
+	delete this->_pauseGameScreen;
 }
 
 void cge::GuiManager::drawScreen(int screen) {
@@ -49,6 +55,14 @@ void cge::GuiManager::drawScreen(int screen) {
 		case (cge::GameState::PLAY_LOAD):
 			this->_loadGameScreen->setInputCallbacks();
 			this->_loadGameScreen->drawScreen();
+			break;
+		case (cge::GameState::PLAY_SAVE):
+			this->_saveGameScreen->setInputCallbacks();
+			this->_saveGameScreen->drawScreen();
+			break;
+		case (cge::GameState::PLAY_PAUSE):
+			this->_pauseGameScreen->setInputCallbacks();
+			this->_pauseGameScreen->drawScreen();
 			break;
 		case (cge::GameState::PLAY_MENU):
 		default:

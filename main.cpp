@@ -60,9 +60,13 @@ int main() {
 			case (cge::PLAY_GAME):
 				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				if (player->getLives() > 0) {
-					int state = levelRunner->runLevel("../resources/Maps/Map1");
-					std::cout << "level exit state " << state << std::endl;
-					std::cout << "Player Lives: " << player->getLives() << std::endl;
+					if (!player->isPauseMenue()) {
+						int state = levelRunner->runLevel("../resources/Maps/Map1");
+						std::cout << "level exit state " << state << std::endl;
+						std::cout << "Player Lives: " << player->getLives() << std::endl;
+					} else {
+						cge::GuiManager::getSingleton()->drawScreen(cge::GameState::PLAY_PAUSE);
+					}
 				}
 				else
 					gameState = cge::PLAY_MENU;
