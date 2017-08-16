@@ -75,6 +75,7 @@ include_directories(
         ${GLM_INCLUDE_DIRS}
         ${GLFW3_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIRS}
+		${OPENAL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIRS}
 )
 
