@@ -18,8 +18,8 @@ private:
 
 
 private:
-	int _special = SDLK_v;
-	int _menue = SDLK_ESCAPE;
+	int _special = GLFW_KEY_V;
+	int _menue = GLFW_KEY_ESCAPE;
 	bool _pauseMenue;
 
 public:

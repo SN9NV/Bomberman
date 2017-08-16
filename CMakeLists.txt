@@ -22,7 +22,8 @@ set(SOURCE_FILES
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
-		Testmain.cpp
+
+		main.cpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
 		entites/Entity.cpp entites/Entity.hpp
@@ -71,7 +72,7 @@ set(SOURCE_FILES
 		entites/RawModel.hpp
         entites/Partical.cpp
 		entites/Partical.h
-		)
+		gui/SaveGameScreen.cpp gui/SaveGameScreen.h)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -81,7 +82,6 @@ find_package(PkgConfig REQUIRED)
 # Find the dependencies for the project
 pkg_search_module(GLEW REQUIRED glew)
 pkg_search_module(GLM REQUIRED glm)
-pkg_search_module(SDL2 REQUIRED sdl2)
 #pkg_search_module(GLFW3	REQURIED glfw3)
 
 # Directories to find the header files
@@ -93,7 +93,6 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/eigen
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/glfw/include
 		${GLEW_INCLUDE_DIRS}
-		${SDL2_INCLUDE_DIRS}
 		${GLM_INCLUDE_DIRS}
 )
 
@@ -101,7 +100,6 @@ include_directories(
 link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
 		${GLEW_LIBRARY_DIRS}
-		${SDL2_LIBRARY_DIRS}
 		${GLM_LIBRARY_DIRS}
 )
 
@@ -111,7 +109,6 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME}
 		${OPENGL_LIBRARIES}
 		${GLEW_LIBRARIES}
-		${SDL2_LIBRARIES}
 		${GLM_LIBRARIES}
 		nanogui
 		)

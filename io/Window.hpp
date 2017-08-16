@@ -2,7 +2,6 @@
 #define NEW_WINDOW_HPP
 
 #include <string>
-#include <SDL.h>
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

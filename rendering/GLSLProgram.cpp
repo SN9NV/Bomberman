@@ -27,11 +27,11 @@ namespace cge {
 		/// Read shaders from file
 		std::string	VertexShaderSRC = IO::readFileToString(vertexFilePath);
 		std::string FragmentShaderSRC = IO::readFileToString(fragmentFilePath);
-
+		std::cout << "compiling " << vertexFilePath << std::endl;
 		if (this->_compileShader(VertexShaderSRC, this->_vertexShaderID)) {
 			return true;
 		}
-
+		std::cout << "compiling " << fragmentFilePath << std::endl;
 		return this->_compileShader(FragmentShaderSRC, this->_fragmentShaderID);
 
 	}

@@ -10,6 +10,7 @@ out vec3	toLight;
 
 
 uniform mat4 view;
+uniform mat4 transformation;
 
 const vec3 lightLocation = vec3(5.0, 5.0, 5.0);
 
