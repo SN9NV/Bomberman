@@ -28,9 +28,8 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 	nanogui::Button *btn_ResumeGame = new nanogui::Button(nanoguiWindow, "Resume Game");
 	btn_ResumeGame->setTooltip("Resumes the current game.");
 	btn_ResumeGame->setFixedWidth(200);
-	btn_ResumeGame->setCallback([_currState, player] {
-		*_currState = cge::GameState::PLAY_GAME;
-		player->setPauseMenue(false);
+	btn_ResumeGame->setCallback([_currState] {
+		*_currState = cge::RESUME;
 	});
 
 	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");

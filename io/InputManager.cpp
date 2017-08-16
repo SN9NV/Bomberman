@@ -65,7 +65,7 @@ namespace cge {
 					  << "Action:   " << action << std::endl
 					  << "Mods:     " << mods << std::endl;*/
 
-			if (action == GLFW_PRESS || action == GLFW_REPEAT)
+			if (action == GLFW_PRESS)
 				iManager->pressKey(key);
 			else if (action == GLFW_RELEASE)
 				iManager->releaseKey(key);

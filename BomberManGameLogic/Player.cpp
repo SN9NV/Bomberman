@@ -1,11 +1,10 @@
 
 #include "Player.hpp"
 
-bool Player::update(const cge::InputManager &input, unsigned lastFrameTime)
-{
+bool Player::update(const cge::InputManager &input, unsigned lastFrameTime) {
 	_plaseBomb = false;
 	if (input.isKeyPressed(_up))
-			this->_n_moveDir.z = -1;
+		this->_n_moveDir.z = -1;
 	else if (input.isKeyPressed(_down))
 		this->_n_moveDir.z = 1;
 	else
@@ -17,8 +16,7 @@ bool Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 	else
 		this->_n_moveDir.x = 0;
 
-	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb)
-	{
+	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb) {
 		_plaseBomb = true;
 	}
 	if (input.isKeyPressed(_menue))
@@ -29,40 +27,33 @@ bool Player::update(const cge::InputManager &input, unsigned lastFrameTime)
 }
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
-		: Being(position, rotation, scale, model, speed), _lives(3)
-{}
+		: Being(position, rotation, scale, model, speed), _lives(3) {}
 
-Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, float speed)
-		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false)
-{}
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
+			   float speed)
+		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false) {}
 
-int Player::getLives() const
-{
+int Player::getLives() const {
 	return _lives;
 }
 
-int Player::loseLife()
-{
+int Player::loseLife() {
 	return --_lives;
 }
 
-bool Player::isPauseMenue() const
-{
+bool Player::isPauseMenue() const {
 	return _pauseMenue;
 }
 
-void Player::setPauseMenue(bool _pauseMenue)
-{
+void Player::setPauseMenue(bool _pauseMenue) {
 	Player::_pauseMenue = _pauseMenue;
 }
 
-int Player::getSpecial() const
-{
+int Player::getSpecial() const {
 	return _special;
 }
 
-void Player::setSpecial(int _special)
-{
+void Player::setSpecial(int _special) {
 	Player::_special = _special;
 }
 
@@ -72,6 +63,34 @@ void Player::setLives(int lives) {
 
 void Player::addLives(int lives) {
 	Player::_lives += lives;
+}
+
+int Player::get_up() const {
+	return _up;
+}
+
+int Player::get_down() const {
+	return _down;
+}
+
+int Player::get_left() const {
+	return _left;
+}
+
+int Player::get_right() const {
+	return _right;
+}
+
+int Player::get_bomb() const {
+	return _bomb;
+}
+
+int Player::get_special() const {
+	return _special;
+}
+
+int Player::get_menue() const {
+	return _menue;
 }
 
 

@@ -13,7 +13,8 @@ namespace cge {
 		PLAY_LOAD,
 		PLAY_SAVE,
 		PLAY_OPTS,
-		WANTS_QUIT
+		WANTS_QUIT,
+		RESUME
 	};
 }
 

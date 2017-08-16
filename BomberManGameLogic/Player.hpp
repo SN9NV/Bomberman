@@ -15,15 +15,24 @@ private:
 	int _left = GLFW_KEY_A;
 	int _right = GLFW_KEY_D;
 	int _bomb = GLFW_KEY_SPACE;
-
-
-private:
 	int _special = GLFW_KEY_V;
 	int _menue = GLFW_KEY_ESCAPE;
 	bool _pauseMenue;
 
 public:
+int get_up() const;
 
+	int get_down() const;
+
+	int get_left() const;
+
+	int get_right() const;
+
+	int get_bomb() const;
+
+	int get_special() const;
+
+	int get_menue() const;
 	bool isPauseMenue() const;
 	void setPauseMenue(bool _pauseMenue);
 	int getSpecial() const;

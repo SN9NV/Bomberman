@@ -10,16 +10,17 @@
 #include "Wall.h"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
-						 cge::Window &_window) : _loader(_loader),
-												 _player(_player),
-												 _gate(nullptr),
-												 _window(_window),
-												 _shader("../shaders/vertex.glsl", "../shaders/fragment.glsl"),
-												 _renderer(_shader),
-												 _camera(glm::vec3(0.0f, 5.0f, 0.0f),
-														 glm::vec3(1.5f, 0.0f, 0.0f), _window)
-{
-	_inputManager = new cge::InputManager(_window);
+						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
+																				  _player(_player),
+																				  _gate(nullptr),
+																				  _window(_window),
+																				  _shader("../shaders/vertex.glsl",
+																						  "../shaders/fragment.glsl"),
+																				  _renderer(_shader),
+																				  _camera(glm::vec3(0.0f, 5.0f, 0.0f),
+																						  glm::vec3(1.5f, 0.0f, 0.0f),
+																						  _window) {
+	_inputManager = inputManager;
 
 	_models.emplace("Wall",
 					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
@@ -40,16 +41,14 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 							   this->_loader));
 }
 
-cge::Model *LevelRunner::getModel(std::string name)
-{
+cge::Model *LevelRunner::getModel(std::string name) {
 	auto found = _models.find(name);
 	if (found != _models.end())
 		return (&found->second);
 	return (nullptr);
 }
 
-void LevelRunner::bumpBeing(Being *being)
-{
+void LevelRunner::bumpBeing(Being *being) {
 	glm::vec3 pos;
 	int x;
 	int y;
@@ -60,53 +59,44 @@ void LevelRunner::bumpBeing(Being *being)
 	x = (int) (round(pos.x));
 	y = (int) (round(pos.z));
 	//colision box up
-	if ((y - 1) > -1 && _level[y - 1][x] != nullptr)
-	{
+	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
 		dist = (float) (fabs(_level[y - 1][x]->getPosition().z - pos.z));
-		if (dist < minBoxDist)
-		{
+		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
 		}
 	}
 	//colision box down
-	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr)
-	{
+	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
 		dist = (float) (fabs(_level[y + 1][x]->getPosition().z - pos.z));
-		if (dist < minBoxDist)
-		{
+		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
 		}
 	}
 	//colision box left
-	if (x - 1 > -1 && _level[y][x - 1] != nullptr)
-	{
+	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
 		dist = (float) (fabs(_level[y][x - 1]->getPosition().x - pos.x));
-		if (dist < minBoxDist)
-		{
+		if (dist < minBoxDist) {
 			being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
 		}
 	}
 	//colision box right
-	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr)
-	{
+	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
 		dist = (float) (fabs(_level[y][x + 1]->getPosition().x - pos.x));
-		if (dist < minBoxDist)
-		{
+		if (dist < minBoxDist) {
 			being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
 		}
 	}
 }
 
-void LevelRunner::beingWorldInteraction()
-{
+void LevelRunner::beingWorldInteraction() {
 	glm::vec3 oldpos;
 	glm::vec3 pos;
 	cge::Model *tmpmdl;
@@ -116,38 +106,30 @@ void LevelRunner::beingWorldInteraction()
 
 
 	being = _beings.begin();
-	while (being != _beings.end())
-	{
+	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
-		if (!(*being)->update(*_inputManager, _window.getFrameTime()))
-		{
+
+		if (!(*being)->update(*_inputManager, _window.getFrameTime())) {
 			_beings.erase(being);
-		} else if ((*being)->isAlive())
-		{
+		} else if ((*being)->isAlive()) {
 			pos = (*being)->getPosition();
 			x = (int) (round(pos.x));
 			y = (int) (round(pos.z));
-			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->is_placeBomb())
-			{
-				if ((*being) == _player)
-				{
+			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->is_placeBomb()) {
+				if ((*being) == _player) {
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
-						x == _gate->getPosition().x)
-					{
+						x == _gate->getPosition().x) {
 						_player->setPosition(_gate->getPosition());
 						_state = levelState::COMPLEAT;
 					}
 
 				}
-				if (_level[y][x] != nullptr)
-				{
-					if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr)
-					{
+				if (_level[y][x] != nullptr) {
+					if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr) {
 						(*being)->setPosition(oldpos);
 						(*being)->setMoveDir({0, 0, 0});
 					} else if ((int) (round(oldpos.z)) != y ||
-							   (int) (round(oldpos.x)) != x)
-					{
+							   (int) (round(oldpos.x)) != x) {
 						(*being)->setPosition(oldpos);
 						(*being)->setMoveDir({0, 0, 0});
 					}
@@ -156,8 +138,7 @@ void LevelRunner::beingWorldInteraction()
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->is_placeBomb() && (tmpmdl = getModel("Bomb")) != nullptr)
-				{
+				if ((*being)->is_placeBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
@@ -168,15 +149,12 @@ void LevelRunner::beingWorldInteraction()
 		} else
 			being++;
 	}
-	for (auto &colBeing : _beings)
-	{
-		if (colBeing != _player)
-		{
+	for (auto &colBeing : _beings) {
+		if (colBeing != _player) {
 			glm::vec3 dist = _player->getPosition() - colBeing->getPosition();
 			float fdist = cge::Maths::vec3Len(dist);
 			float hit = _player->getHitBoxRadius() + colBeing->getHitBoxRadius();
-			if (colBeing->isAlive() && fdist < hit)
-			{
+			if (colBeing->isAlive() && fdist < hit) {
 				_state = levelState::FAIL;
 				_player->loseLife();
 			}
@@ -184,25 +162,20 @@ void LevelRunner::beingWorldInteraction()
 	}
 }
 
-void LevelRunner::checkBeingBlast(int x, int y)
-{
+void LevelRunner::checkBeingBlast(int x, int y) {
 	std::vector<Being *>::iterator being;
 	glm::vec3 beingPos;
 
 	being = _beings.begin();
-	while (being != _beings.end())
-	{
+	while (being != _beings.end()) {
 		beingPos = (*being)->getPosition();
-		if ((int) round(beingPos.x) == x && (int) round(beingPos.z) == y)
-		{
-			if ((*being) == _player)
-			{
+		if ((int) round(beingPos.x) == x && (int) round(beingPos.z) == y) {
+			if ((*being) == _player) {
 				std::cout << "player loose life. Player: " << (int) round(beingPos.x) << " " << (int) round(beingPos.z)
 						  << std::endl;
 				_player->loseLife();
 				_state = levelState::WANTS_QUIT;
-			} else
-			{
+			} else {
 				(*being)->setAlive(false);
 			}
 		}
@@ -210,8 +183,7 @@ void LevelRunner::checkBeingBlast(int x, int y)
 	}
 }
 
-void LevelRunner::bombWorldInteraction()
-{
+void LevelRunner::bombWorldInteraction() {
 	int i;
 	int sheild;
 	bool found;
@@ -221,45 +193,37 @@ void LevelRunner::bombWorldInteraction()
 	std::vector<Bomb *>::iterator bomb = _bombs.begin();
 	std::vector<Being *>::iterator being;
 
-	while (bomb != _bombs.end())
-	{
+	while (bomb != _bombs.end()) {
 		sheild = 0;
-		if (!(*bomb)->update(*_inputManager, _window.getFrameTime()))
-		{
+		if (!(*bomb)->update(*_inputManager, _window.getFrameTime())) {
 			found = false;
 			bombPos = (*bomb)->getPosition();
 			being = _beings.begin();
-			while (being != _beings.end() && !found)
-			{
+			while (being != _beings.end() && !found) {
 				if ((*being)->checkBombDeterNation((*bomb)))
 					found = true;
 				being++;
 			}
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
 			i = 0;
-			while (++i < (*bomb)->getBombradius())
-			{
-				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0)
-				{
+			while (++i < (*bomb)->getBombradius()) {
+				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
 						sheild = sheild | 0b00000001;
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
 
 				}
-				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0)
-				{
+				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0) {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
 						sheild = sheild | 0b00000010;
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
-				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0)
-				{
+				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0) {
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
 						sheild = sheild | 0b00000100;
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
-				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0)
-				{
+				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0) {
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
 						sheild = sheild | 0b00001000;
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
@@ -275,24 +239,19 @@ void LevelRunner::bombWorldInteraction()
 	}
 }
 
-void LevelRunner::loadMapEntitys()
-{
+void LevelRunner::loadMapEntitys() {
 	srand((unsigned int) (time(NULL)));
 	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
 
 	_dwalls = 0;
 	_level.resize(_map.size());
-	for (size_t i = 0; i < _map.size(); ++i)
-	{
+	for (size_t i = 0; i < _map.size(); ++i) {
 		_level[i].resize(_map[i].size());
-		for (size_t j = 0; j < _map[i].length(); ++j)
-		{
-			switch (_map[i][j])
-			{
+		for (size_t j = 0; j < _map[i].length(); ++j) {
+			switch (_map[i][j]) {
 				case 'w':
-					if ((tmpMdl = getModel("Wall")) != nullptr)
-					{
+					if ((tmpMdl = getModel("Wall")) != nullptr) {
 						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
 						_level[i][j] = tmpEnt;
 					}
@@ -303,26 +262,21 @@ void LevelRunner::loadMapEntitys()
 					_map[i][j] = '.';
 					break;
 				case 'd':
-					if ((tmpMdl = getModel("DestructWall")) != nullptr)
-					{
+					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
 						tmpEnt = new DestructWall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
 					break;
 				default:
-					if (_balloons + _onil > 0)
-					{
+					if (_balloons + _onil > 0) {
 
-						if (_balloons > 0 && rand() % 6 == 1)
-						{
-							if ((tmpMdl = getModel("Balloon")) != nullptr)
-							{
+						if (_balloons > 0 && rand() % 6 == 1) {
+							if ((tmpMdl = getModel("Balloon")) != nullptr) {
 								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
 								_balloons--;
 							}
-						} else if (_onil > 0 && rand() % 6 == 1)
-						{
+						} else if (_onil > 0 && rand() % 6 == 1) {
 							/*if ((tmpMdl = getModel("Onil")) != nullptr)
 							{
 								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
@@ -337,27 +291,21 @@ void LevelRunner::loadMapEntitys()
 	}
 }
 
-bool LevelRunner::checkWallBlast(int x, int y)
-{
+bool LevelRunner::checkWallBlast(int x, int y) {
 	cge::Model *tmpMdl;
 
-	if (_level[y][x] != NULL)
-	{
-		if (dynamic_cast<DestructWall *>(_level[y][x]) != NULL)
-		{
+	if (_level[y][x] != NULL) {
+		if (dynamic_cast<DestructWall *>(_level[y][x]) != NULL) {
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
 			srand((unsigned int) time(NULL) + _dwalls);
-			if (_gate == nullptr)
-			{
-				if (_dwalls == 0)
-				{
+			if (_gate == nullptr) {
+				if (_dwalls == 0) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
 						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 					std::cout << "make gate" << std::endl;
-				} else if (rand() % 2 == 1)
-				{
+				} else if (rand() % 2 == 1) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
 						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
 				}
@@ -368,21 +316,17 @@ bool LevelRunner::checkWallBlast(int x, int y)
 	return false;
 }
 
-void LevelRunner::endLevel()
-{
+void LevelRunner::endLevel() {
 	unsigned endTime = 0;
-	while (endTime < 1000)
-	{
+	while (endTime < 1000) {
 		_shader.start();
 		_renderer.prepare();
 		_camera.update(_shader);
-		_player->setRotation({0,endTime * M_PI / 180, 0});
+		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive())
-			_gate->setRotation({0,-(endTime * M_PI / 180), 0});
-		for (auto &vecit : _level)
-		{
-			for (auto &entit : vecit)
-			{
+			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
+		for (auto &vecit : _level) {
+			for (auto &entit : vecit) {
 				if (entit != nullptr)
 					_renderer.render(*entit);
 			}
@@ -395,32 +339,10 @@ void LevelRunner::endLevel()
 		_window.swapBuffers();
 		endTime += _window.getFrameTime();
 	}
-	for (auto vecEnt : _level)
-	{
-		for (auto ent : vecEnt)
-		{
-			if (ent != nullptr)
-				delete (ent);
-		}
-		vecEnt.clear();
-	}
-	_level.clear();
-	for (auto &_bomb : _bombs)
-		delete (_bomb);
-	_bombs.clear();
-	for (auto &being : _beings)
-		if (being != _player)
-			delete (being);
-	_beings.clear();
-	if (_gate != nullptr)
-	{
-		delete (_gate);
-		_gate = nullptr;
-	}
+	cleanlevel();
 }
 
-void LevelRunner::loadMapFromFile(std::string path)
-{
+void LevelRunner::loadMapFromFile(std::string path) {
 	//std::vector<std::string> map;
 	std::ifstream ifs(path);
 	std::string line;
@@ -432,28 +354,21 @@ void LevelRunner::loadMapFromFile(std::string path)
 	_balloons = 0;
 	_onil = 0;
 	_map.clear();
-	if (ifs.good())
-	{
+	if (ifs.good()) {
 		std::getline(ifs, enemies);
-		if (!std::regex_match(enemies, regEnemies))
-		{
+		if (!std::regex_match(enemies, regEnemies)) {
 			_state = levelState::FAIL_MAP_LOAD;
 			return;
-		} else
-		{
-			if (std::regex_match(enemies, match, regEnemies))
-			{
-				for (size_t i = 1; i < match.size(); ++i)
-				{
+		} else {
+			if (std::regex_match(enemies, match, regEnemies)) {
+				for (size_t i = 1; i < match.size(); ++i) {
 					std::ssub_match sub_match = match[i];
 					std::string piece = sub_match.str();
-					if (piece == "balloon:")
-					{
+					if (piece == "balloon:") {
 						sub_match = match[++i];
 						_balloons = stoi(sub_match.str());
 					}
-					if (piece == "onil:")
-					{
+					if (piece == "onil:") {
 						sub_match = match[++i];
 						_onil = stoi(sub_match.str());
 					}
@@ -461,8 +376,7 @@ void LevelRunner::loadMapFromFile(std::string path)
 			}
 			std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
 		}
-		do
-		{
+		do {
 			ifs >> line;
 			_map.push_back(line);
 
@@ -473,8 +387,7 @@ void LevelRunner::loadMapFromFile(std::string path)
 		_state = levelState::FAIL_MAP_LOAD;
 }
 
-bool LevelRunner::checkMapWall()
-{
+bool LevelRunner::checkMapWall() {
 	//check top and bottom lines are solid walls
 	std::regex soilidwall("^w{6,}$");
 	std::regex remainSoledWall("^w+$");
@@ -484,10 +397,8 @@ bool LevelRunner::checkMapWall()
 		return false;
 	if (!std::regex_match(_map[0], soilidwall) || !std::regex_match(_map[_map.size() - 1], soilidwall))
 		return false;
-	for (size_t i = 1; i < _map.size(); ++i)
-	{
-		if (_map[i].find('p') != std::string::npos)
-		{
+	for (size_t i = 1; i < _map.size(); ++i) {
+		if (_map[i].find('p') != std::string::npos) {
 			if (!player && _map[i].find('p', _map[i].find('p') + 1) == std::string::npos)
 				player = true;
 			else
@@ -505,28 +416,66 @@ bool LevelRunner::checkMapWall()
 	return player;
 }
 
-int LevelRunner::getState() const
-{
+int LevelRunner::getState() const {
 	return _state;
 }
 
-int LevelRunner::runLevel(std::string path)
-{
+int LevelRunner::runLevel(std::string path) {
+	if (_state == levelState::PAUSE)
+		cleanlevel();
 	loadMapFromFile(path);
 	if (_state == levelState::FAIL_MAP_LOAD)
 		return (_state);
 	_gate = nullptr;
 	loadMapEntitys();
 	_state = levelState::PLAY;
+	runlevelLoop();
+	if (_state != levelState::PAUSE)
+		endLevel();
+	std::cout << "about to eixit leve with state " << _state << std::endl;
+	return _state;
+}
 
-	while (_state == levelState::PLAY)
-	{
-		_inputManager->pollKeyEvnt();
-		if (_inputManager->isExitCase() || _player->getLives() <= 0)
-		{
+void LevelRunner::cleanlevel() {
+	for (auto vecEnt : _level) {
+		for (auto ent : vecEnt) {
+			if (ent != nullptr)
+				delete (ent);
+		}
+		vecEnt.clear();
+	}
+	_level.clear();
+	for (auto &_bomb : _bombs)
+		delete (_bomb);
+	_bombs.clear();
+	for (auto &being : _beings)
+		if (being != _player)
+			delete (being);
+	_beings.clear();
+	if (_gate != nullptr) {
+		delete (_gate);
+		_gate = nullptr;
+	}
+}
+
+int LevelRunner::resumeLevel() {
+	if (_state == levelState::PAUSE) {
+		_state = levelState::PLAY;
+		runlevelLoop();
+		if (_state != levelState::PAUSE)
+			endLevel();
+		std::cout << "about to eixit leve with state " << _state << std::endl;
+	}
+	return _state;
+}
+
+void LevelRunner::runlevelLoop() {
+	while (_state == levelState::PLAY) {
+
+		if (_inputManager->isExitCase() || _player->getLives() <= 0) {
 			_state = levelState::WANTS_QUIT;
 		}
-		if (_inputManager->isKeyPressed(GLFW_KEY_ESCAPE))
+		if (_player->isPauseMenue())
 			_state = levelState::PAUSE;
 		if (_beings.size() == 1 && _gate != nullptr)
 			_gate->actervate();
@@ -537,10 +486,8 @@ int LevelRunner::runLevel(std::string path)
 		_shader.start();
 		_renderer.prepare();
 		_camera.update(_shader);
-		for (auto &vecit : _level)
-		{
-			for (auto &entit : vecit)
-			{
+		for (auto &vecit : _level) {
+			for (auto &entit : vecit) {
 				if (entit)
 					_renderer.render(*entit);
 			}
@@ -551,8 +498,10 @@ int LevelRunner::runLevel(std::string path)
 			_renderer.render(*_gate);
 		_shader.end();
 		_window.swapBuffers();
+		_inputManager->pollKeyEvnt();
 	}
-	endLevel();
-	std::cout << "about to eixit leve with state " << _state << std::endl;
-	return _state;
+	//todo: fix nasty hack
+	while (_inputManager->isKeyPressed(_player->get_menue())) {
+		_inputManager->pollKeyEvnt();
+	}
 }

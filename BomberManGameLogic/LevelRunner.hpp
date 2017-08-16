@@ -54,11 +54,15 @@ private:
 	void bumpBeing(Being *);
 	void endLevel();
 	bool checkMapWall();
+	void cleanlevel();
+    void runlevelLoop();
+
 
 public:
 	int getState() const;
-	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window);
+	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager);
 	int runLevel(std::string path);
+    int resumeLevel();
 //todo: move loadMapfrom file to private
 	void loadMapFromFile(std::string path);
 };
