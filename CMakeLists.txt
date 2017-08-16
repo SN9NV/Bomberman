@@ -70,7 +70,21 @@ set(SOURCE_FILES
 		entites/RawModel.cpp
 		entites/RawModel.hpp
         entites/Partical.cpp
-		gui/SaveGameScreen.cpp gui/SaveGameScreen.h gui/PauseGameScreen.cpp gui/PauseGameScreen.h entites/TextureAtlas.cpp entites/TextureAtlas.h)
+		gui/SaveGameScreen.cpp
+		gui/SaveGameScreen.h
+		gui/PauseGameScreen.cpp
+		gui/PauseGameScreen.h
+		entites/TextureAtlas.cpp
+		entites/TextureAtlas.h
+		gui/SaveGameScreen.cpp
+		gui/SaveGameScreen.h
+		gui/PauseGameScreen.cpp
+		gui/PauseGameScreen.h
+		rendering/SpriteRenderer.cpp
+		rendering/SpriteRenderer.hpp
+		rendering/TextRenderer.cpp
+		rendering/TextRenderer.hpp
+		)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -85,6 +99,7 @@ pkg_search_module(GLM REQUIRED glm)
 # Directories to find the header files
 include_directories(
 		includes
+		${PROJECT_SOURCE_DIR}/dependencies/fontstash/src
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/include
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/nanovg/src

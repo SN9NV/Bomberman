@@ -8,10 +8,12 @@ cge::GuiManager *cge::GuiManager::s_instance = nullptr;
 
 bool cge::GuiManager::initialise(cge::Window& win,
 								cge::GameState *state,
-								Player* player)
+								cge::GameState *prevState,
+								Player* player,
+								int* currMap)
 {
 	if (s_instance == nullptr) {
-		s_instance = new GuiManager(win, state, player);
+		s_instance = new GuiManager(win, state, prevState, player, currMap);
 	}
 	return (true);
 }
@@ -25,16 +27,20 @@ cge::GuiManager *cge::GuiManager::getSingleton() {
 
 cge::GuiManager::GuiManager(cge::Window &win,
 							cge::GameState *state,
-							Player* player):
+							cge::GameState *prevState,
+							Player* player,
+							int* currMap):
 	_window(win),
+	_prevState(prevState),
 	_state(state),
-	_player(player)
+	_player(player),
+	_currMap(currMap)
 {
-	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, player);
-	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, player);
-	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, player);
+	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, prevState, player, currMap);
+	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player);
+	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, prevState, player);
 	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player);
-	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, player);
+	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, prevState, player, currMap);
 }
 
 cge::GuiManager::~GuiManager() {

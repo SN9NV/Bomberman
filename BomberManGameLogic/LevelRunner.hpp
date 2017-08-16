@@ -7,6 +7,7 @@
 
 
 #include "../entites/Model.hpp"
+#include "../rendering/TextRenderer.hpp"
 #include "Bomb.hpp"
 #include "Being.h"
 #include "Player.hpp"
@@ -43,7 +44,7 @@ private:
 	cge::Renderer _renderer;
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
-
+	cge::TextRenderer _textRenderer;
 	int _state = levelState::PLAY;
 	int _dwalls;
 	int _balloons;

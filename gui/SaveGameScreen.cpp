@@ -21,7 +21,6 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	glfwSwapBuffers(this->_window.getGLFWWindow());
 
 	// Create nanogui gui
-	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
 	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Save Game");
 	nanogui::AdvancedGridLayout layout(
@@ -32,9 +31,9 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 
 	nanogui::Button *btn_MainMenu = new nanogui::Button(nanoguiWindow, "Back");
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
-																	   nanogui::Alignment::Middle, nanogui::Alignment::Middle));
+		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_MainMenu->setCallback([_currState] {
-		*_currState = cge::GameState::PLAY_MENU;
+		*_currState = cge::GameState::PLAY_PAUSE;
 	});
 
 	nanogui::TabWidget* tabs = nanoguiWindow->add<nanogui::TabWidget>();

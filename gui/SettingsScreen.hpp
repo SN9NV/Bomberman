@@ -14,7 +14,7 @@ namespace cge {
 	namespace GUI {
 		class SettingsScreen {
 		public:
-			SettingsScreen(cge::Window &win, cge::GameState *_currState, Player *player);
+			SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player);
 
 			~SettingsScreen();
 

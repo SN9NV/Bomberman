@@ -4,10 +4,9 @@
 
 #include "PauseGameScreen.h"
 
-cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, Player *player) :
+cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap) :
 		_window(win),
-		_player(player)
-{
+		_player(player) {
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -35,29 +34,65 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
-	btn_NewGame->setCallback([_currState, player] {
-		*_currState = cge::GameState::PLAY_GAME;
-		player->setLives(3);
-		player->setPauseMenue(false);
+	btn_NewGame->setCallback([&, _currState, player, currMap] {
+		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+											  "New Game", "Any unsaved progress will be lost. Continue?", "Yes", "No",
+											  true);
+		dlg->setCallback([_currState, player, currMap](int result) {
+			if (result == 0) {
+				*_currState = cge::GameState::PLAY_GAME;
+				player->setLives(3);
+				player->setPauseMenue(false);
+				*currMap = 0;
+			}
+		});
 	});
 
 	nanogui::Button *btn_SaveGame = new nanogui::Button(nanoguiWindow, "Save Game");
 	btn_SaveGame->setTooltip("Options for saving game.");
-	btn_SaveGame->setCallback([_currState] { *_currState = cge::GameState::PLAY_SAVE; });
+	btn_SaveGame->setCallback([_currState] {
+		*_currState = cge::GameState::PLAY_SAVE;
+	});
 
 	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
-	btn_LoadGame->setCallback([_currState] { *_currState = cge::GameState::PLAY_LOAD; });
+	btn_LoadGame->setCallback([_currState, prevState] {
+		*prevState = *_currState;
+		*_currState = cge::GameState::PLAY_LOAD;
+	});
 
 	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
-	btn_Settings->setCallback([_currState] { *_currState = cge::GameState::PLAY_OPTS; });
+	btn_Settings->setCallback([_currState, prevState] {
+		*prevState = *_currState;
+		*_currState = cge::GameState::PLAY_OPTS;
+	});
 
 	gui->addGroup("");
 	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Main Menu");
 	btn_Quit->setTooltip("Go back to the main menu.");
-	btn_Quit->setCallback([_currState] {
-		*_currState = cge::GameState::PLAY_MENU;
+	btn_Quit->setCallback([&, _currState]{
+		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+											  "Back to Main", "Any unsaved progress will be lost. Continue?", "Yes",
+											  "No", true);
+		dlg->setCallback([_currState](int result) {
+			if (result == 0) {
+				*_currState = cge::GameState::PLAY_MENU;
+			}
+		});
+	});
+
+	nanogui::Button *btn_QuitToDesktop = new nanogui::Button(nanoguiWindow, "Quit to Desktop");
+	btn_QuitToDesktop->setTooltip("Game Settings");
+	btn_QuitToDesktop->setCallback([&, _currState] {
+		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+											  "Quit to Desktop?", "Any unsaved progress will be lost. Continue?", "Yes",
+											  "No", true);
+		dlg->setCallback([_currState](int result) {
+			if (result == 0) {
+				*_currState = cge::GameState::WANTS_QUIT;
+			}
+		});
 	});
 
 	_screen->setVisible(true);
@@ -85,69 +120,70 @@ void cge::GUI::PauseGameScreen::drawScreen() {
 	_window.swapBuffers();
 }
 
-void cge::GUI::PauseGameScreen::setInputCallbacks() {glfwSetWindowUserPointer(_window.getGLFWWindow(), nullptr);
+void cge::GUI::PauseGameScreen::setInputCallbacks() {
+	glfwSetWindowUserPointer(_window.getGLFWWindow(), nullptr);
 	glfwSetWindowUserPointer(_window.getGLFWWindow(), this);
 
 	glfwSetCursorPosCallback(_window.getGLFWWindow(),
-		[](GLFWwindow *win, double x, double y) {
-			 cge::GUI::PauseGameScreen *screen;
-			 screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+							 [](GLFWwindow *win, double x, double y) {
+								 cge::GUI::PauseGameScreen *screen;
+								 screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-			 screen->getScreen()->cursorPosCallbackEvent(x, y);
-		 }
+								 screen->getScreen()->cursorPosCallbackEvent(x, y);
+							 }
 	);
 
 	glfwSetMouseButtonCallback(_window.getGLFWWindow(),
-	   [](GLFWwindow *win, int button, int action, int modifiers) {
-		   cge::GUI::PauseGameScreen *screen;
-		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+							   [](GLFWwindow *win, int button, int action, int modifiers) {
+								   cge::GUI::PauseGameScreen *screen;
+								   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-		   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
-	   }
+								   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
+							   }
 	);
 
 	glfwSetKeyCallback(_window.getGLFWWindow(),
-	   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
-		   cge::GUI::PauseGameScreen *screen;
-		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+					   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
+						   cge::GUI::PauseGameScreen *screen;
+						   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-		   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
-	   }
+						   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
+					   }
 	);
 
 	glfwSetCharCallback(_window.getGLFWWindow(),
-		[](GLFWwindow *win, unsigned int codepoint) {
-			cge::GUI::PauseGameScreen *screen;
-			screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+						[](GLFWwindow *win, unsigned int codepoint) {
+							cge::GUI::PauseGameScreen *screen;
+							screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-			screen->getScreen()->charCallbackEvent(codepoint);
-		}
+							screen->getScreen()->charCallbackEvent(codepoint);
+						}
 	);
 
 	glfwSetDropCallback(_window.getGLFWWindow(),
-		[](GLFWwindow *win, int count, const char **filenames) {
-			cge::GUI::PauseGameScreen *screen;
-			screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+						[](GLFWwindow *win, int count, const char **filenames) {
+							cge::GUI::PauseGameScreen *screen;
+							screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-			screen->getScreen()->dropCallbackEvent(count, filenames);
-		}
+							screen->getScreen()->dropCallbackEvent(count, filenames);
+						}
 	);
 
 	glfwSetScrollCallback(_window.getGLFWWindow(),
-	  [](GLFWwindow *win, double x, double y) {
-		  cge::GUI::PauseGameScreen *screen;
-		  screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+						  [](GLFWwindow *win, double x, double y) {
+							  cge::GUI::PauseGameScreen *screen;
+							  screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-		  screen->getScreen()->scrollCallbackEvent(x, y);
-	  }
+							  screen->getScreen()->scrollCallbackEvent(x, y);
+						  }
 	);
 
 	glfwSetFramebufferSizeCallback(_window.getGLFWWindow(),
-	   [](GLFWwindow *win, int width, int height) {
-		   cge::GUI::PauseGameScreen *screen;
-		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+								   [](GLFWwindow *win, int width, int height) {
+									   cge::GUI::PauseGameScreen *screen;
+									   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-		   screen->getScreen()->resizeCallbackEvent(width, height);
-	   }
+									   screen->getScreen()->resizeCallbackEvent(width, height);
+								   }
 	);
 }

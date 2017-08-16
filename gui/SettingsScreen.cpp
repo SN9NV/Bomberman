@@ -4,7 +4,7 @@
 
 #include "SettingsScreen.hpp"
 
-cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, Player *player) :
+cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player) :
 	_window(win),
 	_player(player)
 {
@@ -33,8 +33,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::Button *btn_MainMenu = new nanogui::Button(nanoguiWindow, "Back");
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
-	btn_MainMenu->setCallback([_currState] {
-		*_currState = cge::GameState::PLAY_MENU;
+	btn_MainMenu->setCallback([_currState, prevState] {
+		*_currState = *prevState;
 	});
 
 	nanogui::Button *btn_Save = new nanogui::Button(nanoguiWindow, "Save");
