@@ -7,6 +7,8 @@
 
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
+#define FONTSTASH_IMPLEMENTATION
+#define GLFONTSTASH_IMPLEMENTATION
 
 #include "tinyGLTF/tiny_gltf.h"
 #include "BomberManGameLogic/GameLogic.h"
