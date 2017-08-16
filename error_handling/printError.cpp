@@ -1,5 +1,9 @@
-#include <OpenAL/OpenAL.h>
+#include <al.h>
 #include "printError.hpp"
+
+static void	printError(int error, const std::string &message) {
+	std::cerr << "Error: " << error << ": " << message << std::endl;
+}
 
 void	getGLError() {
 	GLenum error = glGetError();
@@ -8,28 +12,28 @@ void	getGLError() {
 		case GL_NO_ERROR:
 			break;
 		case GL_INVALID_ENUM:
-			std::cout << "Error: " << error << " Invalid enum" << std::endl;
+			printError(error, "Invalid enum");
 			break;
 		case GL_INVALID_VALUE:
-			std::cout << "Error: " << error << " Invalid value" << std::endl;
+			printError(error, "Invalid value");
 			break;
 		case GL_INVALID_OPERATION:
-			std::cout << "Error: " << error << " Invalid operation" << std::endl;
+			printError(error, "Invalid operation");
 			break;
 		case GL_INVALID_FRAMEBUFFER_OPERATION:
-			std::cout << "Error: " << error << " Invalid frambuffer operation" << std::endl;
+			printError(error, "Invalid frame buffer operation");
 			break;
 		case GL_OUT_OF_MEMORY:
-			std::cout << "Error: " << error << " Out of memory" << std::endl;
+			printError(error, "Out of memory");
 			break;
 		case GL_STACK_OVERFLOW:
-			std::cout << "Error: " << error << " Stack underflow" << std::endl;
+			printError(error, "Stack overflow");
 			break;
 		case GL_STACK_UNDERFLOW:
-			std::cout << "Error: " << error << " Stack underflow" << std::endl;
+			printError(error, "Stack underflow");
 			break;
 		default:
-			std::cout << "Error: " << error << std::endl;
+			printError(error, "Unknown OpenGL error code");
 	}
 }
 
@@ -40,21 +44,21 @@ void	getALError() {
 		case AL_NO_ERROR:
 			break;
 		case AL_INVALID_NAME:
-			std::cout << "Error: " << error << " Invalid Name parameter passed to AL call." << std::endl;
+			printError(error, "Invalid Name parameter passed to AL call");
 			break;
 		case AL_INVALID_ENUM:
-			std::cout << "Error: " << error << " Invalid parameter passed to AL call." << std::endl;
+			printError(error, "Invalid enum parameter passed to AL call");
 			break;
 		case AL_INVALID_VALUE:
-			std::cout << "Error: " << error << " Invalid enum parameter value." << std::endl;
+			printError(error, "Invalid value parameter passed to AL call");
 			break;
 		case AL_INVALID_OPERATION:
-			std::cout << "Error: " << error << " Illegal call." << std::endl;
+			printError(error, "Illegal AL call");
 			break;
 		case AL_OUT_OF_MEMORY:
-			std::cout << "Error: " << error << " No mojo. (Out of memory)" << std::endl;
+			printError(error, "No mojo (Not enough memory)");
 			break;
 		default:
-			std::cout << "Error: " << error << std::endl;
+			printError(error, "Unknown OpenAL error code");
 	}
 }

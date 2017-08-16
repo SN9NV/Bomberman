@@ -12,12 +12,11 @@ namespace cge {
 	}
 
 	Window::~Window() {
-		glfwDestroyWindow(this->_glfwWindow);
+		//glfwDestroyWindow(this->_glfwWindow);
 		glfwTerminate();
 	}
 
 	void Window::create(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
-
 		glfwInit();
 
 		this->_width = width;

@@ -49,7 +49,6 @@ set(SOURCE_FILES shared.hpp
 #		gui/GuiManager.cpp gui/GuiManager.hpp
 		gui/MainMenuScreen.cpp gui/MainMenuScreen.hpp
 		io/audio/AudioManager.cpp io/audio/AudioManager.hpp
-		io/audio/AudioListener.cpp io/audio/AudioListener.hpp
 		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
 		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp)
 
@@ -74,7 +73,6 @@ include_directories(
         ${GLEW_INCLUDE_DIRS}
         ${GLM_INCLUDE_DIRS}
         ${GLFW3_INCLUDE_DIRS}
-        ${OPENAL_INCLUDE_DIRS}
 		${OPENAL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIRS}
 )
@@ -85,7 +83,7 @@ link_directories(
         ${GLEW_LIBRARY_DIRS}
         ${GLM_LIBRARY_DIRS}
 #		${GLFW3_LIBRARY_DIRS}
-		${OPENAL_LIBRARY_DIRS}
+#		${OPENAL_LIBRARY_DIR}
 		${SNDFILE_LIBRARY_DIRS}
 )
 

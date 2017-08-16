@@ -6,8 +6,8 @@
 #include <regex>
 
 #include <GL/glew.h>
-#include <OpenAL/al.h>
-#include <sndfile.h>
+#include <al.h>
+#include <sndfile.hh>
 
 #include "../entites/Model.hpp"
 

@@ -72,7 +72,6 @@ namespace cge {
 	}
 
 	cge::Loader::AudioFile Loader::loadAudio(const std::string &audioPath) {
-		(void)audioPath; ///> TODO remove
 		auto foundAudio = this->_audioFiles.find(audioPath);
 
 		if (foundAudio == this->_audioFiles.end()) {
@@ -87,13 +86,10 @@ namespace cge {
 				exit(1);
 			}
 
-			sf_count_t				readSize = 8192 * sfInfo.channels;
-			std::vector<uint16_t>	fileBuffer;
-			std::vector<int16_t>	readBuffer(static_cast<unsigned long>(readSize));
-
-			while((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0) {
-				fileBuffer.insert(fileBuffer.end(), readBuffer.begin(), readBuffer.begin() + readSize);
-			}
+			/// Read file info buffer
+			std::vector<int16_t>	buffer(static_cast<unsigned long>(sfInfo.channels * sfInfo.frames));
+			sf_readf_short(file, buffer.data(), sfInfo.frames);
+			sf_close(file);
 
 			/// Generate buffer to store audio
 			ALuint	bufferID = 0;
@@ -107,8 +103,8 @@ namespace cge {
 			alBufferData(
 					bufferID,
 					(sfInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
-					fileBuffer.data(),
-					static_cast<ALsizei>(fileBuffer.size() * sizeof(uint16_t)),
+					buffer.data(),
+					static_cast<ALsizei>(buffer.size() * sizeof(uint16_t)),
 					sfInfo.samplerate
 			);
 

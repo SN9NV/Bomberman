@@ -2,18 +2,29 @@
 #include "AudioSource.hpp"
 
 cge::Audio::Source::Source() {
-	this->Init(1.0, 1.0, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false);
+	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
 }
 
-cge::Audio::Source::Source(ALfloat pitch, ALfloat gain, const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping) {
-	this->Init(pitch, gain, position, velocity, isLooping);
+cge::Audio::Source::Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch, ALfloat gain) {
+	this->Init(position, velocity, isLooping, pitch, gain);
+}
+
+cge::Audio::Source::Source(const std::string &audioPath, cge::Loader &loader) {
+	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
+	this->setAudio(audioPath, loader);
+}
+
+cge::Audio::Source::Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping,
+						   const std::string &audioPath, cge::Loader &loader, ALfloat pitch, ALfloat gain) {
+	this->Init(position, velocity, isLooping, pitch, gain);
+	this->setAudio(audioPath, loader);
 }
 
 cge::Audio::Source::~Source() {
 	alDeleteSources(1, &this->_sourceID);
 }
 
-void cge::Audio::Source::Init(ALfloat pitch, ALfloat gain, const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping) {
+void cge::Audio::Source::Init(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch, ALfloat gain) {
 	alGenSources(1, &this->_sourceID);
 
 	this->setPitch(pitch);
@@ -31,6 +42,14 @@ void cge::Audio::Source::setAudio(const std::string &audioFilePath, cge::Loader 
 
 	this->_bufferID = audioFile.bufferID;
 	this->_sfInfo = audioFile.info;
+	this->_audioPath = audioFilePath;
+
+	std::smatch	matches;
+	if (std::regex_match(audioFilePath, matches, std::regex(".*?/(.*?)\\..*?$"))) {
+		this->_name = matches[1];
+	} else {
+		this->_name = "Unknown Audio File";
+	}
 
 	alSourcei(this->_sourceID, AL_BUFFER, this->_bufferID);
 }
@@ -131,7 +150,12 @@ unsigned cge::Audio::Source::getFileSize(cge::Audio::Source::Offset offsetType) 
 			return static_cast<unsigned>(this->_sfInfo.frames * this->_sfInfo.samplerate);
 		case cge::Audio::Source::Offset::SAMPLES:
 			return static_cast<unsigned>(this->_sfInfo.frames);
-		case cge::Audio::Source::Offset::BYTES:
+//		case cge::Audio::Source::Offset::BYTES:
+		default:
 			return static_cast<unsigned>(this->_sfInfo.frames * this->_sfInfo.channels * sizeof(int16_t));
 	}
+}
+
+std::string cge::Audio::Source::getName() const {
+	return this->_name;
 }

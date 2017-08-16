@@ -1,7 +1,7 @@
 #ifndef BOMBERMAN_AUDIOSOURCE_HPP
 #define BOMBERMAN_AUDIOSOURCE_HPP
 
-#include <OpenAL/al.h>
+#include <al.h>
 #include <glm/vec3.hpp>
 
 #include <string>
@@ -19,12 +19,13 @@ namespace cge {
 			};
 
 			Source();
-			Source(ALfloat pitch, ALfloat gain, const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping);
+			Source(const std::string &audioPath, cge::Loader &loader);
+			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
+			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, const std::string &audioPath, cge::Loader &loader, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
 
 			~Source();
 
-			void	Init(ALfloat pitch, ALfloat gain, const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping);
-
+			void	Init(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
 			void	setAudio(const std::string &audioFilePath, cge::Loader &loader);
 			void	setPitch(ALfloat pitch);
 			void	setGain(ALfloat gain);
@@ -38,6 +39,7 @@ namespace cge {
 			glm::vec3	getVelocity() const;
 			bool 		isLooping() const;
 			unsigned	getFileSize(cge::Audio::Source::Offset offsetType) const;
+			std::string	getName() const;
 
 			void		setPlay(bool play);
 			bool 		isPlaying();
@@ -49,6 +51,8 @@ namespace cge {
 			ALuint		_bufferID;
 			SF_INFO		_sfInfo;
 
+			std::string	_audioPath;
+			std::string	_name;
 			ALfloat		_pitch;
 			ALfloat		_gain;
 			glm::vec3	_position;

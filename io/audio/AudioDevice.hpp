@@ -7,16 +7,48 @@
 #include <string>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 namespace cge {
 	namespace Audio {
 		class Device {
 		public:
+			Device();
 			explicit Device(const std::string &deviceName);
+			~Device();
 
 			static std::vector<std::string>	listDevices();
+			static std::string				defaultDevice();
+
+			/// Use to update all values
+			void				makeCurrentContext() const;
+
+			std::string			getDeviceName() const;
+			const ALCdevice		*getDevice() const;
+			const ALCcontext	*getContext() const;
+
+			void	setLocation(const glm::vec3 &location, bool update = false);
+			void	setVelocity(const glm::vec3 &velocity, bool update = false);
+			void	setOrientation(const std::vector<float> &orientation, bool update = false);
+
+			void	updateLocation() const;
+			void	updateVelocity() const;
+			void	updateOrientation() const;
+
+			glm::vec3			getLocation() const;
+			glm::vec3			getVelocity() const;
+			std::vector<float>	getOrientation() const;
+
 		private:
+			std::string	_deviceName;
 			ALCdevice	*_device;
 			ALCcontext	*_context;
+
+			glm::vec3			_location;
+			glm::vec3			_velocity;
+			std::vector<float>	_orientation;
+
+			void	_Init(const std::string &deviceName);
 		};
 	}
 }
