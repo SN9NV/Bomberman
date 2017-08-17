@@ -35,7 +35,8 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
-	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
+	//nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
+	cge::GUI::Custom::CustomButton *btn_NewGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
 	btn_NewGame->setCallback([currState, player, currMap] {

@@ -9,6 +9,7 @@
 #include "../shared.hpp"
 #include "../BomberManGameLogic/Player.hpp"
 #include "../io/audio/AudioDevice.hpp"
+#include "CustomButton.hpp"
 #include <nanogui/nanogui.h>
 
 namespace cge {
