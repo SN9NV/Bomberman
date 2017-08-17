@@ -13,7 +13,7 @@ endif ()
 
 
 function(installPkg pkgApple pkgLinux)
-	if (APPLE)
+	if (APPLE AND ${pkgApple})
 		execute_process(COMMAND brew install ${pkgApple})
 	elseif(LINUX AND ${pkgLinux})
 		execute_process(COMMAND sudo apt install ${pkgLinux})
@@ -51,7 +51,7 @@ set(SOURCE_FILES
 		loaders/Loader.cpp loaders/Loader.hpp
 		loaders/picoPNG.cpp loaders/picoPNG.hpp
 		extras/glmOstream.cpp extras/glmOstream.hpp
-		error_handling/glError.cpp error_handling/glError.hpp
+		error_handling/printError.cpp error_handling/printError.hpp
         BomberManGameLogic/Being.cpp
 		BomberManGameLogic/Being.h
 		BomberManGameLogic/Player.cpp
@@ -98,21 +98,25 @@ set(SOURCE_FILES
 		rendering/SpriteRenderer.hpp
 		rendering/TextRenderer.cpp
 		rendering/TextRenderer.hpp
+		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
+		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
 		)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
+find_package(OpenAL REQUIRED)	#> Linux => libopenal-dev
 find_package(PkgConfig REQUIRED)
 
 if (NOT PKG_CONFIG_FOUND)
 	installPkg(pkg-config pkg-config)
 endif()
 
-# Find the dependencies for the project
-pkg_search_module(GLEW REQUIRED glew)
-pkg_search_module(GLM REQUIRED glm)
-#pkg_search_module(GLFW3	REQURIED glfw3)
+# Find the dependencies for the project				Mac				Linux
+pkg_search_module(GLEW		REQUIRED glew)			#> 	glew			libglew-dev
+pkg_search_module(GLM		REQUIRED glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
+#pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
+pkg_search_module(SNDFILE	REQURIED sndfile)		#> 	libsndfile		libsndfile1-dev
 
 if (NOT GLEW_FOUND)
 	installPkg(glew libglew-dev)
@@ -133,6 +137,8 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/glfw/include
 		${GLEW_INCLUDE_DIRS}
 		${GLM_INCLUDE_DIRS}
+		${OPENAL_INCLUDE_DIR}
+		${SNDFILE_INCLUDE_DIRS}
 )
 
 # Directories to find the libraries
@@ -140,6 +146,7 @@ link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
 		${GLEW_LIBRARY_DIRS}
 		${GLM_LIBRARY_DIRS}
+		${SNDFILE_LIBRARY_DIRS}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -147,8 +154,10 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # Link executable with libraries
 target_link_libraries(${PROJECT_NAME}
 		${OPENGL_LIBRARIES}
+		${OPENAL_LIBRARY}
 		${GLEW_LIBRARIES}
 		${GLM_LIBRARIES}
+		${SNDFILE_LIBRARIES}
 		nanogui
 		)
 

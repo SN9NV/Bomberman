@@ -17,6 +17,8 @@
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
 #include "gui/GuiManager.hpp"
+#include "io/audio/AudioSource.hpp"
+#include "io/audio/AudioDevice.hpp"
 #include <GLFW/glfw3.h>
 
 #include <nanogui/nanogui.h>
@@ -28,13 +30,14 @@ static constexpr unsigned WIDTH = 1024;
 
 int main() {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GameState gameState = cge::GameState::PLAY_MENU;
-	cge::GameState prevGameState = gameState;
-	cge::InputManager inputManager(window);
-	cge::Loader loader;
-	Player *player;
-	cge::Model BomberMan;
-	LevelRunner *levelRunner;
+	cge::GameState		gameState = cge::GameState::PLAY_MENU;
+	cge::GameState		prevGameState = gameState;
+	cge::InputManager	inputManager(window);
+	cge::Loader			loader;
+	Player				*player;
+	cge::Model			BomberMan;
+	LevelRunner			*levelRunner;
+	cge::Audio::Device	defaultAudioDevice;
 
 	int currMap = 0;
 	std::vector<std::string> maps = {

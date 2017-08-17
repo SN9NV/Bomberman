@@ -105,4 +105,30 @@ namespace cge {
 
 		return foundModel->second;
 	}
+
+	cge::Loader::AudioFile Loader::loadAudio(const std::string &audioPath) {
+		auto foundAudio = this->_audioFiles.find(audioPath);
+
+		if (foundAudio == this->_audioFiles.end()) {
+			SF_INFO	sfInfo = {};
+
+			SNDFILE	*file = sf_open(audioPath.c_str(), SFM_READ, &sfInfo);
+
+			if (file == nullptr) {
+				std::cerr << "Could not open audio file: " << audioPath << "\n";
+				exit(1);
+			}
+
+			auto	*buffer = new int16_t[sfInfo.channels * sfInfo.frames];
+			sf_readf_short(file, buffer, sfInfo.frames);
+			sf_close(file);
+
+			cge::Loader::AudioFile	ret = { buffer, sfInfo };
+			this->_audioFiles[audioPath] = ret;
+
+			return ret;
+		}
+
+		return foundAudio->second;
+	}
 }
