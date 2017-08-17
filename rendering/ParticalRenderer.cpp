@@ -8,33 +8,33 @@
 #include "../extras/Maths.hpp"
 
 const std::vector<float> vert = {
-        // position             //UV
-		1.0f, 1.0f, 0.0f,     1.0,1.0,
-		-1.0f, 1.0f, 0.0f,    0, 1,
-		-1.0f, -1.0f, 0.0f,   0,0,
-		1.0f, -1.0f, 0.0f,    1, 0,
+		// position             //UV
+		1.0f, 1.0f, 0.0f, 1.0, 1.0,
+		-1.0f, 1.0f, 0.0f, 0, 1,
+		-1.0f, -1.0f, 0.0f, 0, 0,
+		1.0f, -1.0f, 0.0f, 1, 0,
 };
 
 const std::vector<unsigned int> ind = {
 		0, 1, 3,
 		1, 2, 3
 };
+//static const int MAX_PARTICALS = 100000;
 
 cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) : plane(vert, ind, true),
-																	_shader(shader)
-{}
+																	_shader(shader) {
+	glBindVertexArray(plane.getVao());
+	glGenBuffers(1, &_instanceVBO);
 
-void cge::ParticalRenderer::prepare() const
-{
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glBindVertexArray(0);
 }
 
-void cge::ParticalRenderer::render(Partical &partical, Camera &cam)
-{
+void cge::ParticalRenderer::prepare() const {
+	//glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+}
+
+void cge::ParticalRenderer::render(Partical &partical, Camera &cam) {
 	_shader.start();
 	prepare();
 	cam.update();
@@ -42,21 +42,7 @@ void cge::ParticalRenderer::render(Partical &partical, Camera &cam)
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glBindTexture(GL_TEXTURE_2D, partical.getTexture().getID());
-	glm::mat4	model(1.0f);
-
-	model = glm::translate(model, partical.getPosition());
-	glm::mat4 view = cam.getViewMatrix();
-	model[0][0] = view[0][0];
-	model[0][1] = view[1][0];
-	model[0][2] = view[2][0];
-	model[1][0] = view[0][1];
-	model[1][1] = view[1][1];
-	model[1][2] = view[2][1];
-	model[2][0] = view[0][2];
-	model[2][1] = view[1][2];
-	model[2][2] = view[2][2];
-	model = glm::scale(model, glm::vec3(partical.getScale(), partical.getScale(), partical.getScale()));
-	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"), view * model);
+	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"), viewModelMatrix(partical, cam));
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"), cam.getProjectionMatrix());
 	this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical.get_currOff());
 	this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical.get_nextOff());
@@ -70,52 +56,162 @@ void cge::ParticalRenderer::render(Partical &partical, Camera &cam)
 	_shader.end();
 }
 
-void cge::ParticalRenderer::addPartical(cge::Partical partical)
-{
-	_partiacals.push_back(partical);
-}
-
-void cge::ParticalRenderer::render(cge::Camera &camera)
-{
-	for (auto &partical : _partiacals)
-	{
-		render(partical, camera);
+void cge::ParticalRenderer::addPartical(cge::Partical partical, GLenum specFac, GLenum deffFac) {
+	auto find = _partiacals.find(partical.getTexture().getID());
+	if (find != _partiacals.end()) {
+		find->second.partical.push_back(partical);
+		find->second.specFac = specFac;
+		find->second.deffFac = deffFac;
+	} else {
+		s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
+		_partiacals.emplace(partical.getTexture().getID(), tmp);
 	}
 }
 
-void cge::ParticalRenderer::update(unsigned lastframe)
-{
-	for (std::vector<cge::Partical>::iterator partical = _partiacals.begin(); partical != _partiacals.end();)
-	{
-		if (!partical->update(lastframe))
-		{
-			_partiacals.erase(partical);
-		} else
-			partical++;
+void cge::ParticalRenderer::render(cge::Camera &camera) {
+	camera.update();
+	_shader.start();
+	prepare();
+	glBindVertexArray(plane.getVao());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
+	glEnableVertexAttribArray(6);
+	glEnableVertexAttribArray(7);
+	glEnableVertexAttribArray(8);
+
+	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
+								 camera.getProjectionMatrix());
+	for (auto &particalList : _partiacals) {
+		if (!particalList.second.partical.empty()) {
+			glBindTexture(GL_TEXTURE_2D, particalList.first);
+			glBlendFunc(particalList.second.specFac, particalList.second.deffFac);
+			this->_shader.uploadFloat(this->_shader.getUniformLocation("row"),
+									  particalList.second.partical[0].getTexture().getRow());
+			std::vector<s_InctenceData> inctenceData(particalList.second.partical.size());
+			size_t index = 0;
+			for (auto &partical : particalList.second.partical) {
+				glm::mat4 mv = viewModelMatrix(partical, camera);
+				/*inctenceData[index].modelview1 = mv[0];
+				inctenceData[index].modelview2 = mv[1];
+				inctenceData[index].modelview3 = mv[2];
+				inctenceData[index].modelview4 = mv[3];*/
+				inctenceData[index].modelview = mv;
+				inctenceData[index].currTextureOff = partical.get_currOff();
+				inctenceData[index].nextTextureOff = partical.get_nextOff();
+				inctenceData[index].blend = partical.get_blend();
+				index++;
+				/*this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"),
+											 viewModelMatrix(partical, camera));
+
+				this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical.get_currOff());
+				this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical.get_nextOff());
+				this->_shader.uploadFloat(this->_shader.getUniformLocation("blend"), partical.get_blend());
+
+				glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, (void *) 0);
+				getGLError();*/
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, _instanceVBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(s_InctenceData) * inctenceData.size(), inctenceData.data(), GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)offsetof(struct s_InctenceData, modelview));
+			glVertexAttribDivisor(2,1);
+			/*glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview2));
+			glVertexAttribDivisor(3,1);
+			glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview3));
+			glVertexAttribDivisor(4,1);
+			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview4));
+			glVertexAttribDivisor(5,1);*/
+			glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *) offsetof(struct s_InctenceData, currTextureOff));
+			glVertexAttribDivisor(6,1);
+			glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *) offsetof(struct s_InctenceData, nextTextureOff));
+			glVertexAttribDivisor(7,1);
+			glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void *) offsetof(struct s_InctenceData, blend));
+			glVertexAttribDivisor(8,1);
+			glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, 0,
+									static_cast<GLsizei>(index));
+										getGLError();
+
+
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(4);
+	glDisableVertexAttribArray(5);
+	glDisableVertexAttribArray(6);
+	glDisableVertexAttribArray(7);
+	glDisableVertexAttribArray(8);
+	glBindVertexArray(0);
+	_shader.end();
+}
+
+bool ParticalSort(cge::Partical p1, cge::Partical p2) {
+	return (p1.getDistCamSqur() > p2.getDistCamSqur());
+}
+
+void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
+	camera.update();
+	for (auto &particalList : _partiacals) {
+		for (std::vector<cge::Partical>::iterator partical = particalList.second.partical.begin();
+			 partical != particalList.second.partical.end();) {
+			if (partical->update(lastframe, camera)) {
+				partical++;
+			} else {
+				particalList.second.partical.erase(partical);
+			}
+		}
+		std::sort(particalList.second.partical.begin(), particalList.second.partical.end(), ParticalSort);
 	}
 }
 
-void cge::ParticalRenderer::updateRender(cge::Camera &camera, unsigned lastframe)
-{
-	for (std::vector<cge::Partical>::iterator partical = _partiacals.begin(); partical != _partiacals.end();)
+void cge::ParticalRenderer::updateRender(cge::Camera &camera, unsigned lastframe) {/*
+	camera.update();
+	_shader.start();
+	prepare();
+	glBindVertexArray(plane.getVao());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	for (auto &particalList : _partiacals)
 	{
-		if (!partical->update(lastframe))
-		{
-			_partiacals.erase(partical);
-		} else
-		{
-			render(*partical, camera);
-			partical++;
+		glBindTexture(GL_TEXTURE_2D, particalList.first);
+		for (std::vector<cge::Partical>::iterator partical = particalList.second.begin(); partical != particalList.second.end();) {
+			if (partical->update(lastframe, camera)) {
+				this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"),
+											 viewModelMatrix(*partical, camera));
+				this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
+											 camera.getProjectionMatrix());
+				this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical->get_currOff());
+				this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical->get_nextOff());
+				this->_shader.uploadFloat(this->_shader.getUniformLocation("blend"), partical->get_blend());
+				this->_shader.uploadFloat(this->_shader.getUniformLocation("row"), partical->getTexture().getRow());
+				glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, 0);
+				getGLError();
+				partical++;
+			}else{
+				particalList.second.erase(partical);
+			}
 		}
 	}
-
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+	_shader.end();*/
+	update(lastframe, camera);
+	render(camera);
 }
 
 void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positionTolorence,
 										   glm::vec3 verlocity, glm::vec3 verlocityTolorence,
 										   float gravityeffect, float gravertyTolerance, float lifetime,
-										   float lifetimeTolorence, float scale, float scaleTolorence, int numParticals, TextureAtlas texture)
-{
+										   float lifetimeTolorence, float scale, float scaleTolorence, int numParticals,
+										   TextureAtlas texture, GLenum specFac, GLenum deffFac) {
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -130,8 +226,7 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 	std::uniform_real_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
 	std::uniform_real_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
 
-	for (int i = 0; i < numParticals ; ++i)
-	{
+	for (int i = 0; i < numParticals; ++i) {
 		position.x = dispx(gen);
 		position.y = dispy(gen);
 		position.z = dispz(gen);
@@ -141,14 +236,30 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 		verlocity.z = disvz(gen);
 
 		gravityeffect = disgrv(gen);
-
 		lifetime = dislife(gen);
-
 		scale = disscale(gen);
 
-		_partiacals.emplace_back(position, verlocity, gravityeffect, lifetime, scale, texture);
+		addPartical(Partical(position, verlocity, gravityeffect, lifetime, scale, texture), specFac, deffFac);
 
 	}
 
 
+}
+
+glm::mat4 cge::ParticalRenderer::viewModelMatrix(cge::Partical partical, Camera camera) {
+	glm::mat4 model(1.0f);
+
+	model = glm::translate(model, partical.getPosition());
+	glm::mat4 view = camera.getViewMatrix();
+	model[0][0] = view[0][0];
+	model[0][1] = view[1][0];
+	model[0][2] = view[2][0];
+	model[1][0] = view[0][1];
+	model[1][1] = view[1][1];
+	model[1][2] = view[2][1];
+	model[2][0] = view[0][2];
+	model[2][1] = view[1][2];
+	model[2][2] = view[2][2];
+	model = glm::scale(model, glm::vec3(partical.getScale(), partical.getScale(), partical.getScale()));
+	return glm::mat4(view * model);
 }

@@ -62,7 +62,7 @@ const glm::vec3 &Being::get_n_moveDir() const
 {
 	return _n_moveDir;
 }
-bool Being::is_placeBomb() const
+bool Being::isPlaceBomb() const
 {
 	return _plaseBomb;
 }
@@ -112,6 +112,10 @@ bool Being::isAlive() const
 void Being::setAlive(bool _alive)
 {
 	Being::_alive = _alive;
+}
+
+void Being::setPlaseBomb(bool _plaseBomb) {
+	Being::_plaseBomb = _plaseBomb;
 }
 
 
