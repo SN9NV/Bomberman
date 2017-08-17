@@ -94,12 +94,12 @@ find_package(PkgConfig REQUIRED)
 # Find the dependencies for the project
 pkg_search_module(GLEW REQUIRED glew)
 pkg_search_module(GLM REQUIRED glm)
+pkg_search_module(FT REQUIRED freetype2)
 #pkg_search_module(GLFW3	REQURIED glfw3)
 
 # Directories to find the header files
 include_directories(
 		includes
-		${PROJECT_SOURCE_DIR}/dependencies/fontstash/src
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/include
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/nanovg/src
@@ -107,6 +107,7 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/glfw/include
 		${GLEW_INCLUDE_DIRS}
 		${GLM_INCLUDE_DIRS}
+		${FT_INCLUDE_DIRS}
 )
 
 # Directories to find the libraries
@@ -114,6 +115,7 @@ link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
 		${GLEW_LIBRARY_DIRS}
 		${GLM_LIBRARY_DIRS}
+		${FT_LIBRARY_DIRS}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -124,6 +126,7 @@ target_link_libraries(${PROJECT_NAME}
 		${GLEW_LIBRARIES}
 		${GLM_LIBRARIES}
 		nanogui
+		${FT_LIBRARIES}
 		)
 
 if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/dependencies/nanogui/build")

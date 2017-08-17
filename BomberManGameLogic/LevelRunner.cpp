@@ -544,8 +544,9 @@ void LevelRunner::runlevelLoop() {
 		if (_gate != nullptr)
 			_renderer.render(*_gate);
 		_entShader.end();
-		//_particalRenderer.prepare();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
+		_textRenderer.DrawText("test", 5, 5);
+
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 	}

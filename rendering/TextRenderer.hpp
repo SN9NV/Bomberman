@@ -5,15 +5,10 @@
 #ifndef BOMBERMAN_TEXTRENDERER_HPP
 #define BOMBERMAN_TEXTRENDERER_HPP
 
-#include "../error_handling/Exceptions.hpp"
-
-
 #include <iostream>
-#include <string.h>
-#include <fontstash.h>
-
-#include <GLFW/glfw3.h>
-#include <glfontstash.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include "GLSLProgram.hpp"
 
 namespace cge {
 	class TextRenderer {
@@ -21,13 +16,26 @@ namespace cge {
 		TextRenderer();
 		~TextRenderer();
 
-		void	DrawText(std::string text);
+		void	DrawText(std::string text, float x, float y);
 	private:
-		FONScontext*	_context;
-		int				_fontNormal;
-		unsigned int	_blackColor;
+		cge::GLSLProgram	_textShader;
 
-		void			dash(float dx, float dy);
+		struct point {
+			GLfloat x;
+			GLfloat y;
+			GLfloat s;
+			GLfloat t;
+		};
+
+		FT_Library			ft;
+		FT_Face				face;
+		GLuint				texture;
+		GLuint				attribute_coord;
+		GLint				uniform_tex;
+		GLint				uniform_color;
+		GLuint				vbo;
+
+		void	renderText(std::string text, float x, float y, float sx, float sy);
 	};
 };
 
