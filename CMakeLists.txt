@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
 if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui")
-	message(FATAL_ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
+	message(ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
 			"You probably did not clone the project with --recursive.\n"
 			"Automatically cloning submodules...")
 	execute_process(COMMAND git submodule update --init --recursive)
