@@ -20,12 +20,14 @@ namespace cge {
 										cge::GameState* state,
 										cge::GameState *prevState,
 										Player* player,
-										int* currMap);
+										int* currMap,
+										cge::Loader& loader);
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
 							cge::GameState *prevState,
 							Player* player,
-							int* currMap);
+							int* currMap,
+							cge::Loader& _loader);
 
 		static GuiManager*	getSingleton();
 

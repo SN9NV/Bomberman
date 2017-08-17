@@ -9,10 +9,14 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 										 cge::GameState *currState,
 										 cge::GameState *prevState,
 										 Player* player,
-										 int* currMap) :
+										 int* currMap,
+										 cge::Loader& _loader) :
 		_window(win),
-		_player(player)
+		_player(player),
+		_audio("../resources/audio/menu_click.wav", _loader)
 {
+	this->_audio.setLooping(false);
+
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -81,6 +85,7 @@ void cge::GUI::MainMenuScreen::drawScreen() {
 	this->_screen->drawWidgets();
 
 	_window.swapBuffers();
+	this->_audio.setPlaying(false);
 }
 
 void cge::GUI::MainMenuScreen::setInputCallbacks() {

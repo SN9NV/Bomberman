@@ -517,10 +517,6 @@ int LevelRunner::resumeLevel() {
 }
 
 void LevelRunner::runlevelLoop() {
-	cge::Audio::Source	gameMusic("resources/audio/MainTheme.ogg", this->_loader);
-	gameMusic.setLooping(true);
-	gameMusic.setPlaying();
-
 	while (_state == levelState::PLAY) {
 
 		if (_inputManager->isExitCase() || _player->getLives() <= 0) {
@@ -550,7 +546,7 @@ void LevelRunner::runlevelLoop() {
 			_renderer.render(*_gate);
 		_entShader.end();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-		_textRenderer.DrawText("test", 5, 5);
+		//_textRenderer.DrawText("test", 5, 5);
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 	}
