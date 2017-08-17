@@ -117,7 +117,7 @@ pkg_search_module(GLEW		REQUIRED glew)			#> 	glew			libglew-dev
 pkg_search_module(GLM		REQUIRED glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
 #pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
 pkg_search_module(SNDFILE	REQURIED sndfile)		#> 	libsndfile		libsndfile1-dev
-pkg_search_module(FT REQUIRED freetype2)
+pkg_search_module(FT		REQUIRED freetype2)
 
 if (NOT GLEW_FOUND)
 	installPkg(glew libglew-dev)
@@ -127,8 +127,12 @@ if (NOT GLM_FOUND)
 	installPkg(glm FALSE)
 endif()
 
+if (NOT SNDFILE_FOUND)
+	installPkg(libsndfile libsndfile1-dev)
+endif()
+
 if (NOT FT_FOUND)
-	installPkg(freetype)
+	installPkg(freetype FALSE)
 endif()
 
 # Directories to find the header files
