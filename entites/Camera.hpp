@@ -21,6 +21,9 @@ namespace cge {
 		Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window);
 		void		setPosition(const glm::vec3 &position);
 		void		setRotation(const glm::vec3 &rotation);
+		void		addPosition(const glm::vec3 &delta);
+		void		addRotation(const glm::vec3 &delta);
+		void		lookAt(const glm::vec3 &lookAtPos);
 		glm::vec3	getPosition() const;
 		glm::vec3	getRotation() const;
 		glm::mat4	getProjectionMatrix() const;

@@ -1,7 +1,7 @@
 
 #include "Player.hpp"
 
-bool Player::update(const cge::InputManager &input, unsigned lastFrameTime) {
+bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	_plaseBomb = false;
 	if (input.isKeyPressed(_up))
 		this->_n_moveDir.z = -1;
@@ -23,7 +23,7 @@ bool Player::update(const cge::InputManager &input, unsigned lastFrameTime) {
 		_pauseMenue = true;
 	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
 		Being::setDirection();
-	return (Being::update(input, lastFrameTime));
+	return (Being::update(input, shader, lastFrameTime));
 }
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)

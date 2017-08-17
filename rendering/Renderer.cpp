@@ -87,6 +87,9 @@ namespace cge {
 				Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())
 		);
 
+		/// Upload if the model has an animation or not
+		this->_shader.uploadBool(this->_shader.getUniformLocation("isAnimated"), entity.isAnimated());
+
 		/// Draw the triangles
 		glBindTexture(GL_TEXTURE_2D, entityModel.getTexture().getID());
 

@@ -9,6 +9,7 @@
 #include "../extras/Maths.hpp"
 #include "Wall.h"
 #include "../io/audio/AudioSource.hpp"
+#include "../extras/glmOstream.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
@@ -114,7 +115,7 @@ void LevelRunner::beingWorldInteraction() {
 	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
 
-		if (!(*being)->update(*_inputManager, _window.getFrameTime())) {
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime())) {
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
 			pos = (*being)->getPosition();
@@ -534,7 +535,9 @@ void LevelRunner::runlevelLoop() {
 		if (_state == levelState::PLAY)
 			bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
-		_camera.setPosition({plpos.x, 10, plpos.z});
+		_camera.setPosition({plpos.x, 10, plpos.z + 3});
+		_camera.lookAt(plpos);
+
 		_entShader.start();
 		_renderer.prepare();
 		_camera.update(_entShader);
@@ -550,7 +553,7 @@ void LevelRunner::runlevelLoop() {
 			_renderer.render(*_gate);
 		_entShader.end();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-		_textRenderer.DrawText("test", 5, 5);
+//		_textRenderer.DrawText("test", 5, 5);
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 	}

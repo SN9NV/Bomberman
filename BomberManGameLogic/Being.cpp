@@ -26,14 +26,15 @@ Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-bool Being::update(const cge::InputManager &input, unsigned lastFrameTime)
+bool Being::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime)
 {
-	(void) input;
+	cge::Entity::update(input, shader, lastFrameTime);
+
 	if (_alive)
 	{
 		if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
 			_n_moveDir = glm::normalize(_n_moveDir);
-		_position = _position + ((lastFrameTime * _speed) * _n_moveDir);
+		_position += (lastFrameTime * _speed) * _n_moveDir;
 		return (true);
 	}
 	else

@@ -100,6 +100,7 @@ set(SOURCE_FILES
 		rendering/TextRenderer.hpp
 		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
 		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
+		extras/tinygltfOstream.cpp extras/tinygltfOstream.hpp
 		)
 
 

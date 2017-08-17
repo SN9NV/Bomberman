@@ -1,5 +1,7 @@
 #include "Camera.hpp"
 #include "../extras/Maths.hpp"
+#include "../extras/glmOstream.hpp"
+#include <glm/gtx/matrix_decompose.hpp>
 
 std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs);
 
@@ -54,6 +56,17 @@ namespace cge
 		this->_needsUpdate = true;
 	}
 
+	void cge::Camera::addPosition(const glm::vec3 &delta) {
+		this->_position += delta;
+		this->_needsUpdate = true;
+	}
+
+	void cge::Camera::addRotation(const glm::vec3 &delta) {
+		this->_rotation += delta;
+		this->_needsUpdate = true;
+	}
+
+
 	glm::vec3 Camera::getPosition() const
 	{
 		return this->_position;
@@ -72,6 +85,15 @@ namespace cge
 	glm::mat4 Camera::getViewMatrix() const
 	{
 		return this->_viewMatrix;
+	}
+
+	void Camera::lookAt(const glm::vec3 &lookAtPos) {
+		glm::vec3 lookAt = this->_position - lookAtPos;
+
+		this->_rotation = {
+			glm::atan(lookAt.y / lookAt.z),
+			0, 0
+		};
 	}
 }
 
