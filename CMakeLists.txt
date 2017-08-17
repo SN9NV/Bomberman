@@ -6,9 +6,23 @@ set(CMAKE_CXX_STANDARD 14)
 
 if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui")
 	message(FATAL_ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
-			"You probably did not clone the project with --recursive. It is possible to recover "
-			"by calling \"git submodule update --init --recursive\"")
+			"You probably did not clone the project with --recursive.\n"
+			"Automatically cloning submodules...")
+	execute_process(COMMAND git submodule update --init --recursive)
 endif ()
+
+
+function(installPkg pkgApple pkgLinux)
+	if (APPLE)
+		execute_process(COMMAND brew install ${pkgApple})
+	elseif(LINUX AND ${pkgLinux})
+		execute_process(COMMAND sudo apt install ${pkgLinux})
+	endif()
+endfunction()
+
+if(UNIX AND NOT APPLE)
+	set(LINUX TRUE)
+endif()
 
 
 set(SOURCE_FILES
@@ -91,10 +105,22 @@ set(SOURCE_FILES
 find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
 
+if (NOT PKG_CONFIG_FOUND)
+	installPkg(pkg-config pkg-config)
+endif()
+
 # Find the dependencies for the project
 pkg_search_module(GLEW REQUIRED glew)
 pkg_search_module(GLM REQUIRED glm)
 #pkg_search_module(GLFW3	REQURIED glfw3)
+
+if (NOT GLEW_FOUND)
+	installPkg(glew libglew-dev)
+endif()
+
+if (NOT GLM_FOUND)
+	installPkg(glm FALSE)
+endif()
 
 # Directories to find the header files
 include_directories(
