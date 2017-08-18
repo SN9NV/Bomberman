@@ -30,8 +30,8 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_wi
 	_models.emplace("Balloon", cge::Model(resRoot+"Balloon.glb", resRoot+"BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot+"Gate.glb", resRoot+"GateDiffuseColor.png", this->_loader));
 
-	_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
-	_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->_player->setAnimationSpeed(2.6f);
 }

@@ -4,22 +4,38 @@
 cge::Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window) :
 		_position(position),
 		_rotation(rotation),
-		_projectionMatrix(glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
+		_projectionMatrix(
+				glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
 		_viewMatrix(1.0f),
 		_needsUpdate(true),
 		_track(nullptr),
 		_trackOffset(1.0f),
-		_trackOldPosition(0.0f)
-{
+		_trackOldPosition(0.0f) {
 
 }
 
 void cge::Camera::update() {
+	glm::vec3 trackingPosition;
+
+	if (this->_track != nullptr) {
+		trackingPosition = this->_track->getPosition();
+	}
+
+
+	if (this->_track != nullptr) {
+		this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, {0, 1, 0});
+	} else {
 		this->_viewMatrix = cge::Maths::createViewMatrix(*this);
+	}
+
+
+	if (this->_track != nullptr) {
+		this->_trackOldPosition = trackingPosition;
+	}
 }
 
 void cge::Camera::update(const cge::GLSLProgram &shader) {
-	glm::vec3	trackingPosition;
+	glm::vec3 trackingPosition;
 
 	if (this->_track != nullptr) {
 		trackingPosition = this->_track->getPosition();
@@ -28,7 +44,7 @@ void cge::Camera::update(const cge::GLSLProgram &shader) {
 	if (this->_needsUpdate || (this->_track != nullptr && this->_trackOldPosition != trackingPosition)) {
 
 		if (this->_track != nullptr) {
-			this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, { 0, 1, 0 });
+			this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, {0, 1, 0});
 		} else {
 			this->_viewMatrix = cge::Maths::createViewMatrix(*this);
 		}
@@ -85,7 +101,7 @@ glm::mat4 cge::Camera::getViewMatrix() const {
 }
 
 void cge::Camera::lookAt(const glm::vec3 &lookAtPos) {
-	this->_viewMatrix = glm::lookAt(this->_position, lookAtPos, { 0, 1, 0 });
+	this->_viewMatrix = glm::lookAt(this->_position, lookAtPos, {0, 1, 0});
 	this->_needsUpdate = true;
 }
 

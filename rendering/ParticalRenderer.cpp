@@ -253,3 +253,11 @@ void cge::ParticalRenderer::clearParticals() {
 	}
 
 }
+
+void cge::ParticalRenderer::addParticalTexture(cge::TextureAtlas texture, GLenum specFac, GLenum deffFac) {
+	auto find = _partiacals.find(texture.getID());
+	if (find != _partiacals.end()) {
+		find->second.specFac = specFac;
+		find->second.deffFac = deffFac;
+	}
+}
