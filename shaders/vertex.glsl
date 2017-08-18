@@ -19,7 +19,7 @@ uniform mat4	jointTransforms[MAX_JOINTS];
 uniform mat4	transformation;
 uniform mat4	view;
 
-const vec3 lightLocation = vec3(5.0, 5.0, 5.0);
+const vec3 lightLocation = vec3(0, 5.0, 0);
 
 void main() {
 	mat4 skinMatrix = mat4(1.0);
@@ -38,5 +38,5 @@ void main() {
 	fragmentNormal = (transform * vec4(vertexNormal, 0.0)).xyz;
 	fragmentUV = vertexUV;
 //	fragmentWeights = vertexWeights;
-	toLight = lightLocation - position.xyz;
+	toLight = normalize(lightLocation - position.xyz);
 }
