@@ -19,7 +19,6 @@ const std::vector<unsigned int> ind = {
 		0, 1, 3,
 		1, 2, 3
 };
-//static const int MAX_PARTICALS = 100000;
 
 cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) : plane(vert, ind, true),
 																	_shader(shader) {
@@ -98,15 +97,6 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 				inctenceData[index].nextTextureOff = partical.get_nextOff();
 				inctenceData[index].blend = partical.get_blend();
 				index++;
-				/*this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"),
-											 viewModelMatrix(partical, camera));
-
-				this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical.get_currOff());
-				this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical.get_nextOff());
-				this->_shader.uploadFloat(this->_shader.getUniformLocation("blend"), partical.get_blend());
-
-				glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, (void *) 0);
-				getGLError();*/
 			}
 			glBindBuffer(GL_ARRAY_BUFFER, _instanceVBO);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(s_InctenceData) * inctenceData.size(), inctenceData.data(),
@@ -171,50 +161,24 @@ void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
 	}
 }
 
-void cge::ParticalRenderer::updateRender(cge::Camera &camera, unsigned lastframe) {/*
-	camera.update();
-	_shader.start();
-	prepare();
-	glBindVertexArray(plane.getVao());
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	for (auto &particalList : _partiacals)
-	{
-		glBindTexture(GL_TEXTURE_2D, particalList.first);
-		for (std::vector<cge::Partical>::iterator partical = particalList.second.begin(); partical != particalList.second.end();) {
-			if (partical->update(lastframe, camera)) {
-				this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("modelview"),
-											 viewModelMatrix(*partical, camera));
-				this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
-											 camera.getProjectionMatrix());
-				this->_shader.uploadvec2d(this->_shader.getUniformLocation("currTextureOff"), partical->get_currOff());
-				this->_shader.uploadvec2d(this->_shader.getUniformLocation("nextTextureOff"), partical->get_nextOff());
-				this->_shader.uploadFloat(this->_shader.getUniformLocation("blend"), partical->get_blend());
-				this->_shader.uploadFloat(this->_shader.getUniformLocation("row"), partical->getTexture().getRow());
-				glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, 0);
-				getGLError();
-				partical++;
-			}else{
-				particalList.second.erase(partical);
-			}
-		}
-	}
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindVertexArray(0);
-	_shader.end();*/
+void cge::ParticalRenderer::updateRender(cge::Camera &camera, unsigned lastframe) {
 	update(lastframe, camera);
 	render(camera);
 }
 
 void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positionTolorence,
 										   glm::vec3 verlocity, glm::vec3 verlocityTolorence,
-										   float gravityeffect, float gravertyTolerance, float lifetime,
-										   float lifetimeTolorence, float scale, float scaleTolorence, int numParticals,
+										   float gravityeffect, float gravertyTolerance,
+										   float lifetime, float lifetimeTolorence,
+										   float scale, float scaleTolorence,
+										   float rotation, float rotationTolorence,
+										   float spin, float spinTolorence,
+										   size_t numParticals,
 										   TextureAtlas texture, GLenum specFac, GLenum deffFac) {
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
+	/*std::random_device rd;
+	std::mt19937 gen(rd());*/
+	std::default_random_engine gen;
 	std::uniform_real_distribution<float> dispx(position.x - positionTolorence.x, position.x + positionTolorence.x);
 	std::uniform_real_distribution<float> dispy(position.y - positionTolorence.y, position.y + positionTolorence.y);
 	std::uniform_real_distribution<float> dispz(position.z - positionTolorence.z, position.z + positionTolorence.z);
@@ -225,8 +189,23 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 	std::uniform_real_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
 	std::uniform_real_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
 	std::uniform_real_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::uniform_real_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::uniform_real_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);
 
-	for (int i = 0; i < numParticals; ++i) {
+	/*std::normal_distribution<float> dispx(position.x - positionTolorence.x, position.x + positionTolorence.x);
+	std::normal_distribution<float> dispy(position.y - positionTolorence.y, position.y + positionTolorence.y);
+	std::normal_distribution<float> dispz(position.z - positionTolorence.z, position.z + positionTolorence.z);
+	std::normal_distribution<float> disvx(verlocity.x - verlocityTolorence.x, verlocity.x + verlocityTolorence.x);
+	std::normal_distribution<float> disvy(verlocity.y - verlocityTolorence.y, verlocity.y + verlocityTolorence.y);
+	std::normal_distribution<float> disvz(verlocity.z - verlocityTolorence.z, verlocity.z + verlocityTolorence.z);
+	gravertyTolerance = (gravertyTolerance < 0) ? 0 : ((gravertyTolerance > 1) ? 1 : gravertyTolerance);
+	std::normal_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
+	std::normal_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
+	std::normal_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::normal_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::normal_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);*/
+
+	for (size_t i = 0; i < numParticals; ++i) {
 		position.x = dispx(gen);
 		position.y = dispy(gen);
 		position.z = dispz(gen);
@@ -238,8 +217,10 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 		gravityeffect = disgrv(gen);
 		lifetime = dislife(gen);
 		scale = disscale(gen);
-
-		addPartical(Partical(position, verlocity, gravityeffect, lifetime, scale, texture), specFac, deffFac);
+		rotation = disrot(gen);
+		spin = disspin(gen);
+		addPartical(Partical(position, verlocity, gravityeffect, lifetime, scale, rotation, spin, texture), specFac,
+					deffFac);
 
 	}
 
@@ -260,6 +241,15 @@ glm::mat4 cge::ParticalRenderer::viewModelMatrix(cge::Partical partical, Camera 
 	model[2][0] = view[0][2];
 	model[2][1] = view[1][2];
 	model[2][2] = view[2][2];
+	model = glm::rotate(model, partical.getRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::scale(model, glm::vec3(partical.getScale(), partical.getScale(), partical.getScale()));
 	return glm::mat4(view * model);
+}
+
+void cge::ParticalRenderer::clearParticals() {
+	for (auto &pstruct : _partiacals) {
+		pstruct.second.partical.clear();
+		pstruct.second.partical.resize(0);
+	}
+
 }

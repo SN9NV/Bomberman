@@ -43,6 +43,7 @@ set(SOURCE_FILES
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
 		main.cpp
+#		Testmain.cpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
 		entites/Entity.cpp entites/Entity.hpp
@@ -106,7 +107,14 @@ set(SOURCE_FILES
 		rendering/TextRenderer.hpp
 		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
 		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
-		gui/CustomButton.cpp gui/CustomButton.hpp extras/SavedGame.cpp extras/SavedGame.hpp io/settings/Settings.cpp io/settings/Settings.hpp)
+		gui/CustomButton.cpp
+		gui/CustomButton.hpp
+		extras/SavedGame.cpp
+		extras/SavedGame.hpp
+		io/settings/Settings.cpp
+		io/settings/Settings.hpp
+		extras/tinygltfOstream.cpp
+		extras/tinygltfOstream.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

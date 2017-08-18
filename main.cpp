@@ -58,8 +58,7 @@ int main() {
 			new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
 	};
 
-	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							loader));
+	BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
 	//player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
@@ -73,7 +72,7 @@ int main() {
 					menuSound->setPlaying(false);
 					levelSounds[currMap]->setLooping(true);
 					levelSounds[currMap]->setPlaying();
-					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					state = levelRunner->runLevel(maps[currMap]);
 					levelSounds[currMap]->setPlaying(false);
 					if (state == levelState::FAIL_MAP_LOAD) {
@@ -101,7 +100,7 @@ int main() {
 				menuSound->setPlaying(false);
 				gameState = cge::GameState::PLAY_GAME;
 				player->setPauseMenue(false);
-				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();
 				levelSounds[currMap]->setLooping(false);
 				levelSounds[currMap]->setPlaying();

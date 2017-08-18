@@ -43,7 +43,7 @@ int get_up() const;
 	void addLives(int lives);
 	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed);
 	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitbox, float speed);
-	bool update(const cge::InputManager &input, unsigned lastFrameTime);
+	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 	int loseLife();
 
 	int getScore() const;

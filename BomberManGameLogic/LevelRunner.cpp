@@ -10,44 +10,30 @@
 #include "Wall.h"
 #include "../io/audio/AudioSource.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
-						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
-																				  _player(_player),
-																				  _gate(nullptr),
-																				  _window(_window),
-																				  _entShader("../shaders/vertex.glsl",
-																							 "../shaders/fragment.glsl"),
-																				  _partShader(
-																						  "../shaders/particalVertex.glsl",
-																						  "../shaders/particalFragment.glsl"),
-																				  _renderer(_entShader),
-																				  _camera(glm::vec3(0.0f, 5.0f, 0.0f),
-																						  glm::vec3(1.5f, 0.0f, 0.0f),
-																						  _window),
-																				  _particalRenderer(_partShader) {
-	_inputManager = inputManager;
+LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager) :
+		_loader(_loader),
+		_player(_player),
+		_gate(nullptr),
+		_window(_window),
+		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
+		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
+		_renderer(_entShader),
+		_camera({ 0.0f, 5.0f, 0.0f }, { 1.5f, 0.0f, 0.0f }, _window),
+		_particalRenderer(_partShader),
+		_inputManager(inputManager)
+{
+	const std::string resRoot = "resources/models/";
+	_models.emplace("Wall", cge::Model(resRoot+"Wall.glb", resRoot+"SolidWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot+"DestructWall.glb", resRoot+"DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("Bomb", cge::Model(resRoot+"Bomb.glb", resRoot+"BombDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot+"Bomber.glb", resRoot+"BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Balloon", cge::Model(resRoot+"Balloon.glb", resRoot+"BalloonDiffuseColor.png", this->_loader));
+	_models.emplace("Gate", cge::Model(resRoot+"Gate.glb", resRoot+"GateDiffuseColor.png", this->_loader));
 
-	_models.emplace("Wall",
-					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("DestructWall", cge::Model("../resources/models/DestructWall.glb",
-											   "../resources/models/DestructWallDiffuseColor.png", this->_loader));
-	_models.emplace("Bomb",
-					cge::Model("../resources/models/Bomb.glb", "../resources/models/BombDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Bomber",
-					cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Balloon",
-					cge::Model("../resources/models/Balloon.glb", "../resources/models/BalloonDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Gate",
-					cge::Model("../resources/models/Gate.glb", "../resources/models/GateDiffuseColor.png",
-							   this->_loader));
-	_loader.loadTextureAtlas(
-			"../resources/TextureAtlas/FireBallAtlas.png", 4);
-	_loader.loadTextureAtlas(
-			"../resources/Textures/ConcreatFragment.png", 1);
+	_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
+	_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1);
+
+	this->_player->setAnimationSpeed(2.6f);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -70,7 +56,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y - 1][x]->getPosition().z - pos.z));
+		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
@@ -79,7 +65,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y + 1][x]->getPosition().z - pos.z));
+		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
@@ -88,7 +74,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y][x - 1]->getPosition().x - pos.x));
+		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
@@ -97,7 +83,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y][x + 1]->getPosition().x - pos.x));
+		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
@@ -118,7 +104,7 @@ void LevelRunner::beingWorldInteraction() {
 	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
 
-		if (!(*being)->update(*_inputManager, _window.getFrameTime())) {
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime())) {
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
 			pos = (*being)->getPosition();
@@ -199,7 +185,7 @@ void LevelRunner::bombWorldInteraction() {
 	Bomb *tmpBomb;
 	glm::vec3 bombPos;
 	glm::vec3 beingPos;
-	std::vector<Bomb *>::iterator bomb = _bombs.begin();
+	auto bomb = _bombs.begin();
 	std::vector<Being *>::iterator being;
 
 	while (bomb != _bombs.end()) {
@@ -211,65 +197,52 @@ void LevelRunner::bombWorldInteraction() {
 			while (being != _beings.end() && !found) {
 				if ((*being)->checkBombDeterNation((*bomb)))
 					found = true;
-				being++;
+				else
+					being++;
 			}
+			checkGateDamage(bombPos, *being);
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
-			_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z}, {0.45, .5, 0.45},
-											 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1, 0.01,
-											 1000, _loader.loadTextureAtlas(
-							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+			fireEffect({bombPos.x, bombPos.y + .5,bombPos.z}, 1000);
 			i = 0;
 			while (++i < (*bomb)->getBombradius()) {
 				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
-
+					checkGateDamage({bombPos.x, bombPos.y, bombPos.z + i}, *being);
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
 						sheild = sheild | 0b00000001;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, {0.49, .5, 0.49},
-														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0, 1000, 1000, 0.1,
-														 0.01, 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, 1000);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
-
 				}
 				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0) {
-
+					checkGateDamage({bombPos.x, bombPos.y, bombPos.z - i}, *being);
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
 						sheild = sheild | 0b00000010;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, {0.49, .5, 0.49},
-														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
-														 0.01, 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, 1000);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
 				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0) {
+					checkGateDamage({bombPos.x + i, bombPos.y, bombPos.z}, *being);
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
 						sheild = sheild | 0b00000100;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, {0.49, .5, 0.49},
-														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
-														 0.01, 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+						fireEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, 1000);
 					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
 				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0) {
-
+					checkGateDamage({bombPos.x - i, bombPos.y, bombPos.z}, *being);
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
 						sheild = sheild | 0b00001000;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x - i, bombPos.y + .5, bombPos.z},  {0.49, .5, 0.49},
-														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
-														 0.01, 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+						fireEffect({bombPos.x - i, bombPos.y + .5, bombPos.z}, 1000);
 					}
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
 			}
-			_level[bombPos.z][bombPos.x] = NULL;
+			_level[bombPos.z][bombPos.x] = nullptr;
 			tmpBomb = (*bomb);
 			delete (tmpBomb);
 			_bombs.erase(bomb);
@@ -280,7 +253,7 @@ void LevelRunner::bombWorldInteraction() {
 }
 
 void LevelRunner::loadMapEntitys() {
-	srand((unsigned int) (time(NULL)));
+	srand((unsigned int) (time(nullptr)));
 	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
 
@@ -298,12 +271,13 @@ void LevelRunner::loadMapEntitys() {
 					break;
 				case 'p':
 					_player->setPosition({j, 0, i});
-					_beings.push_back(this->_player);
+					_beings.emplace_back(this->_player);
 					_map[i][j] = '.';
 					break;
 				case 'd':
 					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
-						tmpEnt = new DestructWall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+						float rotation = (rand() % 4) * 90;
+						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, 0.5f);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
@@ -334,19 +308,13 @@ void LevelRunner::loadMapEntitys() {
 bool LevelRunner::checkWallBlast(int x, int y) {
 	cge::Model *tmpMdl;
 
-	if (_level[y][x] != NULL) {
-		if (dynamic_cast<DestructWall *>(_level[y][x]) != NULL) {
+	if (_level[y][x] != nullptr) {
+		if (dynamic_cast<DestructWall *>(_level[y][x]) != nullptr) {
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
-			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
-											 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1, 0.01,
-											 100, _loader.loadTextureAtlas(
-							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
-			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
-											 {0, 0, 0.00}, {0, 0, 0}, 0.5, 0.1, 100, 100, 0.1, 0.01,
-											 1000, _loader.loadTextureAtlas(
-							"../resources/Textures/ConcreatFragment.png", 1),GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			wallBrakeEffect({x, 0, y}, 1000);
+			fireEffect({x, 0, y}, 100);
 			srand((unsigned int) time(NULL) + _dwalls);
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
@@ -369,6 +337,8 @@ void LevelRunner::endLevel() {
 	while (endTime < 1000) {
 		_entShader.start();
 		_renderer.prepare();
+		_camera.setTrackEntity(*_player);
+		_camera.setTrackOffset({ 0, 5, 5 });
 		_camera.update(_entShader);
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive())
@@ -388,10 +358,10 @@ void LevelRunner::endLevel() {
 		_window.swapBuffers();
 		endTime += _window.getFrameTime();
 	}
-	cleanlevel();
+	cleanLevel();
 }
 
-void LevelRunner::loadMapFromFile(std::string path) {
+void LevelRunner::loadMapFromFile(const std::string &path) {
 	//std::vector<std::string> map;
 	std::ifstream ifs(path);
 	std::string line;
@@ -408,23 +378,25 @@ void LevelRunner::loadMapFromFile(std::string path) {
 		if (!std::regex_match(enemies, regEnemies)) {
 			_state = levelState::FAIL_MAP_LOAD;
 			return;
-		} else {
-			if (std::regex_match(enemies, match, regEnemies)) {
-				for (size_t i = 1; i < match.size(); ++i) {
-					std::ssub_match sub_match = match[i];
-					std::string piece = sub_match.str();
-					if (piece == "balloon:") {
-						sub_match = match[++i];
-						_balloons = stoi(sub_match.str());
-					}
-					if (piece == "onil:") {
-						sub_match = match[++i];
-						_onil = stoi(sub_match.str());
-					}
+		}
+
+		if (std::regex_match(enemies, match, regEnemies)) {
+			for (size_t i = 1; i < match.size(); ++i) {
+				std::ssub_match sub_match = match[i];
+				std::string piece = sub_match.str();
+				if (piece == "balloon:") {
+					sub_match = match[++i];
+					_balloons = stoi(sub_match.str());
+				}
+				if (piece == "onil:") {
+					sub_match = match[++i];
+					_onil = stoi(sub_match.str());
 				}
 			}
-			std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
 		}
+
+		std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
+
 		do {
 			ifs >> line;
 			_map.push_back(line);
@@ -469,27 +441,28 @@ int LevelRunner::getState() const {
 	return _state;
 }
 
-int LevelRunner::runLevel(std::string path) {
+int LevelRunner::runLevel(const std::string &path) {
 	if (_state == levelState::PAUSE)
-		cleanlevel();
+		cleanLevel();
 	loadMapFromFile(path);
 	if (_state == levelState::FAIL_MAP_LOAD)
 		return (_state);
+	_levelTime = 200000;
 	_gate = nullptr;
 	loadMapEntitys();
 	_state = levelState::PLAY;
-	runlevelLoop();
+	runLevelLoop();
 	if (_state != levelState::PAUSE)
 		endLevel();
-	std::cout << "about to eixit leve with state " << _state << std::endl;
 	return _state;
 }
 
-void LevelRunner::cleanlevel() {
+void LevelRunner::cleanLevel() {
 	std::vector<Being *>::iterator being;
 	bool found;
 
 	_player->setPlaseBomb(false);
+	_particalRenderer.clearParticals();
 	for (auto bomb : _bombs) {
 		found = false;
 		being = _beings.begin();
@@ -508,33 +481,34 @@ void LevelRunner::cleanlevel() {
 	}
 	_level.clear();
 	_bombs.clear();
-	for (auto &being : _beings)
-		if (being != _player)
-			delete (being);
+	for (auto &beingIter : _beings)
+		if (beingIter != _player)
+			delete beingIter;
 	_beings.clear();
 	if (_gate != nullptr) {
 		delete (_gate);
 		_gate = nullptr;
 	}
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
 }
 
 int LevelRunner::resumeLevel() {
 	if (_state == levelState::PAUSE) {
 		_state = levelState::PLAY;
-		runlevelLoop();
+		runLevelLoop();
 		if (_state != levelState::PAUSE)
 			endLevel();
-		std::cout << "about to eixit leve with state " << _state << std::endl;
 	}
 	return _state;
 }
 
-void LevelRunner::runlevelLoop() {
+void LevelRunner::runLevelLoop() {
+	_inputManager->setInputCallBacks();
 	while (_state == levelState::PLAY) {
-
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		_renderer.prepare();
 		if (_inputManager->isExitCase() || _player->getLives() <= 0) {
 			_state = levelState::WANTS_QUIT;
 		}
@@ -547,15 +521,29 @@ void LevelRunner::runlevelLoop() {
 			bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
 		_camera.setPosition({plpos.x, 10, plpos.z});
+		if (_gate != nullptr) {
+			if (_gate->isDamage()) {
+				cge::Model *tmp;
+				if ((tmp = getModel("Balloon")) != nullptr) {
+					_beings.push_back(
+							new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, 0.5f));
+				}
+			}
+			_gate->update();
+		}
 
 		_entShader.start();
-		//glDisable(GL_BLEND);
-		//glEnable(GL_DEPTH_TEST);
+		_camera.setTrackEntity(*_player);
+		_camera.setTrackOffset({ 0, 5, 5 });
+//		_camera.setPosition({plpos.x + 3, 10, plpos.z + 3});
+//		_camera.lookAt(plpos);
+
+		_entShader.start();
 		_renderer.prepare();
 		_camera.update(_entShader);
 		for (auto &vecit : _level) {
 			for (auto &entit : vecit) {
-				if (entit)
+				if (entit != nullptr)
 					_renderer.render(*entit);
 			}
 		}
@@ -565,12 +553,46 @@ void LevelRunner::runlevelLoop() {
 			_renderer.render(*_gate);
 		_entShader.end();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-		//_textRenderer.DrawText("test", 5, 5);
+//		_textRenderer.DrawText("test", 5, 5);
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
+		if ((_levelTime <= _window.getFrameTime()))
+			_state = levelState::FAIL;
+		else
+			_levelTime -= _window.getFrameTime();
 	}
-	//todo: fix nasty hack
-	while (_inputManager->isKeyPressed(_player->get_menue())) {
+//todo: fix nasty hack
+	while (_inputManager->
+			isKeyPressed(_player->get_menue())
+		   || _inputManager->isKeyPressed(_player->get_bomb())
+		   || _inputManager->isKeyPressed(_player->get_up())
+		   || _inputManager->isKeyPressed(_player->get_down())
+		   || _inputManager->isKeyPressed(_player->get_left())
+		   || _inputManager->isKeyPressed(_player->get_right())
+		   || _inputManager->isKeyPressed(_player->get_special())) {
 		_inputManager->pollKeyEvnt();
+
 	}
+}
+
+void LevelRunner::wallBrakeEffect(glm::vec3 position, size_t numParticals) {
+	_particalRenderer.partivalEffect(position, {0.5, .5, 0.5},
+									 {0, 0, 0.00}, {0, 0, 0}, 0.5, 0.1, 250, 100, 0.1, 0.01, 0.1, 1, 0.001, 0.001,
+									 numParticals, _loader.loadTextureAtlas(
+					"../resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void LevelRunner::fireEffect(glm::vec3 position, size_t numParticals) {
+	_particalRenderer.partivalEffect(position, {0.5, .5, 0.5},
+									 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 500, 500, 0.1, 0.01, 0.1, 1, 0.00001,
+									 0.0001,
+									 numParticals, _loader.loadTextureAtlas(
+					"../resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+
+}
+
+void LevelRunner::checkGateDamage(glm::vec3 position, Being *being) {
+	if (being == _player && _gate != nullptr && _gate->getPosition().x == position.x &&
+		_gate->getPosition().z == position.z)
+		_gate->damage(8);
 }

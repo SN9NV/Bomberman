@@ -5,7 +5,6 @@ namespace cge {
 	InputManager::InputManager(const cge::Window& win) :
 		_window(win)
 	{
-
 	}
 
 	void InputManager::pressKey(int keysym) {
@@ -31,7 +30,6 @@ namespace cge {
 	}
 
 	void InputManager::pollKeyEvnt() {
-		this->setInputCallBacks();
 		glfwPollEvents();
 	}
 

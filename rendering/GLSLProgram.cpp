@@ -195,4 +195,8 @@ namespace cge {
 			std::cerr << "Could not bind attribute: " << attrName << std::endl;
 		return (attribute);
 	}
+
+	bool GLSLProgram::isInUse() const {
+		return this->_isInUse;
+	}
 }

@@ -26,3 +26,9 @@ std::ostream &operator<<(std::ostream &out, const glm::mat4 &rhs) {
 
 	return out;
 }
+
+std::ostream &operator<<(std::ostream &out, const glm::quat &rhs) {
+	out << "[ " << rhs.x << ", " << rhs.y << ", " << rhs.z << ", " << rhs.w << " ]";
+
+	return out;
+}

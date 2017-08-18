@@ -45,6 +45,7 @@ private:
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
 	cge::TextRenderer _textRenderer;
+	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;
 	int _balloons;
@@ -59,17 +60,20 @@ private:
 	void bumpBeing(Being *);
 	void endLevel();
 	bool checkMapWall();
-	void cleanlevel();
-    void runlevelLoop();
+	void runLevelLoop();
+	void fireEffect(glm::vec3 position, size_t numParticals);
+	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
+	void checkGateDamage(glm::vec3 position, Being *being);
+	void cleanLevel();
 
 
 public:
 	int getState() const;
 	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager);
-	int runLevel(std::string path);
+	int runLevel(const std::string &path);
     int resumeLevel();
 //todo: move loadMapfrom file to private
-	void loadMapFromFile(std::string path);
+	void loadMapFromFile(const std::string &path);
 };
 
 

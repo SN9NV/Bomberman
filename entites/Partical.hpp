@@ -21,6 +21,8 @@ namespace cge {
 		float _scale;
 		float _elapsedtime;
 		float _distCamSqur;
+		float _rotation;
+		float _spin;
 		TextureAtlas _texture;
 		glm::vec2 _currOff;
 		glm::vec2 _nextOff;
@@ -29,15 +31,17 @@ namespace cge {
 	public:
 		virtual ~Partical();
 
-		Partical(const glm::vec3 &_position, const glm::vec3 &_verlocity, float _gravityeffect, float _lifrtime,
-				 float _scale, TextureAtlas &texture);
+		Partical(const glm::vec3 &position, const glm::vec3 &verlocity, float gravityeffect, float lifrtime,
+				 float scale, float rotation, float spin, TextureAtlas &texture);
 
 		Partical(Partical const &cpy);
 
-		//Partical();
+		Partical() = default;
 		bool update(unsigned lastFrameTime, Camera camera);
 
 		float getScale() const;
+
+		float getRotation() const;
 
 		const glm::vec3 &getPosition() const;
 

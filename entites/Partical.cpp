@@ -17,12 +17,20 @@ namespace cge {
 
 	}
 
-	Partical::Partical(const glm::vec3 &_position, const glm::vec3 &_verlocity, float _gravityeffect, float _lifrtime,
-					   float _scale, TextureAtlas &texture) : _position(_position), _verlocity(_verlocity),
-															  _gravityeffect(_gravityeffect),
-															  _lifrtime(_lifrtime), _scale(_scale), _elapsedtime(0),_distCamSqur(0),
-															  _texture(texture), _currOff({0, 0}), _nextOff({1, 1}),
-															  _blend(1) {}
+	Partical::Partical(const glm::vec3 &position, const glm::vec3 &verlocity, float gravityeffect, float lifrtime,
+					   float scale, float rotation, float spin, TextureAtlas &texture) : _position(position),
+																						 _verlocity(verlocity),
+																						 _gravityeffect(gravityeffect),
+																						 _lifrtime(lifrtime),
+																						 _scale(scale),
+																						 _rotation(rotation),
+																						 _spin(spin),
+																						 _elapsedtime(0),
+																						 _distCamSqur(0),
+																						 _texture(texture),
+																						 _currOff({0, 0}),
+																						 _nextOff({1, 1}),
+																						 _blend(1) {}
 
 	bool Partical::update(unsigned lastFrameTime, Camera camera) {
 		float progression;
@@ -30,6 +38,7 @@ namespace cge {
 
 		_verlocity.y -= (GRAVE * _gravityeffect * lastFrameTime);
 		_position += Maths::scaleVec3(_scale, _verlocity);
+		_rotation += lastFrameTime * _spin;
 		_elapsedtime += lastFrameTime;
 		_distCamSqur = Maths::vec3Len(camera.getPosition() - _position);
 		progression = _elapsedtime / _lifrtime * _texture.getStages();
@@ -69,15 +78,19 @@ namespace cge {
 		return _blend;
 	}
 
-	Partical::Partical(Partical const &cpy) : _position(cpy._position), _verlocity(cpy._verlocity),
+	Partical::Partical(Partical const &cpy) : _position(cpy._position),
+											  _verlocity(cpy._verlocity),
 											  _gravityeffect(cpy._gravityeffect),
-											  _lifrtime(cpy._lifrtime), _scale(cpy._scale),
+											  _lifrtime(cpy._lifrtime),
+											  _scale(cpy._scale),
+											  _rotation(cpy._rotation),
+											  _spin(cpy._spin),
 											  _elapsedtime(cpy._elapsedtime),
 											  _distCamSqur(cpy._distCamSqur),
-											  _texture(cpy._texture), _currOff(cpy._currOff), _nextOff(cpy._nextOff),
-											  _blend(cpy._blend) {
-
-	}
+											  _texture(cpy._texture),
+											  _currOff(cpy._currOff),
+											  _nextOff(cpy._nextOff),
+											  _blend(cpy._blend) {}
 
 	Partical &Partical::operator=(Partical const &cpy) {
 		_position = (cpy._position);
@@ -96,5 +109,9 @@ namespace cge {
 
 	float Partical::getDistCamSqur() const {
 		return _distCamSqur;
+	}
+
+	float Partical::getRotation() const {
+		return _rotation;
 	}
 }
