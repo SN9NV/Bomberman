@@ -27,11 +27,11 @@ bool Player::update(const cge::InputManager &input, unsigned lastFrameTime) {
 }
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
-		: Being(position, rotation, scale, model, speed), _lives(3) {}
+		: Being(position, rotation, scale, model, speed), _lives(3), _score(0) {}
 
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
 			   float speed)
-		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false) {}
+		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false), _score(0) {}
 
 int Player::getLives() const {
 	return _lives;
@@ -91,6 +91,22 @@ int Player::get_special() const {
 
 int Player::get_menue() const {
 	return _menue;
+}
+
+int Player::getScore() const {
+	return (this->_score);
+}
+
+void Player::setScore(int score) {
+	this->_score = score;
+}
+
+void Player::addScore(int addition) {
+	this->_score += addition;
+}
+
+void Player::subScore(int subtraction) {
+	this->_score -= subtraction;
 }
 
 

@@ -36,8 +36,9 @@ void cge::Saves::SavedGame::setCreationTime(const std::string &_creationTime) {
 	SavedGame::_creationTime = _creationTime;
 }
 
-cge::Saves::SavedGame::SavedGame() {
-
+cge::Saves::SavedGame::SavedGame(int slot) {
+	this->_available = false;
+	this->_fileName = "../resources/Saves/Slot" + std::to_string(slot) + ".save";
 }
 
 cge::Saves::SavedGame::~SavedGame() {
