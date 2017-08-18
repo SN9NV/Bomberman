@@ -17,6 +17,8 @@
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
 #include "gui/GuiManager.hpp"
+#include "io/audio/AudioSource.hpp"
+#include "io/audio/AudioDevice.hpp"
 #include <GLFW/glfw3.h>
 
 #include <nanogui/nanogui.h>
@@ -28,15 +30,17 @@ static constexpr unsigned WIDTH = 1024;
 
 int main() {
 	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GameState gameState = cge::GameState::PLAY_MENU;
-	cge::GameState prevGameState = gameState;
-	cge::InputManager inputManager(window);
-	cge::Loader loader;
-	Player *player;
-	cge::Model BomberMan;
-	LevelRunner *levelRunner;
+	cge::GameState		gameState = cge::GameState::PLAY_MENU;
+	cge::GameState		prevGameState = gameState;
+	cge::InputManager	inputManager(window);
+	cge::Loader			loader;
+	Player				*player;
+	cge::Model			BomberMan;
+	LevelRunner			*levelRunner;
+	cge::Audio::Device	defaultAudioDevice;
 
 	int currMap = 0;
+	int noOfMaps = 3;
 	std::vector<std::string> maps = {
 			"../resources/Maps/Map1",
 			"../resources/Maps/Map2",
@@ -63,12 +67,10 @@ int main() {
 					}
 					if (state == levelState::PAUSE)
 						gameState = cge::PLAY_PAUSE;
-					if (state == levelState::COMPLEAT) {
+					if (state == levelState::COMPLEAT && currMap < maps.size()) {
 						currMap++;
-						if (currMap > maps.size()) {
-							gameState = cge::GameState::PLAY_MENU;
-							currMap = 0;
-						}
+					} else {
+						gameState = cge::GameState::PLAY_MENU;
 					}
 					std::cout << "level exit state " << state << std::endl;
 					std::cout << "Player Lives: " << player->getLives() << std::endl;

@@ -4,7 +4,7 @@
 
 #include <random>
 #include "ParticalRenderer.hpp"
-#include "../error_handling/glError.hpp"
+#include "../error_handling/printError.hpp"
 #include "../extras/Maths.hpp"
 
 const std::vector<float> vert = {

@@ -8,6 +8,7 @@
 #include "Balloon.hpp"
 #include "../extras/Maths.hpp"
 #include "Wall.h"
+#include "../io/audio/AudioSource.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
@@ -529,6 +530,10 @@ int LevelRunner::resumeLevel() {
 }
 
 void LevelRunner::runlevelLoop() {
+	cge::Audio::Source	gameMusic("resources/audio/MainTheme.ogg", this->_loader);
+	gameMusic.setLooping(true);
+	gameMusic.setPlaying();
+
 	while (_state == levelState::PLAY) {
 
 
@@ -563,8 +568,8 @@ void LevelRunner::runlevelLoop() {
 		if (_gate != nullptr)
 			_renderer.render(*_gate);
 		_entShader.end();
-		_particalRenderer.prepare();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
+		//_textRenderer.DrawText("test", 5, 5);
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 	}

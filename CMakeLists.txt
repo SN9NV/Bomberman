@@ -4,11 +4,31 @@ project(Bomberman)
 set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
+# These directories get symlinked into the build directory after compilation
+set(RESOURCE_DIRS
+		shaders
+		resources
+		)
+
 if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui")
-	message(FATAL_ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
-			"You probably did not clone the project with --recursive. It is possible to recover "
-			"by calling \"git submodule update --init --recursive\"")
+	message(ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
+			"You probably did not clone the project with --recursive.\n"
+			"Automatically cloning submodules...")
+	execute_process(COMMAND git submodule update --init --recursive)
 endif ()
+
+
+function(installPkg pkgApple pkgLinux)
+	if (APPLE AND ${pkgApple})
+		execute_process(COMMAND brew install ${pkgApple})
+	elseif(LINUX AND ${pkgLinux})
+		execute_process(COMMAND sudo apt install ${pkgLinux})
+	endif()
+endfunction()
+
+if(UNIX AND NOT APPLE)
+	set(LINUX TRUE)
+endif()
 
 
 set(SOURCE_FILES
@@ -37,7 +57,7 @@ set(SOURCE_FILES
 		loaders/Loader.cpp loaders/Loader.hpp
 		loaders/picoPNG.cpp loaders/picoPNG.hpp
 		extras/glmOstream.cpp extras/glmOstream.hpp
-		error_handling/glError.cpp error_handling/glError.hpp
+		error_handling/printError.cpp error_handling/printError.hpp
         BomberManGameLogic/Being.cpp
 		BomberManGameLogic/Being.h
 		BomberManGameLogic/Player.cpp
@@ -84,22 +104,46 @@ set(SOURCE_FILES
 		rendering/SpriteRenderer.hpp
 		rendering/TextRenderer.cpp
 		rendering/TextRenderer.hpp
+		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
+		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
 		)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
+find_package(OpenAL REQUIRED)	#> Linux => libopenal-dev
 find_package(PkgConfig REQUIRED)
 
-# Find the dependencies for the project
-pkg_search_module(GLEW REQUIRED glew)
-pkg_search_module(GLM REQUIRED glm)
-#pkg_search_module(GLFW3	REQURIED glfw3)
+if (NOT PKG_CONFIG_FOUND)
+	installPkg(pkg-config pkg-config)
+endif()
+
+# Find the dependencies for the project				Mac				Linux
+pkg_search_module(GLEW		REQUIRED glew)			#> 	glew			libglew-dev
+pkg_search_module(GLM		REQUIRED glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
+#pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
+pkg_search_module(SNDFILE	REQURIED sndfile)		#> 	libsndfile		libsndfile1-dev
+pkg_search_module(FT		REQUIRED freetype2)
+
+if (NOT GLEW_FOUND)
+	installPkg(glew libglew-dev)
+endif()
+
+if (NOT GLM_FOUND)
+	installPkg(glm FALSE)
+endif()
+
+if (NOT SNDFILE_FOUND)
+	installPkg(libsndfile libsndfile1-dev)
+endif()
+
+if (NOT FT_FOUND)
+	installPkg(freetype FALSE)
+endif()
 
 # Directories to find the header files
 include_directories(
 		includes
-		${PROJECT_SOURCE_DIR}/dependencies/fontstash/src
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/include
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/nanovg/src
@@ -107,6 +151,9 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/ext/glfw/include
 		${GLEW_INCLUDE_DIRS}
 		${GLM_INCLUDE_DIRS}
+		${FT_INCLUDE_DIRS}
+		${OPENAL_INCLUDE_DIR}
+		${SNDFILE_INCLUDE_DIRS}
 )
 
 # Directories to find the libraries
@@ -114,6 +161,8 @@ link_directories(
 		${PROJECT_SOURCE_DIR}/dependencies/nanogui/build
 		${GLEW_LIBRARY_DIRS}
 		${GLM_LIBRARY_DIRS}
+		${FT_LIBRARY_DIRS}
+		${SNDFILE_LIBRARY_DIRS}
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -121,9 +170,12 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # Link executable with libraries
 target_link_libraries(${PROJECT_NAME}
 		${OPENGL_LIBRARIES}
+		${OPENAL_LIBRARY}
 		${GLEW_LIBRARIES}
 		${GLM_LIBRARIES}
+		${SNDFILE_LIBRARIES}
 		nanogui
+		${FT_LIBRARIES}
 		)
 
 if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/dependencies/nanogui/build")
@@ -135,3 +187,13 @@ if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/dependencies/nanogui/build")
 			WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/dependencies/nanogui/
 	)
 endif ()
+
+# Function to symbolically link the resources into the build directory
+#	Won't work on Windows
+foreach(RESOURCE_DIR ${RESOURCE_DIRS})
+	add_custom_command(
+			TARGET ${PROJECT_NAME} POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/${RESOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE_DIR}
+			DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE_DIR}
+	)
+endforeach()

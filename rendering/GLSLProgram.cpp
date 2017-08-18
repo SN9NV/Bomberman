@@ -184,4 +184,15 @@ namespace cge {
 
 		glUniform2f(location, value.x, value.y);
 	}
+
+	GLuint GLSLProgram::getAttributeLocation(const std::string &attrName) const {
+		if (!this->_isInUse) {
+			std::cerr << "Program is not in use\n";
+		}
+
+		GLuint attribute = glGetAttribLocation(this->_programID, attrName.c_str());
+		if (attribute == -1)
+			std::cerr << "Could not bind attribute: " << attrName << std::endl;
+		return (attribute);
+	}
 }
