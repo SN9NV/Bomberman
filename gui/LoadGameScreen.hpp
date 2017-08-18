@@ -8,13 +8,15 @@
 #include "../io/Window.hpp"
 #include "../shared.hpp"
 #include "../BomberManGameLogic/Player.hpp"
+#include "../io/audio/AudioSource.hpp"
 #include <nanogui/nanogui.h>
+#include "CustomButton.hpp"
 
 namespace cge {
 	namespace GUI {
 		class LoadGameScreen {
 		public:
-			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player);
+			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader);
 
 			~LoadGameScreen();
 
@@ -27,9 +29,10 @@ namespace cge {
 		private:
 			LoadGameScreen();
 
-			nanogui::Screen *_screen;
-			cge::Window &_window;
-			Player *_player;
+			nanogui::Screen*	_screen;
+			cge::Window&		_window;
+			Player				*_player;
+			cge::Audio::Source	_audioMenuScroll;
 		};
 	}
 }

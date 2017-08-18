@@ -8,13 +8,15 @@
 #include "../io/Window.hpp"
 #include "../shared.hpp"
 #include "../BomberManGameLogic/Player.hpp"
+#include "../io/audio/AudioSource.hpp"
 #include <nanogui/nanogui.h>
+#include "CustomButton.hpp"
 
 namespace cge {
 	namespace GUI {
 		class PauseGameScreen {
 		public:
-			PauseGameScreen(cge::Window& win, cge::GameState* _currState, cge::GameState* prevState, Player *player, int* currMap);
+			PauseGameScreen(cge::Window& win, cge::GameState* _currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader);
 			~PauseGameScreen();
 
 			nanogui::Screen* getScreen();
@@ -27,6 +29,7 @@ namespace cge {
 			nanogui::Screen* 	_screen;
 			cge::Window&		_window;
 			Player*				_player;
+			cge::Audio::Source	_audioMenuScroll;
 		};
 	}
 };

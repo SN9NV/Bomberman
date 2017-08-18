@@ -4,10 +4,14 @@
 
 #include "LoadGameScreen.hpp"
 
-cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player) :
+cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
-	_player(player)
+	_player(player),
+	_audioMenuScroll("../resources/audio/menu_click.wav", loader)
 {
+	this->_audioMenuScroll.setLooping(false);
+	this->_audioMenuScroll.setGain(0.09f);
+	
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -29,12 +33,15 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 			{100, 100, 100, 100, 50},
 			5);
 	nanoguiWindow->setLayout(&layout);
-
-	nanogui::Button *btn_MainMenu = new nanogui::Button(nanoguiWindow, "Back");
+	
+	cge::GUI::Custom::CustomButton *btn_MainMenu = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Back");
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
 			nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_MainMenu->setCallback([_currState, prevState] {
 		*_currState = *prevState;
+	});
+	btn_MainMenu->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
 	});
 
 	nanogui::TabWidget* tabs = nanoguiWindow->add<nanogui::TabWidget>();
@@ -52,8 +59,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot1 = new nanogui::TextBox(p_slot1);
 	txtb_Slot1->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot1->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot1 = new nanogui::Button(p_slot1, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot1 = new cge::GUI::Custom::CustomButton(p_slot1, "Load");
 	btn_SaveSlot1->setTooltip("Load Game on Slot 1");
+	btn_SaveSlot1->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	/**Slot 2**/
 	nanogui::Widget *p_slot2 = new nanogui::Widget(saves);
@@ -63,8 +73,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot2 = new nanogui::TextBox(p_slot2);
 	txtb_Slot2->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot2->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot2 = new nanogui::Button(p_slot2, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot2 = new cge::GUI::Custom::CustomButton(p_slot2, "Load");
 	btn_SaveSlot2->setTooltip("Load Game on Slot 2");
+	btn_SaveSlot2->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	/**Slot 3**/
 	nanogui::Widget *p_slot3 = new nanogui::Widget(saves);
@@ -74,8 +87,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot3 = new nanogui::TextBox(p_slot3);
 	txtb_Slot3->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot3->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot3 = new nanogui::Button(p_slot3, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot3 = new cge::GUI::Custom::CustomButton(p_slot3, "Load");
 	btn_SaveSlot3->setTooltip("Load Game on Slot 3");
+	btn_SaveSlot3->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	/**Slot 4**/
 	nanogui::Widget *p_slot4 = new nanogui::Widget(saves);
@@ -85,8 +101,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot4 = new nanogui::TextBox(p_slot4);
 	txtb_Slot4->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot4->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot4 = new nanogui::Button(p_slot4, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot4 = new cge::GUI::Custom::CustomButton(p_slot4, "Load");
 	btn_SaveSlot4->setTooltip("Load Game on Slot 4");
+	btn_SaveSlot4->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	/**Slot 5**/
 	nanogui::Widget *p_slot5 = new nanogui::Widget(saves);
@@ -96,8 +115,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot5 = new nanogui::TextBox(p_slot5);
 	txtb_Slot5->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot5->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot5 = new nanogui::Button(p_slot5, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot5 = new cge::GUI::Custom::CustomButton(p_slot5, "Load");
 	btn_SaveSlot5->setTooltip("Load Game on Slot 5");
+	btn_SaveSlot5->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	/**Slot 6**/
 	nanogui::Widget *p_slot6 = new nanogui::Widget(saves);
@@ -107,8 +129,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::TextBox *txtb_Slot6 = new nanogui::TextBox(p_slot6);
 	txtb_Slot6->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot6->setValue("[Empty]");
-	nanogui::Button *btn_SaveSlot6 = new nanogui::Button(p_slot6, "Load");
+	cge::GUI::Custom::CustomButton *btn_SaveSlot6 = new cge::GUI::Custom::CustomButton(p_slot6, "Load");
 	btn_SaveSlot6->setTooltip("Load Game on Slot 6");
+	btn_SaveSlot6->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	_screen->setVisible(true);
 	_screen->performLayout();

@@ -4,10 +4,14 @@
 
 #include "SettingsScreen.hpp"
 
-cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player) :
+cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
-	_player(player)
+	_player(player),
+	_audioMenuScroll("../resources/audio/menu_click.wav", loader)
 {
+	this->_audioMenuScroll.setLooping(false);
+	this->_audioMenuScroll.setGain(0.09f);
+
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -30,18 +34,24 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 			5);
 	nanoguiWindow->setLayout(&layout);
 
-	nanogui::Button *btn_MainMenu = new nanogui::Button(nanoguiWindow, "Back");
+	cge::GUI::Custom::CustomButton *btn_MainMenu = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Back");
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_MainMenu->setCallback([_currState, prevState] {
 		*_currState = *prevState;
 	});
+	btn_MainMenu->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_Save = new nanogui::Button(nanoguiWindow, "Save");
+	cge::GUI::Custom::CustomButton *btn_Save = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Save");
 	layout.setAnchor(btn_Save, nanogui::AdvancedGridLayout::Anchor(4, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_Save->setCallback([&] {
 		std::cout << "Save Game Here." << std::endl;
+	});
+	btn_Save->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
 	});
 
 	nanogui::TabWidget* tabs = nanoguiWindow->add<nanogui::TabWidget>();

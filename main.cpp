@@ -40,11 +40,20 @@ int main() {
 	cge::Audio::Device	defaultAudioDevice;
 
 	int currMap = 0;
-	int noOfMaps = 3;
 	std::vector<std::string> maps = {
 			"../resources/Maps/Map1",
 			"../resources/Maps/Map2",
 			"../resources/Maps/Map3"
+	};
+	cge::Audio::Source* menuSound = new cge::Audio::Source("../resources/audio/MainTheme.ogg", loader);
+	menuSound->setLooping(true);
+	std::vector<cge::Audio::Source *> levelSounds = {
+			new cge::Audio::Source("../resources/audio/Area 1.ogg", loader),
+			new cge::Audio::Source("../resources/audio/Area 2.ogg", loader),
+			new cge::Audio::Source("../resources/audio/Area 3.ogg", loader),
+			new cge::Audio::Source("../resources/audio/Area 4.ogg", loader),
+			new cge::Audio::Source("../resources/audio/Area 5.ogg", loader),
+			new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
 	};
 
 	BomberMan = (cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
@@ -53,49 +62,63 @@ int main() {
 	//player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
-	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap);
+	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader);
 	int state;
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {
 			case (cge::PLAY_GAME):
 				if (player->getLives() > 0) {
+					menuSound->setPlaying(false);
+					levelSounds[currMap]->setLooping(true);
+					levelSounds[currMap]->setPlaying();
 					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					state = levelRunner->runLevel(maps[currMap]);
+					levelSounds[currMap]->setPlaying(false);
 					if (state == levelState::FAIL_MAP_LOAD) {
 						std::cout << "Failed to load map: " << maps[currMap++] << std::endl;
 						gameState = cge::GameState::PLAY_MENU;
-					}
-					if (state == levelState::PAUSE)
+					} else if (state == levelState::PAUSE)
 						gameState = cge::PLAY_PAUSE;
-					if (state == levelState::COMPLEAT && currMap < maps.size()) {
+					else if (state == levelState::COMPLEAT && currMap < maps.size()) {
 						currMap++;
-					} else {
-						gameState = cge::GameState::PLAY_MENU;
+						if (currMap >= maps.size())
+							state = cge::GameState::PLAY_MENU;
 					}
+
 					std::cout << "level exit state " << state << std::endl;
 					std::cout << "Player Lives: " << player->getLives() << std::endl;
 				} else
 					gameState = cge::PLAY_MENU;
 				break;
 			case (cge::PLAY_PAUSE):
+				if (!menuSound->isPlaying())
+					menuSound->setPlaying();
 				cge::GuiManager::getSingleton()->drawScreen(cge::GameState::PLAY_PAUSE);
 				break;
 			case (cge::RESUME):
+				menuSound->setPlaying(false);
 				gameState = cge::GameState::PLAY_GAME;
 				player->setPauseMenue(false);
 				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();
-				std::cout << "esc is pressed: " << inputManager.isKeyPressed(GLFW_KEY_ESCAPE) << std::endl;
+				levelSounds[currMap]->setLooping(false);
+				levelSounds[currMap]->setPlaying();
 				state = levelRunner->resumeLevel();
+				levelSounds[currMap]->setPlaying(false);
 				if (state == levelState::PAUSE)
 					gameState = cge::PLAY_PAUSE;
 				std::cout << "level exit state " << state << std::endl;
 				std::cout << "Player Lives: " << player->getLives() << std::endl;
 				break;
 			default:
+				if (!menuSound->isPlaying())
+					menuSound->setPlaying();
 				cge::GuiManager::getSingleton()->drawScreen(gameState);
 				break;
 		}
+	}
+	for (auto iter : levelSounds) {
+		delete iter;
 	}
 	return 0;
 }

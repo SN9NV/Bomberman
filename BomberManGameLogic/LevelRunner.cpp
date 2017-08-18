@@ -530,10 +530,6 @@ int LevelRunner::resumeLevel() {
 }
 
 void LevelRunner::runlevelLoop() {
-	cge::Audio::Source	gameMusic("resources/audio/MainTheme.ogg", this->_loader);
-	gameMusic.setLooping(true);
-	gameMusic.setPlaying();
-
 	while (_state == levelState::PLAY) {
 
 
