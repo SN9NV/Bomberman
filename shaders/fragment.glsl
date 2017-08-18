@@ -16,5 +16,5 @@ void main() {
 	float brightness = max(normalBrightness, 0.1);
 	vec4 diffuse = vec4(vec3(brightness), 1.0);
 
-	colour = diffuse * texture(samplerUV, fragmentUV);
+	colour = /*diffuse **/ texture(samplerUV, fragmentUV);
 }

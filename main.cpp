@@ -59,7 +59,7 @@ int main() {
 		switch (gameState) {
 			case (cge::PLAY_GAME):
 				if (player->getLives() > 0) {
-					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					state = levelRunner->runLevel(maps[currMap]);
 					if (state == levelState::FAIL_MAP_LOAD) {
 						std::cout << "Failed to load map: " << maps[currMap++] << std::endl;
@@ -83,7 +83,7 @@ int main() {
 			case (cge::RESUME):
 				gameState = cge::GameState::PLAY_GAME;
 				player->setPauseMenue(false);
-				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();
 				std::cout << "esc is pressed: " << inputManager.isKeyPressed(GLFW_KEY_ESCAPE) << std::endl;
 				state = levelRunner->resumeLevel();

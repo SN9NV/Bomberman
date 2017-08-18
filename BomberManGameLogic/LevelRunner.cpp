@@ -535,8 +535,10 @@ void LevelRunner::runlevelLoop() {
 		if (_state == levelState::PLAY)
 			bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
-		_camera.setPosition({plpos.x, 10, plpos.z + 3});
-		_camera.lookAt(plpos);
+		_camera.setTrackEntity(*_player);
+		_camera.setTrackOffset({ 0, 5, 5 });
+//		_camera.setPosition({plpos.x + 3, 10, plpos.z + 3});
+//		_camera.lookAt(plpos);
 
 		_entShader.start();
 		_renderer.prepare();

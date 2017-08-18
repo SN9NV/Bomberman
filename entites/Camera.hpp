@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include "../io/InputManager.hpp"
 #include "../rendering/GLSLProgram.hpp"
+#include "Model.hpp"
+#include "Entity.hpp"
 
 namespace cge {
 	class Camera {
@@ -23,6 +25,8 @@ namespace cge {
 		void		setRotation(const glm::vec3 &rotation);
 		void		addPosition(const glm::vec3 &delta);
 		void		addRotation(const glm::vec3 &delta);
+		void		setTrackEntity(cge::Entity &entity);
+		void		setTrackOffset(const glm::vec3 &trackOffset);
 		void		lookAt(const glm::vec3 &lookAtPos);
 		glm::vec3	getPosition() const;
 		glm::vec3	getRotation() const;
@@ -36,6 +40,9 @@ namespace cge {
 		glm::vec3	_rotation;
 		glm::mat4	_projectionMatrix;
 		glm::mat4	_viewMatrix;
+		cge::Entity	*_track;
+		glm::vec3	_trackOffset;
+		glm::vec3	_trackOldPosition;
 
 		bool 		_needsUpdate;
 	};

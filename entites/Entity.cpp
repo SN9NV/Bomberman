@@ -89,15 +89,16 @@ namespace cge
 	{
 		(void)lastFrameTime;
 
-//		double currentTime = glfwGetTime();
+		double currentTime = glfwGetTime();
 
-//		this->_ticksDelta = currentTime - this->_lastTicks;
-		this->_ticksDelta = lastFrameTime;
+		this->_ticksDelta = currentTime - this->_lastTicks;
+//		this->_ticksDelta = (lastFrameTime / 1000.0);
 		this->_animationTicks += (this->_ticksDelta * this->_animationSpeed);
 
-		std::cout << _ticksDelta << ", " << _animationTicks << "\n";
+//		std::cout << _ticksDelta << ", " << _animationTicks << "\n";
 
-		this->_lastTicks = (lastFrameTime / 1000.0);
+		this->_lastTicks = currentTime;
+//		this->_lastTicks = (lastFrameTime / 1000.0);
 
 		if (this->_hasAnimation) {
 			if (shader.isInUse()) {
@@ -140,7 +141,9 @@ namespace cge
 			if (this->_animationTicks < 0.0) {
 				this->_animationTicks += animationLength;
 			} else if (this->_animationTicks >= animationLength) {
+//				std::cout << "Animation overflow\t" << this->_animationTicks << ", ";
 				this->_animationTicks -= animationLength;
+//				std::cout << this->_animationTicks << "\n";
 			}
 
 			/// Find the top of the frame we're in
@@ -166,10 +169,6 @@ namespace cge
 					keyFrames[upperKeyframe] - keyFrames[0];
 			float lowerKeyframeTime = keyFrames[lowerKeyframe] - keyFrames[0];
 			float interpolant = static_cast<float>(this->_animationTicks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
-
-			if (inBuffView.target == 3) {
-				std::cout << lowerKeyframe << "(" << lowerKeyframeTime << "), " << upperKeyframe << "(" << upperKeyframeTime << "), " << interpolant << "\n";
-			}
 
 			if (channel.target_path == "translation") {
 				auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
@@ -222,7 +221,6 @@ namespace cge
 		glm::mat4	currentTransform;
 		if (jointTransform == transformationMap.end()) {
 			currentTransform = parentTransform;
-			std::cout << "using parent transform\n";
 		} else {
 			currentTransform =
 					parentTransform *
