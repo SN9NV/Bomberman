@@ -39,10 +39,10 @@ cge::GuiManager::GuiManager(cge::Window &win,
 	_currMap(currMap)
 {
 	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, prevState, player, currMap, _loader);
-	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player);
-	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, prevState, player);
-	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player);
-	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, prevState, player, currMap);
+	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player, _loader);
+	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, prevState, player, _loader);
+	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player, _loader);
+	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, prevState, player, currMap, _loader);
 }
 
 cge::GuiManager::~GuiManager() {

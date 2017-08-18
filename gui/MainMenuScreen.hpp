@@ -34,7 +34,7 @@ namespace cge {
 			nanogui::Screen* 	_screen;
 			cge::Window&		_window;
 			Player*				_player;
-			cge::Audio::Source	_audio;
+			cge::Audio::Source	_audioMouseEnter;
 		};
 	}
 }

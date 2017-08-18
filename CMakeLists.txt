@@ -100,7 +100,7 @@ set(SOURCE_FILES
 		rendering/TextRenderer.hpp
 		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
 		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
-		gui/CustomButton.cpp gui/CustomButton.hpp)
+		gui/CustomButton.cpp gui/CustomButton.hpp extras/SavedGame.cpp extras/SavedGame.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

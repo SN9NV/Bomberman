@@ -4,9 +4,14 @@
 
 #include "PauseGameScreen.h"
 
-cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap) :
+cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader) :
 		_window(win),
-		_player(player) {
+		_player(player),
+		_audioMenuScroll("../resources/audio/menu_click.wav", loader)
+{
+	this->_audioMenuScroll.setLooping(false);
+	this->_audioMenuScroll.setGain(0.09f);
+
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -24,14 +29,17 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
-	nanogui::Button *btn_ResumeGame = new nanogui::Button(nanoguiWindow, "Resume Game");
+	cge::GUI::Custom::CustomButton *btn_ResumeGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Resume Game");
 	btn_ResumeGame->setTooltip("Resumes the current game.");
 	btn_ResumeGame->setFixedWidth(200);
 	btn_ResumeGame->setCallback([_currState] {
 		*_currState = cge::RESUME;
 	});
+	btn_ResumeGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
+	cge::GUI::Custom::CustomButton *btn_NewGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
 	btn_NewGame->setCallback([&, _currState, player, currMap] {
@@ -47,29 +55,41 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 			}
 		});
 	});
+	btn_NewGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_SaveGame = new nanogui::Button(nanoguiWindow, "Save Game");
+	cge::GUI::Custom::CustomButton *btn_SaveGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Save Game");
 	btn_SaveGame->setTooltip("Options for saving game.");
 	btn_SaveGame->setCallback([_currState] {
 		*_currState = cge::GameState::PLAY_SAVE;
 	});
+	btn_SaveGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
+	cge::GUI::Custom::CustomButton *btn_LoadGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
 	btn_LoadGame->setCallback([_currState, prevState] {
 		*prevState = *_currState;
 		*_currState = cge::GameState::PLAY_LOAD;
 	});
+	btn_LoadGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
+	cge::GUI::Custom::CustomButton *btn_Settings = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
 	btn_Settings->setCallback([_currState, prevState] {
 		*prevState = *_currState;
 		*_currState = cge::GameState::PLAY_OPTS;
 	});
+	btn_Settings->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
 	gui->addGroup("");
-	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Main Menu");
+	cge::GUI::Custom::CustomButton *btn_Quit = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Main Menu");
 	btn_Quit->setTooltip("Go back to the main menu.");
 	btn_Quit->setCallback([&, _currState]{
 		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
@@ -81,8 +101,11 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 			}
 		});
 	});
+	btn_Quit->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
+	});
 
-	nanogui::Button *btn_QuitToDesktop = new nanogui::Button(nanoguiWindow, "Quit to Desktop");
+	cge::GUI::Custom::CustomButton *btn_QuitToDesktop = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Quit to Desktop");
 	btn_QuitToDesktop->setTooltip("Game Settings");
 	btn_QuitToDesktop->setCallback([&, _currState] {
 		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
@@ -93,6 +116,9 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 				*_currState = cge::GameState::WANTS_QUIT;
 			}
 		});
+	});
+	btn_QuitToDesktop->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setPlaying();
 	});
 
 	_screen->setVisible(true);
