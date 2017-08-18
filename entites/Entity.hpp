@@ -14,8 +14,8 @@ namespace cge {
 		Entity() = default;
 		virtual ~Entity() = default;
 
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, float hitBoxRadius);
+//		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, float hitBoxRadius = 0.0f);
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
@@ -57,11 +57,18 @@ namespace cge {
 			glm::quat	rotation;
 		};
 
+		struct _AnimateSkeleton {
+			const std::map<int, Transformation>	&transformationMap;
+			glm::mat4							&parentTransform;
+			std::map<int, glm::mat4>			&animatedMatrices;
+			std::vector<tinygltf::Node>			&nodes;
+			const glm::mat4						*inverseMatrices;
+			int									startNodeIndex;
+			int									rootNodeIndex;
+		};
+
 		void	_applyAnimation(cge::GLSLProgram &shader);
-		void	_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
-								 const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
-								 int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
-								 std::map<int, glm::mat4> &animatedMatrices);
+		void	_animateSkeleton(cge::Entity::_AnimateSkeleton &vars);
 	};
 }
 

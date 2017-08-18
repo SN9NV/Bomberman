@@ -11,22 +11,27 @@
 #include "tinyGLTF/tiny_gltf.h"
 #include "shared.hpp"
 #include "rendering/ParticalRenderer.hpp"
+#include "BomberManGameLogic/Player.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
 int main()
 {
-	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
-	cge::GameState gameState = cge::GameState::PLAY_MENU;
-	cge::InputManager inputManager(window);
-	cge::GLSLProgram shader("../shaders/particalVertex.glsl", "../shaders/particalFragment.glsl");
-	cge::Camera camera(glm::vec3(0.0f, 0.0f, 10.0f),
-					   glm::vec3(0.0f, 0.0f, 0.0f), window);
-	cge::ParticalRenderer prender(shader);
-	prender.addPartical(cge::Partical({0,0,0},{0,0,0}, 0, 10000, 1));
-	prender.addPartical(cge::Partical({1,0,0},{0,0,0}, 0, 10000, 4));
-	prender.addPartical(cge::Partical({-1,0,0},{0,0,0}, 0, 10000, 0.5));
+	cge::Window			window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::GameState		gameState = cge::GameState::PLAY_MENU;
+	cge::InputManager	inputManager(window);
+	cge::GLSLProgram	shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+	cge::Camera 		camera(glm::vec3(0.8f, 1.6f, 1.75f), glm::vec3(0.5f, -0.4f, 0.0f), window);
+	cge::Renderer		renderer(shader);
+	cge::Loader			loader;
+
+	cge::Model	bomberModel = cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader);
+	Player		player({ 0, 0, 0 }, { 0, 90, 0 }, 1, bomberModel, 1.0f);
+	Player		player1({ 0, 0, -5 }, { 0, 0, 0 }, 1, bomberModel, 1.0f);
+	Player		player2({ 0, 0, -10 }, { 0, 0, 0 }, 1, bomberModel, 1.0f);
+
+
 	while (gameState != cge::WANTS_QUIT)
 	{
 		inputManager.pollKeyEvnt();
@@ -57,37 +62,19 @@ int main()
 			camera.setPosition({camera.getPosition().x, camera.getPosition().y, camera.getPosition().z - .5});
 		}
 
-		if (inputManager.isKeyPressed(GLFW_KEY_SPACE))
-			prender.partivalEffect({0, 0, 0},{2,2,2}, {0, 0, 0},{0.01,0.0,0}, 0.1,0.00, 5000, 500, 1,1, 5);
-		if (inputManager.isKeyPressed(GLFW_KEY_P))
-			prender.addPartical(cge::Partical({0, 0, 0}, {0, .25f, 0}, 0.1, 5000, 1));
+		shader.start();
+			player.update(inputManager, shader, window.getFrameTime());
+			player1.update(inputManager, shader, window.getFrameTime());
+			player2.update(inputManager, shader, window.getFrameTime());
 
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_7))
-		{
-			camera.setRotation({camera.getRotation().x + 0.01, camera.getRotation().y, camera.getRotation().z});
-		}
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_4))
-		{
-			camera.setRotation({camera.getRotation().x - 0.01, camera.getRotation().y, camera.getRotation().z});
-		}
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_8))
-		{
-			camera.setRotation({camera.getRotation().x, camera.getRotation().y + 0.01, camera.getRotation().z});
-		}
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_5))
-		{
-			camera.setRotation({camera.getRotation().x, camera.getRotation().y - 0.01, camera.getRotation().z});
-		}
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_9))
-		{
-			camera.setRotation({camera.getRotation().x, camera.getRotation().y, camera.getRotation().z + 0.01});
-		}
-		if (inputManager.isKeyPressed(GLFW_KEY_KP_6))
-		{
-			camera.setRotation({camera.getRotation().x, camera.getRotation().y, camera.getRotation().z - 0.01});
-		}
-		prender.prepare();
-		prender.updateRender(camera, window.getFrameTime());
+			renderer.prepare();
+			camera.update(shader);
+
+			renderer.render(player);
+			renderer.render(player1);
+			renderer.render(player2);
+		shader.end();
+
 		window.swapBuffers();
 	}
 

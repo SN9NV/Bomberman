@@ -31,10 +31,11 @@ void main() {
 						vertexWeights.w * jointTransforms[int(vertexJointIncides.w)];
 	}
 
-	vec4 position = skinMatrix * transformation * vec4(vertexPosition, 1.0);
+	mat4 transform = transformation * skinMatrix;
+	vec4 position = transform * vec4(vertexPosition, 1.0);
 	gl_Position = view * position;
 
-	fragmentNormal = (skinMatrix * transformation * vec4(vertexNormal, 0.0)).xyz;
+	fragmentNormal = (transform * vec4(vertexNormal, 0.0)).xyz;
 	fragmentUV = vertexUV;
 //	fragmentWeights = vertexWeights;
 	toLight = lightLocation - position.xyz;

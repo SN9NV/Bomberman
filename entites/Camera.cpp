@@ -28,12 +28,15 @@ namespace cge
 
 	void Camera::update(const GLSLProgram &shader, bool printCameraChange)
 	{
-		if (this->_needsUpdate || (this->_track != nullptr && this->_trackOldPosition != this->_track->getPosition()))
-		{
-			glm::vec3	trackingPosition = this->_track->getPosition();
+		glm::vec3	trackingPosition;
 
-			if (printCameraChange)
-			{
+		if (this->_track != nullptr) {
+			this->_track->getPosition();
+		}
+
+		if (this->_needsUpdate || (this->_track != nullptr && this->_trackOldPosition != trackingPosition))
+		{
+			if (printCameraChange) {
 				std::cout << *this << "\n";
 			}
 
@@ -50,7 +53,10 @@ namespace cge
 			);
 
 			this->_needsUpdate = false;
-			this->_trackOldPosition = this->_track->getPosition();
+
+			if (this->_track != nullptr) {
+				this->_trackOldPosition = trackingPosition;
+			}
 		}
 	}
 

@@ -11,40 +11,25 @@
 #include "../io/audio/AudioSource.hpp"
 #include "../extras/glmOstream.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
-						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
-																				  _player(_player),
-																				  _gate(nullptr),
-																				  _window(_window),
-																				  _entShader("../shaders/vertex.glsl",
-																							 "../shaders/fragment.glsl"),
-																				  _partShader(
-																						  "../shaders/particalVertex.glsl",
-																						  "../shaders/particalFragment.glsl"),
-																				  _renderer(_entShader),
-																				  _camera(glm::vec3(0.0f, 5.0f, 0.0f),
-																						  glm::vec3(1.5f, 0.0f, 0.0f),
-																						  _window),
-																				  _particalRenderer(_partShader) {
-	_inputManager = inputManager;
-
-	_models.emplace("Wall",
-					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("DestructWall", cge::Model("../resources/models/DestructWall.glb",
-											   "../resources/models/DestructWallDiffuseColor.png", this->_loader));
-	_models.emplace("Bomb",
-					cge::Model("../resources/models/Bomb.glb", "../resources/models/BombDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Bomber",
-					cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Balloon",
-					cge::Model("../resources/models/Balloon.glb", "../resources/models/BalloonDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Gate",
-					cge::Model("../resources/models/Gate.glb", "../resources/models/GateDiffuseColor.png",
-							   this->_loader));
+LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager) :
+		_loader(_loader),
+		_player(_player),
+		_gate(nullptr),
+		_window(_window),
+		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
+		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
+		_renderer(_entShader),
+		_camera({ 0.0f, 5.0f, 0.0f }, { 1.5f, 0.0f, 0.0f }, _window),
+		_particalRenderer(_partShader),
+		_inputManager(inputManager)
+{
+	const std::string resRoot = "resources/models/";
+	_models.emplace("Wall", cge::Model(resRoot+"Wall.glb", resRoot+"SolidWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot+"DestructWall.glb", resRoot+"DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("Bomb", cge::Model(resRoot+"Bomb.glb", resRoot+"BombDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot+"Bomber.glb", resRoot+"BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Balloon", cge::Model(resRoot+"Balloon.glb", resRoot+"BalloonDiffuseColor.png", this->_loader));
+	_models.emplace("Gate", cge::Model(resRoot+"Gate.glb", resRoot+"GateDiffuseColor.png", this->_loader));
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {

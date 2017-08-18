@@ -2,24 +2,24 @@
 #include "../extras/Maths.hpp"
 #include "../extras/glmOstream.hpp"
 
-cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model) :
-		_model(model),
-		_position(position),
-		_rotation(rotation),
-		_scale(scale),
-		_hitBoxRadius(0),
-		_transformation(1.0),
-		_transformationLocation(0),
-		_lastTicks(glfwGetTime()),
-		_ticksDelta(0.0),
-		_animationTicks(0.0),
-		_currentAnimation(0),
-		_hasAnimation(!model.getTinygltfModel().animations.empty()),
-		_animationSpeed(1.0),
-		_needsTransformationUpdate(true)
-{
-
-}
+//cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model) :
+//		_model(model),
+//		_position(position),
+//		_rotation(rotation),
+//		_scale(scale),
+//		_hitBoxRadius(0),
+//		_transformation(1.0),
+//		_transformationLocation(0),
+//		_lastTicks(glfwGetTime()),
+//		_ticksDelta(0.0),
+//		_animationTicks(0.0),
+//		_currentAnimation(0),
+//		_hasAnimation(!model.getTinygltfModel().animations.empty()),
+//		_animationSpeed(1.0),
+//		_needsTransformationUpdate(true)
+//{
+//
+//}
 
 cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox) :
 		_model(model),
@@ -77,14 +77,10 @@ float cge::Entity::getScale() const {
 }
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
-	(void)lastFrameTime;
-
 	if (this->_hasAnimation) {
-		double currentTime = glfwGetTime();
-
-		this->_ticksDelta = currentTime - this->_lastTicks;
+		this->_ticksDelta = lastFrameTime / 1000.0f;
 		this->_animationTicks += (this->_ticksDelta * this->_animationSpeed);
-		this->_lastTicks = currentTime;
+		this->_lastTicks = lastFrameTime / 1000.0f;
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -182,7 +178,17 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			continue;
 		}
 
-		this->_animateSkeleton(transformationMap, skeletonTransformation, model.nodes, joint, rootJointIndex, inverseMatrices, animatedMatrices);
+		cge::Entity::_AnimateSkeleton vars = {
+			transformationMap,
+			skeletonTransformation,
+			animatedMatrices,
+			model.nodes,
+			inverseMatrices,
+			joint,
+			rootJointIndex
+		};
+
+		this->_animateSkeleton(vars);
 	}
 
 	const unsigned MAX_JOINTS = 50;
@@ -194,30 +200,30 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	}
 }
 
-void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformation> &transformationMap,
-									  const glm::mat4 &parentTransform, std::vector<tinygltf::Node> &nodes,
-									  int startNodeIndex, int rootNodeIndex, const glm::mat4 *inverseMatrices,
-									  std::map<int, glm::mat4> &animatedMatrices) {
-	glm::mat4	inverseMatrix = inverseMatrices[startNodeIndex - rootNodeIndex];
+void	cge::Entity::_animateSkeleton(cge::Entity::_AnimateSkeleton &vars) {
+	glm::mat4	inverseMatrix = vars.inverseMatrices[vars.startNodeIndex - vars.rootNodeIndex];
 
 	glm::mat4		globalJointTransform;
-	auto			jointTransform = transformationMap.find(startNodeIndex);
+	auto			jointTransform = vars.transformationMap.find(vars.startNodeIndex);
 
 	glm::mat4	currentTransform;
-	if (jointTransform == transformationMap.end()) {
-		currentTransform = parentTransform;
+	if (jointTransform == vars.transformationMap.end()) {
+		currentTransform = vars.parentTransform;
 	} else {
 		currentTransform =
-				parentTransform *
+				vars.parentTransform *
 				glm::translate(glm::mat4(1.0f), jointTransform->second.translation) *
 				glm::mat4_cast(glm::normalize(jointTransform->second.rotation));
 	}
 
-	for (auto &child : nodes[startNodeIndex].children) {
-		this->_animateSkeleton(transformationMap, currentTransform, nodes, child, rootNodeIndex, inverseMatrices, animatedMatrices);
-	}
+	vars.animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
 
-	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
+	for (auto &child : vars.nodes[vars.startNodeIndex].children) {
+		vars.parentTransform = currentTransform;
+		vars.startNodeIndex = child;
+
+		this->_animateSkeleton(vars);
+	}
 }
 
 float cge::Entity::getHitBoxRadius() const {

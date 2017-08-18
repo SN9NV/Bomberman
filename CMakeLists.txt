@@ -37,6 +37,7 @@ set(SOURCE_FILES
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
 		main.cpp
+#		Testmain.cpp
 		entites/Camera.cpp entites/Camera.hpp
 		io/InputManager.cpp io/InputManager.hpp
 		entites/Entity.cpp entites/Entity.hpp
