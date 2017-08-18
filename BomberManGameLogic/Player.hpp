@@ -10,6 +10,7 @@ class Player : public Being
 {
 private:
 	int _lives;
+	int _score;
 	int _up = GLFW_KEY_W;
 	int _down = GLFW_KEY_S;
 	int _left = GLFW_KEY_A;
@@ -44,6 +45,11 @@ int get_up() const;
 	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitbox, float speed);
 	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 	int loseLife();
+
+	int getScore() const;
+	void setScore(int score);
+	void addScore(int addition);
+	void subScore(int subtraction);
 
 };
 

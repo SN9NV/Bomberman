@@ -9,10 +9,15 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 										 cge::GameState *currState,
 										 cge::GameState *prevState,
 										 Player* player,
-										 int* currMap) :
+										 int* currMap,
+										 cge::Loader& _loader) :
 		_window(win),
-		_player(player)
+		_player(player),
+		_audioMouseEnter("../resources/audio/menu_click.wav", _loader)
 {
+	this->_audioMouseEnter.setLooping(false);
+	this->_audioMouseEnter.setGain(0.09f);
+
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -31,7 +36,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
-	nanogui::Button *btn_NewGame = new nanogui::Button(nanoguiWindow, "New Game");
+	cge::GUI::Custom::CustomButton *btn_NewGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "New Game");
 	btn_NewGame->setTooltip("Starts a new game.");
 	btn_NewGame->setFixedWidth(200);
 	btn_NewGame->setCallback([currState, player, currMap] {
@@ -40,26 +45,38 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		player->setPauseMenue(false);
 		*currMap = 0;
 	});
+	btn_NewGame->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setPlaying();
+	});
 
-	nanogui::Button *btn_LoadGame = new nanogui::Button(nanoguiWindow, "Load Game");
+	cge::GUI::Custom::CustomButton *btn_LoadGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Load Game");
 	btn_LoadGame->setTooltip("Options for loading game.");
 	btn_LoadGame->setCallback([currState, prevState] {
 		*prevState = *currState;
 		*currState = cge::GameState::PLAY_LOAD;
 	});
+	btn_LoadGame->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setPlaying();
+	});
 
-	nanogui::Button *btn_Settings = new nanogui::Button(nanoguiWindow, "Settings");
+	cge::GUI::Custom::CustomButton *btn_Settings = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Settings");
 	btn_Settings->setTooltip("Game Settings");
 	btn_Settings->setCallback([currState, prevState] {
 		*prevState = *currState;
 		*currState = cge::GameState::PLAY_OPTS;
 	});
+	btn_Settings->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setPlaying();
+	});
 
 	gui->addGroup("");
-	nanogui::Button *btn_Quit = new nanogui::Button(nanoguiWindow, "Quit");
+	cge::GUI::Custom::CustomButton *btn_Quit = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Quit");
 	btn_Quit->setTooltip("Quit the game.");
 	btn_Quit->setCallback([currState] {
 		*currState = cge::GameState::WANTS_QUIT;
+	});
+	btn_Quit->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setPlaying();
 	});
 
 	_screen->setVisible(true);
