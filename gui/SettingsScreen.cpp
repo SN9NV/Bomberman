@@ -3,6 +3,7 @@
 //
 
 #include "SettingsScreen.hpp"
+#include "../io/settings/Settings.hpp"
 
 cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
@@ -48,7 +49,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	layout.setAnchor(btn_Save, nanogui::AdvancedGridLayout::Anchor(4, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_Save->setCallback([&] {
-		std::cout << "Save Game Here." << std::endl;
+		this->saveSettings();
 	});
 	btn_Save->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
@@ -66,13 +67,13 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::Widget *p_master = new nanogui::Widget(sounds);
 	p_master->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
-	nanogui::Slider *sl_master = new nanogui::Slider(p_master);
-	sl_master->setValue(0.5f); // set master volume here;
+	sl_master = new nanogui::Slider(p_master);
+	sl_master->setValue(cge::Settings::Settings::getSingleton()->getSettings().MasterVolume);
 	sl_master->setFixedWidth(250);
 
 	nanogui::TextBox *txtb_master = new nanogui::TextBox(p_master);
 	txtb_master->setFixedSize(nanogui::Vector2i(60, 25));
-	txtb_master->setValue("50"); // set master volume here;
+	txtb_master->setValue(std::to_string((int)(sl_master->value() * 100)));
 	txtb_master->setUnits("%");
 	sl_master->setCallback([txtb_master](float value) {
 		txtb_master->setValue(std::to_string((int) (value * 100)));
@@ -87,13 +88,13 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::Widget *p_music = new nanogui::Widget(sounds);
 	p_music->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
-	nanogui::Slider *sl_music = new nanogui::Slider(p_music);
-	sl_music->setValue(0.5f); // set music volume here;
+	sl_music = new nanogui::Slider(p_music);
+	sl_music->setValue(cge::Settings::Settings::getSingleton()->getSettings().MusicVolume);
 	sl_music->setFixedWidth(250);
 
 	nanogui::TextBox *txtb_music = new nanogui::TextBox(p_music);
 	txtb_music->setFixedSize(nanogui::Vector2i(60, 25));
-	txtb_music->setValue("50"); // set music volume here;
+	txtb_music->setValue(std::to_string((int)(sl_music->value() * 100)));
 	txtb_music->setUnits("%");
 	sl_music->setCallback([txtb_music](float value) {
 		txtb_music->setValue(std::to_string((int) (value * 100)));
@@ -107,13 +108,13 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	nanogui::Widget *p_sfx = new nanogui::Widget(sounds);
 	p_sfx->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
-	nanogui::Slider *sl_sfx = new nanogui::Slider(p_sfx);
-	sl_sfx->setValue(0.5f); // set sfx volume here;
+	sl_sfx = new nanogui::Slider(p_sfx);
+	sl_sfx->setValue(cge::Settings::Settings::getSingleton()->getSettings().MusicVolume); // set sfx volume here;
 	sl_sfx->setFixedWidth(250);
 
 	nanogui::TextBox *txtb_sfx = new nanogui::TextBox(p_sfx);
 	txtb_sfx->setFixedSize(nanogui::Vector2i(60, 25));
-	txtb_sfx->setValue("50"); // set sfx volume here;
+	txtb_sfx->setValue(std::to_string((int)(sl_sfx->value() * 100)));
 	txtb_sfx->setUnits("%");
 	sl_sfx->setCallback([txtb_sfx](float value) {
 		txtb_sfx->setValue(std::to_string((int) (value * 100)));
@@ -131,8 +132,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveUp = p_MoveUp->add<nanogui::Label>("Move Up:");
 	lbl_MoveUp->setFixedWidth(80);
 	p_MoveUp->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	auto txtb_MoveUp = p_MoveUp->add<nanogui::TextBox>();
-	txtb_MoveUp->setValue("W");//Change here to settings
+	txtb_MoveUp = p_MoveUp->add<nanogui::TextBox>();
+	txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
 	txtb_MoveUp->setEditable(true);
 	txtb_MoveUp->setFixedWidth(35);
 	txtb_MoveUp->setFormat("[A-Z]");
@@ -142,8 +143,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveRight = p_MoveRight->add<nanogui::Label>("Move Right:");
 	lbl_MoveRight->setFixedWidth(80);
 	p_MoveRight->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	auto txtb_MoveRight = p_MoveRight->add<nanogui::TextBox>();
-	txtb_MoveRight->setValue("D");//Change here to settings
+	txtb_MoveRight = p_MoveRight->add<nanogui::TextBox>();
+	txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
 	txtb_MoveRight->setEditable(true);
 	txtb_MoveRight->setFixedWidth(35);
 	txtb_MoveRight->setFormat("[A-Z]");
@@ -153,8 +154,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveDown = p_MoveDown->add<nanogui::Label>("Move Down:");
 	lbl_MoveDown->setFixedWidth(80);
 	p_MoveDown->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	auto txtb_MoveDown = p_MoveDown->add<nanogui::TextBox>();
-	txtb_MoveDown->setValue("S");//Change here to settings
+	txtb_MoveDown = p_MoveDown->add<nanogui::TextBox>();
+	txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
 	txtb_MoveDown->setEditable(true);
 	txtb_MoveDown->setFixedWidth(35);
 	txtb_MoveDown->setFormat("[A-Z]");
@@ -164,8 +165,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveLeft = p_MoveLeft->add<nanogui::Label>("Move Left:");
 	lbl_MoveLeft->setFixedWidth(80);
 	p_MoveLeft->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	auto txtb_MoveLeft = p_MoveLeft->add<nanogui::TextBox>();
-	txtb_MoveLeft->setValue("A"); //Change here to settings
+	txtb_MoveLeft = p_MoveLeft->add<nanogui::TextBox>();
+	txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft)); //Change here to settings
 	txtb_MoveLeft->setEditable(true);
 	txtb_MoveLeft->setFixedWidth(35);
 	txtb_MoveLeft->setFormat("[A-Z]");
@@ -261,4 +262,32 @@ void cge::GUI::SettingsScreen::setInputCallbacks() {
 		   screen->getScreen()->resizeCallbackEvent(width, height);
 	   }
 	);
+}
+
+void cge::GUI::SettingsScreen::saveSettings() {
+	cge::Settings::Settings* setts = cge::Settings::Settings::getSingleton();
+
+	setts->setMasterVolume(this->sl_master->value());
+	setts->setMusicVolume(this->sl_music->value());
+	setts->setSfxVolume(this->sl_sfx->value());
+
+	setts->setKeyUpwards(static_cast<unsigned int>(this->txtb_MoveUp->value()[0]));
+	setts->setKeyRight(static_cast<unsigned int>(this->txtb_MoveRight->value()[0]));
+	setts->setKeyDown(static_cast<unsigned int>(this->txtb_MoveDown->value()[0]));
+	setts->setKeyLeft(static_cast<unsigned int>(this->txtb_MoveLeft->value()[0]));
+
+	_player->set_up(this->txtb_MoveUp->value()[0]);
+	_player->set_right(this->txtb_MoveRight->value()[0]);
+	_player->set_down(this->txtb_MoveDown->value()[0]);
+	_player->set_left(this->txtb_MoveLeft->value()[0]);
+
+	setts->writeToBinaryFile();
+}
+
+std::string cge::GUI::SettingsScreen::charToString(int chr) {
+	std::stringstream ss;
+	std::string s;
+	ss << (char)chr;
+	ss >> s;
+	return (s);
 }

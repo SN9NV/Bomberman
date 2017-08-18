@@ -45,6 +45,7 @@ namespace cge {
 			void						setKeyDown(unsigned int kd);
 			void						setKeyLeft(unsigned int kl);
 
+			void 						writeToBinaryFile();
 		private:
 			Settings(std::string file);
 			~Settings();
@@ -54,7 +55,6 @@ namespace cge {
 			std::string					_fileName;
 
 			void						readFromBinaryFile();
-			void 						writeToBinaryFile();
 			void						setToDefaults();
 		};
 	}

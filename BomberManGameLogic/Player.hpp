@@ -21,13 +21,17 @@ private:
 	bool _pauseMenue;
 
 public:
-int get_up() const;
+	int get_up() const;
+	void set_up(int up);
 
 	int get_down() const;
+	void set_down(int down);
 
 	int get_left() const;
+	void set_left(int left);
 
 	int get_right() const;
+	void set_right(int right);
 
 	int get_bomb() const;
 

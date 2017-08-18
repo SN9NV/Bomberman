@@ -120,4 +120,20 @@ void Player::subScore(int subtraction) {
 	this->_score -= subtraction;
 }
 
+void Player::set_up(int up) {
+	this->_up = up;
+}
+
+void Player::set_down(int down) {
+	this->_down = down;
+}
+
+void Player::set_left(int left) {
+	this->_left = left;
+}
+
+void Player::set_right(int right) {
+	this->_right = right;
+}
+
 
