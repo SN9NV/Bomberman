@@ -40,52 +40,43 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 
 }
 
-void cge::Entity::addPosition(const glm::vec3 &delta)
-{
+void cge::Entity::addPosition(const glm::vec3 &delta) {
 	this->_position += delta;
 	this->_needsTransformationUpdate = true;
 }
 
-void cge::Entity::setPosition(const glm::vec3 &position)
-{
+void cge::Entity::setPosition(const glm::vec3 &position) {
 	this->_position = position;
 	this->_needsTransformationUpdate = true;
 }
 
-void cge::Entity::addRotation(const glm::vec3 &delta)
-{
+void cge::Entity::addRotation(const glm::vec3 &delta) {
 	this->_rotation += delta;
 	this->_needsTransformationUpdate = true;
 }
 
-void cge::Entity::setRotation(const glm::vec3 &rotation)
-{
+void cge::Entity::setRotation(const glm::vec3 &rotation) {
 	this->_rotation = rotation;
 	this->_needsTransformationUpdate = true;
 }
 
-cge::Model &cge::Entity::getModel()
-{
+cge::Model &cge::Entity::getModel() {
 	return this->_model;
 }
 
-glm::vec3 cge::Entity::getPosition() const
-{
+glm::vec3 cge::Entity::getPosition() const {
 	return this->_position;
 }
 
-glm::vec3 cge::Entity::getRotation() const
-{
+glm::vec3 cge::Entity::getRotation() const {
 	return this->_rotation;
 }
 
-float cge::Entity::getScale() const
-{
+float cge::Entity::getScale() const {
 	return this->_scale;
 }
 
-bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime)
-{
+bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	(void)lastFrameTime;
 
 	if (this->_hasAnimation) {
@@ -240,19 +231,16 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 	animatedMatrices[startNodeIndex - rootNodeIndex] = currentTransform * inverseMatrix;
 }
 
-float cge::Entity::getHitBoxRadius() const
-{
+float cge::Entity::getHitBoxRadius() const {
 	return _hitBoxRadius;
 }
 
-void cge::Entity::setHitBoxRadius(const float &hitBox)
-{
+void cge::Entity::setHitBoxRadius(const float &hitBox) {
 	_hitBoxRadius = hitBox * _scale;
 
 }
 
-void cge::Entity::setScale(float scale)
-{
+void cge::Entity::setScale(float scale) {
 	_scale = scale;
 	this->_needsTransformationUpdate = true;
 	_hitBoxRadius = _hitBoxRadius * _scale;
