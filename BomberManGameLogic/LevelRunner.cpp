@@ -44,6 +44,10 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
 	_models.emplace("Gate",
 					cge::Model("../resources/models/Gate.glb", "../resources/models/GateDiffuseColor.png",
 							   this->_loader));
+	_loader.loadTextureAtlas(
+			"../resources/TextureAtlas/FireBallAtlas.png", 4);
+	_loader.loadTextureAtlas(
+			"../resources/Textures/ConcreatFragment.png", 1);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -120,7 +124,7 @@ void LevelRunner::beingWorldInteraction() {
 			pos = (*being)->getPosition();
 			x = (int) (round(pos.x));
 			y = (int) (round(pos.z));
-			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->is_placeBomb()) {
+			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->isPlaceBomb()) {
 				if ((*being) == _player) {
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
 						x == _gate->getPosition().x) {
@@ -143,7 +147,7 @@ void LevelRunner::beingWorldInteraction() {
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->is_placeBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
+				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
@@ -210,10 +214,10 @@ void LevelRunner::bombWorldInteraction() {
 				being++;
 			}
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
-			_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
-											{0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, 0.1, 0.2,
-											100, _loader.loadTextureAtlas(
-							"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+			_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z}, {0.45, .5, 0.45},
+											 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1, 0.01,
+											 1000, _loader.loadTextureAtlas(
+							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 			i = 0;
 			while (++i < (*bomb)->getBombradius()) {
 				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
@@ -221,10 +225,10 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
 						sheild = sheild | 0b00000001;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z + i}, {0.5, 0.5, 0.5},
-														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
-														 100, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+						_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, {0.49, .5, 0.49},
+														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0, 1000, 1000, 0.1,
+														 0.01, 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
 
@@ -234,10 +238,10 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
 						sheild = sheild | 0b00000010;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x, bombPos.y, bombPos.z - i}, {0.5, 0.5, 0.5},
-														 {0, 0.002, -0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
-														 100, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+						_particalRenderer.partivalEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, {0.49, .5, 0.49},
+														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
+														 0.01, 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
@@ -245,10 +249,10 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
 						sheild = sheild | 0b00000100;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x + i, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
-														 {0.00, 0.002, 0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
-														 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+						_particalRenderer.partivalEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, {0.49, .5, 0.49},
+														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
+														 0.01, 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
@@ -257,10 +261,10 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
 						sheild = sheild | 0b00001000;
 					else {
-						_particalRenderer.partivalEffect({bombPos.x - i, bombPos.y, bombPos.z}, {0.5, 0.5, 0.5},
-														 {-0.0, 0.002, 0}, {0, 0.001, 0}, 0, 0.001, 1000, 1000, .1, .3,
-														 1000, _loader.loadTextureAtlas(
-										"../resources/TextureAtlas/Fireball_Atlas_d.png", 4));
+						_particalRenderer.partivalEffect({bombPos.x - i, bombPos.y + .5, bombPos.z},  {0.49, .5, 0.49},
+														 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1,
+														 0.01, 1000, _loader.loadTextureAtlas(
+										"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 					}
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
@@ -335,6 +339,14 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
+			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
+											 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1, 0.01,
+											 100, _loader.loadTextureAtlas(
+							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
+			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
+											 {0, 0, 0.00}, {0, 0, 0}, 0.5, 0.1, 100, 100, 0.1, 0.01,
+											 1000, _loader.loadTextureAtlas(
+							"../resources/Textures/ConcreatFragment.png", 1),GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			srand((unsigned int) time(NULL) + _dwalls);
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
@@ -477,6 +489,7 @@ void LevelRunner::cleanlevel() {
 	std::vector<Being *>::iterator being;
 	bool found;
 
+	_player->setPlaseBomb(false);
 	for (auto bomb : _bombs) {
 		found = false;
 		being = _beings.begin();
@@ -488,7 +501,7 @@ void LevelRunner::cleanlevel() {
 	}
 	for (auto vecEnt : _level) {
 		for (auto ent : vecEnt) {
-			if (ent != nullptr )
+			if (ent != nullptr)
 				delete (ent);
 		}
 		vecEnt.clear();
@@ -519,6 +532,9 @@ int LevelRunner::resumeLevel() {
 void LevelRunner::runlevelLoop() {
 	while (_state == levelState::PLAY) {
 
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		if (_inputManager->isExitCase() || _player->getLives() <= 0) {
 			_state = levelState::WANTS_QUIT;
 		}
@@ -531,7 +547,10 @@ void LevelRunner::runlevelLoop() {
 			bombWorldInteraction();
 		glm::vec3 plpos = _player->getPosition();
 		_camera.setPosition({plpos.x, 10, plpos.z});
+
 		_entShader.start();
+		//glDisable(GL_BLEND);
+		//glEnable(GL_DEPTH_TEST);
 		_renderer.prepare();
 		_camera.update(_entShader);
 		for (auto &vecit : _level) {

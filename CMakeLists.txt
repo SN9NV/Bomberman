@@ -4,6 +4,12 @@ project(Bomberman)
 set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
+# These directories get symlinked into the build directory after compilation
+set(RESOURCE_DIRS
+		shaders
+		resources
+		)
+
 if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui")
 	message(ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
 			"You probably did not clone the project with --recursive.\n"
@@ -181,3 +187,13 @@ if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/dependencies/nanogui/build")
 			WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/dependencies/nanogui/
 	)
 endif ()
+
+# Function to symbolically link the resources into the build directory
+#	Won't work on Windows
+foreach(RESOURCE_DIR ${RESOURCE_DIRS})
+	add_custom_command(
+			TARGET ${PROJECT_NAME} POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/${RESOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE_DIR}
+			DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE_DIR}
+	)
+endforeach()

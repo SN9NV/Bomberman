@@ -31,9 +31,11 @@ public:
 
 	void setDamage(int _damage);
 
+	void setPlaseBomb(bool _plaseBomb);
+
 	const glm::vec3 &get_n_moveDir() const;
 
-	bool is_placeBomb() const;
+	bool isPlaceBomb() const;
 
 	void placeBomb(Bomb *bomb);
 

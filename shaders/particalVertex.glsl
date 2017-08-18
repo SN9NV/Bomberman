@@ -1,12 +1,12 @@
 #version 330 core
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 uv;
+layout (location = 2) in mat4 modelview;
+layout (location = 6) in vec2 currTextureOff;
+layout (location = 7) in vec2 nextTextureOff;
+layout (location = 8) in float blend;
 
-uniform mat4 modelview;
 uniform mat4 projection;
-uniform vec2 currTextureOff;
-uniform vec2 nextTextureOff;
-uniform float blend;
 uniform float row;
 
 out vec2 outCurrTextureOff;

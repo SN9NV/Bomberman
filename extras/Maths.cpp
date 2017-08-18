@@ -33,6 +33,11 @@ namespace cge {
 			return ((float)sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
 		}
 
+		float 		vec3LenSqur(glm::vec3 vec)
+		{
+			return ((float)(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+		}
+
 		glm::vec3	scaleVec3(float scale, glm::vec3 vec)
 		{
 			glm::vec3 re = {vec.x * scale, vec.y * scale,vec.z * scale};
