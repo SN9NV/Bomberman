@@ -79,9 +79,7 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
-	glEnableVertexAttribArray(6);
-	glEnableVertexAttribArray(7);
-	glEnableVertexAttribArray(8);
+
 
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
 								 camera.getProjectionMatrix());
@@ -95,10 +93,6 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 			size_t index = 0;
 			for (auto &partical : particalList.second.partical) {
 				glm::mat4 mv = viewModelMatrix(partical, camera);
-				/*inctenceData[index].modelview1 = mv[0];
-				inctenceData[index].modelview2 = mv[1];
-				inctenceData[index].modelview3 = mv[2];
-				inctenceData[index].modelview4 = mv[3];*/
 				inctenceData[index].modelview = mv;
 				inctenceData[index].currTextureOff = partical.get_currOff();
 				inctenceData[index].nextTextureOff = partical.get_nextOff();
@@ -115,27 +109,35 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 				getGLError();*/
 			}
 			glBindBuffer(GL_ARRAY_BUFFER, _instanceVBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(s_InctenceData) * inctenceData.size(), inctenceData.data(), GL_DYNAMIC_DRAW);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)offsetof(struct s_InctenceData, modelview));
-			glVertexAttribDivisor(2,1);
-			/*glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview2));
-			glVertexAttribDivisor(3,1);
-			glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview3));
-			glVertexAttribDivisor(4,1);
-			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void *)offsetof(struct s_InctenceData, modelview4));
-			glVertexAttribDivisor(5,1);*/
-			glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *) offsetof(struct s_InctenceData, currTextureOff));
-			glVertexAttribDivisor(6,1);
-			glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *) offsetof(struct s_InctenceData, nextTextureOff));
-			glVertexAttribDivisor(7,1);
-			glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void *) offsetof(struct s_InctenceData, blend));
-			glVertexAttribDivisor(8,1);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(s_InctenceData) * inctenceData.size(), inctenceData.data(),
+						 GL_STREAM_DRAW);
+			GLsizei dataSize = sizeof(struct s_InctenceData);
+			GLsizei vec4Size = sizeof(glm::vec4);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) (offsetof(struct s_InctenceData, modelview)));
+			glVertexAttribDivisor(2, 1);
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) (offsetof(struct s_InctenceData, modelview) + vec4Size));
+			glVertexAttribDivisor(3, 1);
+			glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) (offsetof(struct s_InctenceData, modelview) + 2 * vec4Size));
+			glVertexAttribDivisor(4, 1);
+			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) (offsetof(struct s_InctenceData, modelview) + 3 * vec4Size));
+			glVertexAttribDivisor(5, 1);
+			glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) offsetof(struct s_InctenceData, currTextureOff));
+			glVertexAttribDivisor(6, 1);
+			glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, dataSize,
+								  (void *) offsetof(struct s_InctenceData, nextTextureOff));
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, dataSize, (void *) offsetof(struct s_InctenceData, blend));
+			glVertexAttribDivisor(8, 1);
 			glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(vert.size()), GL_UNSIGNED_INT, 0,
 									static_cast<GLsizei>(index));
-										getGLError();
+			getGLError();
 
-
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -145,9 +147,7 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
 	glDisableVertexAttribArray(5);
-	glDisableVertexAttribArray(6);
-	glDisableVertexAttribArray(7);
-	glDisableVertexAttribArray(8);
+
 	glBindVertexArray(0);
 	_shader.end();
 }

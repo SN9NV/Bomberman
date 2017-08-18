@@ -338,13 +338,13 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
-			/*_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
+			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
 											 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 1000, 1000, 0.1, 0.01,
-											 1000, _loader.loadTextureAtlas(
-							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);*/
+											 100, _loader.loadTextureAtlas(
+							"../resources/TextureAtlas/FireBallAtlas.png", 4),GL_SRC_ALPHA, GL_ONE);
 			_particalRenderer.partivalEffect({x,  0.5, y}, {0.45, .5, 0.45},
 											 {0, 0, 0.00}, {0, 0, 0}, 0.5, 0.1, 100, 100, 0.1, 0.01,
-											 10000, _loader.loadTextureAtlas(
+											 1000, _loader.loadTextureAtlas(
 							"../resources/Textures/ConcreatFragment.png", 1),GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			srand((unsigned int) time(NULL) + _dwalls);
 			if (_gate == nullptr) {
