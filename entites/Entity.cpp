@@ -83,13 +83,8 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 		double currentTime = glfwGetTime();
 
 		this->_ticksDelta = currentTime - this->_lastTicks;
-//			this->_ticksDelta = (lastFrameTime / 1000.0);
 		this->_animationTicks += (this->_ticksDelta * this->_animationSpeed);
-
-//			std::cout << _ticksDelta << ", " << _animationTicks << "\n";
-
 		this->_lastTicks = currentTime;
-//			this->_lastTicks = (lastFrameTime / 1000.0);
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -131,9 +126,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		if (this->_animationTicks < 0.0) {
 			this->_animationTicks += animationLength;
 		} else if (this->_animationTicks >= animationLength) {
-//				std::cout << "Animation overflow\t" << this->_animationTicks << ", ";
 			this->_animationTicks -= animationLength;
-//				std::cout << this->_animationTicks << "\n";
 		}
 
 		/// Find the top of the frame we're in
@@ -192,10 +185,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		}
 
 		this->_animateSkeleton(transformationMap, skeletonTransformation, model.nodes, joint, rootJointIndex, inverseMatrices, animatedMatrices);
-	}
-
-	for (auto &animated : animatedMatrices) {
-		std::cout << animated.second << "\n";
 	}
 
 	const unsigned MAX_JOINTS = 50;
