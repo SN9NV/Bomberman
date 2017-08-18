@@ -12,7 +12,7 @@ namespace cge {
 	namespace Saves {
 		class SavedGame {
 		public:
-			SavedGame();
+			explicit SavedGame(int slot);
 			~SavedGame();
 
 			int getSlot() const;

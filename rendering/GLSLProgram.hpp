@@ -28,6 +28,7 @@ namespace cge {
 		void	uploadvec2d(GLint location, const glm::vec2 &value) const;
 		void	uploadBool(GLint location, bool value) const;
 		void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
+		bool	isInUse() const;
 
 	private:
 		GLuint		_vertexShaderID;

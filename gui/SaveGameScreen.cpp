@@ -4,10 +4,11 @@
 
 #include "SaveGameScreen.h"
 
-cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader)  :
+cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap)  :
 		_window(win),
 		_player(player),
-		_audioMenuScroll("../resources/audio/menu_click.wav", loader)
+		_audioMenuScroll("../resources/audio/menu_click.wav", loader),
+		_currMap(currMap)
 {
 	this->_audioMenuScroll.setLooping(false);
 	this->_audioMenuScroll.setGain(0.09f);
@@ -58,7 +59,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	p_slot1->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot1, "Slot 1)", "sans-bold");
-	nanogui::TextBox *txtb_Slot1 = new nanogui::TextBox(p_slot1);
+	txtb_Slot1 = new nanogui::TextBox(p_slot1);
 	txtb_Slot1->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot1->setValue(this->_availableSaves[0]->isAvailable() ? this->_availableSaves[0]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot1 = new cge::GUI::Custom::CustomButton(p_slot1, "Save");
@@ -67,6 +68,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot1->setCallback([&] {
+		this->saveGame(0);
 	});
 
 	/**Slot 2**/
@@ -74,13 +76,16 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	p_slot2->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot2, "Slot 2)", "sans-bold");
-	nanogui::TextBox *txtb_Slot2 = new nanogui::TextBox(p_slot2);
+	txtb_Slot2 = new nanogui::TextBox(p_slot2);
 	txtb_Slot2->setFixedSize(nanogui::Vector2i(250, 25));
-	txtb_Slot2->setValue(this->_availableSaves[1]->isAvailable() ? this->_availableSaves[2]->getCreationTime() : "[Empty]");
+	txtb_Slot2->setValue(this->_availableSaves[1]->isAvailable() ? this->_availableSaves[1]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot2 = new cge::GUI::Custom::CustomButton(p_slot2, "Save");
 	btn_SaveSlot2->setTooltip("Save Game on Slot 2");
 	btn_SaveSlot2->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
+	});
+	btn_SaveSlot2->setCallback([&] {
+		this->saveGame(1);
 	});
 
 	/**Slot 3**/
@@ -88,7 +93,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	p_slot3->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot3, "Slot 3)", "sans-bold");
-	nanogui::TextBox *txtb_Slot3 = new nanogui::TextBox(p_slot3);
+	txtb_Slot3 = new nanogui::TextBox(p_slot3);
 	txtb_Slot3->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot3->setValue(this->_availableSaves[2]->isAvailable() ? this->_availableSaves[2]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot3 = new cge::GUI::Custom::CustomButton(p_slot3, "Save");
@@ -96,13 +101,16 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	btn_SaveSlot3->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
 	});
+	btn_SaveSlot3->setCallback([&] {
+		this->saveGame(2);
+	});
 
 	/**Slot 4**/
 	nanogui::Widget *p_slot4 = new nanogui::Widget(saves);
 	p_slot4->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot4, "Slot 4)", "sans-bold");
-	nanogui::TextBox *txtb_Slot4 = new nanogui::TextBox(p_slot4);
+	txtb_Slot4 = new nanogui::TextBox(p_slot4);
 	txtb_Slot4->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot4->setValue(this->_availableSaves[3]->isAvailable() ? this->_availableSaves[3]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot4 = new cge::GUI::Custom::CustomButton(p_slot4, "Save");
@@ -110,13 +118,16 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	btn_SaveSlot4->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
 	});
+	btn_SaveSlot4->setCallback([&] {
+		this->saveGame(3);
+	});
 
 	/**Slot 5**/
 	nanogui::Widget *p_slot5 = new nanogui::Widget(saves);
 	p_slot5->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot5, "Slot 5)", "sans-bold");
-	nanogui::TextBox *txtb_Slot5 = new nanogui::TextBox(p_slot5);
+	txtb_Slot5 = new nanogui::TextBox(p_slot5);
 	txtb_Slot5->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot5->setValue(this->_availableSaves[4]->isAvailable() ? this->_availableSaves[4]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot5 = new cge::GUI::Custom::CustomButton(p_slot5, "Save");
@@ -124,19 +135,25 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	btn_SaveSlot5->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
 	});
+	btn_SaveSlot5->setCallback([&] {
+		this->saveGame(4);
+	});
 
 	/**Slot 6**/
 	nanogui::Widget *p_slot6 = new nanogui::Widget(saves);
 	p_slot6->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 20));
 
 	new nanogui::Label(p_slot6, "Slot 6)", "sans-bold");
-	nanogui::TextBox *txtb_Slot6 = new nanogui::TextBox(p_slot6);
+	txtb_Slot6 = new nanogui::TextBox(p_slot6);
 	txtb_Slot6->setFixedSize(nanogui::Vector2i(250, 25));
 	txtb_Slot6->setValue(this->_availableSaves[5]->isAvailable() ? this->_availableSaves[5]->getCreationTime() : "[Empty]");
 	cge::GUI::Custom::CustomButton *btn_SaveSlot6 = new cge::GUI::Custom::CustomButton(p_slot6, "Save");
 	btn_SaveSlot6->setTooltip("Save Game on Slot 6");
 	btn_SaveSlot6->setMouseEnterCallback([&] {
 		this->_audioMenuScroll.setPlaying();
+	});
+	btn_SaveSlot6->setCallback([&] {
+		this->saveGame(5);
 	});
 
 	_screen->setVisible(true);
@@ -237,9 +254,7 @@ void cge::GUI::SaveGameScreen::setInputCallbacks() {
 
 void cge::GUI::SaveGameScreen::searchAvailableSaves() {
 	for (int i = 0; i < 6; i++) {
-		cge::Saves::SavedGame *save = new cge::Saves::SavedGame();
-		save->setAvailable(false);
-		save->setFileName("../resources/Saves/Slot" + std::to_string(i) + ".save");
+		cge::Saves::SavedGame *save = new cge::Saves::SavedGame(i);
 
 		struct stat buffer;
 		if (stat(save->getFileName().c_str(), &buffer) == 0) {
@@ -249,4 +264,54 @@ void cge::GUI::SaveGameScreen::searchAvailableSaves() {
 		}
 		this->_availableSaves.insert(std::make_pair(i, save));
 	}
+}
+
+void cge::GUI::SaveGameScreen::saveGame(int slot) {
+	if (this->_availableSaves[slot]->isAvailable()) {
+		auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				  "Overwrite Existing Save?", "Are you sure you want to overwrite the existing save?", "Yes",
+				  "No", true);
+		dlg->setCallback([&, slot] (int result) {
+			if (result == 0)
+				this->save(slot);
+		});
+	} else {
+		this->save(slot);
+	}
+}
+
+void cge::GUI::SaveGameScreen::save(int slot) {
+	std::cout << "Saving" << std::endl;
+
+	cge::Saves::SavedGame *save = this->_availableSaves[slot];
+
+	if (save != nullptr) {
+		std::ofstream saveFile;
+		saveFile.open(save->getFileName());
+		if (saveFile.is_open()) {
+			saveFile << "level: " << *this->_currMap << std::endl
+					 << "lives: " << this->_player->getLives() << std::endl
+					 << "score: " << this->_player->getScore();
+			saveFile.close();
+		}
+
+		struct stat buffer;
+		stat(save->getFileName().c_str(), &buffer);
+		save->setAvailable(true);
+		struct tm * timeinfo = localtime(&buffer.st_ctime);
+		save->setCreationTime(asctime(timeinfo));
+
+		this->refreshGUI();
+	} else {
+		std::cout << "Failed to save. Save details not found." << std::endl;
+	}
+}
+
+void cge::GUI::SaveGameScreen::refreshGUI() {
+	txtb_Slot1->setValue(this->_availableSaves[0]->isAvailable() ? this->_availableSaves[0]->getCreationTime() : "[Empty]");
+	txtb_Slot2->setValue(this->_availableSaves[1]->isAvailable() ? this->_availableSaves[1]->getCreationTime() : "[Empty]");
+	txtb_Slot3->setValue(this->_availableSaves[2]->isAvailable() ? this->_availableSaves[2]->getCreationTime() : "[Empty]");
+	txtb_Slot4->setValue(this->_availableSaves[3]->isAvailable() ? this->_availableSaves[3]->getCreationTime() : "[Empty]");
+	txtb_Slot5->setValue(this->_availableSaves[4]->isAvailable() ? this->_availableSaves[4]->getCreationTime() : "[Empty]");
+	txtb_Slot6->setValue(this->_availableSaves[5]->isAvailable() ? this->_availableSaves[5]->getCreationTime() : "[Empty]");
 }

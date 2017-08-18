@@ -52,7 +52,7 @@ public:
 
 	Being() = default;
 
-	virtual bool update(const cge::InputManager &input, unsigned lastFrameTime) override;
+	virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
 
 	void setDirection();
 

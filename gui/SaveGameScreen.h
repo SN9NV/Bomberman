@@ -23,7 +23,8 @@ namespace cge {
 			&win,
 			cge::GameState *_currState, Player
 			*player,
-			cge::Loader& loader);
+			cge::Loader& loader,
+			int* currMap);
 
 			~SaveGameScreen();
 
@@ -39,11 +40,22 @@ namespace cge {
 			nanogui::Screen *_screen;
 			cge::Window &_window;
 			Player *_player;
+			int* _currMap;
 			cge::Audio::Source _audioMenuScroll;
+
 			std::map<int, cge::Saves::SavedGame*> _availableSaves;
 
 			void searchAvailableSaves();
 			void saveGame(int slot);
+			void save(int slot);
+			void refreshGUI();
+
+			nanogui::TextBox *txtb_Slot1;
+			nanogui::TextBox *txtb_Slot2;
+			nanogui::TextBox *txtb_Slot3;
+			nanogui::TextBox *txtb_Slot4;
+			nanogui::TextBox *txtb_Slot5;
+			nanogui::TextBox *txtb_Slot6;
 		};
 	};
 };

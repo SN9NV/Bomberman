@@ -10,44 +10,30 @@
 #include "Wall.h"
 #include "../io/audio/AudioSource.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player,
-						 cge::Window &_window, cge::InputManager *inputManager) : _loader(_loader),
-																				  _player(_player),
-																				  _gate(nullptr),
-																				  _window(_window),
-																				  _entShader("../shaders/vertex.glsl",
-																							 "../shaders/fragment.glsl"),
-																				  _partShader(
-																						  "../shaders/particalVertex.glsl",
-																						  "../shaders/particalFragment.glsl"),
-																				  _renderer(_entShader),
-																				  _camera(glm::vec3(0.0f, 5.0f, 0.0f),
-																						  glm::vec3(1.5f, 0.0f, 0.0f),
-																						  _window),
-																				  _particalRenderer(_partShader) {
-	_inputManager = inputManager;
+LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager) :
+		_loader(_loader),
+		_player(_player),
+		_gate(nullptr),
+		_window(_window),
+		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
+		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
+		_renderer(_entShader),
+		_camera({ 0.0f, 5.0f, 0.0f }, { 1.5f, 0.0f, 0.0f }, _window),
+		_particalRenderer(_partShader),
+		_inputManager(inputManager)
+{
+	const std::string resRoot = "resources/models/";
+	_models.emplace("Wall", cge::Model(resRoot+"Wall.glb", resRoot+"SolidWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot+"DestructWall.glb", resRoot+"DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("Bomb", cge::Model(resRoot+"Bomb.glb", resRoot+"BombDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot+"Bomber.glb", resRoot+"BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Balloon", cge::Model(resRoot+"Balloon.glb", resRoot+"BalloonDiffuseColor.png", this->_loader));
+	_models.emplace("Gate", cge::Model(resRoot+"Gate.glb", resRoot+"GateDiffuseColor.png", this->_loader));
 
-	_models.emplace("Wall",
-					cge::Model("../resources/models/Wall.glb", "../resources/models/SolidWallDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("DestructWall", cge::Model("../resources/models/DestructWall.glb",
-											   "../resources/models/DestructWallDiffuseColor.png", this->_loader));
-	_models.emplace("Bomb",
-					cge::Model("../resources/models/Bomb.glb", "../resources/models/BombDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Bomber",
-					cge::Model("../resources/models/Bomber.glb", "../resources/models/BomberManTextureDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Balloon",
-					cge::Model("../resources/models/Balloon.glb", "../resources/models/BalloonDiffuseColor.png",
-							   this->_loader));
-	_models.emplace("Gate",
-					cge::Model("../resources/models/Gate.glb", "../resources/models/GateDiffuseColor.png",
-							   this->_loader));
-	_loader.loadTextureAtlas(
-			"../resources/TextureAtlas/FireBallAtlas.png", 4);
-	_loader.loadTextureAtlas(
-			"../resources/Textures/ConcreatFragment.png", 1);
+	_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
+	_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1);
+
+	this->_player->setAnimationSpeed(2.6f);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -70,7 +56,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y - 1][x]->getPosition().z - pos.z));
+		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
@@ -79,7 +65,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y + 1][x]->getPosition().z - pos.z));
+		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
 			being->setMoveDir({0, 0, 0});
@@ -88,7 +74,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y][x - 1]->getPosition().x - pos.x));
+		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
@@ -97,7 +83,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	//colision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
-		dist = (float) (fabs(_level[y][x + 1]->getPosition().x - pos.x));
+		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
 		if (dist < minBoxDist) {
 			being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
 			being->setMoveDir({0, 0, 0});
@@ -118,7 +104,7 @@ void LevelRunner::beingWorldInteraction() {
 	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
 
-		if (!(*being)->update(*_inputManager, _window.getFrameTime())) {
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime())) {
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
 			pos = (*being)->getPosition();
@@ -199,7 +185,7 @@ void LevelRunner::bombWorldInteraction() {
 	Bomb *tmpBomb;
 	glm::vec3 bombPos;
 	glm::vec3 beingPos;
-	std::vector<Bomb *>::iterator bomb = _bombs.begin();
+	auto bomb = _bombs.begin();
 	std::vector<Being *>::iterator being;
 
 	while (bomb != _bombs.end()) {
@@ -216,7 +202,7 @@ void LevelRunner::bombWorldInteraction() {
 			}
 			checkGateDamage(bombPos, *being);
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
-			fireEffect(bombPos, 1000);
+			fireEffect({bombPos.x, bombPos.y + .5,bombPos.z}, 1000);
 			i = 0;
 			while (++i < (*bomb)->getBombradius()) {
 				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
@@ -256,7 +242,7 @@ void LevelRunner::bombWorldInteraction() {
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
 			}
-			_level[bombPos.z][bombPos.x] = NULL;
+			_level[bombPos.z][bombPos.x] = nullptr;
 			tmpBomb = (*bomb);
 			delete (tmpBomb);
 			_bombs.erase(bomb);
@@ -267,7 +253,7 @@ void LevelRunner::bombWorldInteraction() {
 }
 
 void LevelRunner::loadMapEntitys() {
-	srand((unsigned int) (time(NULL)));
+	srand((unsigned int) (time(nullptr)));
 	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
 
@@ -285,7 +271,7 @@ void LevelRunner::loadMapEntitys() {
 					break;
 				case 'p':
 					_player->setPosition({j, 0, i});
-					_beings.push_back(this->_player);
+					_beings.emplace_back(this->_player);
 					_map[i][j] = '.';
 					break;
 				case 'd':
@@ -322,8 +308,8 @@ void LevelRunner::loadMapEntitys() {
 bool LevelRunner::checkWallBlast(int x, int y) {
 	cge::Model *tmpMdl;
 
-	if (_level[y][x] != NULL) {
-		if (dynamic_cast<DestructWall *>(_level[y][x]) != NULL) {
+	if (_level[y][x] != nullptr) {
+		if (dynamic_cast<DestructWall *>(_level[y][x]) != nullptr) {
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
@@ -351,6 +337,8 @@ void LevelRunner::endLevel() {
 	while (endTime < 1000) {
 		_entShader.start();
 		_renderer.prepare();
+		_camera.setTrackEntity(*_player);
+		_camera.setTrackOffset({ 0, 5, 5 });
 		_camera.update(_entShader);
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive())
@@ -370,10 +358,10 @@ void LevelRunner::endLevel() {
 		_window.swapBuffers();
 		endTime += _window.getFrameTime();
 	}
-	cleanlevel();
+	cleanLevel();
 }
 
-void LevelRunner::loadMapFromFile(std::string path) {
+void LevelRunner::loadMapFromFile(const std::string &path) {
 	//std::vector<std::string> map;
 	std::ifstream ifs(path);
 	std::string line;
@@ -390,22 +378,25 @@ void LevelRunner::loadMapFromFile(std::string path) {
 		if (!std::regex_match(enemies, regEnemies)) {
 			_state = levelState::FAIL_MAP_LOAD;
 			return;
-		} else {
-			if (std::regex_match(enemies, match, regEnemies)) {
-				for (size_t i = 1; i < match.size(); ++i) {
-					std::ssub_match sub_match = match[i];
-					std::string piece = sub_match.str();
-					if (piece == "balloon:") {
-						sub_match = match[++i];
-						_balloons = stoi(sub_match.str());
-					}
-					if (piece == "onil:") {
-						sub_match = match[++i];
-						_onil = stoi(sub_match.str());
-					}
+		}
+
+		if (std::regex_match(enemies, match, regEnemies)) {
+			for (size_t i = 1; i < match.size(); ++i) {
+				std::ssub_match sub_match = match[i];
+				std::string piece = sub_match.str();
+				if (piece == "balloon:") {
+					sub_match = match[++i];
+					_balloons = stoi(sub_match.str());
+				}
+				if (piece == "onil:") {
+					sub_match = match[++i];
+					_onil = stoi(sub_match.str());
 				}
 			}
 		}
+
+		std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
+
 		do {
 			ifs >> line;
 			_map.push_back(line);
@@ -450,9 +441,9 @@ int LevelRunner::getState() const {
 	return _state;
 }
 
-int LevelRunner::runLevel(std::string path) {
+int LevelRunner::runLevel(const std::string &path) {
 	if (_state == levelState::PAUSE)
-		cleanlevel();
+		cleanLevel();
 	loadMapFromFile(path);
 	if (_state == levelState::FAIL_MAP_LOAD)
 		return (_state);
@@ -466,8 +457,7 @@ int LevelRunner::runLevel(std::string path) {
 	return _state;
 }
 
-void LevelRunner::cleanlevel() {
-	std::cout << "clearing level" << std::endl;
+void LevelRunner::cleanLevel() {
 	std::vector<Being *>::iterator being;
 	bool found;
 
@@ -491,9 +481,9 @@ void LevelRunner::cleanlevel() {
 	}
 	_level.clear();
 	_bombs.clear();
-	for (auto &being : _beings)
-		if (being != _player)
-			delete (being);
+	for (auto &beingIter : _beings)
+		if (beingIter != _player)
+			delete beingIter;
 	_beings.clear();
 	if (_gate != nullptr) {
 		delete (_gate);
@@ -543,11 +533,17 @@ void LevelRunner::runLevelLoop() {
 		}
 
 		_entShader.start();
+		_camera.setTrackEntity(*_player);
+		_camera.setTrackOffset({ 0, 5, 5 });
+//		_camera.setPosition({plpos.x + 3, 10, plpos.z + 3});
+//		_camera.lookAt(plpos);
+
+		_entShader.start();
 		_renderer.prepare();
 		_camera.update(_entShader);
 		for (auto &vecit : _level) {
 			for (auto &entit : vecit) {
-				if (entit)
+				if (entit != nullptr)
 					_renderer.render(*entit);
 			}
 		}
@@ -557,7 +553,7 @@ void LevelRunner::runLevelLoop() {
 			_renderer.render(*_gate);
 		_entShader.end();
 		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-		//_textRenderer.DrawText("test", 5, 5);
+//		_textRenderer.DrawText("test", 5, 5);
 		_window.swapBuffers();
 		_inputManager->pollKeyEvnt();
 		if ((_levelTime <= _window.getFrameTime()))
