@@ -12,9 +12,17 @@ class Gate : public cge::Entity
 {
 private:
 	bool _active;
+	bool _damage;
+	size_t _damageCycels;
 public:
 	void actervate();
 	bool isActive() const;
+
+	bool isDamage() const;
+
+	void setDamage(bool _damage);
+	void damage(size_t _damageCicels);
+	bool update();
 	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
 	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox);
 };
