@@ -21,3 +21,24 @@ void Gate::actervate()
 {
 	_active = true;
 }
+
+bool Gate::isDamage() const {
+	return _damage;
+}
+
+void Gate::setDamage(bool _damage) {
+	Gate::_damage = _damage;
+}
+
+void Gate::damage(size_t damageCycles) {
+	_damageCycels = damageCycles;
+	_damage = true;
+}
+
+bool Gate::update() {
+	if (_damageCycels == 1)
+		_damage = false;
+	if (_damageCycels > 0)
+		_damageCycels--;
+	return true;
+}

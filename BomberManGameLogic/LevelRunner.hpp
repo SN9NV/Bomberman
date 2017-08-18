@@ -45,6 +45,7 @@ private:
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
 	cge::TextRenderer _textRenderer;
+	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;
 	int _balloons;
@@ -59,8 +60,11 @@ private:
 	void bumpBeing(Being *);
 	void endLevel();
 	bool checkMapWall();
+	void runLevelLoop();
+	void fireEffect(glm::vec3 position, size_t numParticals);
+	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
+	void checkGateDamage(glm::vec3 position, Being *being);
 	void cleanLevel();
-    void runLevelLoop();
 
 
 public:

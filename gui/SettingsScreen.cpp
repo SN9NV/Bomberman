@@ -135,10 +135,6 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	txtb_MoveUp->setValue("W");//Change here to settings
 	txtb_MoveUp->setEditable(true);
 	txtb_MoveUp->setFixedWidth(35);
-	/*txtb_MoveUp->setCallback([](const std::string &val) -> bool {
-		std::cout << "Test: " << val << std::endl;
-		return (true);
-	});*/
 	txtb_MoveUp->setFormat("[A-Z]");
 
 	/**KEY-BINDINGS: Move Right**/
