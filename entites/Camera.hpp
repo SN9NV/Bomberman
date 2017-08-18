@@ -33,7 +33,7 @@ namespace cge {
 		glm::mat4	getProjectionMatrix() const;
 		glm::mat4	getViewMatrix() const;
 
-		void	update(const GLSLProgram &shader, bool printCameraChange = false);
+		void	update(const GLSLProgram &shader);
 		void	update();
 	private:
 		glm::vec3	_position;

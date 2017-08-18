@@ -78,9 +78,7 @@ float cge::Entity::getScale() const {
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	if (this->_hasAnimation) {
-		this->_ticksDelta = lastFrameTime / 1000.0f;
-		this->_animationTicks += (this->_ticksDelta * this->_animationSpeed);
-		this->_lastTicks = lastFrameTime / 1000.0f;
+		this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -195,8 +193,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	for (unsigned i = 0; i < MAX_JOINTS; i++) {
 		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
 							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4(1.0f));
-
-		std::cout << "Index: " << i << "\nMatrix:\n" << animatedMatrices[i];
 	}
 }
 

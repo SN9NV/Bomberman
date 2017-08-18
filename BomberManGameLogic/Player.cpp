@@ -16,6 +16,17 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	else
 		this->_n_moveDir.x = 0;
 
+	/// TODO remove
+	if (input.isKeyPressed(GLFW_KEY_KP_ADD)) {
+		this->_animationSpeed += 0.01;
+		std::cout << "Animation speed: " << this->_animationSpeed << "\n";
+	}
+	if (input.isKeyPressed(GLFW_KEY_KP_SUBTRACT)) {
+		this->_animationSpeed -= 0.01;
+		std::cout << "Animation speed: " << this->_animationSpeed << "\n";
+	}
+	/// TODO remove
+
 	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb) {
 		_plaseBomb = true;
 	}

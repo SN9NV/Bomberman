@@ -30,6 +30,8 @@ LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_wi
 	_models.emplace("Bomber", cge::Model(resRoot+"Bomber.glb", resRoot+"BomberManTextureDiffuseColor.png", this->_loader));
 	_models.emplace("Balloon", cge::Model(resRoot+"Balloon.glb", resRoot+"BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot+"Gate.glb", resRoot+"GateDiffuseColor.png", this->_loader));
+
+	this->_player->setAnimationSpeed(2.6f);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -455,7 +457,7 @@ int LevelRunner::runLevel(std::string path) {
 	runlevelLoop();
 	if (_state != levelState::PAUSE)
 		endLevel();
-	std::cout << "about to eixit leve with state " << _state << std::endl;
+	std::cout << "about to exit leave with state " << _state << std::endl;
 	return _state;
 }
 
