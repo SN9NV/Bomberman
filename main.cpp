@@ -19,6 +19,7 @@
 #include "gui/GuiManager.hpp"
 #include "io/audio/AudioSource.hpp"
 #include "io/audio/AudioDevice.hpp"
+#include "io/settings/Settings.hpp"
 #include <GLFW/glfw3.h>
 
 #include <nanogui/nanogui.h>
@@ -38,6 +39,7 @@ int main() {
 	cge::Model			BomberMan;
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
+	cge::Settings::Settings::Initialise("resources/settings/settings.data");
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
