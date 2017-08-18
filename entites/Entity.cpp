@@ -137,8 +137,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 			}
 		}
 
-		std::cout << upperKeyframe << "\n";
-
 		unsigned lowerKeyframe = (upperKeyframe == 0) ? static_cast<unsigned>(inAccessor.count - 1) : upperKeyframe - 1;
 
 		auto transformation = transformationMap.find(channel.target_node);
@@ -190,7 +188,9 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	const unsigned MAX_JOINTS = 50;
 	for (unsigned i = 0; i < MAX_JOINTS; i++) {
 		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
-							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4());
+							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4(1.0f));
+
+		std::cout << "Index: " << i << "\nMatrix:\n" << animatedMatrices[i];
 	}
 }
 
@@ -209,7 +209,7 @@ void	cge::Entity::_animateSkeleton(const std::map<int, cge::Entity::Transformati
 	} else {
 		currentTransform =
 				parentTransform *
-				glm::translate(glm::mat4(), jointTransform->second.translation) *
+				glm::translate(glm::mat4(1.0f), jointTransform->second.translation) *
 				glm::mat4_cast(glm::normalize(jointTransform->second.rotation));
 	}
 
