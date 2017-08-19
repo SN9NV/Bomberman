@@ -87,3 +87,11 @@ void cge::Settings::Settings::setToDefaults() {
 	this->_settings.MusicVolume = 0.8f;
 	this->_settings.SfxVolume = 0.01f;
 }
+
+float cge::Settings::Settings::getMusicVolume() const {
+	return (this->_settings.MusicVolume * this->_settings.MasterVolume);
+}
+
+float cge::Settings::Settings::getSfxVolume() const {
+	return (this->_settings.SfxVolume * this->_settings.MasterVolume);
+}
