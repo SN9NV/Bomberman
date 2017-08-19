@@ -36,7 +36,8 @@ void Gate::damage(size_t damageCycles) {
 }
 
 bool Gate::update() {
-	if (_damageCycels == 1)
+	std::cout << "gate updated\n";
+	if (_damageCycels > 1)
 		_damage = false;
 	if (_damageCycels > 0)
 		_damageCycels--;

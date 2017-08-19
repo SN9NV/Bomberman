@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include "../../error_handling/Exceptions.hpp"
 
 namespace cge {

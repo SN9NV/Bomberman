@@ -29,17 +29,13 @@ bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, u
 		if ((z < 0.01 || z > 0.99)) {
 				_n_moveDir.x = 0;
 				_n_moveDir.z = (_ndisision(gen) == 1) ? -1 : 1;
-			std::cout << "moving from : " << _position.x << " " << _position.z << " to ";
 			_position.z = static_cast<float>(round(_position.z));
-			std::cout  << _position.x << " " << _position.z << std::endl;
 		}
 		else if ((x < 0.01 || x > 0.99))
 		{
 			_n_moveDir.z = 0;
 			_n_moveDir.x = (_ndisision(gen) == 1) ? -1 : 1;
-			std::cout << "moving from : " << _position.x << " " << _position.z << " to ";
 			_position.x = static_cast<float>(round(_position.x));
-			std::cout  << _position.x << " " << _position.z << std::endl;
 		}
 	} else if (_n_moveDir.x == 0 && _n_moveDir.z == 0) {
 		if (_ndisision(gen) == 1) {

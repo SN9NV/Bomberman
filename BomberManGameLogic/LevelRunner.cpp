@@ -10,11 +10,11 @@
 #include "Wall.h"
 #include "../io/audio/AudioSource.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager) :
-		_loader(_loader),
-		_player(_player),
+LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager) :
+		_loader(loader),
+		_player(player),
 		_gate(nullptr),
-		_window(_window),
+		_window(window),
 		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
 		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
 		_renderer(_entShader),
@@ -335,27 +335,10 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 void LevelRunner::endLevel() {
 	unsigned endTime = 0;
 	while (endTime < 1000) {
-		_entShader.start();
-		_renderer.prepare();
-		_camera.setTrackEntity(*_player);
-		_camera.setTrackOffset({ 0, 5, 5 });
-		_camera.update(_entShader);
 		_player->setRotation({0, endTime * M_PI / 180, 0});
-		if (_gate != nullptr && _gate->isActive())
+		if (_gate != nullptr && _gate->isActive() && _player->getPosition() == _gate->getPosition())
 			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
-		for (auto &vecit : _level) {
-			for (auto &entit : vecit) {
-				if (entit != nullptr)
-					_renderer.render(*entit);
-			}
-		}
-		for (auto being : _beings)
-			_renderer.render(*being);
-		if (_gate != nullptr)
-			_renderer.render(*_gate);
-		_entShader.end();
-		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-		_window.swapBuffers();
+		render();
 		endTime += _window.getFrameTime();
 	}
 	cleanLevel();
@@ -508,53 +491,8 @@ int LevelRunner::resumeLevel() {
 void LevelRunner::runLevelLoop() {
 	_inputManager->setInputCallBacks();
 	while (_state == levelState::PLAY) {
-		_renderer.prepare();
-		if (_inputManager->isExitCase() || _player->getLives() <= 0) {
-			_state = levelState::WANTS_QUIT;
-		}
-		if (_player->isPauseMenue())
-			_state = levelState::PAUSE;
-		if (_beings.size() == 1 && _gate != nullptr)
-			_gate->actervate();
-		beingWorldInteraction();
-		if (_state == levelState::PLAY)
-			bombWorldInteraction();
-		glm::vec3 plpos = _player->getPosition();
-		_camera.setPosition({plpos.x, 10, plpos.z});
-		if (_gate != nullptr) {
-			if (_gate->isDamage()) {
-				cge::Model *tmp;
-				if ((tmp = getModel("Balloon")) != nullptr) {
-					_beings.push_back(
-							new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, 0.5f));
-				}
-			}
-			_gate->update();
-		}
-
-		_entShader.start();
-		_camera.setTrackEntity(*_player);
-		_camera.setTrackOffset({ 0, 5, 5 });
-//		_camera.setPosition({plpos.x + 3, 10, plpos.z + 3});
-//		_camera.lookAt(plpos);
-
-		_entShader.start();
-		_renderer.prepare();
-		_camera.update(_entShader);
-		for (auto &vecit : _level) {
-			for (auto &entit : vecit) {
-				if (entit != nullptr)
-					_renderer.render(*entit);
-			}
-		}
-		for (auto being : _beings)
-			_renderer.render(*being);
-		if (_gate != nullptr)
-			_renderer.render(*_gate);
-		_entShader.end();
-		_particalRenderer.updateRender(_camera, _window.getFrameTime());
-//		_textRenderer.DrawText("test", 5, 5);
-		_window.swapBuffers();
+		update();
+		render();
 		_inputManager->pollKeyEvnt();
 		if ((_levelTime <= _window.getFrameTime()))
 			_state = levelState::FAIL;
@@ -579,7 +517,7 @@ void LevelRunner::wallBrakeEffect(glm::vec3 position, size_t numParticals) {
 	_particalRenderer.partivalEffect(position, {0.5, .5, 0.5},
 									 {0, 0, 0.00}, {0, 0, 0}, 0.5, 0.1, 250, 100, 0.1, 0.01, 0.1, 1, 0.001, 0.001,
 									 numParticals, _loader.loadTextureAtlas(
-					"../resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					"resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void LevelRunner::fireEffect(glm::vec3 position, size_t numParticals) {
@@ -587,7 +525,7 @@ void LevelRunner::fireEffect(glm::vec3 position, size_t numParticals) {
 									 {0, 0.002, 0.00}, {0, 0.001, 0}, 0, 0.00, 500, 500, 0.1, 0.01, 0.1, 1, 0.00001,
 									 0.0001,
 									 numParticals, _loader.loadTextureAtlas(
-					"../resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+					"resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
 
 }
 
@@ -595,4 +533,56 @@ void LevelRunner::checkGateDamage(glm::vec3 position, Being *being) {
 	if (being == _player && _gate != nullptr && _gate->getPosition().x == position.x &&
 		_gate->getPosition().z == position.z)
 		_gate->damage(8);
+}
+
+void LevelRunner::update()
+{
+	if (_inputManager->isExitCase() || _player->getLives() <= 0) {
+		_state = levelState::WANTS_QUIT;
+	}
+	if (_player->isPauseMenue())
+		_state = levelState::PAUSE;
+	if (_beings.size() == 1 && _gate != nullptr)
+		_gate->actervate();
+	beingWorldInteraction();
+	if (_state == levelState::PLAY)
+		bombWorldInteraction();
+	glm::vec3 plpos = _player->getPosition();
+	_camera.setPosition({plpos.x, 10, plpos.z});
+	if (_gate != nullptr) {
+		if (_gate->isDamage()) {
+			cge::Model *tmp;
+			if ((tmp = getModel("Balloon")) != nullptr) {
+				_beings.push_back(
+						new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, 0.5f));
+			}
+		}
+		_gate->update();
+	}
+}
+
+void LevelRunner::render()
+{
+	_renderer.prepare();
+	_entShader.start();
+	_camera.setTrackEntity(*_player);
+	_camera.setTrackOffset({ 0, 8, 5 });
+
+	_entShader.start();
+	_renderer.prepare();
+	_camera.update(_entShader);
+	for (auto &vecit : _level) {
+		for (auto &entit : vecit) {
+			if (entit != nullptr)
+				_renderer.render(*entit);
+		}
+	}
+	for (auto being : _beings)
+		_renderer.render(*being);
+	if (_gate != nullptr)
+		_renderer.render(*_gate);
+	_entShader.end();
+	_particalRenderer.updateRender(_camera, _window.getFrameTime());
+//		_textRenderer.DrawText("test", 5, 5);
+	_window.swapBuffers();
 }

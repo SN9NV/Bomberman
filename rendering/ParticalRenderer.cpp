@@ -62,8 +62,9 @@ void cge::ParticalRenderer::addPartical(cge::Partical partical, GLenum specFac, 
 		find->second.specFac = specFac;
 		find->second.deffFac = deffFac;
 	} else {
-		s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
-		_partiacals.emplace(partical.getTexture().getID(), tmp);
+		/*s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
+		_partiacals.emplace(partical.getTexture().getID(), tmp);*/
+		std::cout << "partical texture not found\n";
 	}
 }
 
@@ -256,8 +257,8 @@ void cge::ParticalRenderer::clearParticals() {
 
 void cge::ParticalRenderer::addParticalTexture(cge::TextureAtlas texture, GLenum specFac, GLenum deffFac) {
 	auto find = _partiacals.find(texture.getID());
-	if (find != _partiacals.end()) {
-		find->second.specFac = specFac;
-		find->second.deffFac = deffFac;
+	if (find == _partiacals.end()) {
+		s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({}), specFac, deffFac};
+		_partiacals.emplace(texture.getID(), tmp);
 	}
 }

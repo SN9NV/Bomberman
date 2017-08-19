@@ -65,6 +65,8 @@ private:
 	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
 	void checkGateDamage(glm::vec3 position, Being *being);
 	void cleanLevel();
+	void update();
+	void render();
 
 
 public:
