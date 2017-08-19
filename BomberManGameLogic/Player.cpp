@@ -3,16 +3,30 @@
 
 bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	_plaseBomb = false;
+	_playAnimation = false;
 	if (input.isKeyPressed(_up))
+	{
+		_playAnimation = true;
 		this->_n_moveDir.z = -1;
+	}
 	else if (input.isKeyPressed(_down))
+	{
+		_playAnimation = true;
 		this->_n_moveDir.z = 1;
+	}
 	else
 		this->_n_moveDir.z = 0;
+
 	if (input.isKeyPressed(_right))
+	{
+		_playAnimation = true;
 		this->_n_moveDir.x = 1;
+	}
 	else if (input.isKeyPressed(_left))
+	{
+		_playAnimation = true;
 		this->_n_moveDir.x = -1;
+	}
 	else
 		this->_n_moveDir.x = 0;
 

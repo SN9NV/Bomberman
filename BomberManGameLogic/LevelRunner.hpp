@@ -14,6 +14,7 @@
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
+#include "PowerUPInterface.hpp"
 
 
 enum levelState
@@ -50,6 +51,8 @@ private:
 	int _dwalls;
 	int _balloons;
 	int _onil;
+	bool _powerup;
+	PowerUPInterface *_powerUpInstance;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();

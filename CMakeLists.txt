@@ -114,7 +114,7 @@ set(SOURCE_FILES
 		io/settings/Settings.cpp
 		io/settings/Settings.hpp
 		extras/tinygltfOstream.cpp
-		extras/tinygltfOstream.hpp)
+		extras/tinygltfOstream.hpp BomberManGameLogic/PowerUPInterface.hpp BomberManGameLogic/FireUp.cpp BomberManGameLogic/FireUp.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

@@ -31,7 +31,7 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_transformationLocation(0),
 		_lastTicks(glfwGetTime()),
 		_ticksDelta(0.0),
-		_animationTicks(0.0),
+		_animationTicks(1.0),
 		_currentAnimation(0),
 		_hasAnimation(!model.getTinygltfModel().animations.empty()),
 		_animationSpeed(1.0),
@@ -78,7 +78,8 @@ float cge::Entity::getScale() const {
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	if (this->_hasAnimation) {
-		this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
+		if (this->_playAnimation)
+			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -251,4 +252,14 @@ bool cge::Entity::isAnimated() const {
 
 double cge::Entity::getAnimationSpeed() const {
 	return this->_animationSpeed;
+}
+
+bool cge::Entity::isPlayAnimation() const
+{
+	return _playAnimation;
+}
+
+void cge::Entity::setPlayAnimation(bool playAnimation)
+{
+	this->_playAnimation = playAnimation;
 }

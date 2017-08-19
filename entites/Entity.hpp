@@ -26,6 +26,7 @@ namespace cge {
 		void 			setScale(float scale);
 		void			setAnimationTicks(double ticks);
 		void			setAnimationSpeed(float speed);
+		void 			setPlayAnimation(bool playAnimation);
 
 		float 			getHitBoxRadius() const;
 		Model			&getModel();
@@ -33,6 +34,7 @@ namespace cge {
 		glm::vec3		getRotation() const;
 		float 			getScale() const;
 		bool 			isAnimated() const;
+		bool			isPlayAnimation() const;
 		double			getAnimationSpeed() const;
 
 	protected:
@@ -48,6 +50,7 @@ namespace cge {
 		double		_animationTicks;
 		unsigned	_currentAnimation;
 		bool		_hasAnimation;
+		bool 		_playAnimation;
 		double		_animationSpeed;
 
 		bool		_needsTransformationUpdate;
