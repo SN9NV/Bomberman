@@ -155,24 +155,9 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	txtb_MoveUp = p_MoveUp->add<nanogui::TextBox>();
 	txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
 	txtb_MoveUp->setEditable(true);
-	txtb_MoveUp->setFixedWidth(35);
+	txtb_MoveUp->setFixedWidth(50);
 	txtb_MoveUp->setFormat("[A-Z]");
 	txtb_MoveUp->setCallback([&] (const std::string& str)-> bool {
-		this->_changesMade = true;
-		return (true);
-	});
-
-	/**KEY-BINDINGS: Move Right**/
-	nanogui::Widget* p_MoveRight = keyBindings->add<nanogui::Widget>();
-	auto lbl_MoveRight = p_MoveRight->add<nanogui::Label>("Move Right:");
-	lbl_MoveRight->setFixedWidth(80);
-	p_MoveRight->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	txtb_MoveRight = p_MoveRight->add<nanogui::TextBox>();
-	txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
-	txtb_MoveRight->setEditable(true);
-	txtb_MoveRight->setFixedWidth(35);
-	txtb_MoveRight->setFormat("[A-Z]");
-	txtb_MoveRight->setCallback([&] (const std::string& str)-> bool {
 		this->_changesMade = true;
 		return (true);
 	});
@@ -185,9 +170,24 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	txtb_MoveDown = p_MoveDown->add<nanogui::TextBox>();
 	txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
 	txtb_MoveDown->setEditable(true);
-	txtb_MoveDown->setFixedWidth(35);
+	txtb_MoveDown->setFixedWidth(50);
 	txtb_MoveDown->setFormat("[A-Z]");
 	txtb_MoveDown->setCallback([&] (const std::string& str)-> bool {
+		this->_changesMade = true;
+		return (true);
+	});
+
+	/**KEY-BINDINGS: Move Right**/
+	nanogui::Widget* p_MoveRight = keyBindings->add<nanogui::Widget>();
+	auto lbl_MoveRight = p_MoveRight->add<nanogui::Label>("Move Right:");
+	lbl_MoveRight->setFixedWidth(80);
+	p_MoveRight->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
+	txtb_MoveRight = p_MoveRight->add<nanogui::TextBox>();
+	txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
+	txtb_MoveRight->setEditable(true);
+	txtb_MoveRight->setFixedWidth(50);
+	txtb_MoveRight->setFormat("[A-Z]");
+	txtb_MoveRight->setCallback([&] (const std::string& str)-> bool {
 		this->_changesMade = true;
 		return (true);
 	});
@@ -200,7 +200,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	txtb_MoveLeft = p_MoveLeft->add<nanogui::TextBox>();
 	txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft)); //Change here to settings
 	txtb_MoveLeft->setEditable(true);
-	txtb_MoveLeft->setFixedWidth(35);
+	txtb_MoveLeft->setFixedWidth(50);
 	txtb_MoveLeft->setFormat("[A-Z]");
 	txtb_MoveLeft->setCallback([&] (const std::string& str)-> bool {
 		this->_changesMade = true;
