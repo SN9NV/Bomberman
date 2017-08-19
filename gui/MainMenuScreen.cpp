@@ -46,6 +46,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		*currMap = 0;
 	});
 	btn_NewGame->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMouseEnter.setPlaying();
 	});
 
@@ -56,6 +57,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		*currState = cge::GameState::PLAY_LOAD;
 	});
 	btn_LoadGame->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMouseEnter.setPlaying();
 	});
 
@@ -66,6 +68,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		*currState = cge::GameState::PLAY_OPTS;
 	});
 	btn_Settings->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMouseEnter.setPlaying();
 	});
 
@@ -76,6 +79,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		*currState = cge::GameState::WANTS_QUIT;
 	});
 	btn_Quit->setMouseEnterCallback([&] {
+		this->_audioMouseEnter.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMouseEnter.setPlaying();
 	});
 

@@ -39,7 +39,9 @@ int main() {
 	cge::Model			BomberMan;
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
+
 	cge::Settings::Settings::Initialise("resources/settings/settings.data");
+	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
@@ -49,6 +51,7 @@ int main() {
 	};
 	cge::Audio::Source* menuSound = new cge::Audio::Source("../resources/audio/MainTheme.ogg", loader);
 	menuSound->setLooping(true);
+	menuSound->setGain(setts->getMusicVolume());
 	std::vector<cge::Audio::Source *> levelSounds = {
 			new cge::Audio::Source("../resources/audio/Area 1.ogg", loader),
 			new cge::Audio::Source("../resources/audio/Area 2.ogg", loader),
@@ -70,6 +73,7 @@ int main() {
 			case (cge::PLAY_GAME):
 				if (player->getLives() > 0) {
 					menuSound->setPlaying(false);
+					levelSounds[currMap]->setGain(setts->getMusicVolume());
 					levelSounds[currMap]->setLooping(true);
 					levelSounds[currMap]->setPlaying();
 //					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -92,8 +96,10 @@ int main() {
 					gameState = cge::PLAY_MENU;
 				break;
 			case (cge::PLAY_PAUSE):
-				if (!menuSound->isPlaying())
+				menuSound->setGain(setts->getMusicVolume());
+				if (!menuSound->isPlaying()) {
 					menuSound->setPlaying();
+				}
 				cge::GuiManager::getSingleton()->drawScreen(cge::GameState::PLAY_PAUSE);
 				break;
 			case (cge::RESUME):
@@ -102,6 +108,7 @@ int main() {
 				player->setPauseMenue(false);
 //				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();
+				levelSounds[currMap]->setGain(setts->getMusicVolume());
 				levelSounds[currMap]->setLooping(false);
 				levelSounds[currMap]->setPlaying();
 				state = levelRunner->resumeLevel();
@@ -112,8 +119,10 @@ int main() {
 				std::cout << "Player Lives: " << player->getLives() << std::endl;
 				break;
 			default:
-				if (!menuSound->isPlaying())
+				menuSound->setGain(setts->getMusicVolume());
+				if (!menuSound->isPlaying()) {
 					menuSound->setPlaying();
+				}
 				cge::GuiManager::getSingleton()->drawScreen(gameState);
 				break;
 		}

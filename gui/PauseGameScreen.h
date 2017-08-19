@@ -11,6 +11,7 @@
 #include "../io/audio/AudioSource.hpp"
 #include <nanogui/nanogui.h>
 #include "CustomButton.hpp"
+#include "../io/settings/Settings.hpp"
 
 namespace cge {
 	namespace GUI {

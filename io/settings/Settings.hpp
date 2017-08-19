@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include "../../error_handling/Exceptions.hpp"
 
 namespace cge {
@@ -32,7 +32,11 @@ namespace cge {
 			static void						Initialise(std::string file);
 			static cge::Settings::Settings*	getSingleton();
 
-			t_settings				getSettings() const;
+			t_settings						getSettings() const;
+
+			/**Getters taking the master volume into account.**/
+			float						getMusicVolume() const;
+			float						getSfxVolume() const;
 
 			/**Volume Setters**/
 			void						setMasterVolume(float mv);

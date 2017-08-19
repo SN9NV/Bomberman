@@ -36,6 +36,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		*_currState = cge::RESUME;
 	});
 	btn_ResumeGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -56,6 +57,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		});
 	});
 	btn_NewGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -75,6 +77,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		*_currState = cge::GameState::PLAY_LOAD;
 	});
 	btn_LoadGame->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -85,6 +88,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		*_currState = cge::GameState::PLAY_OPTS;
 	});
 	btn_Settings->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -102,6 +106,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		});
 	});
 	btn_Quit->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -118,6 +123,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 		});
 	});
 	btn_QuitToDesktop->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -151,65 +157,65 @@ void cge::GUI::PauseGameScreen::setInputCallbacks() {
 	glfwSetWindowUserPointer(_window.getGLFWWindow(), this);
 
 	glfwSetCursorPosCallback(_window.getGLFWWindow(),
-							 [](GLFWwindow *win, double x, double y) {
-								 cge::GUI::PauseGameScreen *screen;
-								 screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+		 [](GLFWwindow *win, double x, double y) {
+			 cge::GUI::PauseGameScreen *screen;
+			 screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-								 screen->getScreen()->cursorPosCallbackEvent(x, y);
-							 }
+			 screen->getScreen()->cursorPosCallbackEvent(x, y);
+		 }
 	);
 
 	glfwSetMouseButtonCallback(_window.getGLFWWindow(),
-							   [](GLFWwindow *win, int button, int action, int modifiers) {
-								   cge::GUI::PauseGameScreen *screen;
-								   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int button, int action, int modifiers) {
+		   cge::GUI::PauseGameScreen *screen;
+		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-								   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
-							   }
+		   screen->getScreen()->mouseButtonCallbackEvent(button, action, modifiers);
+	   }
 	);
 
 	glfwSetKeyCallback(_window.getGLFWWindow(),
-					   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
-						   cge::GUI::PauseGameScreen *screen;
-						   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int key, int scancode, int action, int mods) {
+		   cge::GUI::PauseGameScreen *screen;
+		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-						   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
-					   }
+		   screen->getScreen()->keyCallbackEvent(key, scancode, action, mods);
+	   }
 	);
 
 	glfwSetCharCallback(_window.getGLFWWindow(),
-						[](GLFWwindow *win, unsigned int codepoint) {
-							cge::GUI::PauseGameScreen *screen;
-							screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+		[](GLFWwindow *win, unsigned int codepoint) {
+			cge::GUI::PauseGameScreen *screen;
+			screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-							screen->getScreen()->charCallbackEvent(codepoint);
-						}
+			screen->getScreen()->charCallbackEvent(codepoint);
+		}
 	);
 
 	glfwSetDropCallback(_window.getGLFWWindow(),
-						[](GLFWwindow *win, int count, const char **filenames) {
-							cge::GUI::PauseGameScreen *screen;
-							screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+		[](GLFWwindow *win, int count, const char **filenames) {
+			cge::GUI::PauseGameScreen *screen;
+			screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-							screen->getScreen()->dropCallbackEvent(count, filenames);
-						}
+			screen->getScreen()->dropCallbackEvent(count, filenames);
+		}
 	);
 
 	glfwSetScrollCallback(_window.getGLFWWindow(),
-						  [](GLFWwindow *win, double x, double y) {
-							  cge::GUI::PauseGameScreen *screen;
-							  screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+	  [](GLFWwindow *win, double x, double y) {
+		  cge::GUI::PauseGameScreen *screen;
+		  screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-							  screen->getScreen()->scrollCallbackEvent(x, y);
-						  }
+		  screen->getScreen()->scrollCallbackEvent(x, y);
+	  }
 	);
 
 	glfwSetFramebufferSizeCallback(_window.getGLFWWindow(),
-								   [](GLFWwindow *win, int width, int height) {
-									   cge::GUI::PauseGameScreen *screen;
-									   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
+	   [](GLFWwindow *win, int width, int height) {
+		   cge::GUI::PauseGameScreen *screen;
+		   screen = (cge::GUI::PauseGameScreen *) glfwGetWindowUserPointer(win);
 
-									   screen->getScreen()->resizeCallbackEvent(width, height);
-								   }
+		   screen->getScreen()->resizeCallbackEvent(width, height);
+	   }
 	);
 }

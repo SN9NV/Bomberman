@@ -42,6 +42,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 		*_currState = cge::GameState::PLAY_PAUSE;
 	});
 	btn_MainMenu->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 
@@ -65,6 +66,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot1 = new cge::GUI::Custom::CustomButton(p_slot1, "Save");
 	btn_SaveSlot1->setTooltip("Save Game on Slot 1");
 	btn_SaveSlot1->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot1->setCallback([&] {
@@ -82,6 +84,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot2 = new cge::GUI::Custom::CustomButton(p_slot2, "Save");
 	btn_SaveSlot2->setTooltip("Save Game on Slot 2");
 	btn_SaveSlot2->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot2->setCallback([&] {
@@ -99,6 +102,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot3 = new cge::GUI::Custom::CustomButton(p_slot3, "Save");
 	btn_SaveSlot3->setTooltip("Save Game on Slot 3");
 	btn_SaveSlot3->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot3->setCallback([&] {
@@ -116,6 +120,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot4 = new cge::GUI::Custom::CustomButton(p_slot4, "Save");
 	btn_SaveSlot4->setTooltip("Save Game on Slot 4");
 	btn_SaveSlot4->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot4->setCallback([&] {
@@ -133,6 +138,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot5 = new cge::GUI::Custom::CustomButton(p_slot5, "Save");
 	btn_SaveSlot5->setTooltip("Save Game on Slot 5");
 	btn_SaveSlot5->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot5->setCallback([&] {
@@ -150,6 +156,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 	cge::GUI::Custom::CustomButton *btn_SaveSlot6 = new cge::GUI::Custom::CustomButton(p_slot6, "Save");
 	btn_SaveSlot6->setTooltip("Save Game on Slot 6");
 	btn_SaveSlot6->setMouseEnterCallback([&] {
+		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
 	btn_SaveSlot6->setCallback([&] {

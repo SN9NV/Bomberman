@@ -10,11 +10,14 @@ set(RESOURCE_DIRS
 		resources
 		)
 
-if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui")
+if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui/build")
 	message(ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
 			"You probably did not clone the project with --recursive.\n"
 			"Automatically cloning submodules...")
 	execute_process(COMMAND git submodule update --init --recursive)
+	message(INFO "Build NanoGUI")
+	execute_process(COMMAND /bin/sh ${PROJECT_SOURCE_DIR}/install_dependencies.sh
+					WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/dependencies/nanogui/)
 endif ()
 
 
@@ -185,16 +188,6 @@ target_link_libraries(${PROJECT_NAME}
 		nanogui
 		${FT_LIBRARIES}
 		)
-
-if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/dependencies/nanogui/build")
-	message("Building NanoGUI...")
-	add_custom_command(
-			TARGET ${PROJECT_NAME}
-			PRE_BUILD
-			COMMAND /bin/sh ${PROJECT_SOURCE_DIR}/install_dependencies.sh
-			WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/dependencies/nanogui/
-	)
-endif ()
 
 # Function to symbolically link the resources into the build directory
 #	Won't work on Windows

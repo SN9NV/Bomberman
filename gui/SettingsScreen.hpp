@@ -35,6 +35,9 @@ namespace cge {
 			cge::Window &_window;
 			Player *_player;
 			cge::Audio::Source _audioMenuScroll;
+			cge::GameState* _currState;
+			cge::GameState* _prevState;
+			bool			_changesMade;
 
 			/**Sliders for Volume control**/
 			nanogui::Slider *sl_master;

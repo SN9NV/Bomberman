@@ -14,6 +14,7 @@
 #include <nanogui/nanogui.h>
 #include "CustomButton.hpp"
 #include "../extras/SavedGame.hpp"
+#include "../io/settings/Settings.hpp"
 
 namespace cge {
 	namespace GUI {
