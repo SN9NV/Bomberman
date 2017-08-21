@@ -319,7 +319,10 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 	std::ifstream ifs(save->getFileName());
 	std::smatch match;
 
-	int level = 0, lives = 3, score = 0;
+	int level = 0,
+		lives = 3,
+		score = 0,
+		dmg = 2;
 
 	if (ifs.good()) {
 		while (std::getline(ifs, line)) {
@@ -329,6 +332,8 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 				lives = std::atoi(match[1].str().c_str());
 			} else if (std::regex_match(line, match, std::regex("score: ([0-9])\\s*"))) {
 				score = std::atoi(match[1].str().c_str());
+			} else if (std::regex_match(line, match, std::regex("dmg: ([0-9])\\s*"))) {
+				dmg = std::atoi(match[1].str().c_str());
 			} else {
 				auto noSaveDlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 					"Error", "Failed to load save game. Corrupted save file.", "OK", "Cancel", false);
@@ -340,6 +345,7 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 		_player->setLives(lives);
 		_player->setScore(score);
 		_player->setPauseMenue(false);
+		_player->setDamage(dmg);
 		*_gameState = cge::GameState::PLAY_GAME;
 	} else {
 		std::cerr << "Failed to load game. Corrupt" << std::endl;

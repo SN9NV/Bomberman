@@ -298,7 +298,8 @@ void cge::GUI::SaveGameScreen::save(int slot) {
 		if (saveFile.is_open()) {
 			saveFile << "level: " << *this->_currMap << std::endl
 					 << "lives: " << this->_player->getLives() << std::endl
-					 << "score: " << this->_player->getScore();
+					 << "score: " << this->_player->getScore() << std::endl
+					 << "dmg: " << this->_player->getDamage() << std::endl;
 			saveFile.close();
 		}
 
