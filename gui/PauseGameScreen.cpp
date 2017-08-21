@@ -26,7 +26,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 
 	// Create nanogui gui
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
 	cge::GUI::Custom::CustomButton *btn_ResumeGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Resume Game");
@@ -219,4 +219,9 @@ void cge::GUI::PauseGameScreen::setInputCallbacks() {
 		   screen->getScreen()->resizeCallbackEvent(width, height);
 	   }
 	);
+}
+
+void cge::GUI::PauseGameScreen::ReinitializeScreen() {
+	this->_screen->initialize(this->_window.getGLFWWindow(), false);
+	this->nanoguiWindow->center();
 }

@@ -25,15 +25,14 @@
 #include <nanogui/nanogui.h>
 #include <iostream>
 
-static constexpr unsigned HEIGHT = 720;
-static constexpr unsigned WIDTH = 1280;
-
-
 int main() {
 	cge::Settings::Settings::Initialise("resources/settings/settings.data");
 	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
 
-	cge::Window window("Bomberman", setts->getSettings().Width, setts->getSettings().Height, cge::Window::Flags::VSYNC_ENABLED | cge::Window::Flags::FULLSCREEN);
+	unsigned int winFlags = cge::Window::Flags::VSYNC_ENABLED;
+	if (setts->getSettings().Fullscreen)
+		winFlags |= cge::Window::Flags::FULLSCREEN;
+	cge::Window window("Bomberman", setts->getSettings().Width, setts->getSettings().Height, winFlags);
 	cge::GameState		gameState = cge::GameState::PLAY_MENU;
 	cge::GameState		prevGameState = gameState;
 	cge::InputManager	inputManager(window);

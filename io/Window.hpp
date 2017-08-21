@@ -28,6 +28,7 @@ namespace cge {
 		Window &operator=(const Window &rhs) = default;
 
 		void	create(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags);
+		void	recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags);
 		void	swapBuffers();
 
 		unsigned	getWidth() const;

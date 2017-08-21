@@ -35,7 +35,7 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	// Create nanogui gui
 	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Load Game");
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Load Game");
 	nanogui::AdvancedGridLayout layout(
 			{100, 100, 100, 100, 100},
 			{100, 100, 100, 100, 50},
@@ -350,4 +350,9 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 	} else {
 		std::cerr << "Failed to load game. Corrupt" << std::endl;
 	}
+}
+
+void cge::GUI::LoadGameScreen::ReinitializeScreen() {
+	this->_screen->initialize(this->_window.getGLFWWindow(), false);
+	this->nanoguiWindow->center();
 }

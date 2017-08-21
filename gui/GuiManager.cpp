@@ -79,3 +79,11 @@ void cge::GuiManager::drawScreen(int screen) {
 			break;
 	}
 }
+
+void cge::GuiManager::ReinitializeScreens() {
+	this->_mainMenuScreen->ReinitializeScreen();
+	this->_settingsScreen->ReinitializeScreen();
+	this->_loadGameScreen->ReinitializeScreen();
+	this->_saveGameScreen->ReinitializeScreen();
+	this->_pauseGameScreen->ReinitializeScreen();
+}
