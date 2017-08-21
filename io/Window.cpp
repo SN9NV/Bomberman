@@ -5,7 +5,7 @@ namespace cge {
 	Window::Window() :
 			_width(0),
 			_height(0),
-			_lastFrameTime((glfwGetTime() * 1000)),
+			_lastFrameTime(static_cast<unsigned int>(glfwGetTime() * 1000)),
 			_glfwWindow(nullptr)
 	{
 
@@ -23,7 +23,7 @@ namespace cge {
 
 		this->_width = width;
 		this->_height = height;
-		this->_lastFrameTime = (glfwGetTime() * 1000);
+		this->_lastFrameTime = static_cast<unsigned int>(glfwGetTime() * 1000);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
