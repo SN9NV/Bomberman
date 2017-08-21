@@ -26,7 +26,7 @@
 #include <iostream>
 
 static constexpr unsigned HEIGHT = 720;
-static constexpr unsigned WIDTH = 1024;
+static constexpr unsigned WIDTH = 1280;
 
 
 int main() {
