@@ -95,11 +95,9 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 			std::vector<s_InctenceData> inctenceData(particalList.second.partical.size());
 			size_t index = 0;
 			for (auto &partical : particalList.second.partical) {
-				std::cout << "Partical: " << index << std::endl;
 				glm::mat4 mv = viewModelMatrix(partical, camera);
 				inctenceData[index].modelview = mv;
 				inctenceData[index].currTextureOff = partical.get_currOff();
-				std::cout << "coff: " << partical.get_currOff().x << " " << partical.get_currOff().y << std::endl;
 				inctenceData[index].nextTextureOff = partical.get_nextOff();
 				inctenceData[index].blend = partical.get_blend();
 				index++;
@@ -143,6 +141,9 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
 	glDisableVertexAttribArray(5);
+	glDisableVertexAttribArray(6);
+	glDisableVertexAttribArray(7);
+	glDisableVertexAttribArray(8);
 
 	glBindVertexArray(0);
 	_shader.end();

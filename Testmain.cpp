@@ -31,13 +31,13 @@ int main() {
 	Player player({0, 0, 0}, {0, 90, 0}, 1, bomberModel, 1.0f);
 
 	inputManager.setInputCallBacks();
-	cge::TextureAtlas t = loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlasNUM.png", 4);
+	cge::TextureAtlas t = loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
 	glm::vec3 camOff = {0, 0, 5};
 	//player.update(inputManager, shader, window.getFrameTime());
 	camera.setTrackEntity(player);
 	prender.partivalEffect({0, 0, 0}, {0.5, .5, 0.5},
-						   {0, 0, 0.00}, {0, 0.00, 0}, 0, 0.00, 16000, 0, 0.4, 0.1, 0, 0, 0.0,
-						   0.0, 1, t, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						   {0, 0, 0.00}, {0, 0.005, 0}, 0, 0.00, 5000, 5000, 0.4, 0.1, 0, 0, 0.0,
+						   0.0, 2000, t, GL_SRC_ALPHA, GL_ONE);
 	while (gameState != cge::WANTS_QUIT) {
 		inputManager.pollKeyEvnt();
 		if (inputManager.isExitCase() || inputManager.isKeyPressed(GLFW_KEY_ESCAPE))
@@ -45,32 +45,26 @@ int main() {
 		if (inputManager.isKeyPressed(GLFW_KEY_W)) {
 			//camera.setPosition({camera.getPosition().x, camera.getPosition().y + .5, camera.getPosition().z});
 			camOff.y += .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 		if (inputManager.isKeyPressed(GLFW_KEY_S)) {
 			//camera.setPosition({camera.getPosition().x, camera.getPosition().y - .5, camera.getPosition().z});
 			camOff.y -= .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 		if (inputManager.isKeyPressed(GLFW_KEY_D)) {
 			//camera.setPosition({camera.getPosition().x + .5, camera.getPosition().y, camera.getPosition().z});
 			camOff.x += .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 		if (inputManager.isKeyPressed(GLFW_KEY_A)) {
 			//camera.setPosition({camera.getPosition().x - .5, camera.getPosition().y, camera.getPosition().z});
 			camOff.x -= .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 		if (inputManager.isKeyPressed(GLFW_KEY_Q)) {
 			//camera.setPosition({camera.getPosition().x, camera.getPosition().y, camera.getPosition().z + .5});
 			camOff.z += .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 		if (inputManager.isKeyPressed(GLFW_KEY_E)) {
 			//camera.setPosition({camera.getPosition().x, camera.getPosition().y, camera.getPosition().z - .5});
 			camOff.z -= .5;
-			std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		}
 //std::cout << camOff.x << " " << camOff.y << " " << camOff.z << std::endl;
 		shader.start();
