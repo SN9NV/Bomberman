@@ -25,6 +25,11 @@ namespace cge {
 			unsigned int	KeyRight;
 			unsigned int	KeyDown;
 			unsigned int	KeyLeft;
+
+			/**Window Settings**/
+			bool			Fullscreen;
+			unsigned		Width;
+			unsigned		Height;
 		}				t_settings;
 
 		class Settings {
@@ -48,6 +53,11 @@ namespace cge {
 			void						setKeyRight(unsigned int kr);
 			void						setKeyDown(unsigned int kd);
 			void						setKeyLeft(unsigned int kl);
+
+			/**Window Setters**/
+			void						setFullscreen(bool fs);
+			void						setHeight(unsigned h);
+			void						setWidth(unsigned w);
 
 			void 						writeToBinaryFile();
 		private:

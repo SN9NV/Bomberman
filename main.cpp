@@ -30,7 +30,10 @@ static constexpr unsigned WIDTH = 1280;
 
 
 int main() {
-	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED | cge::Window::Flags::FULLSCREEN);
+	cge::Settings::Settings::Initialise("resources/settings/settings.data");
+	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
+
+	cge::Window window("Bomberman", setts->getSettings().Width, setts->getSettings().Height, cge::Window::Flags::VSYNC_ENABLED);
 	cge::GameState		gameState = cge::GameState::PLAY_MENU;
 	cge::GameState		prevGameState = gameState;
 	cge::InputManager	inputManager(window);
@@ -40,8 +43,6 @@ int main() {
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
 
-	cge::Settings::Settings::Initialise("resources/settings/settings.data");
-	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
