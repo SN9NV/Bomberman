@@ -27,10 +27,11 @@ namespace cge {
 			void drawScreen();
 
 			void setInputCallbacks();
-
+			void ReinitializeScreen();
 		private:
 			SettingsScreen();
 
+			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen *_screen;
 			cge::Window &_window;
 			Player *_player;
@@ -38,6 +39,7 @@ namespace cge {
 			cge::GameState* _currState;
 			cge::GameState* _prevState;
 			bool			_changesMade;
+			bool			_windowChangesMade;
 
 			/**Sliders for Volume control**/
 			nanogui::Slider *sl_master;

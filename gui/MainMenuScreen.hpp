@@ -29,9 +29,11 @@ namespace cge {
 
 			void drawScreen();
 			void setInputCallbacks();
+			void ReinitializeScreen();
 		private:
 			MainMenuScreen();
 
+			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen* 	_screen;
 			cge::Window&		_window;
 			Player*				_player;

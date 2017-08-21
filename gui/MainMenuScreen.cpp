@@ -24,7 +24,6 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 	this->_screen = new nanogui::Screen();
 	this->_screen->initialize(this->_window.getGLFWWindow(), true);
 
-
 	int width, height;
 	glfwGetFramebufferSize(this->_window.getGLFWWindow(), &width, &height);
 	glViewport(0, 0, width, height);
@@ -33,7 +32,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 
 	// Create nanogui gui
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Main Menu");
 	nanoguiWindow->setLayout(new nanogui::GroupLayout());
 
 	cge::GUI::Custom::CustomButton *btn_NewGame = new cge::GUI::Custom::CustomButton(nanoguiWindow, "New Game");
@@ -175,4 +174,9 @@ void cge::GUI::MainMenuScreen::setInputCallbacks() {
 
 nanogui::Screen *cge::GUI::MainMenuScreen::getScreen() {
 	return (this->_screen);
+}
+
+void cge::GUI::MainMenuScreen::ReinitializeScreen() {
+	this->_screen->initialize(this->_window.getGLFWWindow(), false);
+	this->nanoguiWindow->center();
 }

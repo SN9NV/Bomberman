@@ -35,6 +35,8 @@ namespace cge {
 
 		void drawScreen(int screen);
 
+		void ReinitializeScreens();
+
 	private:
 		static cge::GuiManager*		s_instance;
 

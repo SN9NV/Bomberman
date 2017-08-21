@@ -4,6 +4,7 @@
 
 #include "SettingsScreen.hpp"
 #include "../io/settings/Settings.hpp"
+#include "GuiManager.hpp"
 
 cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
@@ -11,7 +12,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	_audioMenuScroll("../resources/audio/menu_click.wav", loader),
 	_currState(_currState),
 	_prevState(prevState),
-	_changesMade(false)
+	_changesMade(false),
+	_windowChangesMade(false)
 {
 	this->_audioMenuScroll.setLooping(false);
 	this->_audioMenuScroll.setGain(0.09f);
@@ -31,7 +33,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	// Create nanogui gui
 	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Settings");
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Settings");
 	nanogui::AdvancedGridLayout layout(
 			{100, 100, 100, 100, 100},
 			{100, 100, 100, 100, 50},
@@ -42,7 +44,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
 		nanogui::Alignment::Middle, nanogui::Alignment::Middle));
 	btn_MainMenu->setCallback([&] {
-		if (this->_changesMade) {
+		if (this->_changesMade || this->_windowChangesMade) {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Unsaved Changes", "All unsaved changes will be lost. Continue?", "Yes", "No", true);
 			dlg->setCallback([&] (int result) {
@@ -226,9 +228,15 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		cb_Resolution->setSelectedIndex(1);
 	else
 		cb_Resolution->setSelectedIndex(2);
+	cb_Resolution->setCallback([&] (int index) {
+		_windowChangesMade = true;
+	});
 
 	chkbx_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
 	chkbx_FullScreen->setChecked(cge::Settings::Settings::getSingleton()->getSettings().Fullscreen);
+	chkbx_FullScreen->setCallback([&] (bool state) {
+		_windowChangesMade = true;
+	});
 
 	tabs->setActiveTab(0);
 	_screen->setVisible(true);
@@ -353,8 +361,15 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	}
 	setts->setFullscreen(chkbx_FullScreen->checked());
 
-	setts->writeToBinaryFile();
+	if (this->_windowChangesMade) {
+		unsigned int winFlags = cge::Window::Flags::VSYNC_ENABLED;
+		if (setts->getSettings().Fullscreen)
+			winFlags |= cge::Window::Flags::FULLSCREEN;
+		this->_window.recreate("Bomberman", setts->getSettings().Width, setts->getSettings().Height, winFlags);
+		cge::GuiManager::getSingleton()->ReinitializeScreens();
+	}
 
+	setts->writeToBinaryFile();
 	auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Information,
 		"Saved.", "Settings saved. Back to Menu?", "Yes", "No", true);
 	this->_changesMade = false;
@@ -370,4 +385,9 @@ std::string cge::GUI::SettingsScreen::charToString(int chr) {
 	ss << (char)chr;
 	ss >> s;
 	return (s);
+}
+
+void cge::GUI::SettingsScreen::ReinitializeScreen() {
+	this->_screen->initialize(this->_window.getGLFWWindow(), false);
+	this->nanoguiWindow->center();
 }

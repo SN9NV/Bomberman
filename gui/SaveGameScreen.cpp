@@ -28,7 +28,7 @@ cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_curr
 
 	// Create nanogui gui
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Save Game");
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Save Game");
 	nanogui::AdvancedGridLayout layout(
 			{100, 100, 100, 100, 100},
 			{100, 100, 100, 100, 50},
@@ -322,4 +322,9 @@ void cge::GUI::SaveGameScreen::refreshGUI() {
 	txtb_Slot4->setValue(this->_availableSaves[3]->isAvailable() ? this->_availableSaves[3]->getCreationTime() : "[Empty]");
 	txtb_Slot5->setValue(this->_availableSaves[4]->isAvailable() ? this->_availableSaves[4]->getCreationTime() : "[Empty]");
 	txtb_Slot6->setValue(this->_availableSaves[5]->isAvailable() ? this->_availableSaves[5]->getCreationTime() : "[Empty]");
+}
+
+void cge::GUI::SaveGameScreen::ReinitializeScreen() {
+	this->_screen->initialize(this->_window.getGLFWWindow(), false);
+	this->nanoguiWindow->center();
 }
