@@ -1,5 +1,7 @@
 #include "Camera.hpp"
 #include "../extras/Maths.hpp"
+#include "../extras/glmOstream.hpp"
+#include <glm/gtx/matrix_decompose.hpp>
 
 cge::Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window) :
 		_position(position),
@@ -25,8 +27,15 @@ void cge::Camera::update() {
 	if (this->_track != nullptr) {
 		this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, {0, 1, 0});
 		this->_position = trackingPosition + this->_trackOffset;
+		this->_orientation = glm::normalize(this->_position - trackingPosition);
 	} else {
 		this->_viewMatrix = cge::Maths::createViewMatrix(*this);
+		glm::vec4 tmp = {0, 0, -1, 1};
+		glm::mat4 transformation(1.0f);
+		glm::rotate(transformation, _rotation.x, {1, 0, 0});
+		glm::rotate(transformation, _rotation.y, {0, 1, 0});
+		glm::rotate(transformation, _rotation.z, {0, 0, 1});
+		_orientation = (transformation * tmp);
 	}
 
 
@@ -98,4 +107,8 @@ void cge::Camera::setTrackEntity(cge::Entity &entity) {
 void cge::Camera::setTrackOffset(const glm::vec3 &trackOffset) {
 	this->_trackOffset = trackOffset;
 	this->_needsUpdate = true;
+}
+
+const glm::vec3 &cge::Camera::getOrientation() const {
+	return _orientation;
 }

@@ -32,7 +32,7 @@ namespace cge {
 																						 _nextOff({1, 1}),
 																						 _blend(1) {}
 
-	bool Partical::update(unsigned lastFrameTime, Camera camera) {
+	bool Partical::update(unsigned lastFrameTime, const Camera &camera) {
 		float progression;
 		int index;
 
@@ -40,7 +40,7 @@ namespace cge {
 		_position += Maths::scaleVec3(_scale, _verlocity);
 		_rotation += lastFrameTime * _spin;
 		_elapsedtime += lastFrameTime;
-		_distCamSqur = Maths::vec3Len(camera.getPosition() - _position);
+		_distCamSqur = Maths::particalCameraDistance(camera.getPosition() - _position, camera.getOrientation());
 		progression = _elapsedtime / _lifrtime * _texture.getStages();
 		_blend = static_cast<float>(fmod(progression, 1));
 		index = (int) floor(progression);

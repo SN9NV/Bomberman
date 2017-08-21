@@ -65,6 +65,7 @@ private:
 	bool checkMapWall();
 	void runLevelLoop();
 	void fireEffect(glm::vec3 position, size_t numParticals);
+	void portalEffect(glm::vec3 position, size_t numParticals);
 	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
 	void checkGateDamage(glm::vec3 position, Being *being);
 	void cleanLevel();

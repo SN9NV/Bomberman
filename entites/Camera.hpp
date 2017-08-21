@@ -33,6 +33,8 @@ namespace cge {
 		glm::mat4	getProjectionMatrix() const;
 		glm::mat4	getViewMatrix() const;
 
+		const glm::vec3 &getOrientation() const;
+
 		void	update(const GLSLProgram &shader);
 		void	update();
 	private:
@@ -43,6 +45,7 @@ namespace cge {
 		cge::Entity	*_track;
 		glm::vec3	_trackOffset;
 		glm::vec3	_trackOldPosition;
+		glm::vec3	_orientation;
 
 		bool 		_needsUpdate;
 	};

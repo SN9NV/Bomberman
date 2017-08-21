@@ -46,7 +46,7 @@ int main() {
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
-			"../resources/Maps/Map1",
+			"../resources/Maps/MapTest",
 			"../resources/Maps/Map2",
 			"../resources/Maps/Map3"
 	};
