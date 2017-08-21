@@ -25,6 +25,7 @@ namespace cge {
 		this->_height = height;
 		this->_lastFrameTime = static_cast<unsigned int>(glfwGetTime() * 1000.0);
 
+
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -70,7 +71,7 @@ namespace cge {
 	}
 
 	void Window::swapBuffers() {
-		unsigned currentTime = static_cast<unsigned int>(glfwGetTime() * 1000.0);
+		auto currentTime = static_cast<unsigned int>(glfwGetTime() * 1000.0);
 		this->_deltaFrameTime = currentTime - this->_lastFrameTime;
 		this->_lastFrameTime = currentTime;
 

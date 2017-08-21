@@ -73,6 +73,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	layout.setAnchor(tabs, nanogui::AdvancedGridLayout::Anchor(0, 0, 5, 4,
 		nanogui::Alignment::Fill, nanogui::Alignment::Fill));
 
+	/**SOUNDS**/
 	nanogui::Widget* sounds = tabs->createTab("Sound Settings");
 	sounds->setLayout(new nanogui::GroupLayout());
 
@@ -207,6 +208,22 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		return (true);
 	});
 
+	/**WINDOW**/
+	nanogui::Widget* windowSettings = tabs->createTab("Window");
+	windowSettings->setLayout(new nanogui::GroupLayout());
+
+	new nanogui::Label(windowSettings, "Resolution:", "sans-bold");
+	nanogui::ComboBox *cobo = new nanogui::ComboBox(windowSettings,
+		{
+			"1920 x 1080",
+			"1280 x 720",
+			"640 × 480"
+		});
+	cobo->setFontSize(16);
+
+	nanogui::CheckBox *cb_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
+
+	tabs->setActiveTab(0);
 	_screen->setVisible(true);
 	_screen->performLayout();
 	nanoguiWindow->center();
