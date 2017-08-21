@@ -62,8 +62,8 @@ void cge::ParticalRenderer::addPartical(cge::Partical partical, GLenum specFac, 
 		find->second.specFac = specFac;
 		find->second.deffFac = deffFac;
 	} else {
-		/*s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
-		_partiacals.emplace(partical.getTexture().getID(), tmp);*/
+		s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
+		_partiacals.emplace(partical.getTexture().getID(), tmp);
 		std::cout << "partical texture not found\n";
 	}
 }
@@ -79,6 +79,9 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
+	glEnableVertexAttribArray(6);
+	glEnableVertexAttribArray(7);
+	glEnableVertexAttribArray(8);
 
 
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
@@ -138,13 +141,12 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
 	glDisableVertexAttribArray(5);
+	glDisableVertexAttribArray(6);
+	glDisableVertexAttribArray(7);
+	glDisableVertexAttribArray(8);
 
 	glBindVertexArray(0);
 	_shader.end();
-}
-
-bool ParticalSort(cge::Partical p1, cge::Partical p2) {
-	return (p1.getDistCamSqur() > p2.getDistCamSqur());
 }
 
 void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
@@ -158,7 +160,10 @@ void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
 				particalList.second.partical.erase(partical);
 			}
 		}
-		std::sort(particalList.second.partical.begin(), particalList.second.partical.end(), ParticalSort);
+		std::sort(particalList.second.partical.begin(), particalList.second.partical.end(),
+				  [](cge::Partical p1, cge::Partical p2) {
+					  return (p1.getDistCamSqur() > p2.getDistCamSqur());
+				  });
 	}
 }
 
