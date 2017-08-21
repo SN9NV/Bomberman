@@ -51,6 +51,10 @@ namespace cge {
 			nanogui::TextBox* txtb_MoveDown;
 			nanogui::TextBox* txtb_MoveLeft;
 
+			/**Window Settings**/
+			nanogui::CheckBox *chkbx_FullScreen;
+			nanogui::ComboBox *cb_Resolution;
+
 			void saveSettings();
 		};
 	};

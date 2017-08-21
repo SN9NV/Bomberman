@@ -213,15 +213,22 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	windowSettings->setLayout(new nanogui::GroupLayout());
 
 	new nanogui::Label(windowSettings, "Resolution:", "sans-bold");
-	nanogui::ComboBox *cobo = new nanogui::ComboBox(windowSettings,
+	cb_Resolution = new nanogui::ComboBox(windowSettings,
 		{
 			"1920 x 1080",
 			"1280 x 720",
 			"640 × 480"
 		});
-	cobo->setFontSize(16);
+	cb_Resolution->setFontSize(16);
+	if (cge::Settings::Settings::getSingleton()->getSettings().Height == 1080)
+		cb_Resolution->setSelectedIndex(0);
+	else if (cge::Settings::Settings::getSingleton()->getSettings().Height == 720)
+		cb_Resolution->setSelectedIndex(1);
+	else
+		cb_Resolution->setSelectedIndex(2);
 
-	nanogui::CheckBox *cb_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
+	chkbx_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
+	chkbx_FullScreen->setChecked(cge::Settings::Settings::getSingleton()->getSettings().Fullscreen);
 
 	tabs->setActiveTab(0);
 	_screen->setVisible(true);
@@ -333,6 +340,18 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	_player->set_right(this->txtb_MoveRight->value()[0]);
 	_player->set_down(this->txtb_MoveDown->value()[0]);
 	_player->set_left(this->txtb_MoveLeft->value()[0]);
+
+	if (cb_Resolution->selectedIndex() == 0) {
+		setts->setHeight(1080);
+		setts->setWidth(1920);
+	} else if (cb_Resolution->selectedIndex() == 1) {
+		setts->setHeight(720);
+		setts->setWidth(1280);
+	} else if (cb_Resolution->selectedIndex() == 2) {
+		setts->setHeight(480);
+		setts->setWidth(640);
+	}
+	setts->setFullscreen(chkbx_FullScreen->checked());
 
 	setts->writeToBinaryFile();
 
