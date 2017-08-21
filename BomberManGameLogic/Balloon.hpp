@@ -6,7 +6,7 @@
 #define BOMBERMAN_BALLOON_HPP
 
 
-#include "Being.h"
+#include "Being.hpp"
 #include <random>
 
 class Balloon : public  Being

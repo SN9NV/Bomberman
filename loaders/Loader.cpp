@@ -2,6 +2,7 @@
 #include "IO.hpp"
 #include "picoPNG.hpp"
 #include "../entites/TextureAtlas.h"
+#include "../tinyGLTF/tiny_gltf.h"
 
 cge::Texture cge::Loader::loadTexture(const std::string &texturePath) {
 	auto foundTexture = this->_textures.find(texturePath);
@@ -99,6 +100,14 @@ tinygltf::Model &cge::Loader::loadGLTFModel(const std::string &modelPath) {
 		if (!err.empty()) {
 			std::cout << "Had error loading glTF file!!!\n" << err << "\n";
 			exit(1);
+		}
+
+		for (auto &node : model.animations) {
+			for (auto &translation : node.channels) {
+				std::cout << translation.sampler << " ";
+			}
+
+			std::cout << "\n";
 		}
 
 		return model;

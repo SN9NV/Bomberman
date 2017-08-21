@@ -2,7 +2,7 @@
 // Created by rojones on 2017/08/07.
 //
 
-#include "Being.h"
+#include "Being.hpp"
 #include <cmath>
 
 Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed) :
@@ -75,7 +75,7 @@ void Being::placeBomb(Bomb *bomb)
 
 bool Being::checkBombDeterNation(Bomb *bomb)
 {
-	for (std::vector<Bomb *>::iterator it = _bombs.begin(); it != _bombs.end() ; it++)
+	for (auto it = _bombs.begin(); it != _bombs.end() ; it++)
 	{
 		if (bomb == *it)
 		{

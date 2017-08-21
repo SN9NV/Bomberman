@@ -9,7 +9,7 @@
 #include "../entites/Model.hpp"
 #include "../rendering/TextRenderer.hpp"
 #include "Bomb.hpp"
-#include "Being.h"
+#include "Being.hpp"
 #include "Player.hpp"
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"

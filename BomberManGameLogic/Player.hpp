@@ -2,7 +2,7 @@
 #define BOMBERMAN_PLAYER_HPP
 
 
-#include "Being.h"
+#include "Being.hpp"
 #include "../io/InputManager.hpp"
 #include "Bomb.hpp"
 

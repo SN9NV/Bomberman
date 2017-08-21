@@ -45,7 +45,7 @@ set(SOURCE_FILES
 		tinyGLTF/tiny_gltf.h
 		BomberManGameLogic/MapLoader.cpp
 		BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.h
+		BomberManGameLogic/Being.hpp
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
@@ -67,7 +67,7 @@ set(SOURCE_FILES
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/printError.cpp error_handling/printError.hpp
         BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.h
+		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp
 		BomberManGameLogic/Player.hpp
 		BomberManGameLogic/GameLogic.h
