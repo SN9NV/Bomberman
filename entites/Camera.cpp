@@ -24,6 +24,7 @@ void cge::Camera::update() {
 
 	if (this->_track != nullptr) {
 		this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, {0, 1, 0});
+		this->_position = trackingPosition + this->_trackOffset;
 	} else {
 		this->_viewMatrix = cge::Maths::createViewMatrix(*this);
 	}
@@ -35,25 +36,9 @@ void cge::Camera::update() {
 }
 
 void cge::Camera::update(const cge::GLSLProgram &shader) {
-	glm::vec3 trackingPosition;
+	if (this->_needsUpdate || (this->_track != nullptr && this->_trackOldPosition != this->_track->getPosition())) {
 
-	if (this->_track != nullptr) {
-		trackingPosition = this->_track->getPosition();
-	}
-
-	if (this->_needsUpdate || (this->_track != nullptr && this->_trackOldPosition != trackingPosition)) {
-
-		if (this->_track != nullptr) {
-			this->_viewMatrix = glm::lookAt(trackingPosition + this->_trackOffset, trackingPosition, {0, 1, 0});
-		} else {
-			this->_viewMatrix = cge::Maths::createViewMatrix(*this);
-		}
-
-		this->_needsUpdate = false;
-
-		if (this->_track != nullptr) {
-			this->_trackOldPosition = trackingPosition;
-		}
+		this->update();
 	}
 
 	/// projectionMatrix * viewMatrix
