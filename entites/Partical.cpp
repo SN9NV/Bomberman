@@ -44,6 +44,7 @@ namespace cge {
 		progression = _elapsedtime / _lifrtime * _texture.getStages();
 		_blend = static_cast<float>(fmod(progression, 1));
 		index = (int) floor(progression);
+		std::cout << "index: " << index << std::endl;
 		float col = index / _texture.getRow();
 		float row = index % _texture.getRow();
 		_currOff = {row / (float) _texture.getRow(), col / (float) _texture.getRow()};

@@ -62,8 +62,8 @@ void cge::ParticalRenderer::addPartical(cge::Partical partical, GLenum specFac, 
 		find->second.specFac = specFac;
 		find->second.deffFac = deffFac;
 	} else {
-		/*s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
-		_partiacals.emplace(partical.getTexture().getID(), tmp);*/
+		s_ParticalBlend tmp = (s_ParticalBlend) {std::vector<Partical>({partical}), specFac, deffFac};
+		_partiacals.emplace(partical.getTexture().getID(), tmp);
 		std::cout << "partical texture not found\n";
 	}
 }
@@ -79,6 +79,9 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
+	glEnableVertexAttribArray(6);
+	glEnableVertexAttribArray(7);
+	glEnableVertexAttribArray(8);
 
 
 	this->_shader.uploadMatrix4f(this->_shader.getUniformLocation("projection"),
@@ -92,9 +95,11 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 			std::vector<s_InctenceData> inctenceData(particalList.second.partical.size());
 			size_t index = 0;
 			for (auto &partical : particalList.second.partical) {
+				std::cout << "Partical: " << index << std::endl;
 				glm::mat4 mv = viewModelMatrix(partical, camera);
 				inctenceData[index].modelview = mv;
 				inctenceData[index].currTextureOff = partical.get_currOff();
+				std::cout << "coff: " << partical.get_currOff().x << " " << partical.get_currOff().y << std::endl;
 				inctenceData[index].nextTextureOff = partical.get_nextOff();
 				inctenceData[index].blend = partical.get_blend();
 				index++;
@@ -143,10 +148,6 @@ void cge::ParticalRenderer::render(cge::Camera &camera) {
 	_shader.end();
 }
 
-bool ParticalSort(cge::Partical p1, cge::Partical p2) {
-	return (p1.getDistCamSqur() > p2.getDistCamSqur());
-}
-
 void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
 	camera.update();
 	for (auto &particalList : _partiacals) {
@@ -158,7 +159,10 @@ void cge::ParticalRenderer::update(unsigned lastframe, Camera camera) {
 				particalList.second.partical.erase(partical);
 			}
 		}
-		std::sort(particalList.second.partical.begin(), particalList.second.partical.end(), ParticalSort);
+		std::sort(particalList.second.partical.begin(), particalList.second.partical.end(),
+				  [](cge::Partical p1, cge::Partical p2) {
+					  return (p1.getDistCamSqur() > p2.getDistCamSqur());
+				  });
 	}
 }
 
