@@ -20,13 +20,17 @@ if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui/build")
 					WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/dependencies/nanogui/)
 endif ()
 
+set(INSTALLED_PACKAGE FALSE)
 
 function(installPkg pkgApple pkgLinux)
-	if (APPLE AND ${pkgApple})
+	if (APPLE AND pkgApple)
+		message("Installing " ${pkgApple} "...")
 		execute_process(COMMAND brew install ${pkgApple})
-	elseif(LINUX AND ${pkgLinux})
+	elseif(LINUX AND pkgLinux)
 		execute_process(COMMAND sudo apt install ${pkgLinux})
 	endif()
+
+	set(INSTALLED_PACKAGE TRUE)
 endfunction()
 
 if(UNIX AND NOT APPLE)
@@ -41,7 +45,7 @@ set(SOURCE_FILES
 		tinyGLTF/tiny_gltf.h
 		BomberManGameLogic/MapLoader.cpp
 		BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.h
+		BomberManGameLogic/Being.hpp
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
@@ -63,7 +67,7 @@ set(SOURCE_FILES
 		extras/glmOstream.cpp extras/glmOstream.hpp
 		error_handling/printError.cpp error_handling/printError.hpp
         BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.h
+		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp
 		BomberManGameLogic/Player.hpp
 		BomberManGameLogic/GameLogic.h
@@ -123,18 +127,19 @@ set(SOURCE_FILES
 # Find OpenGL (for Mac mostly, Linux didn't need this)
 find_package(OpenGL REQUIRED)
 find_package(OpenAL REQUIRED)	#> Linux => libopenal-dev
-find_package(PkgConfig REQUIRED)
+find_package(PkgConfig)
 
-if (NOT PKG_CONFIG_FOUND)
+if (NOT PKG_CONFIG_EXECUTABLE)
 	installPkg(pkg-config pkg-config)
+	find_package(PkgConfig REQUIRED)
 endif()
 
 # Find the dependencies for the project				Mac				Linux
-pkg_search_module(GLEW		REQUIRED glew)			#> 	glew			libglew-dev
-pkg_search_module(GLM		REQUIRED glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
-#pkg_search_module(GLFW3		REQURIED glfw3)		#> 	glfw3			libglfw3-dev
-pkg_search_module(SNDFILE	REQURIED sndfile)		#> 	libsndfile		libsndfile1-dev
-pkg_search_module(FT		REQUIRED freetype2)
+pkg_search_module(GLEW		REQUIRED	glew)			#> 	glew			libglew-dev
+pkg_search_module(GLM		REQUIRED	glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
+#pkg_search_module(GLFW3		REQUIRED	glfw3)		#> 	glfw3			libglfw3-dev
+pkg_search_module(SNDFILE	REQUIRED	sndfile)		#> 	libsndfile		libsndfile1-dev
+pkg_search_module(FT		REQUIRED	freetype2)
 
 if (NOT GLEW_FOUND)
 	installPkg(glew libglew-dev)

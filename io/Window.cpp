@@ -1,4 +1,3 @@
-
 #include "Window.hpp"
 
 namespace cge {
@@ -57,6 +56,7 @@ namespace cge {
 		}
 
 		glewExperimental = GL_TRUE;
+
 		if (glewInit() != GLEW_OK) {
 			throw SDL_FatalError("GLEW did not initialize");
 		}
@@ -100,5 +100,10 @@ namespace cge {
 
 	GLFWwindow *Window::getGLFWWindow() const {
 		return (this->_glfwWindow);
+	}
+
+	void Window::recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
+		glfwDestroyWindow(this->_glfwWindow);
+		this->create(windowName, width, height, windowFlags);
 	}
 }

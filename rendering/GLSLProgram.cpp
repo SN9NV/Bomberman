@@ -100,7 +100,7 @@ namespace cge {
 
 		GLint location = glGetUniformLocation(this->_programID, uniformName.c_str());
 
-		if (static_cast<GLuint>(location) == GL_INVALID_INDEX) {
+		if (location == GL_INVALID_INDEX) {
 			std::cerr << "Uniform variable: " << uniformName << " not found in shader\n";
 			exit(1);
 		}
@@ -185,14 +185,16 @@ namespace cge {
 		glUniform2f(location, value.x, value.y);
 	}
 
-	GLuint GLSLProgram::getAttributeLocation(const std::string &attrName) const {
+	GLint GLSLProgram::getAttributeLocation(const std::string &attrName) const {
 		if (!this->_isInUse) {
 			std::cerr << "Program is not in use\n";
 		}
 
-		GLuint attribute = glGetAttribLocation(this->_programID, attrName.c_str());
+		GLint attribute = glGetAttribLocation(this->_programID, attrName.c_str());
+
 		if (attribute == -1)
 			std::cerr << "Could not bind attribute: " << attrName << std::endl;
+
 		return (attribute);
 	}
 
