@@ -26,11 +26,14 @@
 #include <iostream>
 
 static constexpr unsigned HEIGHT = 720;
-static constexpr unsigned WIDTH = 1024;
+static constexpr unsigned WIDTH = 1280;
 
 
 int main() {
-	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	cge::Settings::Settings::Initialise("resources/settings/settings.data");
+	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
+
+	cge::Window window("Bomberman", setts->getSettings().Width, setts->getSettings().Height, cge::Window::Flags::VSYNC_ENABLED | cge::Window::Flags::FULLSCREEN);
 	cge::GameState		gameState = cge::GameState::PLAY_MENU;
 	cge::GameState		prevGameState = gameState;
 	cge::InputManager	inputManager(window);
@@ -40,8 +43,6 @@ int main() {
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
 
-	cge::Settings::Settings::Initialise("resources/settings/settings.data");
-	cge::Settings::Settings *setts = cge::Settings::Settings::getSingleton();
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
@@ -84,9 +85,9 @@ int main() {
 						gameState = cge::GameState::PLAY_MENU;
 					} else if (state == levelState::PAUSE)
 						gameState = cge::PLAY_PAUSE;
-					else if (state == levelState::COMPLEAT && currMap < maps.size()) {
+					else if (state == levelState::COMPLEAT && (size_t)currMap < maps.size()) {
 						currMap++;
-						if (currMap >= maps.size())
+						if ((size_t)currMap >= maps.size())
 							state = cge::GameState::PLAY_MENU;
 					}
 

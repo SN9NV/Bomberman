@@ -73,6 +73,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	layout.setAnchor(tabs, nanogui::AdvancedGridLayout::Anchor(0, 0, 5, 4,
 		nanogui::Alignment::Fill, nanogui::Alignment::Fill));
 
+	/**SOUNDS**/
 	nanogui::Widget* sounds = tabs->createTab("Sound Settings");
 	sounds->setLayout(new nanogui::GroupLayout());
 
@@ -207,6 +208,29 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		return (true);
 	});
 
+	/**WINDOW**/
+	nanogui::Widget* windowSettings = tabs->createTab("Window");
+	windowSettings->setLayout(new nanogui::GroupLayout());
+
+	new nanogui::Label(windowSettings, "Resolution:", "sans-bold");
+	cb_Resolution = new nanogui::ComboBox(windowSettings,
+		{
+			"1920 x 1080",
+			"1280 x 720",
+			"640 × 480"
+		});
+	cb_Resolution->setFontSize(16);
+	if (cge::Settings::Settings::getSingleton()->getSettings().Height == 1080)
+		cb_Resolution->setSelectedIndex(0);
+	else if (cge::Settings::Settings::getSingleton()->getSettings().Height == 720)
+		cb_Resolution->setSelectedIndex(1);
+	else
+		cb_Resolution->setSelectedIndex(2);
+
+	chkbx_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
+	chkbx_FullScreen->setChecked(cge::Settings::Settings::getSingleton()->getSettings().Fullscreen);
+
+	tabs->setActiveTab(0);
 	_screen->setVisible(true);
 	_screen->performLayout();
 	nanoguiWindow->center();
@@ -316,6 +340,18 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	_player->set_right(this->txtb_MoveRight->value()[0]);
 	_player->set_down(this->txtb_MoveDown->value()[0]);
 	_player->set_left(this->txtb_MoveLeft->value()[0]);
+
+	if (cb_Resolution->selectedIndex() == 0) {
+		setts->setHeight(1080);
+		setts->setWidth(1920);
+	} else if (cb_Resolution->selectedIndex() == 1) {
+		setts->setHeight(720);
+		setts->setWidth(1280);
+	} else if (cb_Resolution->selectedIndex() == 2) {
+		setts->setHeight(480);
+		setts->setWidth(640);
+	}
+	setts->setFullscreen(chkbx_FullScreen->checked());
 
 	setts->writeToBinaryFile();
 

@@ -77,6 +77,18 @@ void cge::Settings::Settings::setKeyLeft(unsigned int kl) {
 	this->_settings.KeyLeft = kl;
 }
 
+void cge::Settings::Settings::setFullscreen(bool fs) {
+	this->_settings.Fullscreen = fs;
+}
+
+void cge::Settings::Settings::setHeight(unsigned h) {
+	this->_settings.Height = h;
+}
+
+void cge::Settings::Settings::setWidth(unsigned w) {
+	this->_settings.Width = w;
+}
+
 void cge::Settings::Settings::setToDefaults() {
 	this->_settings.KeyUpwards = GLFW_KEY_W;
 	this->_settings.KeyRight = GLFW_KEY_D;
@@ -86,6 +98,10 @@ void cge::Settings::Settings::setToDefaults() {
 	this->_settings.MasterVolume = 0.5f;
 	this->_settings.MusicVolume = 0.8f;
 	this->_settings.SfxVolume = 0.01f;
+
+	this->_settings.Fullscreen = false;
+	this->_settings.Height = 720;
+	this->_settings.Width = 1280;
 }
 
 float cge::Settings::Settings::getMusicVolume() const {

@@ -52,6 +52,7 @@ cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_cu
 				*_currState = cge::GameState::PLAY_GAME;
 				player->setLives(3);
 				player->setPauseMenue(false);
+				player->setDamage(2);
 				*currMap = 0;
 			}
 		});
