@@ -15,7 +15,7 @@
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
 #include "PowerUPInterface.hpp"
-
+#include "Onil.hpp"
 
 enum levelState
 {

@@ -325,9 +325,9 @@ void LevelRunner::loadMapEntitys() {
 	}
 	if ((tmpMdl = getModel("Onil")) != nullptr) {
 		while (_onil > 0) {
-			/*tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f, *_player, _level);
 			_beings.push_back(tmpBeing);
-			placeBeing(tmpBeing);*/
+			placeBeing(tmpBeing);
 			_onil--;
 		}
 	}
