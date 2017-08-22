@@ -32,7 +32,7 @@ namespace cge {
 			void	setPosition(const glm::vec3 &position);
 			void	setVelocity(const glm::vec3 &velocity);
 			void	setLooping(bool isLooping);
-			void	setAttenuation(ALenum attenuationType = AL_LINEAR_DISTANCE_CLAMPED, float maxDistance = 15.0f, float refrenceDistance = 5.0f);
+			void	setAttenuation(ALenum attenuationType = AL_LINEAR_DISTANCE_CLAMPED, float maxDistance = 15.0f, float refrenceDistance = 2.0f);
 
 			ALfloat		getPitch() const;
 			ALfloat 	getGain() const;
