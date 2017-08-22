@@ -39,10 +39,10 @@ private:
 	Player *_player;
 	Gate	*_gate;
 	cge::Window &_window;
-	cge::GLSLProgram* _entShader;
-	cge::GLSLProgram* _partShader;
+	cge::GLSLProgram _entShader;
+	cge::GLSLProgram _partShader;
 	cge::InputManager *_inputManager;
-	cge::Renderer *_renderer;
+	cge::Renderer _renderer;
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
 	cge::TextRenderer _textRenderer;
@@ -80,8 +80,6 @@ public:
     int resumeLevel();
 //todo: move loadMapfrom file to private
 	void loadMapFromFile(const std::string &path);
-
-	void Reinitialize();
 };
 
 

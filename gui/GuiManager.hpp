@@ -22,15 +22,13 @@ namespace cge {
 										cge::GameState *prevState,
 										Player* player,
 										int* currMap,
-										cge::Loader& loader,
-										LevelRunner *lvlRunner);
+										cge::Loader& loader);
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
 							cge::GameState *prevState,
 							Player* player,
 							int* currMap,
-							cge::Loader& _loader,
-							LevelRunner *lvlRunner);
+							cge::Loader& _loader);
 
 		static GuiManager*	getSingleton();
 
@@ -48,7 +46,6 @@ namespace cge {
 		cge::Window&				_window;
 		Player*						_player;
 		int*						_currMap;
-		LevelRunner					*_levelRunner;
 
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
 		cge::GUI::SettingsScreen*	_settingsScreen;

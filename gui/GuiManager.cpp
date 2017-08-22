@@ -11,11 +11,10 @@ bool cge::GuiManager::initialise(cge::Window& win,
 								cge::GameState *prevState,
 								Player* player,
 								int* currMap,
-								cge::Loader& _loader,
-								LevelRunner *lvlRunner)
+								cge::Loader& _loader)
 {
 	if (s_instance == nullptr) {
-		s_instance = new GuiManager(win, state, prevState, player, currMap, _loader, lvlRunner);
+		s_instance = new GuiManager(win, state, prevState, player, currMap, _loader);
 	}
 	return (true);
 }
@@ -32,14 +31,12 @@ cge::GuiManager::GuiManager(cge::Window &win,
 							cge::GameState *prevState,
 							Player* player,
 							int* currMap,
-							cge::Loader& _loader,
-							LevelRunner *lvlRunner) :
+							cge::Loader& _loader) :
 	_window(win),
 	_prevState(prevState),
 	_state(state),
 	_player(player),
-	_currMap(currMap),
-	_levelRunner(lvlRunner)
+	_currMap(currMap)
 {
 	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, prevState, player, currMap, _loader);
 	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player, _loader);
@@ -89,6 +86,4 @@ void cge::GuiManager::ReinitializeScreens() {
 	this->_loadGameScreen->ReinitializeScreen();
 	this->_saveGameScreen->ReinitializeScreen();
 	this->_pauseGameScreen->ReinitializeScreen();
-
-	this->_levelRunner->Reinitialize();
 }

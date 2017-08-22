@@ -56,7 +56,7 @@ int main() {
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
-	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader, levelRunner);
+	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader);
 	int state;
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {

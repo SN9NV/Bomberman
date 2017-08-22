@@ -16,11 +16,11 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_player(player),
 		_gate(nullptr),
 		_window(window),
-		_entShader(new cge::GLSLProgram("shaders/vertex.glsl", "shaders/fragment.glsl")),
-		_partShader(new cge::GLSLProgram("shaders/particalVertex.glsl", "shaders/particalFragment.glsl")),
-		_renderer(new cge::Renderer(*_entShader)),
+		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
+		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
+		_renderer(_entShader),
 		_camera({0.0f, 5.0f, 0.0f}, {1.5f, 0.0f, 0.0f}, _window),
-		_particalRenderer(*_partShader),
+		_particalRenderer(_partShader),
 		_inputManager(inputManager)
 {
 	const std::string resRoot = "resources/models/";
@@ -116,7 +116,7 @@ void LevelRunner::beingWorldInteraction() {
 	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
 
-		if (!(*being)->update(*_inputManager, *_entShader, _window.getFrameTime()))
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime()))
 		{
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
@@ -667,45 +667,30 @@ void LevelRunner::update() {
 
 void LevelRunner::render()
 {
-	_renderer->prepare();
-	_entShader->start();
+	_renderer.prepare();
+	_entShader.start();
 	_camera.setTrackEntity(*_player);
 	_camera.setTrackOffset({0, 8, 5});
 
-	_entShader->start();
-	_renderer->prepare();
-	_camera.update(*_entShader);
+	_entShader.start();
+	_renderer.prepare();
+	_camera.update(_entShader);
 	for (auto &vecit : _level)
 	{
 		for (auto &entit : vecit)
 		{
 			if (entit != nullptr)
-				_renderer->render(*entit);
+				_renderer.render(*entit);
 		}
 	}
 	for (auto being : _beings)
-		_renderer->render(*being);
+		_renderer.render(*being);
 	if (_gate != nullptr)
-		_renderer->render(*_gate);
+		_renderer.render(*_gate);
 	if (_powerUpInstance != nullptr)
-		_renderer->render(*_powerUpInstance);
-	_entShader->end();
+		_renderer.render(*_powerUpInstance);
+	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 //		_textRenderer.DrawText("test", 5, 5);
 	_window.swapBuffers();
-}
-
-void LevelRunner::Reinitialize() {
-	/*delete this->_entShader;
-	this->_entShader = new cge::GLSLProgram("shaders/vertex.glsl", "shaders/fragment.glsl");
-	this->_entShader->start();
-
-	delete this->_renderer;
-	this->_renderer = new cge::Renderer(*this->_entShader);
-
-	delete this->_partShader;
-	this->_partShader = new cge::GLSLProgram("shaders/particalVertex.glsl", "shaders/particalFragment.glsl");
-	this->_partShader->start();*/
-
-	/*this->_loader.RebindAll();*/
 }

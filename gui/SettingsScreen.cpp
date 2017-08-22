@@ -373,6 +373,7 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Information,
 		"Saved.", "Settings saved. Back to Menu?", "Yes", "No", true);
 	this->_changesMade = false;
+	this->_windowChangesMade = false;
 	dlg->setCallback([&] (int result) {
 		if (result == 0)
 			*this->_currState = *this->_prevState;
