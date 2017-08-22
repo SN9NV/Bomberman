@@ -10,9 +10,11 @@ WingBoot::WingBoot(const glm::vec3 &position, const glm::vec3 &rotation, float s
 }
 
 void WingBoot::Powerup(Player &player) {
-	player.setSpeed(player.getSpeed() + 0.01f);
+	player.setSpeed(player.getSpeed() + 0.001f);
+	player.setAnimationSpeed((float)player.getAnimationSpeed() + 0.2f);
 }
 
 void WingBoot::Reverse(Player &player) {
-	player.setSpeed(player.getSpeed() - 0.01f);
+	player.setSpeed(player.getSpeed() - 0.001f);
+	player.setAnimationSpeed((float)player.getAnimationSpeed() - 0.2f);
 }
