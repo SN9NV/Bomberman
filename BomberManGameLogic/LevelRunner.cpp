@@ -145,8 +145,7 @@ void LevelRunner::beingWorldInteraction() {
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr)
-				{
+				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 5, *tmpmdl, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
@@ -370,7 +369,7 @@ void LevelRunner::endLevel() {
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive() && _player->getPosition() == _gate->getPosition()) {
 			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
-			portalEffect(_gate->getPosition(), 20);
+			portalUseEffect(_gate->getPosition(), 20);
 		}
 		render();
 		endTime += _window.getFrameTime();
@@ -567,23 +566,19 @@ void LevelRunner::fireEffect(glm::vec3 position, size_t numParticals) {
 
 }
 
-void LevelRunner::portalEffect(glm::vec3 position, size_t numParticals) {
+void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 	glm::vec3 verlocity;
 	float lifetime;
-	float scale;
-	float rotation;
-	cge::TextureAtlas t;
-	std::default_random_engine gen;
+	cge::TextureAtlas t = _loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2);
+	static std::default_random_engine gen;
 	std::uniform_real_distribution<float> dispx(position.x - 0.2f, position.x + 0.2f);
 	std::uniform_real_distribution<float> dispz(position.z - 0.2f, position.z + 0.2f);
-	std::uniform_real_distribution<float> disvx(0.0f, -0.0f);
-	std::uniform_real_distribution<float> disvy(1.0f, 0.0f);
-	std::uniform_real_distribution<float> disvz(0.0f, -0.0f);
-	std::uniform_real_distribution<float> dislife(1000, 10000);
-	std::uniform_real_distribution<float> disscale(0.1f, 0.5f);
-	std::uniform_real_distribution<float> disrot(0, 1);
+	static std::uniform_real_distribution<float> disvx(0.01f, -0.01f);
+	static std::uniform_real_distribution<float> disvy(0.06f, 0.04f);
+	static std::uniform_real_distribution<float> disvz(0.01f, -0.01f);
+	static std::uniform_real_distribution<float> dislife(1000, 10000);
 
-	for (size_t i = 0; i < 1; ++i) {
+	for (size_t i = 0; i < numParticals; ++i) {
 		position.x = dispx(gen);
 		position.y = 0;
 		position.z = dispz(gen);
@@ -592,18 +587,45 @@ void LevelRunner::portalEffect(glm::vec3 position, size_t numParticals) {
 		verlocity.y = disvy(gen);
 		verlocity.z = disvz(gen);
 
+		lifetime = dislife(gen);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t),
+									  GL_SRC_ALPHA, GL_ONE);
+	}
+
+}
+void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
+	glm::vec3 verlocity;
+	float lifetime;
+	float scale;
+	float rotation;
+	cge::TextureAtlas t = _loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2);
+	static std::default_random_engine gen;
+	std::uniform_real_distribution<float> dispx(position.x - 0.2f, position.x + 0.2f);
+	std::uniform_real_distribution<float> dispz(position.z - 0.2f, position.z + 0.2f);
+	static std::uniform_real_distribution<float> disvx(0.01f, -0.01f);
+	static std::uniform_real_distribution<float> disvy(0.6f, 0.04f);
+	static std::uniform_real_distribution<float> disvz(0.01f, -0.01f);
+	static std::uniform_real_distribution<float> dislife(1000, 10000);
+	static std::uniform_real_distribution<float> disscale(0.1f, 0.5f);
+	static std::uniform_real_distribution<float> disrot(0, 1);
+
+	for (size_t i = 0; i < numParticals; ++i) {
+		position.x = dispx(gen);
+		position.y = 0;
+		position.z = dispz(gen);
+
+		verlocity.x = disvx(gen);
+		verlocity.y = disvy(gen);
+		verlocity.z = disvz(gen);
 
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		t = _loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.5, lifetime, scale, rotation, 0, t),
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
 									  GL_SRC_ALPHA, GL_ONE);
-
 	}
 
 }
-
 void LevelRunner::checkGateDamage(glm::vec3 position, Being *being) {
 	if (being == _player && _gate != nullptr && _gate->getPosition().x == position.x &&
 		_gate->getPosition().z == position.z)
@@ -634,12 +656,10 @@ void LevelRunner::update() {
 			}
 		}
 		_gate->update();
-		if (_gate->isActive() && time > 999) {
-			std::cout << "generating portal effect" << std::endl;
-			portalEffect(_gate->getPosition(), 1);
+		if (_gate->isActive() && time == 0) {
+			portalActiveEffect(_gate->getPosition(), 1);
 		}
 		time += _window.getFrameTime();
-		std::cout << "time: " << time << std::endl;
 		time = (time < 1000) ? time : 0;
 	}
 }
