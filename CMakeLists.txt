@@ -48,7 +48,7 @@ set(SOURCE_FILES
 		tinyGLTF/tiny_gltf.h
 
 		BomberManGameLogic/GameLogic.hpp
-		BomberManGameLogic/PowerUPInterface.hpp
+        BomberManGameLogic/PowerUPAbstract.hpp
 		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp		BomberManGameLogic/Player.hpp
 		BomberManGameLogic/Bomb.cpp			BomberManGameLogic/Bomb.hpp

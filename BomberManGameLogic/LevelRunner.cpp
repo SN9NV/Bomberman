@@ -10,6 +10,9 @@
 #include "Wall.hpp"
 #include "../io/audio/AudioSource.hpp"
 #include "FireUp.hpp"
+#include "FireDown.hpp"
+#include "FullFire.hpp"
+#include "WingBoot.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager) :
 		_loader(loader),
@@ -21,7 +24,9 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_renderer(_entShader),
 		_camera({0.0f, 5.0f, 0.0f}, {1.5f, 0.0f, 0.0f}, _window),
 		_particalRenderer(_partShader),
-		_inputManager(inputManager)
+		_inputManager(inputManager),
+		_powerUpInstance(nullptr),
+		_powerup(false)
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
@@ -43,9 +48,6 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 										 GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
-	_gate = nullptr;
-	_powerup = false;
-	_powerUpInstance = nullptr;
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -173,10 +175,9 @@ void LevelRunner::beingWorldInteraction() {
 		dist = _player->getPosition() - _powerUpInstance->getPosition();
 		float fdist = cge::Maths::vec3Len(dist);
 		float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
-		if (_state == levelState::PLAY && fdist < hit) {
+		if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
 			_powerUpInstance->Powerup(*_player);
-			delete (_powerUpInstance);
-			_powerUpInstance = nullptr;
+			_powerUpInstance->deActivete();
 		}
 	}
 }
@@ -355,9 +356,10 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 				}
 			}
 			if (!_powerup) {
-				if (rand() % 10 == 1 && (tmpMdl = getModel("FireUp")) != nullptr) {
-					std::cout << "make fire up\n";
-					_powerUpInstance = new FireUp({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
+					std::cout << "place PowerUP\n";
+					_powerUpInstance->setPosition({x, 0, y});
+					_powerUpInstance->activete();
 					_powerup = true;
 				}
 			}
@@ -385,22 +387,22 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	//std::vector<std::string> map;
 	std::ifstream ifs(path);
 	std::string line;
-	std::string enemies;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onil:) ([0-9]{1,2})\\s*)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
 
 
 	_balloons = 0;
 	_onil = 0;
 	_map.clear();
 	if (ifs.good()) {
-		std::getline(ifs, enemies);
-		if (!std::regex_match(enemies, regEnemies)) {
+		std::getline(ifs, line);
+		if (!std::regex_match(line, regEnemies)) {
 			_state = levelState::FAIL_MAP_LOAD;
 			return;
 		}
 
-		if (std::regex_match(enemies, match, regEnemies)) {
+		if (std::regex_match(line, match, regEnemies)) {
 			for (size_t i = 1; i < match.size(); ++i) {
 				std::ssub_match sub_match = match[i];
 				std::string piece = sub_match.str();
@@ -417,10 +419,30 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 
 		std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
 
+		std::getline(ifs, line);
+		if (!std::regex_match(line, regPowerUp)) {
+			_state = levelState::FAIL_MAP_LOAD;
+			return;
+		}
+
+		if (std::regex_match(line, match, regPowerUp)) {
+			cge::Model *tmpMdl;
+				std::ssub_match sub_match = match[1];
+				std::string piece = sub_match.str();
+				if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
+					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
+					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
+					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
+					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				}
+		}
+
 		do {
 			ifs >> line;
 			_map.push_back(line);
-
 		} while (ifs.good());
 	} else
 		_state = levelState::FAIL_MAP_LOAD;
@@ -483,6 +505,10 @@ void LevelRunner::cleanLevel() {
 
 	_player->setPlaseBomb(false);
 	_particalRenderer.clearParticals();
+	if (_powerup && !_powerUpInstance->isActive())
+	{
+		_powerUpInstance->Reverse(*_player);
+	}
 	_powerup = false;
 	delete (_powerUpInstance);
 	_powerUpInstance = nullptr;
@@ -692,7 +718,7 @@ void LevelRunner::render()
 		_renderer.render(*being);
 	if (_gate != nullptr)
 		_renderer.render(*_gate);
-	if (_powerUpInstance != nullptr)
+	if (_powerUpInstance->isActive())
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());

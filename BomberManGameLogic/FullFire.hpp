@@ -6,14 +6,13 @@
 #define BOMBERMAN_FULLFIRE_HPP
 
 
-#include "PowerUPInterface.hpp"
+#include "PowerUPAbstract.hpp"
 
-class FullFire : public PowerUPInterface {
+class FullFire : public PowerUPAbstract {
 public:
 	FullFire(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius);
 	void Powerup(Player &player);
 	void Reverse(Player &player);
-	bool isActive();
 private:
 	int _prevDamage;
 };
