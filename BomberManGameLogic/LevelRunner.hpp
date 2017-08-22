@@ -45,7 +45,6 @@ private:
 	cge::Renderer _renderer;
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
-	cge::TextRenderer _textRenderer;
 	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;

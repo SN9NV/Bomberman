@@ -1,5 +1,4 @@
 #include "Window.hpp"
-#include "settings/Settings.hpp"
 
 namespace cge {
 	Window::Window() :
@@ -69,6 +68,8 @@ namespace cge {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glfwFocusWindow(this->_glfwWindow);
 	}
 
 	void Window::swapBuffers() {
@@ -103,7 +104,7 @@ namespace cge {
 		return (this->_glfwWindow);
 	}
 
-	void Window::recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
+	void Window::recreate(unsigned width, unsigned height) {
 		cge::Settings::Settings *settings = cge::Settings::Settings::getSingleton();
 
 		GLFWmonitor *monitor = glfwGetWindowMonitor(this->_glfwWindow);

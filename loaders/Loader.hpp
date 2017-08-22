@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <al.h>
 #include <sndfile.hh>
+#include <glfw/include/GLFW/glfw3.h>
 
 #include "../entites/Model.hpp"
 #include "../entites/TextureAtlas.h"
@@ -28,8 +29,7 @@ namespace cge {
         TextureAtlas loadTextureAtlas(const std::string &texturePath, int row);
         tinygltf::Model &loadGLTFModel(const std::string &modelPath);
 		cge::Loader::AudioFile	loadAudio(const std::string &audioPath);
-
-		void RebindAll();
+		GLFWimage loadGLFWImage(const std::string &imagePath);
 
     private:
         std::map<std::string, GLuint>					_textures;

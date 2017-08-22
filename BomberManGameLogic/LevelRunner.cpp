@@ -25,14 +25,15 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
-	_models.emplace("DestructWall",
-					cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
-	_models.emplace("Bomber",
-					cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
 	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
 	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
+	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader));
+	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader));
+	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingBootDiffuseColor.png", this->_loader));
 
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
 		GL_SRC_ALPHA, GL_ONE);
