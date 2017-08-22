@@ -11,7 +11,7 @@
 #include <glfw/include/GLFW/glfw3.h>
 
 #include "../entites/Model.hpp"
-#include "../entites/TextureAtlas.h"
+#include "../entites/TextureAtlas.hpp"
 
 namespace cge {
     class Loader {

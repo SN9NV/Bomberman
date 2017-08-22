@@ -2,7 +2,7 @@
 // Created by Owen Exall on 2017/08/16.
 //
 
-#include "PauseGameScreen.h"
+#include "PauseGameScreen.hpp"
 
 cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader) :
 		_window(win),

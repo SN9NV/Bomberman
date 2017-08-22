@@ -2,7 +2,7 @@
 // Created by Robert Jones on 2017/08/16.
 //
 
-#include "TextureAtlas.h"
+#include "TextureAtlas.hpp"
 namespace cge {
     TextureAtlas::TextureAtlas(GLuint textureID, int row) : Texture(textureID), _row(row), _stages(row * row){}
 

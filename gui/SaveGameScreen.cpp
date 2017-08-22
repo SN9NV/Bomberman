@@ -2,7 +2,7 @@
 // Created by Owen Exall on 2017/08/16.
 //
 
-#include "SaveGameScreen.h"
+#include "SaveGameScreen.hpp"
 
 cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap)  :
 		_window(win),
