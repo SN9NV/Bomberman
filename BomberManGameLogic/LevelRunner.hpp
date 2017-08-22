@@ -9,7 +9,7 @@
 #include "../entites/Model.hpp"
 #include "../rendering/TextRenderer.hpp"
 #include "Bomb.hpp"
-#include "Being.h"
+#include "Being.hpp"
 #include "Player.hpp"
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
@@ -65,6 +65,8 @@ private:
 	bool checkMapWall();
 	void runLevelLoop();
 	void fireEffect(glm::vec3 position, size_t numParticals);
+	void portalActiveEffect(glm::vec3 position, size_t numParticals);
+	void portalUseEffect(glm::vec3 position, size_t numParticals);
 	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
 	void checkGateDamage(glm::vec3 position, Being *being);
 	void cleanLevel();

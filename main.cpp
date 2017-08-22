@@ -12,18 +12,10 @@
 
 #include "tinyGLTF/tiny_gltf.h"
 #include "BomberManGameLogic/GameLogic.h"
-#include "BomberManGameLogic/Player.hpp"
 #include "BomberManGameLogic/LevelRunner.hpp"
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
 #include "gui/GuiManager.hpp"
-#include "io/audio/AudioSource.hpp"
-#include "io/audio/AudioDevice.hpp"
-#include "io/settings/Settings.hpp"
-#include <GLFW/glfw3.h>
-
-#include <nanogui/nanogui.h>
-#include <iostream>
 
 int main() {
 	cge::Settings::Settings::Initialise("resources/settings/settings.data");
@@ -38,14 +30,13 @@ int main() {
 	cge::InputManager	inputManager(window);
 	cge::Loader			loader;
 	Player				*player;
-	cge::Model			BomberMan;
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
 
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
-			"../resources/Maps/Map1",
+			"../resources/Maps/MapTest",
 			"../resources/Maps/Map2",
 			"../resources/Maps/Map3"
 	};
@@ -61,9 +52,8 @@ int main() {
 			new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
 	};
 
-	BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
+	cge::Model BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
-	//player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
 	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader, levelRunner);
@@ -76,7 +66,6 @@ int main() {
 					levelSounds[currMap]->setGain(setts->getMusicVolume());
 					levelSounds[currMap]->setLooping(true);
 					levelSounds[currMap]->setPlaying();
-//					glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					state = levelRunner->runLevel(maps[currMap]);
 					levelSounds[currMap]->setPlaying(false);
 					if (state == levelState::FAIL_MAP_LOAD) {
@@ -106,7 +95,6 @@ int main() {
 				menuSound->setPlaying(false);
 				gameState = cge::GameState::PLAY_GAME;
 				player->setPauseMenue(false);
-//				glfwSetInputMode(window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				inputManager.pollKeyEvnt();
 				levelSounds[currMap]->setGain(setts->getMusicVolume());
 				levelSounds[currMap]->setLooping(false);

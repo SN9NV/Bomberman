@@ -233,6 +233,128 @@ void cge::ParticalRenderer::partivalEffect(glm::vec3 position, glm::vec3 positio
 
 }
 
+void cge::ParticalRenderer::partivalEffectPos(glm::vec3 position, glm::vec3 positionTolorence,
+											  glm::vec3 verlocity, glm::vec3 verlocityTolorence,
+											  float gravityeffect, float gravertyTolerance,
+											  float lifetime, float lifetimeTolorence,
+											  float scale, float scaleTolorence,
+											  float rotation, float rotationTolorence,
+											  float spin, float spinTolorence,
+											  size_t numParticals,
+											  TextureAtlas texture, GLenum specFac, GLenum deffFac) {
+
+	/*std::random_device rd;
+	std::mt19937 gen(rd());*/
+	std::default_random_engine gen;
+	std::uniform_real_distribution<float> dispx(position.x, position.x + positionTolorence.x);
+	std::uniform_real_distribution<float> dispy(position.y, position.y + positionTolorence.y);
+	std::uniform_real_distribution<float> dispz(position.z, position.z + positionTolorence.z);
+	std::uniform_real_distribution<float> disvx(verlocity.x, verlocity.x + verlocityTolorence.x);
+	std::uniform_real_distribution<float> disvy(verlocity.y, verlocity.y + verlocityTolorence.y);
+	std::uniform_real_distribution<float> disvz(verlocity.z, verlocity.z + verlocityTolorence.z);
+	gravertyTolerance = (gravertyTolerance < 0) ? 0 : ((gravertyTolerance > 1) ? 1 : gravertyTolerance);
+	std::uniform_real_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
+	std::uniform_real_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
+	std::uniform_real_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::uniform_real_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::uniform_real_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);
+
+	/*std::normal_distribution<float> dispx(position.x - positionTolorence.x, position.x + positionTolorence.x);
+	std::normal_distribution<float> dispy(position.y - positionTolorence.y, position.y + positionTolorence.y);
+	std::normal_distribution<float> dispz(position.z - positionTolorence.z, position.z + positionTolorence.z);
+	std::normal_distribution<float> disvx(verlocity.x - verlocityTolorence.x, verlocity.x + verlocityTolorence.x);
+	std::normal_distribution<float> disvy(verlocity.y - verlocityTolorence.y, verlocity.y + verlocityTolorence.y);
+	std::normal_distribution<float> disvz(verlocity.z - verlocityTolorence.z, verlocity.z + verlocityTolorence.z);
+	gravertyTolerance = (gravertyTolerance < 0) ? 0 : ((gravertyTolerance > 1) ? 1 : gravertyTolerance);
+	std::normal_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
+	std::normal_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
+	std::normal_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::normal_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::normal_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);*/
+
+	for (size_t i = 0; i < numParticals; ++i) {
+		position.x = dispx(gen);
+		position.y = dispy(gen);
+		position.z = dispz(gen);
+
+		verlocity.x = disvx(gen);
+		verlocity.y = disvy(gen);
+		verlocity.z = disvz(gen);
+
+		gravityeffect = disgrv(gen);
+		lifetime = dislife(gen);
+		scale = disscale(gen);
+		rotation = disrot(gen);
+		spin = disspin(gen);
+		addPartical(Partical(position, verlocity, gravityeffect, lifetime, scale, rotation, spin, texture), specFac,
+					deffFac);
+
+	}
+
+
+}
+
+void cge::ParticalRenderer::partivalEffectNeg(glm::vec3 position, glm::vec3 positionTolorence,
+											  glm::vec3 verlocity, glm::vec3 verlocityTolorence,
+											  float gravityeffect, float gravertyTolerance,
+											  float lifetime, float lifetimeTolorence,
+											  float scale, float scaleTolorence,
+											  float rotation, float rotationTolorence,
+											  float spin, float spinTolorence,
+											  size_t numParticals,
+											  TextureAtlas texture, GLenum specFac, GLenum deffFac) {
+
+	/*std::random_device rd;
+	std::mt19937 gen(rd());*/
+	std::default_random_engine gen;
+	std::uniform_real_distribution<float> dispx(position.x - positionTolorence.x, position.x);
+	std::uniform_real_distribution<float> dispy(position.y - positionTolorence.y, position.y);
+	std::uniform_real_distribution<float> dispz(position.z - positionTolorence.z, position.z);
+	std::uniform_real_distribution<float> disvx(verlocity.x - verlocityTolorence.x, verlocity.x);
+	std::uniform_real_distribution<float> disvy(verlocity.y - verlocityTolorence.y, verlocity.y);
+	std::uniform_real_distribution<float> disvz(verlocity.z - verlocityTolorence.z, verlocity.z);
+	gravertyTolerance = (gravertyTolerance < 0) ? 0 : ((gravertyTolerance > 1) ? 1 : gravertyTolerance);
+	std::uniform_real_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
+	std::uniform_real_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
+	std::uniform_real_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::uniform_real_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::uniform_real_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);
+
+	/*std::normal_distribution<float> dispx(position.x - positionTolorence.x, position.x + positionTolorence.x);
+	std::normal_distribution<float> dispy(position.y - positionTolorence.y, position.y + positionTolorence.y);
+	std::normal_distribution<float> dispz(position.z - positionTolorence.z, position.z + positionTolorence.z);
+	std::normal_distribution<float> disvx(verlocity.x - verlocityTolorence.x, verlocity.x + verlocityTolorence.x);
+	std::normal_distribution<float> disvy(verlocity.y - verlocityTolorence.y, verlocity.y + verlocityTolorence.y);
+	std::normal_distribution<float> disvz(verlocity.z - verlocityTolorence.z, verlocity.z + verlocityTolorence.z);
+	gravertyTolerance = (gravertyTolerance < 0) ? 0 : ((gravertyTolerance > 1) ? 1 : gravertyTolerance);
+	std::normal_distribution<float> disgrv(gravityeffect - gravertyTolerance, gravityeffect + gravertyTolerance);
+	std::normal_distribution<float> dislife(lifetime - lifetimeTolorence, lifetime + lifetimeTolorence);
+	std::normal_distribution<float> disscale(scale - scaleTolorence, scale + scaleTolorence);
+	std::normal_distribution<float> disrot(rotation - rotationTolorence, rotation + rotationTolorence);
+	std::normal_distribution<float> disspin(spin - spinTolorence, spin + spinTolorence);*/
+
+	for (size_t i = 0; i < numParticals; ++i) {
+		position.x = dispx(gen);
+		position.y = dispy(gen);
+		position.z = dispz(gen);
+
+		verlocity.x = disvx(gen);
+		verlocity.y = disvy(gen);
+		verlocity.z = disvz(gen);
+
+		gravityeffect = disgrv(gen);
+		lifetime = dislife(gen);
+		scale = disscale(gen);
+		rotation = disrot(gen);
+		spin = disspin(gen);
+		addPartical(Partical(position, verlocity, gravityeffect, lifetime, scale, rotation, spin, texture), specFac,
+					deffFac);
+
+	}
+
+
+}
+
 glm::mat4 cge::ParticalRenderer::viewModelMatrix(cge::Partical partical, Camera camera) {
 	glm::mat4 model(1.0f);
 

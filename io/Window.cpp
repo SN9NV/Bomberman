@@ -1,5 +1,5 @@
-
 #include "Window.hpp"
+#include "settings/Settings.hpp"
 
 namespace cge {
 	Window::Window() :
@@ -104,8 +104,17 @@ namespace cge {
 	}
 
 	void Window::recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
-		glfwDestroyWindow(this->_glfwWindow);
-		glfwTerminate();
-		this->create(windowName, width, height, windowFlags);
+		cge::Settings::Settings *settings = cge::Settings::Settings::getSingleton();
+
+		GLFWmonitor *monitor = glfwGetWindowMonitor(this->_glfwWindow);
+		if (monitor == nullptr)
+			monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+
+		if (settings->getSettings().Fullscreen)
+			glfwSetWindowMonitor(this->_glfwWindow, monitor, 0, 0, width, height, mode->refreshRate);
+		else
+			glfwSetWindowMonitor(this->_glfwWindow, nullptr, (mode->width - width) / 2, (mode->height - height) / 2, width, height, 0);
+		glViewport(0, 0, width, height);
 	}
 }

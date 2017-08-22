@@ -32,12 +32,14 @@ int main() {
 
 	inputManager.setInputCallBacks();
 	cge::TextureAtlas t = loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
-	glm::vec3 camOff = {0, 0, 5};
+	glm::vec3 camOff = {0, 1, 5};
 	//player.update(inputManager, shader, window.getFrameTime());
 	camera.setTrackEntity(player);
-	prender.partivalEffect({0, 0, 0}, {0.5, .5, 0.5},
-						   {0, 0, 0.00}, {0, 0.005, 0}, 0, 0.00, 5000, 5000, 0.4, 0.1, 0, 0, 0.0,
-						   0.0, 2000, t, GL_SRC_ALPHA, GL_ONE);
+//	prender.partivalEffectPos({0, 0, 0}, {0.5, .5, 0.5},
+//						   {0, 0, 0.00}, {0, 0.01, 0}, 0, 0.00, 5000, 5000, 0.4, 0.1, 0, 0, 0.0,
+//						   0.0, 20, t, GL_SRC_ALPHA, GL_ONE);
+	prender.addPartical(cge::Partical({0,0,0},{0,0,0}, 0,100000,1,0,0,t), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	prender.addPartical(cge::Partical({0,0,0.005},{0,0.001,0}, 0,100000,1,0,0,t), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	while (gameState != cge::WANTS_QUIT) {
 		inputManager.pollKeyEvnt();
 		if (inputManager.isExitCase() || inputManager.isKeyPressed(GLFW_KEY_ESCAPE))

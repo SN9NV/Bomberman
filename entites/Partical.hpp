@@ -37,7 +37,7 @@ namespace cge {
 		Partical(Partical const &cpy);
 
 		Partical() = default;
-		bool update(unsigned lastFrameTime, Camera camera);
+		bool update(unsigned lastFrameTime, const Camera &camera);
 
 		float getScale() const;
 

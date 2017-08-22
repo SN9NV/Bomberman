@@ -60,6 +60,28 @@ namespace cge {
 							TextureAtlas texture,
 							GLenum specFac, GLenum deffFac);
 
+		void partivalEffectPos(glm::vec3 position, glm::vec3 positionTolorence,
+							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
+							float gravityeffect, float gravertyTolerance,
+							float lifetime, float lifetimeTolorence,
+							float scale, float scaleTolorence,
+							float rotation, float rotationTolorence,
+							float spin, float spinTolorencce,
+							size_t numParticals,
+							TextureAtlas texture,
+							GLenum specFac, GLenum deffFac);
+
+		void partivalEffectNeg(glm::vec3 position, glm::vec3 positionTolorence,
+							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
+							float gravityeffect, float gravertyTolerance,
+							float lifetime, float lifetimeTolorence,
+							float scale, float scaleTolorence,
+							float rotation, float rotationTolorence,
+							float spin, float spinTolorencce,
+							size_t numParticals,
+							TextureAtlas texture,
+							GLenum specFac, GLenum deffFac);
+
 		void render(Partical &partical, Camera &camera);
 
 		void render(Camera &camera);

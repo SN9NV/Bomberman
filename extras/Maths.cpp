@@ -33,9 +33,9 @@ namespace cge {
 			return ((float)sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
 		}
 
-		float 		vec3LenSqur(glm::vec3 vec)
+		float 		particalCameraDistance(glm::vec3 vec, glm::vec3 cameraRot)
 		{
-			return ((float)(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+			return ((vec.x * vec.x * cameraRot.x) +(vec.y * vec.y * cameraRot.y) +(vec.z * vec.z * cameraRot.z));
 		}
 
 		glm::vec3	scaleVec3(float scale, glm::vec3 vec)
