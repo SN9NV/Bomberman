@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "../error_handling/Exceptions.hpp"
+#include "settings/Settings.hpp"
+#include "../loaders/Loader.hpp"
 
 namespace cge {
 	class Window {
@@ -28,7 +30,7 @@ namespace cge {
 		Window &operator=(const Window &rhs) = default;
 
 		void	create(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags);
-		void	recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags);
+		void	recreate(unsigned width, unsigned height);
 		void	swapBuffers();
 
 		unsigned	getWidth() const;
@@ -43,6 +45,7 @@ namespace cge {
 		unsigned	_deltaFrameTime;
 
 		GLFWwindow*	_glfwWindow;
+		cge::Loader	_loader;
 	};
 }
 

@@ -59,6 +59,9 @@ public:
 	void setMoveDir(glm::vec3 newDir);
 
 	float getDirAngle();
+
+	void setSpeed(const float speed);
+	float getSpeed() const;
 };
 
 

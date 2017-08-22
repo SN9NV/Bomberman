@@ -14,7 +14,7 @@
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
-#include "PowerUPInterface.hpp"
+#include "PowerUPAbstract.hpp"
 
 
 enum levelState
@@ -45,14 +45,13 @@ private:
 	cge::Renderer _renderer;
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
-	cge::TextRenderer _textRenderer;
 	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;
 	int _balloons;
 	int _onil;
 	bool _powerup;
-	PowerUPInterface *_powerUpInstance;
+	PowerUPAbstract *_powerUpInstance;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();

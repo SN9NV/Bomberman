@@ -142,11 +142,25 @@ cge::Loader::AudioFile cge::Loader::loadAudio(const std::string &audioPath) {
 	return foundAudio->second;
 }
 
-void cge::Loader::RebindAll() {
-	for (auto iter : this->_textures) {
-		glBindTexture(GL_TEXTURE_2D, iter.second);
+GLFWimage cge::Loader::loadGLFWImage(const std::string &imagePath) {
+	std::vector<unsigned char>	in;
+	std::vector<unsigned char>	out;
+	unsigned long	width;
+	unsigned long	height;
+	GLFWimage		image = {};
+
+	if (cge::IO::readFileToBuffer(imagePath, in)) {
+		std::cerr << "Failed to load image: " << imagePath << "\n";
+		exit(1);
 	}
-	for (auto iter : this->_textureAtlasas) {
-		glBindTexture(GL_TEXTURE_2D, iter.second.getID());
+
+	if (cge::PicoPNG::decodePNG(out, width, height, in.data(), in.size()) > 0) {
+		std::cerr << "Failed to decode PNG: " << imagePath << "\n";
+		exit(1);
 	}
+
+	image.width = static_cast<int>(width);
+	image.height = static_cast<int>(height);
+	image.pixels = out.data();
+	return (image);
 }

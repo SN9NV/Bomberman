@@ -10,6 +10,9 @@
 #include "Wall.hpp"
 #include "../io/audio/AudioSource.hpp"
 #include "FireUp.hpp"
+#include "FireDown.hpp"
+#include "FullFire.hpp"
+#include "WingBoot.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager) :
 		_loader(loader),
@@ -27,14 +30,15 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
-	_models.emplace("DestructWall",
-					cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
-	_models.emplace("Bomber",
-					cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
 	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
 	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
+	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader));
+	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader));
+	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader));
 
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
 		GL_SRC_ALPHA, GL_ONE);
@@ -171,10 +175,9 @@ void LevelRunner::beingWorldInteraction() {
 		dist = _player->getPosition() - _powerUpInstance->getPosition();
 		float fdist = cge::Maths::vec3Len(dist);
 		float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
-		if (_state == levelState::PLAY && fdist < hit) {
+		if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
 			_powerUpInstance->Powerup(*_player);
-			//delete (_powerUpInstance);
-			//_powerUpInstance = nullptr;
+			_powerUpInstance->deActivete();
 		}
 	}
 }
@@ -356,6 +359,7 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
 					std::cout << "place PowerUP\n";
 					_powerUpInstance->setPosition({x, 0, y});
+					_powerUpInstance->activete();
 					_powerup = true;
 				}
 			}
@@ -385,7 +389,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	std::string line;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onil:) ([0-9]{1,2})\\s*)?$");
-	std::regex regPowerUp("^(FireUp|FullFire|FireDown)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
 
 
 	_balloons = 0;
@@ -426,7 +430,13 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 				std::ssub_match sub_match = match[1];
 				std::string piece = sub_match.str();
 				if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
-					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);;
+					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
+					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
+					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
+					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
 				}
 		}
 
@@ -495,6 +505,10 @@ void LevelRunner::cleanLevel() {
 
 	_player->setPlaseBomb(false);
 	_particalRenderer.clearParticals();
+	if (_powerup && !_powerUpInstance->isActive())
+	{
+		_powerUpInstance->Reverse(*_player);
+	}
 	_powerup = false;
 	delete (_powerUpInstance);
 	_powerUpInstance = nullptr;
@@ -704,7 +718,7 @@ void LevelRunner::render()
 		_renderer.render(*being);
 	if (_gate != nullptr)
 		_renderer.render(*_gate);
-	if (_powerup)
+	if (_powerUpInstance->isActive())
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
