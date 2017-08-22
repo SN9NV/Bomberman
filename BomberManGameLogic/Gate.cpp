@@ -4,12 +4,12 @@
 
 #include "Gate.hpp"
 
-Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model) :
-		Entity(position, rotation, scale, model), _active(false), _damage(false), _damageCycels(0)
+Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader) :
+		Entity(position, rotation, scale, model, loader), _active(false), _damage(false), _damageCycels(0)
 {}
 
-Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox) :
-		Entity(position, rotation, scale, model, hitBox), _active(false), _damage(false),  _damageCycels(0)
+Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox) :
+		Entity(position, rotation, scale, model, loader, hitBox), _active(false), _damage(false),  _damageCycels(0)
 {}
 
 bool Gate::isActive() const

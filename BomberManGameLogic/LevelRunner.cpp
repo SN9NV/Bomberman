@@ -25,21 +25,16 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
-	_models.emplace("DestructWall",
-					cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
+	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
-	_models.emplace("Bomber",
-					cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
+	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
 	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
 	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
 
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
-		GL_SRC_ALPHA, GL_ONE);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1),
-		GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2),
-										 GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
 	_gate = nullptr;
@@ -64,7 +59,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	pos = being->getPosition();
 	x = (int) (round(pos.x));
 	y = (int) (round(pos.z));
-	//colision box up
+	//collision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
@@ -73,7 +68,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box down
+	//collision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
@@ -82,7 +77,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box left
+	//collision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
@@ -91,7 +86,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box right
+	//collision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
@@ -128,7 +123,7 @@ void LevelRunner::beingWorldInteraction() {
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
 						x == _gate->getPosition().x) {
 						_player->setPosition(_gate->getPosition());
-						_state = levelState::COMPLEAT;
+						_state = levelState::COMPLETE;
 					}
 
 				}
@@ -147,7 +142,7 @@ void LevelRunner::beingWorldInteraction() {
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
-					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 5, *tmpmdl, (*being)->getDamage());
+					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 4, *tmpmdl, _loader, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -290,7 +285,7 @@ void LevelRunner::loadMapEntitys() {
 			switch (_map[i][j]) {
 				case 'w':
 					if ((tmpMdl = getModel("Wall")) != nullptr) {
-						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
 						_level[i][j] = tmpEnt;
 					}
 					break;
@@ -302,7 +297,7 @@ void LevelRunner::loadMapEntitys() {
 				case 'd':
 					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
 						float rotation = (rand() % 4) * 90;
-						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, 0.5f);
+						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader, 0.5f);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
@@ -312,7 +307,7 @@ void LevelRunner::loadMapEntitys() {
 
 						if (_balloons > 0 && rand() % 6 == 1) {
 							if ((tmpMdl = getModel("Balloon")) != nullptr) {
-								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
+								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
 								_balloons--;
 							}
 						} else if (_onil > 0 && rand() % 6 == 1) {
@@ -340,21 +335,21 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 			_dwalls--;
 			wallBrakeEffect({x, 0, y}, 1000);
 			fireEffect({x, 0, y}, 100);
-			srand((unsigned int) time(NULL) + _dwalls);
+			srand((unsigned int) time(nullptr) + _dwalls);
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
+						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
 					std::cout << "make gate" << std::endl;
 				} else if (rand() % 20 == 1) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
+						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
 				}
 			}
 			if (!_powerup) {
 				if (rand() % 10 == 1 && (tmpMdl = getModel("FireUp")) != nullptr) {
 					std::cout << "make fire up\n";
-					_powerUpInstance = new FireUp({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+					_powerUpInstance = new FireUp({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 					_powerup = true;
 				}
 			}
@@ -589,8 +584,7 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 		verlocity.z = disvz(gen);
 
 		lifetime = dislife(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -622,8 +616,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -649,11 +642,10 @@ void LevelRunner::update() {
 	_camera.setPosition({plpos.x, 10, plpos.z});
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {
-			std::cout << "make enimy because gate damage\n";
+			std::cout << "make enemy because gate damage\n";
 			cge::Model *tmp;
 			if ((tmp = getModel("Balloon")) != nullptr) {
-				_beings.push_back(
-						new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, 0.5f));
+				_beings.push_back(new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, _loader, 0.5f));
 			}
 		}
 		_gate->update();

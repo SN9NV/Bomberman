@@ -11,7 +11,6 @@
 #define GLFONTSTASH_IMPLEMENTATION
 
 #include "tinyGLTF/tiny_gltf.h"
-#include "BomberManGameLogic/GameLogic.hpp"
 #include "BomberManGameLogic/LevelRunner.hpp"
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
@@ -24,6 +23,7 @@ int main() {
 	unsigned int winFlags = cge::Window::Flags::VSYNC_ENABLED;
 	if (setts->getSettings().Fullscreen)
 		winFlags |= cge::Window::Flags::FULLSCREEN;
+
 	cge::Window window("Bomberman", setts->getSettings().Width, setts->getSettings().Height, winFlags);
 	cge::GameState		gameState = cge::GameState::PLAY_MENU;
 	cge::GameState		prevGameState = gameState;
@@ -40,6 +40,7 @@ int main() {
 			"../resources/Maps/Map2",
 			"../resources/Maps/Map3"
 	};
+
 	cge::Audio::Source* menuSound = new cge::Audio::Source("../resources/audio/MainTheme.ogg", loader);
 	menuSound->setLooping(true);
 	menuSound->setGain(setts->getMusicVolume());
@@ -53,7 +54,7 @@ int main() {
 	};
 
 	cge::Model BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
-	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, 0.25f, 0.007);
+	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, loader, 0.25f, 0.007);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
 	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader);
@@ -73,7 +74,7 @@ int main() {
 						gameState = cge::GameState::PLAY_MENU;
 					} else if (state == levelState::PAUSE)
 						gameState = cge::PLAY_PAUSE;
-					else if (state == levelState::COMPLEAT && (size_t)currMap < maps.size()) {
+					else if (state == levelState::COMPLETE && (size_t)currMap < maps.size()) {
 						currMap++;
 						if ((size_t)currMap >= maps.size())
 							state = cge::GameState::PLAY_MENU;

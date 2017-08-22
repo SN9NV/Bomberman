@@ -22,7 +22,7 @@ enum levelState
 	PLAY = 1,
 	WANTS_QUIT,
 	FAIL,
-	COMPLEAT,
+	COMPLETE,
 	FAIL_MAP_LOAD,
 	PAUSE
 };
@@ -36,7 +36,7 @@ private:
 	std::map<std::string, cge::Model> _models;
 	std::vector<std::string> _map;
 	cge::Loader &_loader;
-	Player *_player;
+	Player	*_player;
 	Gate	*_gate;
 	cge::Window &_window;
 	cge::GLSLProgram _entShader;

@@ -23,8 +23,8 @@ public:
 	void setDamage(bool _damage);
 	void damage(size_t _damageCicels);
 	bool update();
-	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
-	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox);
+	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
+	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox);
 };
 
 

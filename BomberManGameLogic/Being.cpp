@@ -5,23 +5,37 @@
 #include "Being.hpp"
 #include <cmath>
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed) :
-		Entity(position, rotation, scale, model),
-		_speed(speed), _maxBomb(1), _plaseBomb(false),  _damage(2), _deathTimeout(1000), _alive(true)
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed) :
+		Entity(position, rotation, scale, model, loader),
+		_speed(speed),
+		_maxBomb(1),
+		_plaseBomb(false),
+		_damage(2),
+		_deathTimeout(1000),
+		_alive(true)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, float speed) :
-		Entity(position, rotation, scale, model, hitBox),
-		_speed(speed), _maxBomb(1), _plaseBomb(false), _damage(2), _deathTimeout(1000), _alive(true)
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, float speed) :
+		Entity(position, rotation, scale, model, loader, hitBox),
+		_speed(speed),
+		_maxBomb(1),
+		_plaseBomb(false),
+		_damage(2),
+		_deathTimeout(1000),
+		_alive(true)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius,
-			 float _speed, int _damage) : Entity(position, rotation, scale, model, hitBoxRadius), _speed(_speed),
-										  _maxBomb(1), _plaseBomb(false), _damage(_damage), _deathTimeout(1000), _alive(true)
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float _speed, int _damage) :
+		Entity(position, rotation, scale, model, loader, hitBoxRadius), _speed(_speed),
+		_maxBomb(1),
+		_plaseBomb(false),
+		_damage(_damage),
+		_deathTimeout(1000),
+		_alive(true)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }

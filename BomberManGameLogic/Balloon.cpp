@@ -8,13 +8,13 @@ std::uniform_int_distribution<int> _ndisision(0, 1);
 std::uniform_int_distribution<int> _nchange(0, 3);
 std::default_random_engine gen;
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model)
-		: Being(position, rotation, scale, model, 0.002f), _changeDir(0) {
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader)
+		: Being(position, rotation, scale, model, loader, 0.002f), _changeDir(0) {
 
 }
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox)
-		: Being(position, rotation, scale, model, hitBox, 0.002f), _changeDir(0) {
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox)
+		: Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0) {
 
 }
 

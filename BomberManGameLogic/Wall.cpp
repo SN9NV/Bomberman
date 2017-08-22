@@ -4,11 +4,8 @@
 
 #include "Wall.hpp"
 
-Wall::Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model) : Entity(position,
-																										  rotation,
-																										  scale, model)
-{}
+Wall::Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader) :
+		Entity(position, rotation, scale, model, loader) {}
 
-Wall::Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius)
-		: Entity(position, rotation, scale, model, hitBoxRadius)
-{}
+Wall::Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius)
+		: Entity(position, rotation, scale, model, loader, hitBoxRadius) {}

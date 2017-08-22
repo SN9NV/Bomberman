@@ -16,9 +16,7 @@ cge::Audio::Source::Source(
 	this->Init(position, velocity, isLooping, pitch, gain);
 }
 
-cge::Audio::Source::Source(
-		const std::string &audioPath,
-		cge::Loader &loader)
+cge::Audio::Source::Source(const std::string &audioPath, cge::Loader &loader)
 {
 	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
 	this->setAudio(audioPath, loader);
@@ -38,6 +36,7 @@ cge::Audio::Source::Source(
 }
 
 cge::Audio::Source::~Source() {
+	std::cout << "Deleting source: " << this->_name << "\n";
 	alDeleteSources(1, &this->_sourceID);
 }
 
@@ -129,13 +128,14 @@ bool cge::Audio::Source::isLooping() const {
 	return this->_isLooping;
 }
 
-void cge::Audio::Source::setPlaying(bool play) {
+void cge::Audio::Source::setPlaying(bool play) const {
 	if (this->_bufferID == 0) {
 		std::cout << "No audio file is set\n";
 		return;
 	}
 
 	if (play) {
+		std::cout << "Playing source: " << this->_name << "\n";
 		alSourcePlay(this->_sourceID);
 	} else {
 		alSourcePause(this->_sourceID);

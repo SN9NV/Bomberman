@@ -2,27 +2,9 @@
 #include "../extras/Maths.hpp"
 #include "../extras/glmOstream.hpp"
 
-//cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model) :
-//		_model(model),
-//		_position(position),
-//		_rotation(rotation),
-//		_scale(scale),
-//		_hitBoxRadius(0),
-//		_transformation(1.0),
-//		_transformationLocation(0),
-//		_lastTicks(glfwGetTime()),
-//		_ticksDelta(0.0),
-//		_animationTicks(0.0),
-//		_currentAnimation(0),
-//		_hasAnimation(!model.getTinygltfModel().animations.empty()),
-//		_animationSpeed(1.0),
-//		_needsTransformationUpdate(true)
-//{
-//
-//}
-
-cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox) :
+cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox) :
 		_model(model),
+		_loader(loader),
 		_position(position),
 		_rotation(rotation),
 		_scale(scale),
@@ -262,4 +244,18 @@ bool cge::Entity::isPlayAnimation() const
 void cge::Entity::setPlayAnimation(bool playAnimation)
 {
 	this->_playAnimation = playAnimation;
+}
+
+void cge::Entity::addNewSoundEffect(const std::string &name, const std::string &audioFilePath) {
+	this->_soundEffects[name] = cge::Audio::Source(this->_position, { 0, 0, 0 }, false, audioFilePath, this->_loader);
+}
+
+void cge::Entity::playEffect(const std::string &name) const {
+	auto source = this->_soundEffects.find(name);
+
+	if (source == this->_soundEffects.end()) {
+		std::cerr << "Sound effect is not assigned to this entity\n";
+	} else {
+		source->second.setPlaying();
+	}
 }

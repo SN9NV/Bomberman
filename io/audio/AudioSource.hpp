@@ -20,12 +20,12 @@ namespace cge {
 
 			explicit Source();
 			Source(const std::string &audioPath, cge::Loader &loader);
-			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
-			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, const std::string &audioPath, cge::Loader &loader, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
+			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 1.0f, ALfloat gain = 1.0f);
+			Source(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, const std::string &audioPath, cge::Loader &loader, ALfloat pitch = 1.0f, ALfloat gain = 1.0f);
 
 			~Source();
 
-			void	Init(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 0.0f, ALfloat gain = 0.0f);
+			void	Init(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch = 1.0f, ALfloat gain = 1.0f);
 			void	setAudio(const std::string &audioFilePath, cge::Loader &loader);
 			void	setPitch(ALfloat pitch);
 			void	setGain(ALfloat gain);
@@ -42,7 +42,7 @@ namespace cge {
 			std::string	getName() const;
 			SF_INFO		getInfo() const;
 
-			void		setPlaying(bool play = true);
+			void		setPlaying(bool play = true) const;
 			bool 		isPlaying();
 			unsigned	getPlayOffset(cge::Audio::Source::Offset offsetType);
 			void		setPlayOffset(cge::Audio::Source::Offset offsetType, unsigned offset);

@@ -11,8 +11,9 @@
 class PowerUPInterface : public cge::Entity
 {
 public:
-	PowerUPInterface(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
-					 float hitBoxRadius) : Entity(position, rotation, scale, model, hitBoxRadius) {}
+	PowerUPInterface(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
+			Entity(position, rotation, scale, model, loader, hitBoxRadius) {}
+
 	virtual void Powerup(Player &player) = 0;
 };
 

@@ -51,12 +51,12 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	return (Being::update(input, shader, lastFrameTime));
 }
 
-Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
-		: Being(position, rotation, scale, model, speed), _lives(3), _score(0) {}
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed)
+		: Being(position, rotation, scale, model, loader, speed), _lives(3), _score(0) {}
 
-Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox,
 			   float speed)
-		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false), _score(0) {}
+		: Being(position, rotation, scale, model, loader, hitBox, speed), _lives(3), _pauseMenue(false), _score(0) {}
 
 int Player::getLives() const {
 	return _lives;

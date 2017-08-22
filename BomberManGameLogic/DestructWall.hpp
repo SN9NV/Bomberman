@@ -11,8 +11,8 @@
 class DestructWall : public cge::Entity
 {
 public:
-	DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
-	DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox);
+	DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
+	DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox);
 };
 
 
