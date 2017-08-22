@@ -14,9 +14,9 @@
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
-#include "PowerUPInterface.hpp"
 #include "../io/audio/AudioDevice.hpp"
-
+#include "Onil.hpp"
+#include "PowerUPAbstract.hpp"
 
 enum levelState
 {
@@ -55,7 +55,7 @@ private:
 	int _balloons;
 	int _onil;
 	bool _powerup;
-	PowerUPInterface *_powerUpInstance;
+	PowerUPAbstract *_powerUpInstance;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();
@@ -72,6 +72,7 @@ private:
 	void portalUseEffect(glm::vec3 position, size_t numParticals);
 	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
 	void checkGateDamage(glm::vec3 position, Being *being);
+	void placeBeing(Being *being);
 	void cleanLevel();
 	void update();
 	void render();

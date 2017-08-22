@@ -362,10 +362,7 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	setts->setFullscreen(chkbx_FullScreen->checked());
 
 	if (this->_windowChangesMade) {
-		unsigned int winFlags = cge::Window::Flags::VSYNC_ENABLED;
-		if (setts->getSettings().Fullscreen)
-			winFlags |= cge::Window::Flags::FULLSCREEN;
-		this->_window.recreate("Bomberman", setts->getSettings().Width, setts->getSettings().Height, winFlags);
+		this->_window.recreate(setts->getSettings().Width, setts->getSettings().Height);
 		cge::GuiManager::getSingleton()->ReinitializeScreens();
 	}
 

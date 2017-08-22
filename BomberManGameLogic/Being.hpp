@@ -41,10 +41,14 @@ public:
 	void	setPlaseBomb(bool _plaseBomb);
 	void	setDirection();
 	void	setMoveDir(glm::vec3 newDir);
+	void	setSpeed(const float speed);
+	float	getSpeed() const;
 
 	const glm::vec3	&get_n_moveDir() const;
 
 	virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
+
+
 };
 
 

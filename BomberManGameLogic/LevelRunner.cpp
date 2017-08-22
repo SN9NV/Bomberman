@@ -10,6 +10,9 @@
 #include "Wall.hpp"
 #include "../io/audio/AudioSource.hpp"
 #include "FireUp.hpp"
+#include "FireDown.hpp"
+#include "FullFire.hpp"
+#include "WingBoot.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
@@ -22,7 +25,9 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_renderer(_entShader),
 		_camera({0.0f, 5.0f, 0.0f}, {1.5f, 0.0f, 0.0f}, _window),
 		_particalRenderer(_partShader),
-		_inputManager(inputManager)
+		_inputManager(inputManager),
+		_powerUpInstance(nullptr),
+		_powerup(false)
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
@@ -32,15 +37,15 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
 	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
+	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader));
+	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader));
+	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader));
 
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
-	_gate = nullptr;
-	_powerup = false;
-	_powerUpInstance = nullptr;
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -168,10 +173,9 @@ void LevelRunner::beingWorldInteraction() {
 		dist = _player->getPosition() - _powerUpInstance->getPosition();
 		float fdist = cge::Maths::vec3Len(dist);
 		float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
-		if (_state == levelState::PLAY && fdist < hit) {
+		if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
 			_powerUpInstance->Powerup(*_player);
-			delete (_powerUpInstance);
-			_powerUpInstance = nullptr;
+			_powerUpInstance->deActivete();
 		}
 	}
 }
@@ -288,6 +292,7 @@ void LevelRunner::loadMapEntitys() {
 	srand((unsigned int) (time(nullptr)));
 	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
+	Being *tmpBeing;
 
 	_dwalls = 0;
 	_level.resize(_map.size());
@@ -315,24 +320,40 @@ void LevelRunner::loadMapEntitys() {
 					}
 					break;
 				default:
-					if (_balloons + _onil > 0) {
-
-						if (_balloons > 0 && rand() % 6 == 1) {
-							if ((tmpMdl = getModel("Balloon")) != nullptr) {
-								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
-								_balloons--;
-							}
-						} else if (_onil > 0 && rand() % 6 == 1) {
-							/*if ((tmpMdl = getModel("Onil")) != nullptr)
-							{
-								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
-								_onil--;
-							}*/
-							_onil--;
-						}
-					}
+//					if (_balloons + _onil > 0) {
+//
+//						if (_balloons > 0 && rand() % 6 == 1) {
+//							if ((tmpMdl = getModel("Balloon")) != nullptr) {
+//								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
+//								_balloons--;
+//							}
+//						} else if (_onil > 0 && rand() % 6 == 1) {
+//							/*if ((tmpMdl = getModel("Onil")) != nullptr)
+//							{
+//								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
+//								_onil--;
+//							}*/
+//							_onil--;
+//						}
+//					}
 					break;
 			}
+		}
+	}
+	if ((tmpMdl = getModel("Balloon")) != nullptr) {
+		while (_balloons > 0) {
+			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
+			_beings.push_back(tmpBeing);
+			placeBeing(tmpBeing);
+			_balloons--;
+		}
+	}
+	if ((tmpMdl = getModel("Onil")) != nullptr) {
+		while (_onil > 0) {
+			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f, *_player, _level);
+			_beings.push_back(tmpBeing);
+			placeBeing(tmpBeing);
+			_onil--;
 		}
 	}
 }
@@ -359,9 +380,10 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 				}
 			}
 			if (!_powerup) {
-				if (rand() % 10 == 1 && (tmpMdl = getModel("FireUp")) != nullptr) {
-					std::cout << "make fire up\n";
-					_powerUpInstance = new FireUp({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
+					std::cout << "place PowerUP\n";
+					_powerUpInstance->setPosition({x, 0, y});
+					_powerUpInstance->activete();
 					_powerup = true;
 				}
 			}
@@ -389,22 +411,22 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	//std::vector<std::string> map;
 	std::ifstream ifs(path);
 	std::string line;
-	std::string enemies;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onil:) ([0-9]{1,2})\\s*)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
 
 
 	_balloons = 0;
 	_onil = 0;
 	_map.clear();
 	if (ifs.good()) {
-		std::getline(ifs, enemies);
-		if (!std::regex_match(enemies, regEnemies)) {
+		std::getline(ifs, line);
+		if (!std::regex_match(line, regEnemies)) {
 			_state = levelState::FAIL_MAP_LOAD;
 			return;
 		}
 
-		if (std::regex_match(enemies, match, regEnemies)) {
+		if (std::regex_match(line, match, regEnemies)) {
 			for (size_t i = 1; i < match.size(); ++i) {
 				std::ssub_match sub_match = match[i];
 				std::string piece = sub_match.str();
@@ -421,10 +443,30 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 
 		std::cout << "balloons: " << _balloons << " onils: " << _onil << std::endl;
 
+		std::getline(ifs, line);
+		if (!std::regex_match(line, regPowerUp)) {
+			_state = levelState::FAIL_MAP_LOAD;
+			return;
+		}
+
+		if (std::regex_match(line, match, regPowerUp)) {
+			cge::Model *tmpMdl;
+				std::ssub_match sub_match = match[1];
+				std::string piece = sub_match.str();
+				if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
+					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
+					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
+					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
+					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				}
+		}
+
 		do {
 			ifs >> line;
 			_map.push_back(line);
-
 		} while (ifs.good());
 	} else
 		_state = levelState::FAIL_MAP_LOAD;
@@ -487,6 +529,10 @@ void LevelRunner::cleanLevel() {
 
 	_player->setPlaseBomb(false);
 	_particalRenderer.clearParticals();
+	if (_powerup && !_powerUpInstance->isActive())
+	{
+		_powerUpInstance->Reverse(*_player);
+	}
 	_powerup = false;
 	delete (_powerUpInstance);
 	_powerUpInstance = nullptr;
@@ -623,6 +669,7 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 	}
 
 }
+
 void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 	glm::vec3 verlocity;
 	float lifetime;
@@ -655,6 +702,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 	}
 
 }
+
 void LevelRunner::checkGateDamage(glm::vec3 position, Being *being) {
 	if (being == _player && _gate != nullptr && _gate->getPosition().x == position.x &&
 		_gate->getPosition().z == position.z)
@@ -714,10 +762,23 @@ void LevelRunner::render()
 		_renderer.render(*being);
 	if (_gate != nullptr)
 		_renderer.render(*_gate);
-	if (_powerUpInstance != nullptr)
+	if (_powerUpInstance->isActive())
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 //		_textRenderer.DrawText("test", 5, 5);
 	_window.swapBuffers();
+}
+
+void LevelRunner::placeBeing(Being *being) {
+	static std::default_random_engine gen;
+	std::uniform_int_distribution<unsigned int> row(0, (unsigned int)_level.size() - 1);
+	int rowNum = row(gen);
+	std::uniform_int_distribution<unsigned int> col(0, (unsigned int)_level[rowNum].size() - 1);
+	int colNum = col(gen);
+	glm::vec3 dist = _player->getPosition() - glm::vec3 ({colNum, 0, rowNum});
+	if (_level[rowNum][colNum] == nullptr && cge::Maths::vec3LenSqr(dist)  > 2)
+		being->setPosition({colNum, 0, rowNum});
+	else
+		placeBeing(being);
 }

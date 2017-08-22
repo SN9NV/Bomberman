@@ -47,8 +47,7 @@ set(SOURCE_FILES
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
 
-		BomberManGameLogic/PowerUPInterface.hpp
-		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
+        BomberManGameLogic/PowerUPAbstract.hpp
 		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp		BomberManGameLogic/Player.hpp
 		BomberManGameLogic/Bomb.cpp			BomberManGameLogic/Bomb.hpp
@@ -58,6 +57,10 @@ set(SOURCE_FILES
 		BomberManGameLogic/Balloon.cpp		BomberManGameLogic/Balloon.hpp
 		BomberManGameLogic/Wall.cpp			BomberManGameLogic/Wall.hpp
 		BomberManGameLogic/FireUp.cpp		BomberManGameLogic/FireUp.hpp
+		BomberManGameLogic/FireDown.cpp		BomberManGameLogic/FireDown.hpp
+		BomberManGameLogic/FullFire.cpp		BomberManGameLogic/FullFire.hpp
+		BomberManGameLogic/WingBoot.cpp		BomberManGameLogic/WingBoot.hpp
+		BomberManGameLogic/Onil.cpp			BomberManGameLogic/Onil.hpp
 
 		entites/Camera.cpp			entites/Camera.hpp
 		entites/Entity.cpp			entites/Entity.hpp
@@ -67,7 +70,6 @@ set(SOURCE_FILES
 		entites/TextureAtlas.cpp	entites/TextureAtlas.hpp
 		entites/Partical.cpp		entites/Partical.hpp
 
-		error_handling/Exceptions.hpp
 		error_handling/printError.cpp	error_handling/printError.hpp
 
 		extras/Maths.cpp			extras/Maths.hpp
@@ -99,8 +101,7 @@ set(SOURCE_FILES
 		rendering/Renderer.cpp			rendering/Renderer.hpp
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
-		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp
-)
+		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

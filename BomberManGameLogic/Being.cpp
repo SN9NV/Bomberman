@@ -133,6 +133,14 @@ void Being::setPlaseBomb(bool _plaseBomb) {
 	Being::_plaseBomb = _plaseBomb;
 }
 
+void Being::setSpeed(const float speed) {
+	this->_speed = speed;
+}
+
+float Being::getSpeed() const {
+	return (this->_speed);
+}
+
 
 
 
