@@ -17,6 +17,12 @@ protected:
 	float		_speed;
 	glm::vec3	_n_moveDir;
 	size_t		_maxBomb;
+public:
+	size_t getMaxBomb() const;
+
+	void setMaxBomb(size_t _maxBomb);
+
+protected:
 	bool		_plaseBomb;
 	int			_damage;
 	unsigned	_deathTimeout;

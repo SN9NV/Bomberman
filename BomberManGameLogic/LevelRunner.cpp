@@ -13,6 +13,7 @@
 #include "FireDown.hpp"
 #include "FullFire.hpp"
 #include "WingBoot.hpp"
+#include "AddBomb.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
@@ -30,6 +31,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_powerup(false)
 {
 	const std::string resRoot = "resources/models/";
+	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader));
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
 	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
@@ -47,6 +49,8 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
+	//todo remove the folowing test line
+	_player->setMaxBomb(3);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -148,8 +152,9 @@ void LevelRunner::beingWorldInteraction() {
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
+				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
+					std::cout << "adding bomb\n";
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -414,7 +419,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	std::string line;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onile:) ([0-9]{1,2})\\s*)?$");
-	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot|AddBomb)?$");
 
 
 	_balloons = 0;
@@ -462,6 +467,8 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
 					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				}else if (piece == "AddBomb" && (tmpMdl = getModel("AddBomb")) != nullptr) {
+					_powerUpInstance = new AddBomb({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				}
 		}
 

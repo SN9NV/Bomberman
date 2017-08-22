@@ -21,6 +21,9 @@ public:
 	virtual bool isActive() { return _active;};
 	virtual void activete() { _active = true;};
 	virtual void deActivete() { _active = false;};
+
+	virtual ~PowerUPAbstract() {
+	}
 };
 
 #endif //BOMBERMAN_POWERUPINTERFACE_HPP

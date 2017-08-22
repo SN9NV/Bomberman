@@ -145,6 +145,14 @@ float Being::getSpeed() const {
 	return (this->_speed);
 }
 
+size_t Being::getMaxBomb() const {
+	return _maxBomb;
+}
+
+void Being::setMaxBomb(size_t _maxBomb) {
+	Being::_maxBomb = _maxBomb;
+}
+
 
 
 
