@@ -10,7 +10,7 @@
 #include <sndfile.hh>
 
 #include "../entites/Model.hpp"
-#include "../entites/TextureAtlas.h"
+#include "../entites/TextureAtlas.hpp"
 
 namespace cge {
     class Loader {

@@ -7,7 +7,7 @@
 #include "Gate.hpp"
 #include "Balloon.hpp"
 #include "../extras/Maths.hpp"
-#include "Wall.h"
+#include "Wall.hpp"
 #include "../io/audio/AudioSource.hpp"
 #include "FireUp.hpp"
 

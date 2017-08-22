@@ -1,7 +1,7 @@
 #include "Loader.hpp"
 #include "IO.hpp"
 #include "picoPNG.hpp"
-#include "../entites/TextureAtlas.h"
+#include "../entites/TextureAtlas.hpp"
 #include "../tinyGLTF/tiny_gltf.h"
 
 cge::Texture cge::Loader::loadTexture(const std::string &texturePath) {

@@ -11,7 +11,7 @@
 #define GLFONTSTASH_IMPLEMENTATION
 
 #include "tinyGLTF/tiny_gltf.h"
-#include "BomberManGameLogic/GameLogic.h"
+#include "BomberManGameLogic/GameLogic.hpp"
 #include "BomberManGameLogic/LevelRunner.hpp"
 #include "shared.hpp"
 #include "gui/MainMenuScreen.hpp"
