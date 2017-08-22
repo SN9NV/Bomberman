@@ -281,6 +281,7 @@ void LevelRunner::loadMapEntitys() {
 	srand((unsigned int) (time(nullptr)));
 	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
+	Being *tmpBeing;
 
 	_dwalls = 0;
 	_level.resize(_map.size());
@@ -308,24 +309,25 @@ void LevelRunner::loadMapEntitys() {
 					}
 					break;
 				default:
-					if (_balloons + _onil > 0) {
 
-						if (_balloons > 0 && rand() % 6 == 1) {
-							if ((tmpMdl = getModel("Balloon")) != nullptr) {
-								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
-								_balloons--;
-							}
-						} else if (_onil > 0 && rand() % 6 == 1) {
-							/*if ((tmpMdl = getModel("Onil")) != nullptr)
-							{
-								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
-								_onil--;
-							}*/
-							_onil--;
-						}
-					}
 					break;
 			}
+		}
+	}
+	if ((tmpMdl = getModel("Balloon")) != nullptr) {
+		while (_balloons > 0) {
+			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+			_beings.push_back(tmpBeing);
+			placeBeing(tmpBeing);
+			_balloons--;
+		}
+	}
+	if ((tmpMdl = getModel("Onil")) != nullptr) {
+		while (_onil > 0) {
+			/*tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+			_beings.push_back(tmpBeing);
+			placeBeing(tmpBeing);*/
+			_onil--;
 		}
 	}
 }
@@ -594,6 +596,7 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 	}
 
 }
+
 void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 	glm::vec3 verlocity;
 	float lifetime;
@@ -627,6 +630,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 	}
 
 }
+
 void LevelRunner::checkGateDamage(glm::vec3 position, Being *being) {
 	if (being == _player && _gate != nullptr && _gate->getPosition().x == position.x &&
 		_gate->getPosition().z == position.z)
@@ -693,4 +697,17 @@ void LevelRunner::render()
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 //		_textRenderer.DrawText("test", 5, 5);
 	_window.swapBuffers();
+}
+
+void LevelRunner::placeBeing(Being *being) {
+	static std::default_random_engine gen;
+	std::uniform_int_distribution<unsigned int> row(0, (unsigned int)_level.size() - 1);
+	int rowNum = row(gen);
+	std::uniform_int_distribution<unsigned int> col(0, (unsigned int)_level[rowNum].size() - 1);
+	int colNum = col(gen);
+	glm::vec3 dist = _player->getPosition() - glm::vec3 ({colNum, 0, rowNum});
+	if (_level[rowNum][colNum] == nullptr && cge::Maths::vec3LenSqr(dist)  > 2)
+		being->setPosition({colNum, 0, rowNum});
+	else
+		placeBeing(being);
 }
