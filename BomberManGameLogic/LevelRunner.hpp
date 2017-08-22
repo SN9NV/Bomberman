@@ -14,8 +14,8 @@
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
+#include "Onil.hpp"
 #include "PowerUPAbstract.hpp"
-
 
 enum levelState
 {

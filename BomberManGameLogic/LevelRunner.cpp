@@ -34,6 +34,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
 	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
 	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
+	_models.emplace("Onile", cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", this->_loader));
 	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
 	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
 	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader));
@@ -324,11 +325,11 @@ void LevelRunner::loadMapEntitys() {
 			_balloons--;
 		}
 	}
-	if ((tmpMdl = getModel("Onil")) != nullptr) {
+	if ((tmpMdl = getModel("Onile")) != nullptr) {
 		while (_onil > 0) {
-			/*tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f, *_player, _level);
 			_beings.push_back(tmpBeing);
-			placeBeing(tmpBeing);*/
+			placeBeing(tmpBeing);
 			_onil--;
 		}
 	}
@@ -388,7 +389,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	std::ifstream ifs(path);
 	std::string line;
 	std::smatch match;
-	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onil:) ([0-9]{1,2})\\s*)?$");
+	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onile:) ([0-9]{1,2})\\s*)?$");
 	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
 
 
@@ -410,7 +411,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 					sub_match = match[++i];
 					_balloons = stoi(sub_match.str());
 				}
-				if (piece == "onil:") {
+				if (piece == "onile:") {
 					sub_match = match[++i];
 					_onil = stoi(sub_match.str());
 				}
@@ -718,7 +719,7 @@ void LevelRunner::render()
 		_renderer.render(*being);
 	if (_gate != nullptr)
 		_renderer.render(*_gate);
-	if (_powerUpInstance->isActive())
+	if (_powerUpInstance != nullptr && _powerUpInstance->isActive())
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());

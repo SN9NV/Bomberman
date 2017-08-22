@@ -61,6 +61,7 @@ set(SOURCE_FILES
 		BomberManGameLogic/FireDown.cpp		BomberManGameLogic/FireDown.hpp
 		BomberManGameLogic/FullFire.cpp		BomberManGameLogic/FullFire.hpp
 		BomberManGameLogic/WingBoot.cpp		BomberManGameLogic/WingBoot.hpp
+		BomberManGameLogic/Onil.cpp			BomberManGameLogic/Onil.hpp
 
 		entites/Camera.cpp			entites/Camera.hpp
 		entites/Entity.cpp			entites/Entity.hpp
