@@ -7,7 +7,7 @@
 
 
 #include "../rendering/GLSLProgram.hpp"
-#include "TextureAtlas.h"
+#include "TextureAtlas.hpp"
 #include "Camera.hpp"
 #include <glm/simd/platform.h>
 

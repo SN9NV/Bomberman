@@ -39,89 +39,69 @@ endif()
 
 
 set(SOURCE_FILES
+		main.cpp
+#		Testmain.cpp
+
 		shared.hpp
 		tinyGLTF/picojson.h
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
-		BomberManGameLogic/MapLoader.cpp
-		BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.hpp
-		tinyGLTF/picojson.h
-		tinyGLTF/stb_image.h
-		tinyGLTF/tiny_gltf.h
-		main.cpp
-#		Testmain.cpp
-		entites/Camera.cpp entites/Camera.hpp
-		io/InputManager.cpp io/InputManager.hpp
-		entites/Entity.cpp entites/Entity.hpp
-		entites/Model.cpp entites/Model.hpp
-		entites/Texture.cpp entites/Texture.hpp
-		io/Window.cpp io/Window.hpp
+
+		BomberManGameLogic/GameLogic.hpp
+		BomberManGameLogic/PowerUPInterface.hpp
+		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
+		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
+		BomberManGameLogic/Player.cpp		BomberManGameLogic/Player.hpp
+		BomberManGameLogic/Bomb.cpp			BomberManGameLogic/Bomb.hpp
+		BomberManGameLogic/LevelRunner.cpp	BomberManGameLogic/LevelRunner.hpp
+		BomberManGameLogic/DestructWall.cpp	BomberManGameLogic/DestructWall.hpp
+		BomberManGameLogic/Gate.cpp			BomberManGameLogic/Gate.hpp
+		BomberManGameLogic/Balloon.cpp		BomberManGameLogic/Balloon.hpp
+		BomberManGameLogic/Wall.cpp			BomberManGameLogic/Wall.hpp
+		BomberManGameLogic/FireUp.cpp		BomberManGameLogic/FireUp.hpp
+
+		entites/Camera.cpp			entites/Camera.hpp
+		entites/Entity.cpp			entites/Entity.hpp
+		entites/Model.cpp			entites/Model.hpp
+		entites/Texture.cpp			entites/Texture.hpp
+		entites/RawModel.cpp		entites/RawModel.hpp
+		entites/TextureAtlas.cpp	entites/TextureAtlas.hpp
+		entites/Partical.cpp		entites/Partical.hpp
+
 		error_handling/Exceptions.hpp
-		rendering/GLSLProgram.cpp rendering/GLSLProgram.hpp
-		loaders/IO.cpp loaders/IO.hpp
-		rendering/Renderer.cpp rendering/Renderer.hpp
-		extras/Maths.cpp extras/Maths.hpp
-		loaders/Loader.cpp loaders/Loader.hpp
-		loaders/picoPNG.cpp loaders/picoPNG.hpp
-		extras/glmOstream.cpp extras/glmOstream.hpp
-		error_handling/printError.cpp error_handling/printError.hpp
-        BomberManGameLogic/Being.cpp
-		BomberManGameLogic/Being.hpp
-		BomberManGameLogic/Player.cpp
-		BomberManGameLogic/Player.hpp
-		BomberManGameLogic/GameLogic.h
-		BomberManGameLogic/Bomb.cpp
-		BomberManGameLogic/Bomb.hpp
-		BomberManGameLogic/LevelRunner.cpp
-		BomberManGameLogic/LevelRunner.hpp
-		BomberManGameLogic/DestructWall.cpp
-		BomberManGameLogic/DestructWall.hpp
-		BomberManGameLogic/Gate.cpp
-		BomberManGameLogic/Gate.hpp
-		BomberManGameLogic/Balloon.cpp
-		BomberManGameLogic/Balloon.hpp
-		BomberManGameLogic/Wall.cpp
-		BomberManGameLogic/Wall.h
-		gui/GuiManager.cpp
-		gui/GuiManager.hpp
-		gui/MainMenuScreen.cpp
-		gui/MainMenuScreen.hpp
-		gui/SettingsScreen.cpp
-		gui/SettingsScreen.hpp
-		gui/LoadGameScreen.cpp
-		gui/LoadGameScreen.hpp
-        entites/Partical.cpp
-		entites/Partical.hpp
-		rendering/ParticalRenderer.cpp
-		rendering/ParticalRenderer.hpp
-		entites/RawModel.cpp
-		entites/RawModel.hpp
-        entites/Partical.cpp
-		gui/SaveGameScreen.cpp
-		gui/SaveGameScreen.h
-		gui/PauseGameScreen.cpp
-		gui/PauseGameScreen.h
-		entites/TextureAtlas.cpp
-		entites/TextureAtlas.h
-		gui/SaveGameScreen.cpp
-		gui/SaveGameScreen.h
-		gui/PauseGameScreen.cpp
-		gui/PauseGameScreen.h
-		rendering/SpriteRenderer.cpp
-		rendering/SpriteRenderer.hpp
-		rendering/TextRenderer.cpp
-		rendering/TextRenderer.hpp
-		io/audio/AudioSource.cpp io/audio/AudioSource.hpp
-		io/audio/AudioDevice.cpp io/audio/AudioDevice.hpp
-		gui/CustomButton.cpp
-		gui/CustomButton.hpp
-		extras/SavedGame.cpp
-		extras/SavedGame.hpp
-		io/settings/Settings.cpp
-		io/settings/Settings.hpp
-		extras/tinygltfOstream.cpp
-		extras/tinygltfOstream.hpp BomberManGameLogic/PowerUPInterface.hpp BomberManGameLogic/FireUp.cpp BomberManGameLogic/FireUp.hpp)
+		error_handling/printError.cpp	error_handling/printError.hpp
+
+		extras/Maths.cpp			extras/Maths.hpp
+		extras/glmOstream.cpp		extras/glmOstream.hpp
+		extras/SavedGame.cpp		extras/SavedGame.hpp
+		extras/tinygltfOstream.cpp	extras/tinygltfOstream.hpp
+
+		gui/GuiManager.cpp		gui/GuiManager.hpp
+		gui/MainMenuScreen.cpp	gui/MainMenuScreen.hpp
+		gui/SettingsScreen.cpp	gui/SettingsScreen.hpp
+		gui/LoadGameScreen.cpp	gui/LoadGameScreen.hpp
+		gui/SaveGameScreen.cpp	gui/SaveGameScreen.hpp
+		gui/PauseGameScreen.cpp	gui/PauseGameScreen.hpp
+		gui/SaveGameScreen.cpp	gui/SaveGameScreen.hpp
+		gui/PauseGameScreen.cpp	gui/PauseGameScreen.hpp
+		gui/CustomButton.cpp	gui/CustomButton.hpp
+
+		io/InputManager.cpp			io/InputManager.hpp
+		io/Window.cpp				io/Window.hpp
+		io/audio/AudioSource.cpp	io/audio/AudioSource.hpp
+		io/audio/AudioDevice.cpp	io/audio/AudioDevice.hpp
+		io/settings/Settings.cpp	io/settings/Settings.hpp
+
+		loaders/IO.cpp		loaders/IO.hpp
+		loaders/Loader.cpp	loaders/Loader.hpp
+		loaders/picoPNG.cpp	loaders/picoPNG.hpp
+
+		rendering/GLSLProgram.cpp		rendering/GLSLProgram.hpp
+		rendering/Renderer.cpp			rendering/Renderer.hpp
+		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
+		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
+		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp
+)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -190,9 +170,9 @@ target_link_libraries(${PROJECT_NAME}
 		${GLEW_LIBRARIES}
 		${GLM_LIBRARIES}
 		${SNDFILE_LIBRARIES}
-		nanogui
 		${FT_LIBRARIES}
-		)
+		nanogui
+)
 
 # Function to symbolically link the resources into the build directory
 #	Won't work on Windows

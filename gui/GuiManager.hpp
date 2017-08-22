@@ -10,8 +10,8 @@
 #include "MainMenuScreen.hpp"
 #include "SettingsScreen.hpp"
 #include "LoadGameScreen.hpp"
-#include "SaveGameScreen.h"
-#include "PauseGameScreen.h"
+#include "SaveGameScreen.hpp"
+#include "PauseGameScreen.hpp"
 #include "../BomberManGameLogic/LevelRunner.hpp"
 
 namespace cge {
