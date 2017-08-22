@@ -10,7 +10,7 @@
 
 class FullFire : public PowerUPAbstract {
 public:
-	FullFire(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius);
+	FullFire(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius);
 	void Powerup(Player &player);
 	void Reverse(Player &player);
 private:

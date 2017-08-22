@@ -47,7 +47,6 @@ set(SOURCE_FILES
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
 
-		BomberManGameLogic/GameLogic.hpp
         BomberManGameLogic/PowerUPAbstract.hpp
 		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp		BomberManGameLogic/Player.hpp
@@ -78,15 +77,15 @@ set(SOURCE_FILES
 		extras/SavedGame.cpp		extras/SavedGame.hpp
 		extras/tinygltfOstream.cpp	extras/tinygltfOstream.hpp
 
-		gui/GuiManager.cpp		gui/GuiManager.hpp
-		gui/MainMenuScreen.cpp	gui/MainMenuScreen.hpp
-		gui/SettingsScreen.cpp	gui/SettingsScreen.hpp
-		gui/LoadGameScreen.cpp	gui/LoadGameScreen.hpp
-		gui/SaveGameScreen.cpp	gui/SaveGameScreen.hpp
-		gui/PauseGameScreen.cpp	gui/PauseGameScreen.hpp
-		gui/SaveGameScreen.cpp	gui/SaveGameScreen.hpp
-		gui/PauseGameScreen.cpp	gui/PauseGameScreen.hpp
-		gui/CustomButton.cpp	gui/CustomButton.hpp
+		gui/GuiManager.cpp			gui/GuiManager.hpp
+		gui/MainMenuScreen.cpp		gui/MainMenuScreen.hpp
+		gui/SettingsScreen.cpp		gui/SettingsScreen.hpp
+		gui/LoadGameScreen.cpp		gui/LoadGameScreen.hpp
+		gui/SaveGameScreen.cpp		gui/SaveGameScreen.hpp
+		gui/PauseGameScreen.cpp		gui/PauseGameScreen.hpp
+		gui/SaveGameScreen.cpp		gui/SaveGameScreen.hpp
+		gui/PauseGameScreen.cpp		gui/PauseGameScreen.hpp
+		gui/CustomButton.cpp		gui/CustomButton.hpp
 
 		io/InputManager.cpp			io/InputManager.hpp
 		io/Window.cpp				io/Window.hpp
@@ -94,15 +93,15 @@ set(SOURCE_FILES
 		io/audio/AudioDevice.cpp	io/audio/AudioDevice.hpp
 		io/settings/Settings.cpp	io/settings/Settings.hpp
 
-		loaders/IO.cpp		loaders/IO.hpp
-		loaders/Loader.cpp	loaders/Loader.hpp
-		loaders/picoPNG.cpp	loaders/picoPNG.hpp
+		loaders/IO.cpp				loaders/IO.hpp
+		loaders/Loader.cpp			loaders/Loader.hpp
+		loaders/picoPNG.cpp			loaders/picoPNG.hpp
 
 		rendering/GLSLProgram.cpp		rendering/GLSLProgram.hpp
 		rendering/Renderer.cpp			rendering/Renderer.hpp
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
-		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp)
+		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp BomberManGameLogic/AddBomb.cpp BomberManGameLogic/AddBomb.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

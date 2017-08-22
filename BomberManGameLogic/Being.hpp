@@ -14,54 +14,47 @@
 class Being : public cge::Entity
 {
 protected:
-	float _speed;
-	glm::vec3 _n_moveDir;
-	size_t _maxBomb;
-	std::vector<Bomb *> _bombs;
-	bool _plaseBomb;
-	int	_damage;
-	unsigned _deathTimeout;
-	bool _alive;
+	float		_speed;
+	glm::vec3	_n_moveDir;
+	size_t		_maxBomb;
 public:
-	bool isAlive() const;
+	size_t getMaxBomb() const;
 
-	void setAlive(bool _alive);
+	void setMaxBomb(size_t _maxBomb);
 
-	int getDamage() const;
+protected:
+	bool		_plaseBomb;
+	int			_damage;
+	unsigned	_deathTimeout;
+	bool		_alive;
+	std::vector<Bomb *> _bombs;
 
-	void setDamage(int _damage);
-
-	void setPlaseBomb(bool _plaseBomb);
-
-	const glm::vec3 &get_n_moveDir() const;
-
-	bool isPlaceBomb() const;
-
-	void placeBomb(Bomb *bomb);
-
-	bool checkBombDeterNation(Bomb *bomb);
-
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
-		  float speed);
-
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
-		  float speed);
-
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius,
-		  float _speed, int _damage);
-
+public:
 	Being() = default;
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed);
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, float speed);
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float _speed, int _damage);
+
+	int		getDamage() const;
+	bool	isAlive() const;
+	bool	isPlaceBomb() const;
+	bool	checkBombDeterNation(Bomb *bomb);
+	void	setDamage(int _damage);
+	void	placeBomb(Bomb *bomb);
+	void	setAlive(bool _alive);
+
+	float	getDirAngle();
+	void	setPlaseBomb(bool _plaseBomb);
+	void	setDirection();
+	void	setMoveDir(glm::vec3 newDir);
+	void	setSpeed(const float speed);
+	float	getSpeed() const;
+
+	const glm::vec3	&get_n_moveDir() const;
 
 	virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
 
-	void setDirection();
 
-	void setMoveDir(glm::vec3 newDir);
-
-	float getDirAngle();
-
-	void setSpeed(const float speed);
-	float getSpeed() const;
 };
 
 

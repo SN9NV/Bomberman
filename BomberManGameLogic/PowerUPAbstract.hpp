@@ -14,13 +14,16 @@ protected:
 	bool _active = false;
 
 public:
-	PowerUPAbstract(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
-					 float hitBoxRadius) : Entity(position, rotation, scale, model, hitBoxRadius) {}
+	PowerUPAbstract(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
+			Entity(position, rotation, scale, model, loader, hitBoxRadius) {}
 	virtual void Powerup(Player &player) = 0;
 	virtual void Reverse(Player &player) = 0;
 	virtual bool isActive() { return _active;};
 	virtual void activete() { _active = true;};
 	virtual void deActivete() { _active = false;};
+
+	virtual ~PowerUPAbstract() {
+	}
 };
 
 #endif //BOMBERMAN_POWERUPINTERFACE_HPP

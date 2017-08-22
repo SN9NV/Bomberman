@@ -18,8 +18,8 @@ private:
 	bool somethingInTheWayY(const glm::vec3 pPos, const glm::vec3 onilPos);
 
 public:
-	Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, Player& player, std::vector<std::vector<cge::Entity *>> &level);
-	Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox, Player& player, std::vector<std::vector<cge::Entity *>> &level);
+	Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, Player& player, std::vector<std::vector<cge::Entity *>> &level);
+	Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, Player& player, std::vector<std::vector<cge::Entity *>> &level);
 	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 };
 

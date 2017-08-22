@@ -8,13 +8,13 @@ std::uniform_int_distribution<int> _ndisision(0, 1);
 std::uniform_int_distribution<int> _nchange(0, 3);
 std::default_random_engine gen;
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model)
-		: Being(position, rotation, scale, model, 0.002f), _changeDir(0) {
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader)
+		: Being(position, rotation, scale, model, loader, 0.002f), _changeDir(0) {
 
 }
 
-Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox)
-		: Being(position, rotation, scale, model, hitBox, 0.002f), _changeDir(0) {
+Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox)
+		: Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0) {
 
 }
 
@@ -31,8 +31,7 @@ bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, u
 				_n_moveDir.z = (_ndisision(gen) == 1) ? -1 : 1;
 			_position.z = static_cast<float>(round(_position.z));
 		}
-		else if ((x < 0.01 || x > 0.99))
-		{
+		else if ((x < 0.01 || x > 0.99)) {
 			_n_moveDir.z = 0;
 			_n_moveDir.x = (_ndisision(gen) == 1) ? -1 : 1;
 			_position.x = static_cast<float>(round(_position.x));

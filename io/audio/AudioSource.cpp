@@ -16,9 +16,7 @@ cge::Audio::Source::Source(
 	this->Init(position, velocity, isLooping, pitch, gain);
 }
 
-cge::Audio::Source::Source(
-		const std::string &audioPath,
-		cge::Loader &loader)
+cge::Audio::Source::Source(const std::string &audioPath, cge::Loader &loader)
 {
 	this->Init({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, false, 1.0f, 1.0f);
 	this->setAudio(audioPath, loader);
@@ -38,7 +36,12 @@ cge::Audio::Source::Source(
 }
 
 cge::Audio::Source::~Source() {
-	alDeleteSources(1, &this->_sourceID);
+	if (this->_sourceID != 0) {
+		alDeleteSources(1, &this->_sourceID);
+		this->_sourceID = 0;
+	} else {
+		std::cout << "Trying to delete source with ID: 0\n";
+	}
 }
 
 void cge::Audio::Source::Init(const glm::vec3 &position, const glm::vec3 &velocity, bool isLooping, ALfloat pitch, ALfloat gain) {
@@ -129,7 +132,7 @@ bool cge::Audio::Source::isLooping() const {
 	return this->_isLooping;
 }
 
-void cge::Audio::Source::setPlaying(bool play) {
+void cge::Audio::Source::setPlaying(bool play) const {
 	if (this->_bufferID == 0) {
 		std::cout << "No audio file is set\n";
 		return;
@@ -142,7 +145,7 @@ void cge::Audio::Source::setPlaying(bool play) {
 	}
 }
 
-bool cge::Audio::Source::isPlaying() {
+bool cge::Audio::Source::isPlaying() const {
 	ALint	state;
 
 	alGetSourcei(this->_sourceID, AL_SOURCE_STATE, &state);
@@ -193,4 +196,15 @@ std::string cge::Audio::Source::getName() const {
 
 SF_INFO cge::Audio::Source::getInfo() const {
 	return this->_sfInfo;
+}
+
+void cge::Audio::Source::setAttenuation(ALenum attenuationType, float maxDistance, float refrenceDistance) {
+	if (this->_sfInfo.channels != 1) {
+		std::cout << "Only mono sound effects can have attenuation\n";
+		return;
+	}
+
+	alDistanceModel(attenuationType);
+	alSourcef(this->_sourceID, AL_MAX_DISTANCE, maxDistance);
+	alSourcef(this->_sourceID, AL_REFERENCE_DISTANCE, refrenceDistance);
 }

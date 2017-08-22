@@ -13,10 +13,12 @@
 #include "FireDown.hpp"
 #include "FullFire.hpp"
 #include "WingBoot.hpp"
+#include "AddBomb.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager) :
+LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
 		_player(player),
+		_audioDevice(audioDevice),
 		_gate(nullptr),
 		_window(window),
 		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
@@ -29,6 +31,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_powerup(false)
 {
 	const std::string resRoot = "resources/models/";
+	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader));
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
 	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
 	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
@@ -41,14 +44,13 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader));
 	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader));
 
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
-		GL_SRC_ALPHA, GL_ONE);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1),
-		GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2),
-										 GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
+	//todo remove the folowing test line
+	_player->setMaxBomb(3);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -68,7 +70,7 @@ void LevelRunner::bumpBeing(Being *being) {
 	pos = being->getPosition();
 	x = (int) (round(pos.x));
 	y = (int) (round(pos.z));
-	//colision box up
+	//collision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
@@ -77,7 +79,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box down
+	//collision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
@@ -86,7 +88,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box left
+	//collision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
@@ -95,7 +97,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//colision box right
+	//collision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
@@ -132,7 +134,7 @@ void LevelRunner::beingWorldInteraction() {
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
 						x == _gate->getPosition().x) {
 						_player->setPosition(_gate->getPosition());
-						_state = levelState::COMPLEAT;
+						_state = levelState::COMPLETE;
 					}
 
 				}
@@ -150,8 +152,9 @@ void LevelRunner::beingWorldInteraction() {
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
-					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, (*being)->getDamage());
+				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
+					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
+					std::cout << "adding bomb\n";
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -206,7 +209,6 @@ void LevelRunner::bombWorldInteraction() {
 	int i;
 	int sheild;
 	bool found;
-	Bomb *tmpBomb;
 	glm::vec3 bombPos;
 	glm::vec3 beingPos;
 	auto bomb = _bombs.begin();
@@ -271,12 +273,24 @@ void LevelRunner::bombWorldInteraction() {
 				}
 			}
 			_level[bombPos.z][bombPos.x] = nullptr;
-			tmpBomb = (*bomb);
+			Bomb *tmpBomb = (*bomb);
+			auto bombEffects = tmpBomb->getSoundEffects();
 			delete (tmpBomb);
+
+			/// Add entity's sound effects to a vector to be cleaned up
+			/// Delete the sources that aren't playing
+			for (auto &source : bombEffects) {
+				if (source.second->isPlaying()) {
+					this->_sources.push_back(source.second);
+				} else {
+					delete source.second;
+				}
+			}
+
+
 			_bombs.erase(bomb);
 		} else
 			bomb++;
-
 	}
 }
 
@@ -294,7 +308,7 @@ void LevelRunner::loadMapEntitys() {
 			switch (_map[i][j]) {
 				case 'w':
 					if ((tmpMdl = getModel("Wall")) != nullptr) {
-						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
 						_level[i][j] = tmpEnt;
 					}
 					break;
@@ -306,20 +320,35 @@ void LevelRunner::loadMapEntitys() {
 				case 'd':
 					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
 						float rotation = (rand() % 4) * 90;
-						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, 0.5f);
+						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader, 0.5f);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
 					break;
 				default:
-
+//					if (_balloons + _onil > 0) {
+//
+//						if (_balloons > 0 && rand() % 6 == 1) {
+//							if ((tmpMdl = getModel("Balloon")) != nullptr) {
+//								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
+//								_balloons--;
+//							}
+//						} else if (_onil > 0 && rand() % 6 == 1) {
+//							/*if ((tmpMdl = getModel("Onil")) != nullptr)
+//							{
+//								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
+//								_onil--;
+//							}*/
+//							_onil--;
+//						}
+//					}
 					break;
 			}
 		}
 	}
 	if ((tmpMdl = getModel("Balloon")) != nullptr) {
 		while (_balloons > 0) {
-			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f);
+			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_balloons--;
@@ -327,7 +356,7 @@ void LevelRunner::loadMapEntitys() {
 	}
 	if ((tmpMdl = getModel("Onile")) != nullptr) {
 		while (_onil > 0) {
-			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.5f, *_player, _level);
+			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f, *_player, _level);
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_onil--;
@@ -345,15 +374,15 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 			_dwalls--;
 			wallBrakeEffect({x, 0, y}, 1000);
 			fireEffect({x, 0, y}, 100);
-			srand((unsigned int) time(NULL) + _dwalls);
+			srand((unsigned int) time(nullptr) + _dwalls);
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
+						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
 					std::cout << "make gate" << std::endl;
 				} else if (rand() % 20 == 1) {
 					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl);
+						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
 				}
 			}
 			if (!_powerup) {
@@ -390,7 +419,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	std::string line;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onile:) ([0-9]{1,2})\\s*)?$");
-	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot|AddBomb)?$");
 
 
 	_balloons = 0;
@@ -431,13 +460,15 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 				std::ssub_match sub_match = match[1];
 				std::string piece = sub_match.str();
 				if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
-					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
-					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
-					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
-					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, 0.3);
+					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+				}else if (piece == "AddBomb" && (tmpMdl = getModel("AddBomb")) != nullptr) {
+					_powerUpInstance = new AddBomb({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
 				}
 		}
 
@@ -540,9 +571,15 @@ void LevelRunner::cleanLevel() {
 		_gate = nullptr;
 	}
 
+	for (auto &source : this->_sources) {
+		source->setPlaying(false);
+		delete source;
+	}
+
+	this->_sources.clear();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-
 }
 
 int LevelRunner::resumeLevel() {
@@ -565,7 +602,24 @@ void LevelRunner::runLevelLoop() {
 			_state = levelState::FAIL;
 		else
 			_levelTime -= _window.getFrameTime();
+
+		this->_audioDevice.setLocation(this->_player->getPosition(), true);
+
+		/// Clean up sound effects from deleted entities
+		this->_sources.erase(std::remove_if(
+				this->_sources.begin(),
+				this->_sources.end(),
+				[](cge::Audio::Source *source) {
+					if (!source->isPlaying()) {
+						delete source;
+						return true;
+					}
+
+					return false;
+				}
+		), this->_sources.end());
 	}
+
 //todo: fix nasty hack
 	while (_inputManager->
 			isKeyPressed(_player->get_menue())
@@ -619,8 +673,7 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 		verlocity.z = disvz(gen);
 
 		lifetime = dislife(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -653,8 +706,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -681,11 +733,10 @@ void LevelRunner::update() {
 	_camera.setPosition({plpos.x, 10, plpos.z});
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {
-			std::cout << "make enimy because gate damage\n";
+			std::cout << "make enemy because gate damage\n";
 			cge::Model *tmp;
 			if ((tmp = getModel("Balloon")) != nullptr) {
-				_beings.push_back(
-						new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, 0.5f));
+				_beings.push_back(new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, _loader, 0.5f));
 			}
 		}
 		_gate->update();

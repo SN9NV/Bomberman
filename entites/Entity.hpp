@@ -5,6 +5,7 @@
 #include "Model.hpp"
 #include "../rendering/GLSLProgram.hpp"
 #include "../io/InputManager.hpp"
+#include "../io/audio/AudioSource.hpp"
 #include <glm/gtc/quaternion.hpp>
 
 
@@ -12,10 +13,9 @@ namespace cge {
 	class Entity {
 	public:
 		Entity() = default;
-		virtual ~Entity() = default;
+		~Entity();
 
-//		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, float hitBoxRadius = 0.0f);
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius = 0.0f);
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
@@ -27,6 +27,7 @@ namespace cge {
 		void			setAnimationTicks(double ticks);
 		void			setAnimationSpeed(float speed);
 		void 			setPlayAnimation(bool playAnimation);
+		void			addNewSoundEffect(const std::string &name, const std::string &audioFilePath);
 
 		float 			getHitBoxRadius() const;
 		Model			&getModel();
@@ -36,9 +37,13 @@ namespace cge {
 		bool 			isAnimated() const;
 		bool			isPlayAnimation() const;
 		double			getAnimationSpeed() const;
+		void			playEffect(const std::string &name) const;
+
+		const std::map<std::string, cge::Audio::Source *>	&getSoundEffects() const;
 
 	protected:
 		Model		&_model;
+		Loader		&_loader;
 		glm::vec3	_position;
 		glm::vec3	_rotation;
 		float 		_scale;
@@ -52,8 +57,9 @@ namespace cge {
 		bool		_hasAnimation;
 		bool 		_playAnimation;
 		double		_animationSpeed;
-
 		bool		_needsTransformationUpdate;
+
+		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		struct Transformation {
 			glm::vec3	translation;

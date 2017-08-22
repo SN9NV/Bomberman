@@ -14,6 +14,7 @@
 #include "../entites/Camera.hpp"
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
+#include "../io/audio/AudioDevice.hpp"
 #include "Onil.hpp"
 #include "PowerUPAbstract.hpp"
 
@@ -22,7 +23,7 @@ enum levelState
 	PLAY = 1,
 	WANTS_QUIT,
 	FAIL,
-	COMPLEAT,
+	COMPLETE,
 	FAIL_MAP_LOAD,
 	PAUSE
 };
@@ -31,12 +32,13 @@ class LevelRunner
 {
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
+	std::vector<cge::Audio::Source *>	_sources;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
 	std::map<std::string, cge::Model> _models;
 	std::vector<std::string> _map;
 	cge::Loader &_loader;
-	Player *_player;
+	Player	*_player;
 	Gate	*_gate;
 	cge::Window &_window;
 	cge::GLSLProgram _entShader;
@@ -45,6 +47,8 @@ private:
 	cge::Renderer _renderer;
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
+	cge::TextRenderer _textRenderer;
+	cge::Audio::Device	_audioDevice;
 	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;
@@ -75,7 +79,7 @@ private:
 
 public:
 	int getState() const;
-	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager);
+	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice);
 	int runLevel(const std::string &path);
     int resumeLevel();
 //todo: move loadMapfrom file to private

@@ -11,9 +11,8 @@
 class Wall : public cge::Entity
 {
 public:
-	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model);
-
-	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius);
+	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
+	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius);
 };
 
 

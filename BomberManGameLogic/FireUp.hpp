@@ -11,7 +11,7 @@
 class FireUp : public PowerUPAbstract
 {
 public:
-	FireUp(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBoxRadius);
+	FireUp(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius);
 	void Powerup(Player &player);
 	void Reverse(Player &player);
 };

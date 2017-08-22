@@ -4,30 +4,23 @@
 bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	_plaseBomb = false;
 	_playAnimation = false;
-	if (input.isKeyPressed(_up))
-	{
+	static unsigned bombBounce = 0;
+	if (input.isKeyPressed(_up)) {
 		_playAnimation = true;
 		this->_n_moveDir.z = -1;
-	}
-	else if (input.isKeyPressed(_down))
-	{
+	} else if (input.isKeyPressed(_down)) {
 		_playAnimation = true;
 		this->_n_moveDir.z = 1;
-	}
-	else
+	} else
 		this->_n_moveDir.z = 0;
 
-	if (input.isKeyPressed(_right))
-	{
+	if (input.isKeyPressed(_right)) {
 		_playAnimation = true;
 		this->_n_moveDir.x = 1;
-	}
-	else if (input.isKeyPressed(_left))
-	{
+	} else if (input.isKeyPressed(_left)) {
 		_playAnimation = true;
 		this->_n_moveDir.x = -1;
-	}
-	else
+	} else
 		this->_n_moveDir.x = 0;
 
 	/// TODO remove
@@ -39,10 +32,13 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 		this->_animationSpeed -= 0.01;
 		std::cout << "Animation speed: " << this->_animationSpeed << "\n";
 	}
-	/// TODO remove
 
+	bombBounce = (lastFrameTime > bombBounce) ? 0 : bombBounce - lastFrameTime;
 	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb) {
-		_plaseBomb = true;
+		if (bombBounce == 0) {
+			_plaseBomb = true;
+			bombBounce = 300;
+		}
 	}
 	if (input.isKeyPressed(_menue))
 		_pauseMenue = true;
@@ -51,12 +47,14 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	return (Being::update(input, shader, lastFrameTime));
 }
 
-Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float speed)
-		: Being(position, rotation, scale, model, speed), _lives(3), _score(0) {}
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
+			   cge::Loader &loader, float speed)
+		: Being(position, rotation, scale, model, loader, speed), _lives(3), _score(0) {}
 
-Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, float hitBox,
+Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
+			   cge::Loader &loader, float hitBox,
 			   float speed)
-		: Being(position, rotation, scale, model, hitBox, speed), _lives(3), _pauseMenue(false), _score(0) {}
+		: Being(position, rotation, scale, model, loader, hitBox, speed), _lives(3), _pauseMenue(false), _score(0) {}
 
 int Player::getLives() const {
 	return _lives;
