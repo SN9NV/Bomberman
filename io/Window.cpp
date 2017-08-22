@@ -39,7 +39,7 @@ namespace cge {
 		glfwWindowHint(GLFW_ALPHA_BITS, 8);
 		glfwWindowHint(GLFW_STENCIL_BITS, 8);
 		glfwWindowHint(GLFW_DEPTH_BITS, 24);
-		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 		this->_glfwWindow = glfwCreateWindow(
 			this->_width,
@@ -105,6 +105,7 @@ namespace cge {
 
 	void Window::recreate(const std::string &windowName, unsigned width, unsigned height, unsigned windowFlags) {
 		glfwDestroyWindow(this->_glfwWindow);
+		glfwTerminate();
 		this->create(windowName, width, height, windowFlags);
 	}
 }

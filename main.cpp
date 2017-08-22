@@ -66,7 +66,7 @@ int main() {
 	//player->setDamage(3);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager);
 
-	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader);
+	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader, levelRunner);
 	int state;
 	while (gameState != cge::WANTS_QUIT) {
 		switch (gameState) {

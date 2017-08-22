@@ -132,3 +132,12 @@ cge::Loader::AudioFile cge::Loader::loadAudio(const std::string &audioPath) {
 
 	return foundAudio->second;
 }
+
+void cge::Loader::RebindAll() {
+	for (auto iter : this->_textures) {
+		glBindTexture(GL_TEXTURE_2D, iter.second);
+	}
+	for (auto iter : this->_textureAtlasas) {
+		glBindTexture(GL_TEXTURE_2D, iter.second.getID());
+	}
+}

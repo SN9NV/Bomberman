@@ -12,6 +12,7 @@
 #include "LoadGameScreen.hpp"
 #include "SaveGameScreen.h"
 #include "PauseGameScreen.h"
+#include "../BomberManGameLogic/LevelRunner.hpp"
 
 namespace cge {
 	class GuiManager {
@@ -21,13 +22,15 @@ namespace cge {
 										cge::GameState *prevState,
 										Player* player,
 										int* currMap,
-										cge::Loader& loader);
+										cge::Loader& loader,
+										LevelRunner *lvlRunner);
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
 							cge::GameState *prevState,
 							Player* player,
 							int* currMap,
-							cge::Loader& _loader);
+							cge::Loader& _loader,
+							LevelRunner *lvlRunner);
 
 		static GuiManager*	getSingleton();
 
@@ -45,6 +48,7 @@ namespace cge {
 		cge::Window&				_window;
 		Player*						_player;
 		int*						_currMap;
+		LevelRunner					*_levelRunner;
 
 		cge::GUI::MainMenuScreen*	_mainMenuScreen;
 		cge::GUI::SettingsScreen*	_settingsScreen;

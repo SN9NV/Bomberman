@@ -29,6 +29,8 @@ namespace cge {
         tinygltf::Model &loadGLTFModel(const std::string &modelPath);
 		cge::Loader::AudioFile	loadAudio(const std::string &audioPath);
 
+		void RebindAll();
+
     private:
         std::map<std::string, GLuint>					_textures;
         std::map<std::string, TextureAtlas>				_textureAtlasas;
@@ -36,7 +38,6 @@ namespace cge {
 		std::map<std::string, cge::Loader::AudioFile>	_audioFiles;
 
         tinygltf::TinyGLTF								_gltfLoader;
-
     };
 }
 
