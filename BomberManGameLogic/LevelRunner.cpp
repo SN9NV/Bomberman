@@ -149,7 +149,7 @@ void LevelRunner::beingWorldInteraction() {
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr) {
-					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 4, *tmpmdl, _loader, (*being)->getDamage());
+					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
