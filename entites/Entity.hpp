@@ -13,9 +13,8 @@ namespace cge {
 	class Entity {
 	public:
 		Entity() = default;
-		virtual ~Entity() = default;
+		~Entity();
 
-//		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model);
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius = 0.0f);
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
@@ -40,6 +39,8 @@ namespace cge {
 		double			getAnimationSpeed() const;
 		void			playEffect(const std::string &name) const;
 
+		const std::map<std::string, cge::Audio::Source *>	&getSoundEffects() const;
+
 	protected:
 		Model		&_model;
 		Loader		&_loader;
@@ -58,7 +59,7 @@ namespace cge {
 		double		_animationSpeed;
 		bool		_needsTransformationUpdate;
 
-		std::map<std::string, cge::Audio::Source>	_soundEffects;
+		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		struct Transformation {
 			glm::vec3	translation;

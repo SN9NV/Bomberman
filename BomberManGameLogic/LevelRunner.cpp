@@ -11,9 +11,10 @@
 #include "../io/audio/AudioSource.hpp"
 #include "FireUp.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager) :
+LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
 		_player(player),
+		_audioDevice(audioDevice),
 		_gate(nullptr),
 		_window(window),
 		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
@@ -198,7 +199,6 @@ void LevelRunner::bombWorldInteraction() {
 	int i;
 	int sheild;
 	bool found;
-	Bomb *tmpBomb;
 	glm::vec3 bombPos;
 	glm::vec3 beingPos;
 	auto bomb = _bombs.begin();
@@ -263,12 +263,24 @@ void LevelRunner::bombWorldInteraction() {
 				}
 			}
 			_level[bombPos.z][bombPos.x] = nullptr;
-			tmpBomb = (*bomb);
+			Bomb *tmpBomb = (*bomb);
+			auto bombEffects = tmpBomb->getSoundEffects();
 			delete (tmpBomb);
+
+			/// Add entity's sound effects to a vector to be cleaned up
+			/// Delete the sources that aren't playing
+			for (auto &source : bombEffects) {
+				if (source.second->isPlaying()) {
+					this->_sources.push_back(source.second);
+				} else {
+					delete source.second;
+				}
+			}
+
+
 			_bombs.erase(bomb);
 		} else
 			bomb++;
-
 	}
 }
 
@@ -505,9 +517,15 @@ void LevelRunner::cleanLevel() {
 		_gate = nullptr;
 	}
 
+	for (auto &source : this->_sources) {
+		source->setPlaying(false);
+		delete source;
+	}
+
+	this->_sources.clear();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-
 }
 
 int LevelRunner::resumeLevel() {
@@ -530,7 +548,24 @@ void LevelRunner::runLevelLoop() {
 			_state = levelState::FAIL;
 		else
 			_levelTime -= _window.getFrameTime();
+
+		this->_audioDevice.setLocation(this->_player->getPosition(), true);
+
+		/// Clean up sound effects from deleted entities
+		this->_sources.erase(std::remove_if(
+				this->_sources.begin(),
+				this->_sources.end(),
+				[](cge::Audio::Source *source) {
+					if (!source->isPlaying()) {
+						delete source;
+						return true;
+					}
+
+					return false;
+				}
+		), this->_sources.end());
 	}
+
 //todo: fix nasty hack
 	while (_inputManager->
 			isKeyPressed(_player->get_menue())

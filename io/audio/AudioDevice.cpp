@@ -77,7 +77,7 @@ void cge::Audio::Device::setLocation(const glm::vec3 &location, bool update) {
 	this->_location = location;
 
 	if (update) {
-		this->updateVelocity();
+		this->updateLocation();
 	}
 }
 

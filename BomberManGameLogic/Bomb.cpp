@@ -39,6 +39,6 @@ Bomb::~Bomb()
 }
 
 void Bomb::_setEffects() {
-	this->addNewSoundEffect("explosion", "resources/audio/sfx_explosion.wav");
+	this->addNewSoundEffect("explosion", "resources/audio/boom.wav");
 }
 

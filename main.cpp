@@ -55,7 +55,7 @@ int main() {
 
 	cge::Model BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, loader, 0.25f, 0.007);
-	levelRunner = new LevelRunner(loader, player, window, &inputManager);
+	levelRunner = new LevelRunner(loader, player, window, &inputManager, defaultAudioDevice);
 
 	cge::GuiManager::initialise(window, &gameState, &prevGameState, player, &currMap, loader);
 	int state;

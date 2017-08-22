@@ -32,6 +32,7 @@ namespace cge {
 			void	setPosition(const glm::vec3 &position);
 			void	setVelocity(const glm::vec3 &velocity);
 			void	setLooping(bool isLooping);
+			void	setAttenuation(ALenum attenuationType = AL_LINEAR_DISTANCE_CLAMPED, float maxDistance = 15.0f, float refrenceDistance = 5.0f);
 
 			ALfloat		getPitch() const;
 			ALfloat 	getGain() const;
@@ -43,7 +44,7 @@ namespace cge {
 			SF_INFO		getInfo() const;
 
 			void		setPlaying(bool play = true) const;
-			bool 		isPlaying();
+			bool 		isPlaying()const;
 			unsigned	getPlayOffset(cge::Audio::Source::Offset offsetType);
 			void		setPlayOffset(cge::Audio::Source::Offset offsetType, unsigned offset);
 

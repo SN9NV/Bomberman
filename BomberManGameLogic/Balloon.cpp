@@ -31,8 +31,7 @@ bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, u
 				_n_moveDir.z = (_ndisision(gen) == 1) ? -1 : 1;
 			_position.z = static_cast<float>(round(_position.z));
 		}
-		else if ((x < 0.01 || x > 0.99))
-		{
+		else if ((x < 0.01 || x > 0.99)) {
 			_n_moveDir.z = 0;
 			_n_moveDir.x = (_ndisision(gen) == 1) ? -1 : 1;
 			_position.x = static_cast<float>(round(_position.x));

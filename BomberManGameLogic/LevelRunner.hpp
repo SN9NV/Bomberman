@@ -15,6 +15,7 @@
 #include "Gate.hpp"
 #include "../rendering/ParticalRenderer.hpp"
 #include "PowerUPInterface.hpp"
+#include "../io/audio/AudioDevice.hpp"
 
 
 enum levelState
@@ -31,6 +32,7 @@ class LevelRunner
 {
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
+	std::vector<cge::Audio::Source *>	_sources;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
 	std::map<std::string, cge::Model> _models;
@@ -46,6 +48,7 @@ private:
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
 	cge::TextRenderer _textRenderer;
+	cge::Audio::Device	_audioDevice;
 	unsigned _levelTime;
 	int _state = levelState::PLAY;
 	int _dwalls;
@@ -75,7 +78,7 @@ private:
 
 public:
 	int getState() const;
-	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager);
+	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice);
 	int runLevel(const std::string &path);
     int resumeLevel();
 //todo: move loadMapfrom file to private
