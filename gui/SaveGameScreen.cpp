@@ -7,7 +7,7 @@
 cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap)  :
 		_window(win),
 		_player(player),
-		_audioMenuScroll("../resources/audio/menu_click.wav", loader),
+		_audioMenuScroll("../resources/audio/click.wav", loader),
 		_currMap(currMap)
 {
 	this->_audioMenuScroll.setLooping(false);

@@ -9,7 +9,7 @@
 cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
 	_player(player),
-	_audioMenuScroll("../resources/audio/menu_click.wav", loader),
+	_audioMenuScroll("../resources/audio/click.wav", loader),
 	_currState(_currState),
 	_prevState(prevState),
 	_changesMade(false),

@@ -7,7 +7,7 @@
 cge::GUI::PauseGameScreen::PauseGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader) :
 		_window(win),
 		_player(player),
-		_audioMenuScroll("../resources/audio/menu_click.wav", loader)
+		_audioMenuScroll("../resources/audio/click.wav", loader)
 {
 	this->_audioMenuScroll.setLooping(false);
 	this->_audioMenuScroll.setGain(0.09f);

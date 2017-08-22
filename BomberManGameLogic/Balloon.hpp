@@ -14,6 +14,8 @@ class Balloon : public  Being
 private:
 	int _changeDir;
 
+	void	_setEffects();
+
 public:
 	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
 	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,cge::Loader &loader,  float hitBox);

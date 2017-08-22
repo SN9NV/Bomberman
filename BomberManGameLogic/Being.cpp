@@ -126,6 +126,10 @@ bool Being::isAlive() const
 
 void Being::setAlive(bool _alive)
 {
+	if (!_alive) {
+		this->playEffect("dieSound");
+	}
+
 	Being::_alive = _alive;
 }
 

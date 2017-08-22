@@ -9,13 +9,15 @@ std::uniform_int_distribution<int> _nchange(0, 3);
 std::default_random_engine gen;
 
 Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader)
-		: Being(position, rotation, scale, model, loader, 0.002f), _changeDir(0) {
-
+		: Being(position, rotation, scale, model, loader, 0.002f), _changeDir(0)
+{
+	this->_setEffects();
 }
 
 Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox)
-		: Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0) {
-
+		: Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0)
+{
+	this->_setEffects();
 }
 
 bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
@@ -46,7 +48,14 @@ bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, u
 		}
 	}
 	_changeDir = (_changeDir >= timeToRandom) ? 0 : _changeDir + lastFrameTime;
-	if (lastFrameTime < 500)
-		return (Being::update(input, shader, lastFrameTime));
-	return (true);
+
+	if (lastFrameTime < 500) {
+		return Being::update(input, shader, lastFrameTime);
+	}
+
+	return true;
+}
+
+void Balloon::_setEffects() {
+	this->addNewSoundEffect("dieSound", "resources/audio/balloon.wav");
 }

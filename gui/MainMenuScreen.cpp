@@ -13,7 +13,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 										 cge::Loader& _loader) :
 		_window(win),
 		_player(player),
-		_audioMouseEnter("../resources/audio/menu_click.wav", _loader)
+		_audioMouseEnter("../resources/audio/click.wav", _loader)
 {
 	this->_audioMouseEnter.setLooping(false);
 	this->_audioMouseEnter.setGain(0.09f);

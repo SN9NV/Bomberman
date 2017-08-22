@@ -247,7 +247,7 @@ void cge::Entity::setPlayAnimation(bool playAnimation)
 }
 
 void cge::Entity::addNewSoundEffect(const std::string &name, const std::string &audioFilePath) {
-	auto *newSource = new cge::Audio::Source(this->_position, { 0, 0, 0 }, false, audioFilePath, this->_loader);
+	auto *newSource = new cge::Audio::Source(this->_position, { 0, 0, 0 }, false, audioFilePath, this->_loader, 1.0f, cge::Settings::Settings::getSingleton()->getSfxVolume());
 	newSource->setAttenuation();
 
 	this->_soundEffects[name] = newSource;
@@ -256,9 +256,7 @@ void cge::Entity::addNewSoundEffect(const std::string &name, const std::string &
 void cge::Entity::playEffect(const std::string &name) const {
 	auto source = this->_soundEffects.find(name);
 
-	if (source == this->_soundEffects.end()) {
-		std::cerr << "Sound effect is not assigned to this entity\n";
-	} else {
+	if (source != this->_soundEffects.end()) {
 		source->second->setPlaying();
 	}
 }
