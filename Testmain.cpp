@@ -1,5 +1,4 @@
 #include "io/Window.hpp"
-#include "loaders/Loader.hpp"
 #include "rendering/GLSLProgram.hpp"
 #include "rendering/Renderer.hpp"
 #include "entites/Camera.hpp"
@@ -8,10 +7,10 @@
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 
-#include "tinyGLTF/tiny_gltf.h"
 #include "shared.hpp"
 #include "rendering/ParticalRenderer.hpp"
 #include "BomberManGameLogic/Player.hpp"
+#include "rendering/TextRenderer.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
@@ -28,13 +27,14 @@ int main() {
 	cge::ParticalRenderer prender(pshader);
 	cge::Model bomberModel = cge::Model("resources/models/Bomber.glb",
 										"resources/models/BomberManTextureDiffuseColor.png", loader);
-	Player player({0, 0, 0}, {0, 90, 0}, 1, bomberModel, 1.0f);
+	cge::TextRenderer textrender;
+	//Player player({0, 0, 0}, {0, 90, 0}, 1, bomberModel,loader, 1.0f);
 
 	inputManager.setInputCallBacks();
 	cge::TextureAtlas t = loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4);
 	glm::vec3 camOff = {0, 1, 5};
 	//player.update(inputManager, shader, window.getFrameTime());
-	camera.setTrackEntity(player);
+	//camera.setTrackEntity(player);
 //	prender.partivalEffectPos({0, 0, 0}, {0.5, .5, 0.5},
 //						   {0, 0, 0.00}, {0, 0.01, 0}, 0, 0.00, 5000, 5000, 0.4, 0.1, 0, 0, 0.0,
 //						   0.0, 20, t, GL_SRC_ALPHA, GL_ONE);
@@ -76,10 +76,11 @@ int main() {
 		renderer.prepare();
 		camera.update(shader);
 
-		renderer.render(player);
+	//	renderer.render(player);
 		shader.end();
 //		prender.render(camera);
 		prender.updateRender(camera, window.getFrameTime());
+		textrender;
 		window.swapBuffers();
 	}
 
