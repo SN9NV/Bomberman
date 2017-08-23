@@ -36,21 +36,24 @@ int main() {
 
 	int currMap = 0;
 	std::vector<std::string> maps = {
-			"../resources/Maps/Map1",
-			"../resources/Maps/Map2",
-			"../resources/Maps/Map3"
+		"../resources/Maps/Map1",
+		"../resources/Maps/Map2",
+		"../resources/Maps/Map3",
+		"../resources/Maps/Map4",
+		"../resources/Maps/Map5",
+		"../resources/Maps/Map6"
 	};
 
 	cge::Audio::Source* menuSound = new cge::Audio::Source("../resources/audio/MainTheme.ogg", loader);
 	menuSound->setLooping(true);
 	menuSound->setGain(setts->getMusicVolume());
 	std::vector<cge::Audio::Source *> levelSounds = {
-			new cge::Audio::Source("../resources/audio/Area 1.ogg", loader),
-			new cge::Audio::Source("../resources/audio/Area 2.ogg", loader),
-			new cge::Audio::Source("../resources/audio/Area 3.ogg", loader),
-			new cge::Audio::Source("../resources/audio/Area 4.ogg", loader),
-			new cge::Audio::Source("../resources/audio/Area 5.ogg", loader),
-			new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 1.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 2.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 3.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 4.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 5.ogg", loader),
+		new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
 	};
 
 	cge::Model BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));

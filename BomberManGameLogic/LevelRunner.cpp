@@ -326,22 +326,6 @@ void LevelRunner::loadMapEntitys() {
 					}
 					break;
 				default:
-//					if (_balloons + _onil > 0) {
-//
-//						if (_balloons > 0 && rand() % 6 == 1) {
-//							if ((tmpMdl = getModel("Balloon")) != nullptr) {
-//								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
-//								_balloons--;
-//							}
-//						} else if (_onil > 0 && rand() % 6 == 1) {
-//							/*if ((tmpMdl = getModel("Onil")) != nullptr)
-//							{
-//								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
-//								_onil--;
-//							}*/
-//							_onil--;
-//						}
-//					}
 					break;
 			}
 		}
