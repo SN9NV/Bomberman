@@ -13,6 +13,8 @@ namespace cge {
 		class SavedGame {
 		public:
 			explicit SavedGame(int slot);
+			SavedGame(const SavedGame& sg);
+			SavedGame& operator=(const SavedGame& rhs);
 			~SavedGame();
 
 			int getSlot() const;

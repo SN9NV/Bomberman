@@ -13,11 +13,15 @@ namespace cge {
 		namespace Custom {
 			class CustomButton : public nanogui::Button {
 			public:
-				explicit CustomButton(nanogui::Widget *parent, const std::string &text = "Untitled", int icon = 0);
+				CustomButton(nanogui::Widget *parent, const std::string &text = "Untitled", int icon = 0);
+				CustomButton(CustomButton & cpy);
+				CustomButton operator=(const CustomButton & rhs);
 				~CustomButton() override;
 
 				void setMouseEnterCallback(const std::function<void()> &callback);
 			private:
+				CustomButton();
+
 				bool mouseEnterEvent(const nanogui::Vector2i &p, bool enter) override ;
 
 				std::function<void()> mMouseEnterCallback;

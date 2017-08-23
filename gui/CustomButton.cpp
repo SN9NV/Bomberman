@@ -10,7 +10,6 @@ cge::GUI::Custom::CustomButton::CustomButton(nanogui::Widget *parent, const std:
 }
 
 cge::GUI::Custom::CustomButton::~CustomButton() {
-
 }
 
 bool cge::GUI::Custom::CustomButton::mouseEnterEvent(const nanogui::Vector2i &p, bool enter) {
@@ -23,4 +22,14 @@ bool cge::GUI::Custom::CustomButton::mouseEnterEvent(const nanogui::Vector2i &p,
 
 void cge::GUI::Custom::CustomButton::setMouseEnterCallback(const std::function<void()> &callback) {
 	this->mMouseEnterCallback = callback;
+}
+
+cge::GUI::Custom::CustomButton::CustomButton(cge::GUI::Custom::CustomButton &cpy) :
+		nanogui::Button(cpy.parent(), cpy.caption(), cpy.icon()) {
+	this->mMouseEnterCallback = cpy.mMouseEnterCallback;
+}
+
+cge::GUI::Custom::CustomButton cge::GUI::Custom::CustomButton::operator=(const cge::GUI::Custom::CustomButton &rhs) {
+	*this = rhs;
+	return (*this);
 }

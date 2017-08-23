@@ -12,12 +12,13 @@
 #include "shared.hpp"
 #include "rendering/ParticalRenderer.hpp"
 #include "BomberManGameLogic/Player.hpp"
+#include "extras/SavedGame.hpp"
 
 static constexpr unsigned HEIGHT = 720;
 static constexpr unsigned WIDTH = 1024;
 
 int main() {
-	cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
+	/*cge::Window window("Bomberman", WIDTH, HEIGHT, cge::Window::Flags::VSYNC_ENABLED);
 	cge::GameState gameState = cge::GameState::PLAY_MENU;
 	cge::InputManager inputManager(window);
 	cge::GLSLProgram shader("shaders/vertex.glsl", "shaders/fragment.glsl");
@@ -81,7 +82,7 @@ int main() {
 //		prender.render(camera);
 		prender.updateRender(camera, window.getFrameTime());
 		window.swapBuffers();
-	}
+	}*/
 
 
 	return 0;

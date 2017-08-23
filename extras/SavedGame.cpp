@@ -42,5 +42,16 @@ cge::Saves::SavedGame::SavedGame(int slot) {
 }
 
 cge::Saves::SavedGame::~SavedGame() {
+}
 
+cge::Saves::SavedGame::SavedGame(const cge::Saves::SavedGame &sg) {
+	this->_fileName = sg._fileName;
+	this->_slot = sg._slot;
+	this->_creationTime = sg._creationTime;
+	this->_available = sg._available;
+}
+
+cge::Saves::SavedGame& cge::Saves::SavedGame::operator=(const cge::Saves::SavedGame &rhs) {
+	*this = rhs;
+	return (*this);
 }
