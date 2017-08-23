@@ -28,7 +28,9 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_particalRenderer(_partShader),
 		_inputManager(inputManager),
 		_powerUpInstance(nullptr),
-		_powerup(false)
+		_powerup(false),
+		_life({20, window.getHeight() - 100}, {48,48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
+		_timer({window.getWidth()- (5 * 48), window.getHeight() - 100}, {48,48}, 1, _loader.loadTexture("resources/Textures/StopWatch.png"))
 {
 	const std::string resRoot = "resources/models/";
 	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
@@ -47,7 +49,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
-
+;
 	this->_player->setAnimationSpeed(2.6f);
 }
 
@@ -755,7 +757,10 @@ void LevelRunner::render()
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
-	_textRenderer.DrawText(("LIVES: " + std::to_string(_player->getLives())), 0,_window.getHeight()- 100, {255,0,0}, 1, _window.getWidth(), _window.getHeight());
+	_spriteRenderer.DrawSprite(_life, _window.getWidth(), _window.getHeight());
+	_spriteRenderer.DrawSprite(_timer, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText((std::to_string(_player->getLives())), 84,_window.getHeight() - 100, {255,0,0}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48),_window.getHeight() - 100, {255,255,255}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 

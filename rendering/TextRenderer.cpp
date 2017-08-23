@@ -99,6 +99,7 @@ void cge::TextRenderer::DrawText(std::string text, float x, float y, glm::vec3 c
 	_textShader.uploadMatrix4f(_uniform_project, projection);
 	// Enable blending, necessary for our alpha texture
 	glEnable(GL_BLEND);
+	//glDisable(GL_DEPTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(_vao);
