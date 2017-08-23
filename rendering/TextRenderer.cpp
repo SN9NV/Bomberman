@@ -22,7 +22,7 @@ cge::TextRenderer::TextRenderer() :
 	std::cout << "Initialized New face." << std::endl;
 
 
-	this->_textShader.start();
+	this->_textShader.begin();
 	attribute_coord = this->_textShader.getAttributeLocation("coord");
 	uniform_tex = this->_textShader.getUniformLocation("tex");
 	uniform_color = this->_textShader.getUniformLocation("textColor");
@@ -46,7 +46,7 @@ void cge::TextRenderer::DrawText(std::string text, float x, float y) {
 	float sx = 2.0f / 1024.0f;
 	float sy = 2.0f / 720.0f;
 
-	this->_textShader.start();
+	this->_textShader.begin();
 
 	/* White background */
 	glClearColor(1, 1, 1, 1);
@@ -118,7 +118,7 @@ void cge::TextRenderer::renderText(std::string text, float x, float y, float sx,
 		glBufferData(GL_ARRAY_BUFFER, sizeof box, box, GL_DYNAMIC_DRAW);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-		/* Advance the cursor to the start of the next character */
+		/* Advance the cursor to the begin of the next character */
 		x += (g->advance.x >> 6) * sx;
 		y += (g->advance.y >> 6) * sy;
 	}

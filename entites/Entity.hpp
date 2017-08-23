@@ -13,7 +13,6 @@ namespace cge {
 	class Entity {
 	public:
 		Entity() = default;
-		~Entity();
 
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius = 0.0f);
 
@@ -38,10 +37,13 @@ namespace cge {
 		bool			isPlayAnimation() const;
 		double			getAnimationSpeed() const;
 		void			playEffect(const std::string &name) const;
+		const std::vector<glm::mat4>	&getJointTransforms() const;
 
 		const std::map<std::string, cge::Audio::Source *>	&getSoundEffects() const;
 
 	protected:
+		static constexpr unsigned __MAX_JOINTS = 50;
+
 		Model		&_model;
 		Loader		&_loader;
 		glm::vec3	_position;
@@ -58,6 +60,7 @@ namespace cge {
 		bool 		_playAnimation;
 		double		_animationSpeed;
 		bool		_needsTransformationUpdate;
+		std::vector<glm::mat4>	_animatedMatrices;
 
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
