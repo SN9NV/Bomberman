@@ -16,7 +16,7 @@ namespace cge {
 
 		bool	compileShaders(const std::string &vertexFilePath, const std::string &fragmentFilePath);
 		bool	linkProgram();
-		void	start();
+		void	begin();
 		void	end();
 		void	bindAttribute(const std::string &attributeName);
 
@@ -27,7 +27,9 @@ namespace cge {
 		void	uploadvec3d(GLint location, const glm::vec3 &value) const;
 		void	uploadvec2d(GLint location, const glm::vec2 &value) const;
 		void	uploadBool(GLint location, bool value) const;
+		void	uploadBool(const std::string &uniformName, bool value) const;
 		void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
+		void	uploadMatrix4f(const std::string &uniformName, const glm::mat4 &value) const;
 		bool	isInUse() const;
 
 	private:
@@ -38,6 +40,7 @@ namespace cge {
 		bool 		_isInUse;
 
 		bool 		_compileShader(const std::string &shaderSRC, GLuint shaderID);
+		void		_checkInUse() const;
 	};
 }
 

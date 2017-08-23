@@ -33,7 +33,6 @@ namespace cge {
 		}
 		std::cout << "compiling " << fragmentFilePath << std::endl;
 		return this->_compileShader(FragmentShaderSRC, this->_fragmentShaderID);
-
 	}
 
 	bool GLSLProgram::linkProgram() {
@@ -75,7 +74,7 @@ namespace cge {
 		glBindAttribLocation(this->_programID, this->_attributeCount++, attributeName.c_str());
 	}
 
-	void GLSLProgram::start() {
+	void GLSLProgram::begin() {
 		for (unsigned i = 0; i < this->_attributeCount; i++) {
 			glEnableVertexAttribArray(i);
 		}
@@ -94,50 +93,42 @@ namespace cge {
 	}
 
 	GLint GLSLProgram::getUniformLocation(const std::string &uniformName) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		GLint location = glGetUniformLocation(this->_programID, uniformName.c_str());
 
 		if (location == GL_INVALID_INDEX) {
 			std::cerr << "Uniform variable: " << uniformName << " not found in shader\n";
-			exit(1);
 		}
 
 		return location;
 	}
 
 	void GLSLProgram::uploadFloat(GLint location, float value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		glUniform1f(location, value);
 	}
 
 	void GLSLProgram::uploadvec3d(GLint location, const glm::vec3 &value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
 	void GLSLProgram::uploadBool(GLint location, bool value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		glUniform1ui(location, value ? 1 : 0);
 	}
 
-	void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
+	void GLSLProgram::uploadBool(const std::string &uniformName, bool value) const {
+		this->uploadBool(this->getUniformLocation(uniformName), value);
+	}
 
+	void GLSLProgram::uploadMatrix4f(GLint location, const glm::mat4 &value) const {
+		this->_checkInUse();
 		glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+	}
+
+	void GLSLProgram::uploadMatrix4f(const std::string &uniformName, const glm::mat4 &value) const {
+		this->uploadMatrix4f(this->getUniformLocation(uniformName), value);
 	}
 
 	bool GLSLProgram::_compileShader(const std::string &shaderSRC, GLuint shaderID) {
@@ -170,35 +161,33 @@ namespace cge {
 	}
 
 	void GLSLProgram::upload1i(GLint location, GLint value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		glUniform1i(location, value);
 	}
 
 	void GLSLProgram::uploadvec2d(GLint location, const glm::vec2 &value) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		glUniform2f(location, value.x, value.y);
 	}
 
 	GLint GLSLProgram::getAttributeLocation(const std::string &attrName) const {
-		if (!this->_isInUse) {
-			std::cerr << "Program is not in use\n";
-		}
-
+		this->_checkInUse();
 		GLint attribute = glGetAttribLocation(this->_programID, attrName.c_str());
 
-		if (attribute == -1)
+		if (attribute == GL_INVALID_INDEX) {
 			std::cerr << "Could not bind attribute: " << attrName << std::endl;
+		}
 
 		return (attribute);
 	}
 
 	bool GLSLProgram::isInUse() const {
 		return this->_isInUse;
+	}
+
+	void GLSLProgram::_checkInUse() const {
+		if (!this->_isInUse) {
+			std::cerr << "Program is not in use\n";
+		}
 	}
 }

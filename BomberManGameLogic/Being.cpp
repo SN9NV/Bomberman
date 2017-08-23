@@ -158,7 +158,7 @@ void Being::setMaxBomb(size_t _maxBomb) {
 
 
 /*void Being::render() {
-	_entShader.start();
+	_entShader.begin();
 	_renderer.prepare();
 	_renderer.render((cge::Entity&)this->getModel());
 	_entShader.end();

@@ -14,11 +14,17 @@ namespace cge {
 
 		~Renderer() = default;
 
-		Renderer(const GLSLProgram &shader);
+		Renderer(GLSLProgram &shader);
 
 		void prepare() const;
 
 		void render(Entity &entity) const;
+
+		/// Upload uniforms
+		void	uploadIsAnimated(bool isAnimated) const;
+		void	uploadJointTransforms(const std::vector<glm::mat4> &jointTransforms) const;
+		void	uploadTransformation(const glm::mat4 &transformation) const;
+		void	uploadView(const glm::mat4 &view) const;
 
 	private:
 		const GLSLProgram &_shader;
@@ -36,6 +42,15 @@ namespace cge {
 		};
 
 		void drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const;
+
+		/// Uniform variables
+		static constexpr unsigned __MAX_JOINTS = 50;
+
+		/// Entity shader uniforms
+		GLint	_uniformIsAnimated;
+		GLint	_uniformJointTransforms[__MAX_JOINTS];
+		GLint	_uniformTransformation;
+		GLint	_uniformView;
 	};
 }
 

@@ -34,7 +34,7 @@ void cge::ParticalRenderer::prepare() const {
 }
 
 void cge::ParticalRenderer::render(Partical &partical, Camera &cam) {
-	_shader.start();
+	_shader.begin();
 	prepare();
 	cam.update();
 	glBindVertexArray(plane.getVao());
@@ -70,7 +70,7 @@ void cge::ParticalRenderer::addPartical(cge::Partical partical, GLenum specFac, 
 
 void cge::ParticalRenderer::render(cge::Camera &camera) {
 	camera.update();
-	_shader.start();
+	_shader.begin();
 	prepare();
 	glBindVertexArray(plane.getVao());
 	glEnableVertexAttribArray(0);

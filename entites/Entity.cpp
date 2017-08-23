@@ -66,7 +66,7 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
 		} else {
-			shader.start();
+			shader.begin();
 			this->_applyAnimation(shader);
 			shader.end();
 		}
@@ -172,10 +172,12 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		this->_animateSkeleton(vars);
 	}
 
-	const unsigned MAX_JOINTS = 50;
-	for (unsigned i = 0; i < MAX_JOINTS; i++) {
-		shader.uploadMatrix4f(shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]"),
-							  i < animatedMatrices.size() ? animatedMatrices[i] : glm::mat4(1.0f));
+	///> Saving joint transforms
+	this->_animatedMatrices.resize(animatedMatrices.size());
+	auto _animatedMatrix = this->_animatedMatrices.begin();
+
+	for (auto &animatedMatrix : animatedMatrices) {
+		*(_animatedMatrix++) = animatedMatrix.second;
 	}
 }
 
@@ -211,7 +213,6 @@ float cge::Entity::getHitBoxRadius() const {
 
 void cge::Entity::setHitBoxRadius(const float &hitBox) {
 	_hitBoxRadius = hitBox * _scale;
-
 }
 
 void cge::Entity::setScale(float scale) {
@@ -261,8 +262,10 @@ void cge::Entity::playEffect(const std::string &name) const {
 	}
 }
 
-cge::Entity::~Entity() { }
-
 const std::map<std::string, cge::Audio::Source *> &cge::Entity::getSoundEffects() const {
 	return this->_soundEffects;
+}
+
+const std::vector<glm::mat4> &cge::Entity::getJointTransforms() const {
+	return this->_animatedMatrices;
 }

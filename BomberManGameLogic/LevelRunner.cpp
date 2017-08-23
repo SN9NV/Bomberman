@@ -751,11 +751,11 @@ void LevelRunner::update() {
 void LevelRunner::render()
 {
 	_renderer.prepare();
-	_entShader.start();
+	_entShader.begin();
 	_camera.setTrackEntity(*_player);
 	_camera.setTrackOffset({0, 8, 5});
 
-	_entShader.start();
+	_entShader.begin();
 	_renderer.prepare();
 	_camera.update(_entShader);
 	for (auto &vecit : _level)

@@ -4,8 +4,21 @@
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 namespace cge {
-	Renderer::Renderer(const GLSLProgram &shader) :
-			_shader(shader) { }
+	Renderer::Renderer(GLSLProgram &shader) :
+			_shader(shader)
+	{
+		bool programInUse = shader.isInUse();
+
+		if (!programInUse) shader.begin();
+			this->_uniformIsAnimated = this->_shader.getUniformLocation("isAnimated");
+			this->_uniformTransformation = this->_shader.getUniformLocation("transformation");
+			this->_uniformView = this->_shader.getUniformLocation("view");
+
+			for (unsigned i = 0; i < this->__MAX_JOINTS; i++) {
+				this->_uniformJointTransforms[i] = this->_shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]");
+			}
+		if (!programInUse) shader.end();
+	}
 
 	void Renderer::prepare() const {
 		glEnable(GL_DEPTH_TEST);
@@ -83,13 +96,15 @@ namespace cge {
 		glBindVertexArray(entityModel.getVaoID());
 
 		/// Upload the model's transformation matrix
-		this->_shader.uploadMatrix4f(
-				this->_shader.getUniformLocation("transformation"),
-				Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale())
-		);
+		this->uploadTransformation(Maths::createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale()));
 
 		/// Upload if the model has an animation or not
-		this->_shader.uploadBool(this->_shader.getUniformLocation("isAnimated"), entity.isAnimated());
+		this->uploadIsAnimated(entity.isAnimated());
+
+		/// Upload animations
+		if (entity.isAnimated()) {
+			this->uploadJointTransforms(entity.getJointTransforms());
+		}
 
 		/// Draw the triangles
 		glBindTexture(GL_TEXTURE_2D, entityModel.getTexture().getID());
@@ -111,5 +126,29 @@ namespace cge {
 		if (type == "WEIGHTS_0") return attrType::WEIGHTS;
 
 		return attrType::UNKNOWN;
+	}
+
+	void Renderer::uploadIsAnimated(bool isAnimated) const {
+		this->_shader.uploadBool(this->_uniformIsAnimated, isAnimated);
+	}
+
+	void Renderer::uploadJointTransforms(const std::vector<glm::mat4> &jointTransforms) const {
+		unsigned i = 0;
+
+		for (auto &jointTransform : jointTransforms) {
+			this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], jointTransform);
+		}
+
+		while (i < this->__MAX_JOINTS) {
+			this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], glm::mat4(1.0f));
+		}
+	}
+
+	void Renderer::uploadTransformation(const glm::mat4 &transformation) const {
+		this->_shader.uploadMatrix4f(this->_uniformTransformation, transformation);
+	}
+
+	void Renderer::uploadView(const glm::mat4 &view) const {
+		this->_shader.uploadMatrix4f(this->_uniformView, view);
 	}
 }
