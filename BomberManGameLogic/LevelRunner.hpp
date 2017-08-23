@@ -17,6 +17,7 @@
 #include "../io/audio/AudioDevice.hpp"
 #include "Onil.hpp"
 #include "PowerUPAbstract.hpp"
+#include "../rendering/SpriteRenderer.hpp"
 
 enum levelState
 {
@@ -48,6 +49,9 @@ private:
 	cge::Camera _camera;
 	cge::ParticalRenderer _particalRenderer;
 	cge::TextRenderer _textRenderer;
+	cge::SpriteRenderer _spriteRenderer;
+	cge::Sprite _life;
+	cge::Sprite _timer;
 	cge::Audio::Device	_audioDevice;
 	unsigned _levelTime;
 	int _state = levelState::PLAY;
