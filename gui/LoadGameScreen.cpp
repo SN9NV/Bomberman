@@ -10,7 +10,8 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	_audioMenuScroll("../resources/audio/click.wav", loader),
 	_gameState(_currState),
 	_prevState(prevState),
-	_currMap(currMap)
+	_currMap(currMap),
+	_loader(loader)
 {
 	this->_audioMenuScroll.setLooping(false);
 	this->_audioMenuScroll.setGain(0.09f);
@@ -326,7 +327,7 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 
 	if (ifs.good()) {
 		while (std::getline(ifs, line)) {
-			if (std::regex_match(line, match, std::regex("level: ([0-2]{1})\\s*"))) {
+			if (std::regex_match(line, match, std::regex("level: ([0-5]{1})\\s*"))) {
 				level = std::atoi(match[1].str().c_str());
 			} else if (std::regex_match(line, match, std::regex("lives: ([0-9]{1,2})\\s*"))) {
 				lives = std::atoi(match[1].str().c_str());
@@ -355,4 +356,27 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 void cge::GUI::LoadGameScreen::ReinitializeScreen() {
 	this->_screen->initialize(this->_window.getGLFWWindow(), false);
 	this->nanoguiWindow->center();
+}
+
+cge::GUI::LoadGameScreen::LoadGameScreen() :
+	_window(*(new cge::Window())),
+	_loader(*(new cge::Loader()))
+{
+}
+
+cge::GUI::LoadGameScreen::LoadGameScreen(const cge::GUI::LoadGameScreen &cpy) :
+	_window(cpy._window),
+	_player(cpy._player),
+	_audioMenuScroll("../resources/audio/click.wav", cpy._loader),
+	_gameState(cpy._gameState),
+	_prevState(cpy._prevState),
+	_currMap(cpy._currMap),
+	_loader(cpy._loader)
+{
+
+}
+
+cge::GUI::LoadGameScreen cge::GUI::LoadGameScreen::operator=(const cge::GUI::LoadGameScreen &rhs) {
+	*this = rhs;
+	return (*this);
 }

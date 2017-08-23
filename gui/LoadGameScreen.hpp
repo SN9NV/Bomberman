@@ -22,6 +22,8 @@ namespace cge {
 		public:
 			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader, int* currMap);
 
+			LoadGameScreen(const LoadGameScreen & cpy);
+			LoadGameScreen operator=(const LoadGameScreen & rhs);
 			~LoadGameScreen();
 
 			nanogui::Screen *getScreen();
@@ -42,6 +44,7 @@ namespace cge {
 			cge::GameState*		_gameState;
 			cge::GameState*		_prevState;
 			std::map<int, cge::Saves::SavedGame*> _availableSaves;
+			cge::Loader&		_loader;
 
 			void				searchAvailableSaves();
 			void				refreshSavedGames();

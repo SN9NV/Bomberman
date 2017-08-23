@@ -87,3 +87,22 @@ void cge::GuiManager::ReinitializeScreens() {
 	this->_saveGameScreen->ReinitializeScreen();
 	this->_pauseGameScreen->ReinitializeScreen();
 }
+
+cge::GuiManager::GuiManager(const cge::GuiManager &cpy) :
+	_window(cpy._window),
+	_prevState(cpy._prevState),
+	_state(cpy._state),
+	_player(cpy._player),
+	_currMap(cpy._currMap)
+{	
+	this->_mainMenuScreen = cpy._mainMenuScreen;
+	this->_settingsScreen = cpy._settingsScreen;
+	this->_loadGameScreen = cpy._loadGameScreen;
+	this->_saveGameScreen = cpy._saveGameScreen;
+	this->_pauseGameScreen = cpy._pauseGameScreen;
+}
+
+cge::GuiManager cge::GuiManager::operator=(const cge::GuiManager &rhs) {
+	*this = rhs;
+	return (*this);
+}

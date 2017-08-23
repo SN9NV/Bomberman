@@ -17,12 +17,12 @@
 namespace cge {
 	class GuiManager {
 	public:
-		static bool			initialise(cge::Window& ,
-										cge::GameState* state,
-										cge::GameState *prevState,
-										Player* player,
-										int* currMap,
-										cge::Loader& loader);
+		static bool	initialise(cge::Window& ,
+							cge::GameState* state,
+							cge::GameState *prevState,
+							Player* player,
+							int* currMap,
+							cge::Loader& loader);
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
 							cge::GameState *prevState,
@@ -32,6 +32,8 @@ namespace cge {
 
 		static GuiManager*	getSingleton();
 
+		GuiManager(const GuiManager & cpy);
+		GuiManager operator=(const GuiManager& rhs);
 		~GuiManager();
 
 		void drawScreen(int screen);
