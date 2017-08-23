@@ -2,13 +2,13 @@
 #include "../extras/Maths.hpp"
 #include "../extras/glmOstream.hpp"
 
-cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox) :
+cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
 		_model(model),
 		_loader(loader),
 		_position(position),
 		_rotation(rotation),
 		_scale(scale),
-		_hitBoxRadius(hitBox * _scale),
+		_hitBoxRadius(hitBoxRadius * _scale),
 		_transformation(1.0),
 		_transformationLocation(0),
 		_lastTicks(glfwGetTime()),

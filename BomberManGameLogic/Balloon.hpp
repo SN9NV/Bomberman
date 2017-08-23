@@ -9,17 +9,15 @@
 #include "Being.hpp"
 #include <random>
 
-class Balloon : public  Being
-{
+class Balloon : public  Being {
+public:
+	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox = 0.5f);
+	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
+
 private:
 	int _changeDir;
 
 	void	_setEffects();
-
-public:
-	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
-	Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,cge::Loader &loader,  float hitBox);
-	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 };
 
 

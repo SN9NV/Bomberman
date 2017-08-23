@@ -11,14 +11,13 @@ namespace cge {
 	class Renderer {
 	public:
 		Renderer() = default;
+		Renderer(GLSLProgram &shader);
 
 		~Renderer() = default;
 
-		Renderer(GLSLProgram &shader);
-
-		void prepare() const;
-
-		void render(Entity &entity) const;
+		void	prepare() const;
+		void	render(Entity &entity) const;
+		void	render(std::vector<cge::Entity> &entities) const;
 
 		/// Upload uniforms
 		void	uploadIsAnimated(bool isAnimated) const;

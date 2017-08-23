@@ -8,11 +8,9 @@
 
 #include "../entites/Entity.hpp"
 
-class Wall : public cge::Entity
-{
+class Wall : public cge::Entity {
 public:
-	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader);
-	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius);
+	Wall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius = 0.5f);
 };
 
 

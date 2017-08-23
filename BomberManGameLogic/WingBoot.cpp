@@ -4,8 +4,9 @@
 
 #include "WingBoot.hpp"
 
-WingBoot::WingBoot(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader,
-				   float hitBoxRadius) : PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius) {
+WingBoot::WingBoot(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
+		PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius)
+{
 
 }
 

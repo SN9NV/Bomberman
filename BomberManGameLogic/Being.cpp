@@ -3,37 +3,13 @@
 //
 
 #include "Being.hpp"
-#include <cmath>
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed) :
-		Entity(position, rotation, scale, model, loader),
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float speed, int damage) :
+		Entity(position, rotation, scale, model, loader, hitBoxRadius),
 		_speed(speed),
 		_maxBomb(1),
-		_plaseBomb(false),
-		_damage(2),
-		_deathTimeout(1000),
-		_alive(true)
-{
-	this->_n_moveDir = glm::vec3(0, 0, 0);
-}
-
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, float speed) :
-		Entity(position, rotation, scale, model, loader, hitBox),
-		_speed(speed),
-		_maxBomb(1),
-		_plaseBomb(false),
-		_damage(2),
-		_deathTimeout(1000),
-		_alive(true)
-{
-	this->_n_moveDir = glm::vec3(0, 0, 0);
-}
-
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float _speed, int _damage) :
-		Entity(position, rotation, scale, model, loader, hitBoxRadius), _speed(_speed),
-		_maxBomb(1),
-		_plaseBomb(false),
-		_damage(_damage),
+		_placeBomb(false),
+		_damage(damage),
 		_deathTimeout(1000),
 		_alive(true)
 {
@@ -79,7 +55,7 @@ const glm::vec3 &Being::get_n_moveDir() const
 }
 bool Being::isPlaceBomb() const
 {
-	return _plaseBomb;
+	return _placeBomb;
 }
 
 void Being::placeBomb(Bomb *bomb)
@@ -133,11 +109,11 @@ void Being::setAlive(bool _alive)
 	Being::_alive = _alive;
 }
 
-void Being::setPlaseBomb(bool _plaseBomb) {
-	Being::_plaseBomb = _plaseBomb;
+void Being::setPlaceBomb(bool placeBomb) {
+	Being::_placeBomb = placeBomb;
 }
 
-void Being::setSpeed(const float speed) {
+void Being::setSpeed(float speed) {
 	this->_speed = speed;
 }
 
@@ -152,14 +128,3 @@ size_t Being::getMaxBomb() const {
 void Being::setMaxBomb(size_t _maxBomb) {
 	Being::_maxBomb = _maxBomb;
 }
-
-
-
-
-
-/*void Being::render() {
-	_entShader.begin();
-	_renderer.prepare();
-	_renderer.render((cge::Entity&)this->getModel());
-	_entShader.end();
-}*/
