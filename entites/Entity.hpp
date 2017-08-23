@@ -12,9 +12,8 @@
 namespace cge {
 	class Entity {
 	public:
-		Entity() = default;
-
-		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius = 0.0f);
+		Entity() = delete;
+		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius);
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
@@ -44,22 +43,22 @@ namespace cge {
 	protected:
 		static constexpr unsigned __MAX_JOINTS = 50;
 
-		Model		&_model;
-		Loader		&_loader;
-		glm::vec3	_position;
-		glm::vec3	_rotation;
-		float 		_scale;
-		float		_hitBoxRadius;
-		glm::mat4	_transformation;
-		GLint		_transformationLocation;
-		double		_lastTicks;
-		double		_ticksDelta;
-		double		_animationTicks;
-		unsigned	_currentAnimation;
-		bool		_hasAnimation;
-		bool 		_playAnimation;
-		double		_animationSpeed;
-		bool		_needsTransformationUpdate;
+		cge::Model		&_model;
+		cge::Loader		&_loader;
+		glm::vec3		_position;
+		glm::vec3		_rotation;
+		float 			_scale;
+		float			_hitBoxRadius;
+		glm::mat4		_transformation;
+		GLint			_transformationLocation;
+		double			_lastTicks;
+		double			_ticksDelta;
+		double			_animationTicks;
+		unsigned		_currentAnimation;
+		bool			_hasAnimation;
+		bool 			_playAnimation;
+		double			_animationSpeed;
+		bool			_needsTransformationUpdate;
 		std::vector<glm::mat4>	_animatedMatrices;
 
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;

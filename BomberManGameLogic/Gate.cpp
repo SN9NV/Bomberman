@@ -4,20 +4,22 @@
 
 #include "Gate.hpp"
 
-Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader) :
-		Entity(position, rotation, scale, model, loader), _active(false), _damage(false), _damageCycels(0)
-{}
+Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
+		Entity(position, rotation, scale, model, loader, hitBoxRadius),
+		_active(false),
+		_damage(false),
+		_damageCycles(0)
+{
 
-Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox) :
-		Entity(position, rotation, scale, model, loader, hitBox), _active(false), _damage(false),  _damageCycels(0)
-{}
+}
+
 
 bool Gate::isActive() const
 {
 	return _active;
 }
 
-void Gate::actervate()
+void Gate::activate()
 {
 	_active = true;
 }
@@ -26,21 +28,21 @@ bool Gate::isDamage() const {
 	return _damage;
 }
 
-void Gate::setDamage(bool _damage) {
-	Gate::_damage = _damage;
+void Gate::setDamage(bool damage) {
+	Gate::_damage = damage;
 }
 
 void Gate::damage(size_t damageCycles) {
-	_damageCycels = damageCycles;
+	_damageCycles = damageCycles;
 	_damage = true;
 }
 
 bool Gate::update() {
-	if (_damageCycels == 1)
+	if (_damageCycles == 1)
 		_damage = false;
-	if (_damageCycels > 0)
+	if (_damageCycles > 0)
 	{
-		_damageCycels--;
+		_damageCycles--;
 	}
 	return true;
 }

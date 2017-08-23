@@ -11,16 +11,16 @@
 class Bomb :public  cge::Entity
 {
 private:
-	int _bombradius;
+	int _bombRadius;
 	float _ticks;
 
 	void	_setEffects();
 
 public:
-	int getBombradius() const;
+	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, int bombRadius = 3, float hitBox = 0.0f);
 	virtual ~Bomb();
-	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, int _bombradius);
-	Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader,float hitBox, int _bombradius);
+
+	int getBombradius() const;
 	bool update(const cge::InputManager &input, unsigned lastFrameTime);
 	bool isDeternate();
 };

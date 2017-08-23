@@ -9,13 +9,12 @@ std::uniform_int_distribution<int> _n_disision(0, 1);
 std::uniform_int_distribution<int> _n_change(0, 3);
 std::default_random_engine _gen;
 
-Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, Player& player, std::vector<std::vector<cge::Entity *>> &level)
-	: Being(position, rotation, scale, model, loader, 0.002f), _changeDir(0), _player(player), _level(level) {
-
-}
-
-Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, Player& player, std::vector<std::vector<cge::Entity *>> &level)
-	: Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0), _player(player), _level(level) {
+Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, Player& player, std::vector<std::vector<cge::Entity *>> &level, float hitBox) :
+		Being(position, rotation, scale, model, loader, hitBox, 0.002f),
+		_changeDir(0),
+		_player(player),
+		_level(level)
+{
 
 }
 
@@ -71,7 +70,7 @@ bool Onil::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsi
 	return (true);
 }
 
-bool Onil::somethingInTheWayX(const glm::vec3 pPos, const glm::vec3 onilPos) {
+bool Onil::somethingInTheWayX(const glm::vec3 &pPos, const glm::vec3 &onilPos) {
 	float sZ = (pPos.z > onilPos.z) ? onilPos.z : pPos.z;
 	float eZ = (pPos.z < onilPos.z) ? onilPos.z : pPos.z;
 	cge::Entity *tmpEnt;
@@ -85,7 +84,7 @@ bool Onil::somethingInTheWayX(const glm::vec3 pPos, const glm::vec3 onilPos) {
 	return (false);
 }
 
-bool Onil::somethingInTheWayY(const glm::vec3 pPos, const glm::vec3 onilPos) {
+bool Onil::somethingInTheWayY(const glm::vec3 &pPos, const glm::vec3 &onilPos) {
 	float sX = (pPos.x > onilPos.x) ? onilPos.x : pPos.x;
 	float eX = (pPos.x < onilPos.x) ? onilPos.x : pPos.x;
 	cge::Entity *tmpEnt;

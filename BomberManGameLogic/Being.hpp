@@ -23,17 +23,15 @@ public:
 	void setMaxBomb(size_t _maxBomb);
 
 protected:
-	bool		_plaseBomb;
+	bool		_placeBomb;
 	int			_damage;
 	unsigned	_deathTimeout;
 	bool		_alive;
 	std::vector<Bomb *> _bombs;
 
 public:
-	Being() = default;
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed);
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, float speed);
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float _speed, int _damage);
+	Being() = delete;
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed, float hitBoxRadius, int damage = 2);
 
 	int		getDamage() const;
 	bool	isAlive() const;
@@ -44,17 +42,15 @@ public:
 	void	setAlive(bool _alive);
 
 	float	getDirAngle();
-	void	setPlaseBomb(bool _plaseBomb);
+	void	setPlaceBomb(bool placeBomb);
 	void	setDirection();
 	void	setMoveDir(glm::vec3 newDir);
-	void	setSpeed(const float speed);
+	void	setSpeed(float speed);
 	float	getSpeed() const;
 
 	const glm::vec3	&get_n_moveDir() const;
 
 	virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
-
-
 };
 
 

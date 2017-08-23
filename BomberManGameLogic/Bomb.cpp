@@ -4,14 +4,8 @@
 
 #include "Bomb.hpp"
 
-Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, int _bombradius)
-		: Entity(position, rotation, scale, model, loader), _bombradius(_bombradius), _ticks(1000)
-{
-	this->_setEffects();
-}
-
-Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox, int _bombradius)
-		: Entity(position, rotation, scale, model, loader, hitBox), _bombradius(_bombradius), _ticks(1000)
+Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, int bombRadius, float hitBox) :
+		Entity(position, rotation, scale, model, loader, hitBox), _bombRadius(bombRadius), _ticks(1000)
 {
 	this->_setEffects();
 }
@@ -30,7 +24,7 @@ bool Bomb::isDeternate()
 
 int Bomb::getBombradius() const
 {
-	return _bombradius;
+	return _bombRadius;
 }
 
 Bomb::~Bomb()

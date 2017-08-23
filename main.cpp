@@ -56,7 +56,7 @@ int main() {
 		new cge::Audio::Source("../resources/audio/Area 6.ogg", loader),
 	};
 
-	cge::Model BomberMan = (cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader));
+	cge::Model BomberMan = cge::Model("resources/models/Bomber.glb", "resources/models/BomberManTextureDiffuseColor.png", loader, cge::Model::Type::STREAMING);
 	player = new Player({0, 0, 0}, {0, 0, 0}, 1, BomberMan, loader, 0.25f, 0.007);
 	levelRunner = new LevelRunner(loader, player, window, &inputManager, defaultAudioDevice);
 

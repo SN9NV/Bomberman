@@ -14,11 +14,17 @@ namespace cge {
 namespace cge {
 	class Model {
 	public:
-		Model() = default;
+		enum class Type {
+			STATIC = GL_STATIC_DRAW,
+			DYNAMIC = GL_DYNAMIC_DRAW,
+			STREAMING = GL_STREAM_DRAW
+		};
+
+		Model() = delete;
 		~Model() = default;
 
-		Model(const std::string &modelFilePath, const std::string &textureFilePath, cge::Loader &loader);
-		Model(const tinygltf::Model &model, const cge::Texture &texture);
+		Model(const std::string &modelFilePath, const std::string &textureFilePath, cge::Loader &loader, Model::Type type);
+		Model(const tinygltf::Model &model, const cge::Texture &texture, Model::Type type);
 
 		GLuint					getVaoID() const;
 		std::vector<GLuint>		&getVBOs();
@@ -30,6 +36,7 @@ namespace cge {
 		std::vector<GLuint>		_vbos;
 		cge::Texture			_texture;
 		tinygltf::Model			_model;
+		Model::Type				_type;
 
 		void 					_create();
 	};

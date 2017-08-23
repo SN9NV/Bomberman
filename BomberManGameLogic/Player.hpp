@@ -6,21 +6,10 @@
 #include "../io/InputManager.hpp"
 #include "Bomb.hpp"
 
-class Player : public Being
-{
-private:
-	int _lives;
-	int _score;
-	int _up = GLFW_KEY_W;
-	int _down = GLFW_KEY_S;
-	int _left = GLFW_KEY_A;
-	int _right = GLFW_KEY_D;
-	int _bomb = GLFW_KEY_SPACE;
-	int _special = GLFW_KEY_V;
-	int _menue = GLFW_KEY_ESCAPE;
-	bool _pauseMenue;
-
+class Player : public Being {
 public:
+	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed = 0.25f, float hitBoxRadius = 0.0f);
+
 	int get_up() const;
 	void set_up(int up);
 
@@ -45,8 +34,6 @@ public:
 	int getLives() const;
 	void setLives(int lives);
 	void addLives(int lives);
-	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed);
-	Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitbox, float speed);
 	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 	int loseLife();
 
@@ -55,6 +42,17 @@ public:
 	void addScore(int addition);
 	void subScore(int subtraction);
 
+private:
+	int _lives;
+	int _score;
+	int _up = GLFW_KEY_W;
+	int _down = GLFW_KEY_S;
+	int _left = GLFW_KEY_A;
+	int _right = GLFW_KEY_D;
+	int _bomb = GLFW_KEY_SPACE;
+	int _special = GLFW_KEY_V;
+	int _menue = GLFW_KEY_ESCAPE;
+	bool _pauseMenue;
 };
 
 #endif //BOMBERMAN_PLAYER_HPP

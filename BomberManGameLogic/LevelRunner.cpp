@@ -31,26 +31,24 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_powerup(false)
 {
 	const std::string resRoot = "resources/models/";
-	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader));
-	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader));
-	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader));
-	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader));
-	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader));
-	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader));
-	_models.emplace("Onile", cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", this->_loader));
-	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader));
-	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader));
-	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader));
-	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader));
-	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader));
+	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
+	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
+	_models.emplace("Onile", cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
+	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
 
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
-	//todo remove the folowing test line
-	_player->setMaxBomb(3);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -154,7 +152,6 @@ void LevelRunner::beingWorldInteraction() {
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
-					std::cout << "adding bomb\n";
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -308,7 +305,7 @@ void LevelRunner::loadMapEntitys() {
 			switch (_map[i][j]) {
 				case 'w':
 					if ((tmpMdl = getModel("Wall")) != nullptr) {
-						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
+						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader);
 						_level[i][j] = tmpEnt;
 					}
 					break;
@@ -320,7 +317,7 @@ void LevelRunner::loadMapEntitys() {
 				case 'd':
 					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
 						float rotation = (rand() % 4) * 90;
-						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader, 0.5f);
+						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
@@ -332,7 +329,7 @@ void LevelRunner::loadMapEntitys() {
 	}
 	if ((tmpMdl = getModel("Balloon")) != nullptr) {
 		while (_balloons > 0) {
-			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f);
+			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader);
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_balloons--;
@@ -340,7 +337,7 @@ void LevelRunner::loadMapEntitys() {
 	}
 	if ((tmpMdl = getModel("Onile")) != nullptr) {
 		while (_onil > 0) {
-			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f, *_player, _level);
+			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, *_player, _level);
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_onil--;
@@ -370,7 +367,7 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 				}
 			}
 			if (!_powerup) {
-				if (/*rand() % 10 == 1 &&*/ _powerUpInstance != nullptr) {
+				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
 					std::cout << "place PowerUP\n";
 					_powerUpInstance->setPosition({x, 0, y});
 					_powerUpInstance->activete();
@@ -519,7 +516,7 @@ void LevelRunner::cleanLevel() {
 	std::vector<Being *>::iterator being;
 	bool found;
 
-	_player->setPlaseBomb(false);
+	_player->setPlaceBomb(false);
 	_particalRenderer.clearParticals();
 	if (_powerup && !_powerUpInstance->isActive())
 	{
@@ -709,7 +706,7 @@ void LevelRunner::update() {
 	if (_player->isPauseMenue())
 		_state = levelState::PAUSE;
 	if (_beings.size() == 1 && _gate != nullptr)
-		_gate->actervate();
+		_gate->activate();
 	beingWorldInteraction();
 	if (_state == levelState::PLAY)
 		bombWorldInteraction();
@@ -758,7 +755,7 @@ void LevelRunner::render()
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
-//		_textRenderer.DrawText("test", 5, 5);
+	_textRenderer.DrawText(("LIVES: " + std::to_string(_player->getLives())), 0,_window.getHeight()- 100, {255,0,0}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 
