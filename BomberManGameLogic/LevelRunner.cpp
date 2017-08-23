@@ -49,8 +49,6 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 
 	this->_player->setAnimationSpeed(2.6f);
-	//todo remove the folowing test line
-	_player->setMaxBomb(3);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
@@ -154,7 +152,6 @@ void LevelRunner::beingWorldInteraction() {
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
-					std::cout << "adding bomb\n";
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -326,22 +323,6 @@ void LevelRunner::loadMapEntitys() {
 					}
 					break;
 				default:
-//					if (_balloons + _onil > 0) {
-//
-//						if (_balloons > 0 && rand() % 6 == 1) {
-//							if ((tmpMdl = getModel("Balloon")) != nullptr) {
-//								_beings.push_back(new Balloon({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.5f));
-//								_balloons--;
-//							}
-//						} else if (_onil > 0 && rand() % 6 == 1) {
-//							/*if ((tmpMdl = getModel("Onil")) != nullptr)
-//							{
-//								_beings.push_back(new Onil({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, 0.5f));
-//								_onil--;
-//							}*/
-//							_onil--;
-//						}
-//					}
 					break;
 			}
 		}
@@ -386,7 +367,7 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 				}
 			}
 			if (!_powerup) {
-				if (/*rand() % 10 == 1 &&*/ _powerUpInstance != nullptr) {
+				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
 					std::cout << "place PowerUP\n";
 					_powerUpInstance->setPosition({x, 0, y});
 					_powerUpInstance->activete();
@@ -774,7 +755,7 @@ void LevelRunner::render()
 		_renderer.render(*_powerUpInstance);
 	_entShader.end();
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
-//		_textRenderer.DrawText("test", 5, 5);
+	_textRenderer.DrawText(("LIVES: " + std::to_string(_player->getLives())), 0,_window.getHeight()- 100, {255,0,0}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 

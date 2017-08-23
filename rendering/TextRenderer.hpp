@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <ft2build.h>
+#include <map>
 #include FT_FREETYPE_H
 #include "GLSLProgram.hpp"
 
@@ -16,7 +17,7 @@ namespace cge {
 		TextRenderer();
 		~TextRenderer();
 
-		void	DrawText(std::string text, float x, float y);
+		void	DrawText(std::string text, float x, float y, glm::vec3 color, float scale, float screenWidth, float screenHight);
 	private:
 		cge::GLSLProgram	_textShader;
 
@@ -26,16 +27,23 @@ namespace cge {
 			GLfloat s;
 			GLfloat t;
 		};
+		typedef struct s_char{
+			GLuint textureID;
+			glm::vec2 size;
+			glm::vec2 bering;
+			GLuint advance;
+		} t_char;
 
-		FT_Library			ft;
-		FT_Face				face;
-		GLuint				texture;
-		GLuint				attribute_coord;
-		GLint				uniform_tex;
-		GLint				uniform_color;
-		GLuint				vbo;
+		std::map<GLchar, t_char> charMap;
 
-		void	renderText(std::string text, float x, float y, float sx, float sy);
+		FT_Library			_ft;
+		FT_Face				_face;
+		GLint				_attribute_coord;
+		GLint				_uniform_tex;
+		GLint				_uniform_color;
+		GLint 				_uniform_project;
+		GLuint 				_vao;
+		GLuint				_vbo;
 	};
 };
 
