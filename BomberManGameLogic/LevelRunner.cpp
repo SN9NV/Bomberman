@@ -74,12 +74,6 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	this->_player->setAnimationSpeed(2.6f);
 }
 
-/*cge::Model *LevelRunner::getModel(std::string name) {
-	auto found = _models.find(name);
-	if (found != _models.end())
-		return (&found->second);
-	return (nullptr);
-}*/
 
 void LevelRunner::bumpBeing(Being *being) {
 	glm::vec3 pos;
@@ -466,7 +460,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 			cge::Entity *tmpEnt;
 			std::ssub_match sub_match = match[1];
 			std::string piece = sub_match.str();
-			if ((tmpEnt = _objtLoader.loadObject("FireUp", {0, 0, 0})) != nullptr) {
+			if ((tmpEnt = _objtLoader.loadObject(piece, {0, 0, 0})) != nullptr) {
 				_powerUpInstance = dynamic_cast<PowerUPAbstract *>(tmpEnt);
 			}
 		}

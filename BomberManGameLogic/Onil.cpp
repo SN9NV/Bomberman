@@ -64,7 +64,8 @@ bool Onil::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsi
 		}
 	}
 	_changeDir = (_changeDir >= timeToRandom) ? 0 : _changeDir + lastFrameTime;
-	this->setRotation({0,this->getDirAngle(),0});
+	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
+		Being::setDirection();
 	if (lastFrameTime < 500)
 		return (Being::update(input, shader, lastFrameTime));
 	return (true);
