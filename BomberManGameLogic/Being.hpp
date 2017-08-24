@@ -27,11 +27,12 @@ protected:
 	int			_damage;
 	unsigned	_deathTimeout;
 	bool		_alive;
+	bool		_wallPass;
 	std::vector<Bomb *> _bombs;
 
 public:
 	Being() = delete;
-	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed, float hitBoxRadius, int damage = 2);
+	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed, float hitBoxRadius, int damage = 2, bool wallPass = false);
 
 	int		getDamage() const;
 	bool	isAlive() const;
@@ -41,12 +42,15 @@ public:
 	void	placeBomb(Bomb *bomb);
 	void	setAlive(bool _alive);
 
+	void setWallPass(bool wallPass);
+
 	float	getDirAngle();
 	void	setPlaceBomb(bool placeBomb);
 	void	setDirection();
 	void	setMoveDir(glm::vec3 newDir);
 	void	setSpeed(float speed);
 	float	getSpeed() const;
+	bool isWallPass() const;
 
 	const glm::vec3	&get_n_moveDir() const;
 

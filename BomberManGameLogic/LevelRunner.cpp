@@ -15,7 +15,8 @@
 #include "WingBoot.hpp"
 #include "AddBomb.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
+LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager,
+						 cge::Audio::Device &audioDevice) :
 		_loader(loader),
 		_player(player),
 		_audioDevice(audioDevice),
@@ -29,27 +30,46 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_inputManager(inputManager),
 		_powerUpInstance(nullptr),
 		_powerup(false),
-		_life({20, window.getHeight() - 100}, {48,48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
-		_timer({window.getWidth()- (5 * 48), window.getHeight() - 100}, {48,48}, 1, _loader.loadTexture("resources/Textures/StopWatch.png"))
-{
+		_life({20, window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
+		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1,
+			   _loader.loadTexture("resources/Textures/StopWatch.png")) {
 	const std::string resRoot = "resources/models/";
-	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("DestructWall", cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("Bomber", cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
-	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
-	_models.emplace("Onile", cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", this->_loader, cge::Model::Type::STREAMING));
-	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("FireDown", cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("FullFire", cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
-	_models.emplace("WingBoot", cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader, cge::Model::Type::STATIC));
+	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader,
+										  cge::Model::Type::STATIC));
+	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader,
+									   cge::Model::Type::STATIC));
+	_models.emplace("DestructWall",
+					cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", this->_loader,
+							   cge::Model::Type::STATIC));
+	_models.emplace("Bomb", cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", this->_loader,
+									   cge::Model::Type::STATIC));
+	_models.emplace("Bomber",
+					cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", this->_loader,
+							   cge::Model::Type::STREAMING));
+	_models.emplace("Balloon", cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", this->_loader,
+										  cge::Model::Type::STREAMING));
+	_models.emplace("Onile", cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", this->_loader,
+										cge::Model::Type::STREAMING));
+	_models.emplace("Gate", cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", this->_loader,
+									   cge::Model::Type::STATIC));
+	_models.emplace("FireUp", cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", this->_loader,
+										 cge::Model::Type::STATIC));
+	_models.emplace("FireDown",
+					cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", this->_loader,
+							   cge::Model::Type::STATIC));
+	_models.emplace("FullFire",
+					cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", this->_loader,
+							   cge::Model::Type::STATIC));
+	_models.emplace("WingBoot",
+					cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader,
+							   cge::Model::Type::STATIC));
 
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
-;
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
+										 GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1),
+										 GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2),
+										 GL_SRC_ALPHA, GL_ONE);
 	this->_player->setAnimationSpeed(2.6f);
 }
 
@@ -72,38 +92,46 @@ void LevelRunner::bumpBeing(Being *being) {
 	y = (int) (round(pos.z));
 	//collision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
-		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
-		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
-		if (dist < minBoxDist) {
-			being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
-			being->setMoveDir({0, 0, 0});
+		if (!being->isWallPass() || (dynamic_cast<DestructWall *>(_level[y - 1][x])) == nullptr) {
+			minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
+			dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
+			if (dist < minBoxDist) {
+				being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
+				being->setMoveDir({0, 0, 0});
+			}
 		}
 	}
 	//collision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
-		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
-		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
-		if (dist < minBoxDist) {
-			being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
-			being->setMoveDir({0, 0, 0});
+		if (!being->isWallPass() || (dynamic_cast<DestructWall *>(_level[y + 1][x])) == nullptr) {
+			minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
+			dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
+			if (dist < minBoxDist) {
+				being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
+				being->setMoveDir({0, 0, 0});
+			}
 		}
 	}
 	//collision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
-		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
-		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
-		if (dist < minBoxDist) {
-			being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
-			being->setMoveDir({0, 0, 0});
+		if (!being->isWallPass() || (dynamic_cast<DestructWall *>(_level[y][x - 1])) == nullptr) {
+			minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
+			dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
+			if (dist < minBoxDist) {
+				being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
+				being->setMoveDir({0, 0, 0});
+			}
 		}
 	}
 	//collision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
-		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
-		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
-		if (dist < minBoxDist) {
-			being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
-			being->setMoveDir({0, 0, 0});
+		if (!being->isWallPass() || (dynamic_cast<DestructWall *>(_level[y][x + 1])) == nullptr) {
+			minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
+			dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
+			if (dist < minBoxDist) {
+				being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
+				being->setMoveDir({0, 0, 0});
+			}
 		}
 	}
 }
@@ -122,8 +150,7 @@ void LevelRunner::beingWorldInteraction() {
 	while (being != _beings.end()) {
 		oldpos = (*being)->getPosition();
 
-		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime()))
-		{
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime())) {
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
 			pos = (*being)->getPosition();
@@ -131,6 +158,15 @@ void LevelRunner::beingWorldInteraction() {
 			y = (int) (round(pos.z));
 			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->isPlaceBomb()) {
 				if ((*being) == _player) {
+					if (_powerUpInstance != nullptr) {
+						dist = _player->getPosition() - _powerUpInstance->getPosition();
+						float fdist = cge::Maths::vec3Len(dist);
+						float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
+						if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
+							_powerUpInstance->Powerup(*_player);
+							_powerUpInstance->deActivete();
+						}
+					}
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
 						x == _gate->getPosition().x) {
 						_player->setPosition(_gate->getPosition());
@@ -138,22 +174,12 @@ void LevelRunner::beingWorldInteraction() {
 					}
 
 				}
-				if (_level[y][x] != nullptr) {
-					if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr) {
-						(*being)->setPosition(oldpos);
-						(*being)->setMoveDir({0, 0, 0});
-					} else if ((int) (round(oldpos.z)) != y ||
-							   (int) (round(oldpos.x)) != x) {
-						(*being)->setPosition(oldpos);
-						(*being)->setMoveDir({0, 0, 0});
-					}
-				}
 				bumpBeing((*being));
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
-					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
+					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage(), 0.4);
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -174,15 +200,7 @@ void LevelRunner::beingWorldInteraction() {
 			}
 		}
 	}
-	if (_powerUpInstance != nullptr) {
-		dist = _player->getPosition() - _powerUpInstance->getPosition();
-		float fdist = cge::Maths::vec3Len(dist);
-		float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
-		if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
-			_powerUpInstance->Powerup(*_player);
-			_powerUpInstance->deActivete();
-		}
-	}
+
 }
 
 void LevelRunner::checkBeingBlast(int x, int y) {
@@ -239,6 +257,7 @@ void LevelRunner::bombWorldInteraction() {
 						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, 500);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
+					checkBombBlast((int) (bombPos.x), (int) (bombPos.z + i));
 				}
 				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0) {
 					//if (_gate != nullptr)
@@ -249,6 +268,7 @@ void LevelRunner::bombWorldInteraction() {
 						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, 500);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
+					checkBombBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
 				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0) {
 					if (_gate != nullptr)
@@ -259,6 +279,7 @@ void LevelRunner::bombWorldInteraction() {
 						fireEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, 500);
 					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
+					checkBombBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
 				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0) {
 					if (_gate != nullptr)
@@ -269,6 +290,7 @@ void LevelRunner::bombWorldInteraction() {
 						fireEffect({bombPos.x - i, bombPos.y + .5, bombPos.z}, 500);
 					}
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
+					checkBombBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
 			}
 			_level[bombPos.z][bombPos.x] = nullptr;
@@ -440,19 +462,19 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 
 		if (std::regex_match(line, match, regPowerUp)) {
 			cge::Model *tmpMdl;
-				std::ssub_match sub_match = match[1];
-				std::string piece = sub_match.str();
-				if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
-					_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-				} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
-					_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-				} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
-					_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-				} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
-					_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-				}else if (piece == "AddBomb" && (tmpMdl = getModel("AddBomb")) != nullptr) {
-					_powerUpInstance = new AddBomb({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-				}
+			std::ssub_match sub_match = match[1];
+			std::string piece = sub_match.str();
+			if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
+				_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
+				_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
+				_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
+				_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			} else if (piece == "AddBomb" && (tmpMdl = getModel("AddBomb")) != nullptr) {
+				_powerUpInstance = new AddBomb({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			}
 		}
 
 		do {
@@ -520,8 +542,7 @@ void LevelRunner::cleanLevel() {
 
 	_player->setPlaceBomb(false);
 	_particalRenderer.clearParticals();
-	if (_powerup && !_powerUpInstance->isActive())
-	{
+	if (_powerup && !_powerUpInstance->isActive()) {
 		_powerUpInstance->Reverse(*_player);
 	}
 	_powerup = false;
@@ -656,7 +677,8 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 		verlocity.z = disvz(gen);
 
 		lifetime = dislife(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA,
+									  GL_ONE);
 	}
 
 }
@@ -689,7 +711,8 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t), GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
+									  GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -719,7 +742,9 @@ void LevelRunner::update() {
 			std::cout << "make enemy because gate damage\n";
 			cge::Model *tmp;
 			if ((tmp = getModel("Balloon")) != nullptr) {
-				_beings.push_back(new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, _loader, 0.5f));
+				_beings.push_back(
+						new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, _loader,
+									0.5f));
 			}
 		}
 		_gate->update();
@@ -731,8 +756,7 @@ void LevelRunner::update() {
 	}
 }
 
-void LevelRunner::render()
-{
+void LevelRunner::render() {
 	_renderer.prepare();
 	_entShader.begin();
 	_camera.setTrackEntity(*_player);
@@ -741,10 +765,8 @@ void LevelRunner::render()
 	_entShader.begin();
 	_renderer.prepare();
 	_camera.update(_entShader);
-	for (auto &vecit : _level)
-	{
-		for (auto &entit : vecit)
-		{
+	for (auto &vecit : _level) {
+		for (auto &entit : vecit) {
 			if (entit != nullptr)
 				_renderer.render(*entit);
 		}
@@ -759,20 +781,33 @@ void LevelRunner::render()
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 	_spriteRenderer.DrawSprite(_life, _window.getWidth(), _window.getHeight());
 	_spriteRenderer.DrawSprite(_timer, _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText((std::to_string(_player->getLives())), 84,_window.getHeight() - 100, {255,0,0}, 1, _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48),_window.getHeight() - 100, {255,255,255}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText((std::to_string(_player->getLives())), 84, _window.getHeight() - 100, {255, 0, 0}, 1,
+						   _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48), _window.getHeight() - 100,
+						   {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 
 void LevelRunner::placeBeing(Being *being) {
 	static std::default_random_engine gen;
-	std::uniform_int_distribution<unsigned int> row(0, (unsigned int)_level.size() - 1);
+	std::uniform_int_distribution<unsigned int> row(0, (unsigned int) _level.size() - 1);
 	int rowNum = row(gen);
-	std::uniform_int_distribution<unsigned int> col(0, (unsigned int)_level[rowNum].size() - 1);
+	std::uniform_int_distribution<unsigned int> col(0, (unsigned int) _level[rowNum].size() - 1);
 	int colNum = col(gen);
-	glm::vec3 dist = _player->getPosition() - glm::vec3 ({colNum, 0, rowNum});
-	if (_level[rowNum][colNum] == nullptr && cge::Maths::vec3LenSqr(dist)  > 2)
+	glm::vec3 dist = _player->getPosition() - glm::vec3({colNum, 0, rowNum});
+	if (_level[rowNum][colNum] == nullptr && cge::Maths::vec3LenSqr(dist) > 2)
 		being->setPosition({colNum, 0, rowNum});
 	else
 		placeBeing(being);
+}
+
+void LevelRunner::checkBombBlast(int x, int y) {
+	for (auto &bomb : _bombs) {
+		if (bomb->getPosition() == glm::vec3({x, 0, y}))
+		{
+			bomb->setDetonate(true);
+			//bombWorldInteraction();
+		}
+			//bomb.
+	}
 }

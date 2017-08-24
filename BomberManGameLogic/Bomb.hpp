@@ -13,6 +13,7 @@ class Bomb :public  cge::Entity
 private:
 	int _bombRadius;
 	float _ticks;
+	bool _isDetonate;
 
 	void	_setEffects();
 
@@ -23,6 +24,10 @@ public:
 	int getBombradius() const;
 	bool update(const cge::InputManager &input, unsigned lastFrameTime);
 	bool isDeternate();
+
+	bool isIsDetonate() const;
+
+	void setDetonate(bool _isDetonate);
 };
 
 
