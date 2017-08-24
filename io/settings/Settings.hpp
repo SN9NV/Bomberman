@@ -34,6 +34,11 @@ namespace cge {
 
 		class Settings {
 		public:
+			Settings() = delete;
+			Settings(const Settings & cpy);
+			Settings operator=(const Settings & rhs);
+			~Settings();
+
 			static void						Initialise(std::string file);
 			static cge::Settings::Settings*	getSingleton();
 
@@ -62,7 +67,6 @@ namespace cge {
 			void 						writeToBinaryFile();
 		private:
 			Settings(std::string file);
-			~Settings();
 
 			static Settings*			s_instance;
 			t_settings					_settings;
