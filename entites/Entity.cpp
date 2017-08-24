@@ -258,6 +258,7 @@ void cge::Entity::playEffect(const std::string &name) const {
 	auto source = this->_soundEffects.find(name);
 
 	if (source != this->_soundEffects.end()) {
+		source->second->setPosition(this->_position);
 		source->second->setPlaying();
 	}
 }
