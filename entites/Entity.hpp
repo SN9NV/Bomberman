@@ -14,6 +14,7 @@ namespace cge {
 	public:
 		Entity() = delete;
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius);
+		~Entity();
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);
@@ -32,6 +33,7 @@ namespace cge {
 		glm::vec3		getPosition() const;
 		glm::vec3		getRotation() const;
 		float 			getScale() const;
+		glm::mat4		getTransformation() const;
 		bool 			isAnimated() const;
 		bool			isPlayAnimation() const;
 		double			getAnimationSpeed() const;
@@ -72,7 +74,7 @@ namespace cge {
 			const std::map<int, Transformation>	&transformationMap;
 			glm::mat4							&parentTransform;
 			std::map<int, glm::mat4>			&animatedMatrices;
-			std::vector<tinygltf::Node>			&nodes;
+			const std::vector<tinygltf::Node>	&nodes;
 			const glm::mat4						*inverseMatrices;
 			int									startNodeIndex;
 			int									rootNodeIndex;

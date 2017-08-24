@@ -26,21 +26,24 @@ namespace cge {
 		Model(const std::string &modelFilePath, const std::string &textureFilePath, cge::Loader &loader, Model::Type type);
 		Model(const tinygltf::Model &model, const cge::Texture &texture, Model::Type type);
 
-		GLuint					getVaoID() const;
-		std::vector<GLuint>		&getVBOs();
-		cge::Texture			&getTexture();
-		tinygltf::Model 		&getTinygltfModel();
+		GLuint						getVaoID() const;
+		Model::Type					getType() const;
+		const std::vector<GLuint>	&getVBOs() const;
+		const cge::Texture			&getTexture() const;
+		const tinygltf::Model 		&getTinygltfModel() const;
 
 	private:
-		GLuint					_vaoID;
-		std::vector<GLuint>		_vbos;
-		cge::Texture			_texture;
-		tinygltf::Model			_model;
-		Model::Type				_type;
+		GLuint				_vaoID;
+		std::vector<GLuint>	_vbos;
+		cge::Texture		_texture;
+		tinygltf::Model		_model;
+		Model::Type			_type;
 
-		void 					_create();
+		void 				_create();
 	};
 }
+
+std::ostream	&operator<<(std::ostream &out, cge::Model::Type type);
 
 
 #endif //NEW_MODEL_HPP

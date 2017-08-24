@@ -17,7 +17,7 @@ namespace cge {
 
 		void	prepare() const;
 		void	render(Entity &entity) const;
-		void	render(std::vector<cge::Entity> &entities) const;
+		void	render(std::vector<cge::Entity *> &entities) const;
 
 		/// Upload uniforms
 		void	uploadIsAnimated(bool isAnimated) const;
@@ -40,7 +40,7 @@ namespace cge {
 			static GLuint convert(const std::string &type);
 		};
 
-		void drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const;
+		void drawMesh(const tinygltf::Model &model, const tinygltf::Mesh &mesh, const std::vector<GLuint> &vboMap) const;
 
 		/// Uniform variables
 		static constexpr unsigned __MAX_JOINTS = 50;

@@ -22,6 +22,14 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 
 }
 
+cge::Entity::~Entity() {
+	for (auto &source : this->_soundEffects) {
+		if (!source.second->isPlaying()) {
+			delete source.second;
+		}
+	}
+}
+
 void cge::Entity::addPosition(const glm::vec3 &delta) {
 	this->_position += delta;
 	this->_needsTransformationUpdate = true;
@@ -72,18 +80,23 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 		}
 	}
 
+	if (this->_needsTransformationUpdate) {
+		this->_transformation = Maths::createTransformationMatrix(this->_position, this->_rotation, this->_scale);
+		this->_needsTransformationUpdate = false;
+	}
+
 	return true;
 }
 
 void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
-	tinygltf::Model &model = this->_model.getTinygltfModel();
+	const tinygltf::Model &model = this->_model.getTinygltfModel();
 	if (!this->_hasAnimation || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;
 	}
 
 	std::map<int, cge::Entity::Transformation>	transformationMap;
 
-	unsigned char *data = model.buffers[0].data.data();
+	const unsigned char *data = model.buffers[0].data.data();
 	tinygltf::Animation animation = model.animations[this->_currentAnimation];
 
 	for (auto &channel : animation.channels) {
@@ -97,7 +110,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		tinygltf::Accessor		outAccessor	= model.accessors[animationSampler.output];
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
-		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
+		auto *keyFrames = reinterpret_cast<const float *>(data + inBuffView.byteOffset);
 		float animationLength = inAccessor.count * (keyFrames[1] - keyFrames[0]);
 
 		if (this->_animationTicks < 0.0) {
@@ -131,15 +144,15 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		float interpolant = static_cast<float>(this->_animationTicks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
 
 		if (channel.target_path == "translation") {
-			auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
+			auto *translation = reinterpret_cast<const glm::vec3 *>(data + outBuffView.byteOffset);
 			transformationMap[channel.target_node].translation = glm::mix(translation[lowerKeyframe], translation[upperKeyframe], interpolant);
 		} else if (channel.target_path == "rotation") {
-			auto *rotation = reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
+			auto *rotation = reinterpret_cast<const glm::quat *>(data + outBuffView.byteOffset);
 			transformationMap[channel.target_node].rotation = glm::slerp(rotation[lowerKeyframe], rotation[upperKeyframe], interpolant);
 		}
 	}
 
-	tinygltf::Skin	&skin = model.skins[0];
+	const tinygltf::Skin	&skin = model.skins[0];
 	int rootJointIndex = skin.joints[0];
 
 	auto						*inverseMatrices = (glm::mat4 *)(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
@@ -147,7 +160,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	std::map<int, glm::mat4>	animatedMatrices;
 
 
-	tinygltf::Node &skeleton = model.nodes[skin.skeleton];
+	const tinygltf::Node &skeleton = model.nodes[skin.skeleton];
 
 	if (!skeleton.translation.empty()) {
 		glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
@@ -269,4 +282,8 @@ const std::map<std::string, cge::Audio::Source *> &cge::Entity::getSoundEffects(
 
 const std::vector<glm::mat4> &cge::Entity::getJointTransforms() const {
 	return this->_animatedMatrices;
+}
+
+glm::mat4 cge::Entity::getTransformation() const {
+	return this->_transformation;
 }
