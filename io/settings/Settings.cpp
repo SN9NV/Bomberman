@@ -111,3 +111,17 @@ float cge::Settings::Settings::getMusicVolume() const {
 float cge::Settings::Settings::getSfxVolume() const {
 	return (this->_settings.SfxVolume * this->_settings.MasterVolume);
 }
+
+cge::Settings::Settings::Settings(const cge::Settings::Settings &cpy) {
+	this->_fileName = cpy._fileName;
+	this->_settings = cpy._settings;
+	this->s_instance = cpy.s_instance;
+}
+
+cge::Settings::Settings cge::Settings::Settings::operator=(const cge::Settings::Settings &rhs) {
+	*this = rhs;
+	return (*this);
+}
+
+cge::Settings::Settings::~Settings() {
+}
