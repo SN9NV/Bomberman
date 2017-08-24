@@ -4,14 +4,15 @@
 
 #include "Being.hpp"
 
-Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float speed, int damage) :
+Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float speed, int damage, bool wallPass) :
 		Entity(position, rotation, scale, model, loader, hitBoxRadius),
 		_speed(speed),
 		_maxBomb(1),
 		_placeBomb(false),
 		_damage(damage),
 		_deathTimeout(1000),
-		_alive(true)
+		_alive(true),
+		_wallPass(false)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
@@ -128,3 +129,12 @@ size_t Being::getMaxBomb() const {
 void Being::setMaxBomb(size_t _maxBomb) {
 	Being::_maxBomb = _maxBomb;
 }
+
+bool Being::isWallPass() const {
+	return _wallPass;
+}
+
+void Being::setWallPass(bool wallPass) {
+	Being::_wallPass = wallPass;
+}
+

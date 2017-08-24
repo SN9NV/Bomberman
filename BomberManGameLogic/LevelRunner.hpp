@@ -67,6 +67,7 @@ private:
 	cge::Model *getModel(std::string name);
 	void checkBeingBlast(int x, int y);
 	bool checkWallBlast(int x, int y);
+	void checkBombBlast(int x, int y);
 	void bumpBeing(Being *);
 	void endLevel();
 	bool checkMapWall();
