@@ -358,12 +358,6 @@ void cge::GUI::LoadGameScreen::ReinitializeScreen() {
 	this->nanoguiWindow->center();
 }
 
-cge::GUI::LoadGameScreen::LoadGameScreen() :
-	_window(*(new cge::Window())),
-	_loader(*(new cge::Loader()))
-{
-}
-
 cge::GUI::LoadGameScreen::LoadGameScreen(const cge::GUI::LoadGameScreen &cpy) :
 	_window(cpy._window),
 	_player(cpy._player),
@@ -373,7 +367,8 @@ cge::GUI::LoadGameScreen::LoadGameScreen(const cge::GUI::LoadGameScreen &cpy) :
 	_currMap(cpy._currMap),
 	_loader(cpy._loader)
 {
-
+	this->_screen = cpy._screen;
+	this->nanoguiWindow = cpy.nanoguiWindow;
 }
 
 cge::GUI::LoadGameScreen cge::GUI::LoadGameScreen::operator=(const cge::GUI::LoadGameScreen &rhs) {

@@ -20,13 +20,10 @@ namespace cge {
 	namespace GUI {
 		class SaveGameScreen {
 		public:
-			SaveGameScreen(cge::Window
-			&win,
-			cge::GameState *_currState, Player
-			*player,
-			cge::Loader& loader,
-			int* currMap);
-
+			SaveGameScreen() = delete;
+			SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap);
+			SaveGameScreen(const SaveGameScreen & cpy);
+			SaveGameScreen operator=(const SaveGameScreen & rhs);
 			~SaveGameScreen();
 
 			nanogui::Screen *getScreen();
@@ -36,7 +33,6 @@ namespace cge {
 			void setInputCallbacks();
 			void ReinitializeScreen();
 		private:
-			SaveGameScreen();
 
 			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen *_screen;
