@@ -5,4 +5,7 @@
 #include "DestructWall.hpp"
 
 DestructWall::DestructWall(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox)
-		: Entity(position, rotation, scale, model, loader, hitBox) {}
+		: Entity(position, rotation, scale, model, loader, hitBox)
+{
+
+}

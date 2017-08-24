@@ -17,22 +17,18 @@ bool Bomb::update(const cge::InputManager &input, unsigned lastFrameTime) {
 	return (_ticks > 0);
 }
 
-bool Bomb::isDeternate()
-{
+bool Bomb::isDeternate() {
 	return (_ticks <= 0);
 }
 
-int Bomb::getBombradius() const
-{
+int Bomb::getBombradius() const {
 	return _bombRadius;
 }
 
-Bomb::~Bomb()
-{
+Bomb::~Bomb() {
 	this->playEffect("explosion");
 }
 
 void Bomb::_setEffects() {
 	this->addNewSoundEffect("explosion", "resources/audio/boom.wav");
 }
-

@@ -9,7 +9,7 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_rotation(rotation),
 		_scale(scale),
 		_hitBoxRadius(hitBoxRadius * _scale),
-		_transformation(1.0),
+		_transformation(Maths::createTransformationMatrix(position, rotation, scale)),
 		_transformationLocation(0),
 		_lastTicks(glfwGetTime()),
 		_ticksDelta(0.0),
@@ -78,11 +78,6 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 			this->_applyAnimation(shader);
 			shader.end();
 		}
-	}
-
-	if (this->_needsTransformationUpdate) {
-		this->_transformation = Maths::createTransformationMatrix(this->_position, this->_rotation, this->_scale);
-		this->_needsTransformationUpdate = false;
 	}
 
 	return true;
@@ -250,13 +245,11 @@ double cge::Entity::getAnimationSpeed() const {
 	return this->_animationSpeed;
 }
 
-bool cge::Entity::isPlayAnimation() const
-{
+bool cge::Entity::isPlayAnimation() const {
 	return _playAnimation;
 }
 
-void cge::Entity::setPlayAnimation(bool playAnimation)
-{
+void cge::Entity::setPlayAnimation(bool playAnimation) {
 	this->_playAnimation = playAnimation;
 }
 
@@ -284,6 +277,11 @@ const std::vector<glm::mat4> &cge::Entity::getJointTransforms() const {
 	return this->_animatedMatrices;
 }
 
-glm::mat4 cge::Entity::getTransformation() const {
+glm::mat4 cge::Entity::getTransformation() {
+	if (this->_needsTransformationUpdate) {
+		this->_transformation = Maths::createTransformationMatrix(this->_position, this->_rotation, this->_scale);
+		this->_needsTransformationUpdate = false;
+	}
+
 	return this->_transformation;
 }

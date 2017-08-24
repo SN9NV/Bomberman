@@ -173,18 +173,18 @@ void	cge::Renderer::render(std::vector<Entity *> &entities) const {
 		return false;
 	});
 
-	auto &model = entities[0]->getModel();
+
 //	auto vao = model.getVaoID();
 //	auto textureID = model.getTexture().getID();
 //	auto isAnimated = entities[0]->isAnimated();
 
 	for (auto &entity : entities) {
-		model = entity->getModel();
+		auto model = entity->getModel();
 
 		glBindVertexArray(model.getVaoID());
 		/// Upload the model's transformation matrix
-		this->uploadTransformation(Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(), entity->getScale()));
-//		this->uploadTransformation(entity->getTransformation());
+//		this->uploadTransformation(Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(), entity->getScale()));
+		this->uploadTransformation(entity->getTransformation());
 
 		/// Upload animations
 		if (entity->isAnimated()) {

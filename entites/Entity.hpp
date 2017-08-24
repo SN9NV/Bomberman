@@ -33,7 +33,7 @@ namespace cge {
 		glm::vec3		getPosition() const;
 		glm::vec3		getRotation() const;
 		float 			getScale() const;
-		glm::mat4		getTransformation() const;
+		glm::mat4		getTransformation();
 		bool 			isAnimated() const;
 		bool			isPlayAnimation() const;
 		double			getAnimationSpeed() const;

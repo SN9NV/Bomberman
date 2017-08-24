@@ -5,16 +5,20 @@
 #include "FireUp.hpp"
 
 FireUp::FireUp(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius)
-		: PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius) {}
-
-void FireUp::Powerup(Player &player)
+		: PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius)
 {
-	if (player.getDamage() < 5)
+
+}
+
+void FireUp::Powerup(Player &player) {
+	if (player.getDamage() < 5) {
 		player.setDamage(player.getDamage() + 1);
+	}
 }
 
 void FireUp::Reverse(Player &player) {
-		if (player.getDamage() > 2)
+		if (player.getDamage() > 2) {
 			player.setDamage(player.getDamage() - 1);
+		}
 }
 

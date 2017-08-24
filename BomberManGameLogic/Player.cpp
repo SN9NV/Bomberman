@@ -13,15 +13,18 @@ Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale
 bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	_placeBomb = false;
 	_playAnimation = false;
+
 	static unsigned bombBounce = 0;
+
 	if (input.isKeyPressed(_up)) {
 		_playAnimation = true;
 		this->_n_moveDir.z = -1;
 	} else if (input.isKeyPressed(_down)) {
 		_playAnimation = true;
 		this->_n_moveDir.z = 1;
-	} else
+	} else {
 		this->_n_moveDir.z = 0;
+	}
 
 	if (input.isKeyPressed(_right)) {
 		_playAnimation = true;
@@ -29,21 +32,26 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	} else if (input.isKeyPressed(_left)) {
 		_playAnimation = true;
 		this->_n_moveDir.x = -1;
-	} else
+	} else {
 		this->_n_moveDir.x = 0;
+	}
 
 	bombBounce = (lastFrameTime > bombBounce) ? 0 : bombBounce - lastFrameTime;
-	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb) {
-		if (bombBounce == 0) {
-			_placeBomb = true;
-			bombBounce = 300;
-		}
+
+	if (input.isKeyPressed(_bomb) && _bombs.size() < _maxBomb && bombBounce == 0) {
+		_placeBomb = true;
+		bombBounce = 300;
 	}
-	if (input.isKeyPressed(_menue))
+
+	if (input.isKeyPressed(_menue)) {
 		_pauseMenue = true;
-	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
+	}
+
+	if (_n_moveDir.x != 0 || _n_moveDir.z != 0) {
 		Being::setDirection();
-	return (Being::update(input, shader, lastFrameTime));
+	}
+
+	return Being::update(input, shader, lastFrameTime);
 }
 
 int Player::getLives() const {
@@ -107,7 +115,7 @@ int Player::get_menue() const {
 }
 
 int Player::getScore() const {
-	return (this->_score);
+	return this->_score;
 }
 
 void Player::setScore(int score) {
@@ -137,5 +145,3 @@ void Player::set_left(int left) {
 void Player::set_right(int right) {
 	this->_right = right;
 }
-
-

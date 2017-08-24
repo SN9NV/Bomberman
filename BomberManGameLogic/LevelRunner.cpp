@@ -49,28 +49,29 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
-;
+
 	this->_player->setAnimationSpeed(2.6f);
 }
 
 cge::Model *LevelRunner::getModel(std::string name) {
 	auto found = _models.find(name);
-	if (found != _models.end())
+
+	if (found != _models.end()) {
 		return (&found->second);
-	return (nullptr);
+	}
+
+	return nullptr;
 }
 
 void LevelRunner::bumpBeing(Being *being) {
-	glm::vec3 pos;
-	int x;
-	int y;
 	float minBoxDist;
 	float dist;
 
-	pos = being->getPosition();
-	x = (int) (round(pos.x));
-	y = (int) (round(pos.z));
-	//collision box up
+	glm::vec3 pos = being->getPosition();
+	int x = static_cast<int>(round(pos.x));
+	int y = static_cast<int>(round(pos.z));
+
+	/// collision box up
 	if ((y - 1) > -1 && _level[y - 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
@@ -79,7 +80,8 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//collision box down
+
+	/// collision box down
 	if (y + 1 < (int) _level.size() && _level[y + 1][x] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
 		dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
@@ -88,7 +90,8 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//collision box left
+
+	/// collision box left
 	if (x - 1 > -1 && _level[y][x - 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
@@ -97,7 +100,8 @@ void LevelRunner::bumpBeing(Being *being) {
 			being->setMoveDir({0, 0, 0});
 		}
 	}
-	//collision box right
+
+	/// collision box right
 	if (x + 1 < (int) _level[y].size() && _level[y][x + 1] != nullptr) {
 		minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
 		dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
@@ -109,63 +113,52 @@ void LevelRunner::bumpBeing(Being *being) {
 }
 
 void LevelRunner::beingWorldInteraction() {
-	glm::vec3 oldpos;
-	glm::vec3 pos;
-	glm::vec3 dist;
-	cge::Model *tmpmdl;
-	std::vector<Being *>::iterator being;
-	int x;
-	int y;
+	for (auto being = _beings.begin(); being != _beings.end(); being++) {
+		auto oldpos = (*being)->getPosition();
 
-
-	being = _beings.begin();
-	while (being != _beings.end()) {
-		oldpos = (*being)->getPosition();
-
-		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime()))
-		{
-			_beings.erase(being);
+		if (!(*being)->update(*_inputManager, _entShader, _window.getFrameTime())) {
+			_beings.erase(being--);
 		} else if ((*being)->isAlive()) {
-			pos = (*being)->getPosition();
-			x = (int) (round(pos.x));
-			y = (int) (round(pos.z));
-			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->isPlaceBomb()) {
-				if ((*being) == _player) {
-					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
-						x == _gate->getPosition().x) {
-						_player->setPosition(_gate->getPosition());
-						_state = levelState::COMPLETE;
-					}
+			auto pos = (*being)->getPosition();
+			auto x = static_cast<int>(round(pos.x));
+			auto y = static_cast<int>(round(pos.z));
 
+			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->isPlaceBomb()) {
+				if ((*being) == _player && _gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
+					x == _gate->getPosition().x) {
+					_player->setPosition(_gate->getPosition());
+					_state = levelState::COMPLETE;
 				}
+
 				if (_level[y][x] != nullptr) {
 					if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr) {
 						(*being)->setPosition(oldpos);
 						(*being)->setMoveDir({0, 0, 0});
-					} else if ((int) (round(oldpos.z)) != y ||
-							   (int) (round(oldpos.x)) != x) {
+					} else if ((int) (round(oldpos.z)) != y || (int) (round(oldpos.x)) != x) {
 						(*being)->setPosition(oldpos);
 						(*being)->setMoveDir({0, 0, 0});
 					}
 				}
+
 				bumpBeing((*being));
 				pos = (*being)->getPosition();
-				x = (int) (round(pos.x));
-				y = (int) (round(pos.z));
-				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
+				x = static_cast<int>(round(pos.x));
+				y = static_cast<int>(round(pos.z));
+
+				auto tmpmdl = getModel("Bomb");
+				if ((*being)->isPlaceBomb() && tmpmdl != nullptr && _level[y][x] == nullptr) {
 					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage());
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
 				}
 			}
-			being++;
-		} else
-			being++;
+		}
 	}
+
 	for (auto &colBeing : _beings) {
 		if (colBeing != _player) {
-			dist = _player->getPosition() - colBeing->getPosition();
+			auto dist = _player->getPosition() - colBeing->getPosition();
 			float fdist = cge::Maths::vec3Len(dist);
 			float hit = _player->getHitBoxRadius() + colBeing->getHitBoxRadius();
 			if (_state == levelState::PLAY && colBeing->isAlive() && fdist < hit) {
@@ -174,8 +167,9 @@ void LevelRunner::beingWorldInteraction() {
 			}
 		}
 	}
+
 	if (_powerUpInstance != nullptr) {
-		dist = _player->getPosition() - _powerUpInstance->getPosition();
+		auto dist = _player->getPosition() - _powerUpInstance->getPosition();
 		float fdist = cge::Maths::vec3Len(dist);
 		float hit = _player->getHitBoxRadius() + _powerUpInstance->getHitBoxRadius();
 		if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
@@ -186,95 +180,90 @@ void LevelRunner::beingWorldInteraction() {
 }
 
 void LevelRunner::checkBeingBlast(int x, int y) {
-	std::vector<Being *>::iterator being;
-	glm::vec3 beingPos;
+	for (auto &being : _beings) {
+		auto beingPos = being->getPosition();
 
-	being = _beings.begin();
-	while (being != _beings.end()) {
-		beingPos = (*being)->getPosition();
 		if ((int) round(beingPos.x) == x && (int) round(beingPos.z) == y) {
-			if ((*being) == _player) {
+			if (being == _player) {
 				_player->loseLife();
 				_state = levelState::WANTS_QUIT;
 			} else {
-				(*being)->setAlive(false);
+				being->setAlive(false);
 			}
 		}
-		being++;
 	}
 }
 
 void LevelRunner::bombWorldInteraction() {
-	int i;
-	int sheild;
-	bool found;
-	glm::vec3 bombPos;
-	glm::vec3 beingPos;
 	auto bomb = _bombs.begin();
-	std::vector<Being *>::iterator being;
-
 	while (bomb != _bombs.end()) {
-		sheild = 0;
+		unsigned shield = 0;
 		if (!(*bomb)->update(*_inputManager, _window.getFrameTime())) {
-			found = false;
-			bombPos = (*bomb)->getPosition();
-			being = _beings.begin();
-			while (being != _beings.end() && !found) {
-				if ((*being)->checkBombDeterNation((*bomb)))
-					found = true;
-				else
-					being++;
+			auto bombPos = (*bomb)->getPosition();
+
+			auto being = _beings.begin();
+			while (being != _beings.end()) {
+				if ((*being)->checkBombDeterNation((*bomb))) {
+					break;
+				}
 			}
+
 			checkGateDamage(bombPos, *being);
 			checkBeingBlast((int) bombPos.x, (int) bombPos.z);
 			fireEffect({bombPos.x, bombPos.y + .5, bombPos.z}, 500);
-			i = 0;
+
+			unsigned i = 0;
 			while (++i < (*bomb)->getBombradius()) {
-				if (bombPos.z + i < _level.size() && (sheild & 0b00000001) == 0) {
+				if (bombPos.z + i < _level.size() && (shield & 0b00000001) == 0) {
 					//if (_gate != nullptr)
 					checkGateDamage({bombPos.x, bombPos.y, bombPos.z + i}, *being);
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
-						sheild = sheild | 0b00000001;
+						shield = shield | 0b00000001;
 					else {
 						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, 500);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
 				}
-				if (bombPos.z - i >= 0 && (sheild & 0b00000010) == 0) {
+				if (bombPos.z - i >= 0 && (shield & 0b00000010) == 0) {
 					//if (_gate != nullptr)
 					checkGateDamage({bombPos.x, bombPos.y, bombPos.z - i}, *being);
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
-						sheild = sheild | 0b00000010;
+						shield = shield | 0b00000010;
 					else {
 						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, 500);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 				}
-				if (bombPos.x + i < _level[bombPos.z].size() && (sheild & 0b00000100) == 0) {
+				if (bombPos.x + i < _level[bombPos.z].size() && (shield & 0b00000100) == 0) {
 					if (_gate != nullptr)
 						checkGateDamage({bombPos.x + i, bombPos.y, bombPos.z}, *being);
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
-						sheild = sheild | 0b00000100;
+						shield = shield | 0b00000100;
 					else {
 						fireEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, 500);
 					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 				}
-				if (bombPos.x - i >= 0 && (sheild & 0b00001000) == 0) {
-					if (_gate != nullptr)
+
+				if (bombPos.x - i >= 0 && (shield & 0b00001000) == 0) {
+					if (_gate != nullptr) {
 						checkGateDamage({bombPos.x - i, bombPos.y, bombPos.z}, *being);
+					}
+
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
-						sheild = sheild | 0b00001000;
+						shield = shield | 0b00001000;
 					else {
 						fireEffect({bombPos.x - i, bombPos.y + .5, bombPos.z}, 500);
 					}
+
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 				}
 			}
+
 			_level[bombPos.z][bombPos.x] = nullptr;
-			Bomb *tmpBomb = (*bomb);
+			Bomb *tmpBomb = *bomb;
 			auto bombEffects = tmpBomb->getSoundEffects();
-			delete (tmpBomb);
+			delete tmpBomb;
 
 			/// Add entity's sound effects to a vector to be cleaned up
 			/// Delete the sources that aren't playing
@@ -286,10 +275,10 @@ void LevelRunner::bombWorldInteraction() {
 				}
 			}
 
-
 			_bombs.erase(bomb);
-		} else
+		} else {
 			bomb++;
+		}
 	}
 }
 

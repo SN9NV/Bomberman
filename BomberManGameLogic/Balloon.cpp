@@ -9,7 +9,8 @@ std::uniform_int_distribution<int> _nchange(0, 3);
 std::default_random_engine gen;
 
 Balloon::Balloon(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBox) :
-		Being(position, rotation, scale, model, loader, hitBox, 0.002f), _changeDir(0)
+		Being(position, rotation, scale, model, loader, hitBox, 0.002f),
+		_changeDir(0)
 {
 	this->_setEffects();
 }
@@ -41,7 +42,10 @@ bool Balloon::update(const cge::InputManager &input, cge::GLSLProgram &shader, u
 			_n_moveDir.z = ((int) _n_moveDir.z == moveDir) ? -moveDir : moveDir;
 		}
 	}
+
 	_changeDir = (_changeDir >= timeToRandom) ? 0 : _changeDir + lastFrameTime;
+
+	this->_needsTransformationUpdate = true;
 
 	if (lastFrameTime < 500) {
 		return Being::update(input, shader, lastFrameTime);
