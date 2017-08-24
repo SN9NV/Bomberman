@@ -5,7 +5,7 @@
 #include "Bomb.hpp"
 
 Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, int bombRadius, float hitBox) :
-		Entity(position, rotation, scale, model, loader, hitBox), _bombRadius(bombRadius), _ticks(1000), _isDetonate(false)
+		Entity(position, rotation, scale, model, loader, hitBox), _bombRadius(bombRadius), _ticks(2000), _isDetonate(false)
 {
 	this->_setEffects();
 }

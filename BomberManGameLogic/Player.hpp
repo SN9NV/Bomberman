@@ -42,6 +42,10 @@ public:
 	void addScore(int addition);
 	void subScore(int subtraction);
 
+	bool isDetonator() const;
+
+	void setDetonator(bool _detonator);
+
 private:
 	int _lives;
 	int _score;
@@ -53,6 +57,7 @@ private:
 	int _special = GLFW_KEY_V;
 	int _menue = GLFW_KEY_ESCAPE;
 	bool _pauseMenue;
+	bool _detonator;
 };
 
 #endif //BOMBERMAN_PLAYER_HPP

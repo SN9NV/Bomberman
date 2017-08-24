@@ -96,7 +96,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			minBoxDist = being->getHitBoxRadius() + _level[y - 1][x]->getHitBoxRadius();
 			dist = fabsf(_level[y - 1][x]->getPosition().z - pos.z);
 			if (dist < minBoxDist) {
-				being->setPosition({pos.x, 0, pos.z + (minBoxDist - dist)});
+				being->setPosition({being->getPosition().x, 0, being->getPosition().z + (minBoxDist - dist)});
 				being->setMoveDir({0, 0, 0});
 			}
 		}
@@ -107,7 +107,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			minBoxDist = being->getHitBoxRadius() + _level[y + 1][x]->getHitBoxRadius();
 			dist = fabsf(_level[y + 1][x]->getPosition().z - pos.z);
 			if (dist < minBoxDist) {
-				being->setPosition({pos.x, 0, pos.z - (minBoxDist - dist)});
+				being->setPosition({being->getPosition().x, 0, being->getPosition().z - (minBoxDist - dist)});
 				being->setMoveDir({0, 0, 0});
 			}
 		}
@@ -118,7 +118,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			minBoxDist = being->getHitBoxRadius() + _level[y][x - 1]->getHitBoxRadius();
 			dist = fabsf(_level[y][x - 1]->getPosition().x - pos.x);
 			if (dist < minBoxDist) {
-				being->setPosition({pos.x + (minBoxDist - dist), 0, pos.z});
+				being->setPosition({being->getPosition().x + (minBoxDist - dist), 0, being->getPosition().z});
 				being->setMoveDir({0, 0, 0});
 			}
 		}
@@ -129,7 +129,7 @@ void LevelRunner::bumpBeing(Being *being) {
 			minBoxDist = being->getHitBoxRadius() + _level[y][x + 1]->getHitBoxRadius();
 			dist = fabsf(_level[y][x + 1]->getPosition().x - pos.x);
 			if (dist < minBoxDist) {
-				being->setPosition({pos.x - (minBoxDist - dist), 0, pos.z});
+				being->setPosition({being->getPosition().x - (minBoxDist - dist), 0, being->getPosition().z});
 				being->setMoveDir({0, 0, 0});
 			}
 		}
