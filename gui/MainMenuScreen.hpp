@@ -17,12 +17,15 @@ namespace cge {
 	namespace GUI {
 		class MainMenuScreen {
 		public:
+			MainMenuScreen() = delete;
 			MainMenuScreen(cge::Window& win,
 						   cge::GameState* _currState,
 						   cge::GameState* prevState,
 						   Player *player,
 						   int* currMap,
 						   cge::Loader& _loader);
+			MainMenuScreen(const MainMenuScreen & cpy);
+			MainMenuScreen operator=(const MainMenuScreen & rhs);
 			~MainMenuScreen();
 
 			nanogui::Screen* getScreen();
@@ -31,7 +34,6 @@ namespace cge {
 			void setInputCallbacks();
 			void ReinitializeScreen();
 		private:
-			MainMenuScreen();
 
 			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen* 	_screen;

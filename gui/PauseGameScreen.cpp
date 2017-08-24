@@ -225,3 +225,17 @@ void cge::GUI::PauseGameScreen::ReinitializeScreen() {
 	this->_screen->initialize(this->_window.getGLFWWindow(), false);
 	this->nanoguiWindow->center();
 }
+
+cge::GUI::PauseGameScreen::PauseGameScreen(const cge::GUI::PauseGameScreen &cpy)  :
+		_window(cpy._window),
+		_player(cpy._player),
+		_audioMenuScroll(cpy._audioMenuScroll)
+{
+	this->_screen = cpy._screen;
+	this->nanoguiWindow = cpy.nanoguiWindow;
+}
+
+cge::GUI::PauseGameScreen cge::GUI::PauseGameScreen::operator=(const cge::GUI::PauseGameScreen &rhs) {
+	*this = rhs;
+	return (*this);
+}

@@ -180,3 +180,17 @@ void cge::GUI::MainMenuScreen::ReinitializeScreen() {
 	this->_screen->initialize(this->_window.getGLFWWindow(), false);
 	this->nanoguiWindow->center();
 }
+
+cge::GUI::MainMenuScreen::MainMenuScreen(const cge::GUI::MainMenuScreen &cpy) :
+	_window(cpy._window),
+	_player(cpy._player),
+	_audioMouseEnter(cpy._audioMouseEnter)
+{
+	this->_screen = cpy._screen;
+	this->nanoguiWindow = cpy.nanoguiWindow;
+}
+
+cge::GUI::MainMenuScreen cge::GUI::MainMenuScreen::operator=(const cge::GUI::MainMenuScreen &rhs) {
+	*this = rhs;
+	return (*this);
+}

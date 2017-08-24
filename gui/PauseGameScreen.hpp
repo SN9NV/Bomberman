@@ -17,7 +17,10 @@ namespace cge {
 	namespace GUI {
 		class PauseGameScreen {
 		public:
+			PauseGameScreen() = delete;
 			PauseGameScreen(cge::Window& win, cge::GameState* _currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader);
+			PauseGameScreen(const PauseGameScreen & cpy);
+			PauseGameScreen operator=(const PauseGameScreen & rhs);
 			~PauseGameScreen();
 
 			nanogui::Screen* getScreen();
@@ -26,7 +29,6 @@ namespace cge {
 			void setInputCallbacks();
 			void ReinitializeScreen();
 		private:
-			PauseGameScreen();
 
 			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen* 	_screen;

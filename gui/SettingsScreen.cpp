@@ -389,3 +389,22 @@ void cge::GUI::SettingsScreen::ReinitializeScreen() {
 	this->_screen->initialize(this->_window.getGLFWWindow(), false);
 	this->nanoguiWindow->center();
 }
+
+cge::GUI::SettingsScreen::SettingsScreen(const cge::GUI::SettingsScreen &cpy) :
+	_window(cpy._window),
+	_player(cpy._player),
+	_audioMenuScroll(cpy._audioMenuScroll),
+	_currState(cpy._currState),
+	_prevState(cpy._prevState),
+	_changesMade(cpy._changesMade),
+	_windowChangesMade(cpy._windowChangesMade)
+{
+	this->_screen = cpy._screen;
+	this->nanoguiWindow = cpy.nanoguiWindow;
+}
+
+cge::GUI::SettingsScreen cge::GUI::SettingsScreen::operator=(const cge::GUI::SettingsScreen &rhs) {
+	*this = rhs;
+	return (*this);
+}
+

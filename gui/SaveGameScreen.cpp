@@ -328,3 +328,18 @@ void cge::GUI::SaveGameScreen::ReinitializeScreen() {
 	this->_screen->initialize(this->_window.getGLFWWindow(), false);
 	this->nanoguiWindow->center();
 }
+
+cge::GUI::SaveGameScreen::SaveGameScreen(const cge::GUI::SaveGameScreen &cpy) :
+		_window(cpy._window),
+		_player(cpy._player),
+		_audioMenuScroll(cpy._audioMenuScroll),
+		_currMap(cpy._currMap)
+{
+	this->_screen = cpy._screen;
+	this->nanoguiWindow = cpy.nanoguiWindow;
+}
+
+cge::GUI::SaveGameScreen cge::GUI::SaveGameScreen::operator=(const cge::GUI::SaveGameScreen &rhs) {
+	*this = rhs;
+	return (*this);
+}
