@@ -3,15 +3,17 @@
 //
 
 #include "LevelFactory.hpp"
+#include "Deternator.hpp"
 
 
 LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Entity *>> &level,
-						   Player &player) : _loader(loader), _level(level), _player(player), _damage(2) {
+						   Player &player) : _loader(loader), _level(level), _player(player), _damage(2), _bombtime(2000) {
 
 
 
 	_map.emplace("AddBomb", std::pair<cge::Model, unsigned int>(cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::AddBomb));
 	_map.emplace("Wall", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Wall));
+	_map.emplace("Deternator", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Deternator.glb", resRoot + "DetornatorDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Deternator));
 	_map.emplace("DestructWall", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::DestructWall));
 	_map.emplace("Bomb", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Bomb));
 	//_map.emplace("Bomber", std::pair<cge::Model, func> (cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", _loader, cge::Model::Type::STREAMING), makeWall));
@@ -34,7 +36,7 @@ cge::Entity *LevelFactory::makeBalloon(glm::vec3 position, cge::Model &model) {
 }
 
 cge::Entity *LevelFactory::makeBomb(glm::vec3 position, cge::Model &model) {
-	return new class Bomb(position, {0,0,0}, 1, model,_loader, _damage, 0.3);
+	return new class Bomb(position, {0,0,0}, 1, model,_loader, _damage, _bombtime, 0.3);
 }
 
 cge::Entity *LevelFactory::makeDestructWall(glm::vec3 position, cge::Model &model) {
@@ -71,6 +73,10 @@ cge::Entity *LevelFactory::makeWingBoot(glm::vec3 position, cge::Model &model) {
 	return new class WingBoot(position, {0,0,0}, 1, model,_loader, 0.3);
 }
 
+cge::Entity *LevelFactory::makeDeternator(glm::vec3 position, cge::Model &model) {
+	return new class Deternator(position, {0,0,0}, 1, model,_loader, 0.3);
+}
+
 void LevelFactory::setDamage(int _damage) {
 	LevelFactory::_damage = _damage;
 }
@@ -91,6 +97,8 @@ cge::Entity *LevelFactory::loadObject(std::string object, glm::vec3 position) {
 			return makeWall(position, find->second.first);
 		case objID::DestructWall :
 			return makeDestructWall(position, find->second.first);
+		case objID::Deternator:
+			return makeDeternator(position, find->second.first);
 		case objID::Balloon :
 			return makeBalloon(position, find->second.first);
 		case objID::Bomb :
@@ -105,6 +113,8 @@ cge::Entity *LevelFactory::loadObject(std::string object, glm::vec3 position) {
 			return makeGate(position, find->second.first);
 		case objID::Onile :
 			return makeOnile(position, find->second.first);
+		case objID::WingBoot :
+			return makeWingBoot(position, find->second.first);
 		default:
 			return nullptr;
 	}
@@ -114,3 +124,9 @@ bool LevelFactory::has(std::string object) {
 	return  (_map.find(object) != _map.end());
 
 }
+
+void LevelFactory::setBombTime(float time) {
+	_bombtime = time;
+}
+
+

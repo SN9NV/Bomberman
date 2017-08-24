@@ -175,6 +175,7 @@ void LevelRunner::beingWorldInteraction() {
 				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && _level[y][x] == nullptr) {
 					_objtLoader.setDamage((*being)->getDamage());
+					_objtLoader.setBombTime((*being)->getBombTime());
 					Bomb *nbomb = dynamic_cast<Bomb *>(_objtLoader.loadObject("Bomb", {x, 0, y}));
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
@@ -420,7 +421,7 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 	std::string line;
 	std::smatch match;
 	std::regex regEnemies("^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onile:) ([0-9]{1,2})\\s*)?$");
-	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot|AddBomb)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot|AddBomb|Deternator)?$");
 
 
 	_balloons = 0;

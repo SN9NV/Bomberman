@@ -29,6 +29,7 @@ public:
 		Balloon,
 		Bomb,
 		DestructWall,
+		Deternator,
 		FireDown,
 		FireUp,
 		FullFire,
@@ -44,12 +45,14 @@ private:
 	Player &_player;
 	const std::string resRoot = "resources/models/";
 	int _damage;
+	float _bombtime;
 	std::map<std::string, std::pair<cge::Model, unsigned int>> _map;
 
 	cge::Entity *makeAddBomb(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeBalloon(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeBomb(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeDestructWall(glm::vec3 position, cge::Model &model);
+	cge::Entity *makeDeternator(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeFireDown(glm::vec3 position, cge::Model &model);
 	cge::Entity	*makeFireUp(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeFullFire(glm::vec3 position, cge::Model &model);
@@ -64,7 +67,7 @@ public:
 	cge::Entity *loadObject(std::string object, glm::vec3 position);
 	void setDamage(int _damage);
 	bool has(std::string object);
-
+	void setBombTime(float time);
 
 };
 

@@ -15,14 +15,9 @@ class Being : public cge::Entity
 {
 protected:
 	float		_speed;
+	float 		_bombTime;
 	glm::vec3	_n_moveDir;
 	size_t		_maxBomb;
-public:
-	size_t getMaxBomb() const;
-
-	void setMaxBomb(size_t _maxBomb);
-
-protected:
 	bool		_placeBomb;
 	int			_damage;
 	unsigned	_deathTimeout;
@@ -41,9 +36,9 @@ public:
 	void	setDamage(int _damage);
 	void	placeBomb(Bomb *bomb);
 	void	setAlive(bool _alive);
-
+	size_t getMaxBomb() const;
+	void setMaxBomb(size_t _maxBomb);
 	void setWallPass(bool wallPass);
-
 	float	getDirAngle();
 	void	setPlaceBomb(bool placeBomb);
 	void	setDirection();
@@ -51,8 +46,9 @@ public:
 	void	setSpeed(float speed);
 	float	getSpeed() const;
 	bool isWallPass() const;
-
 	const glm::vec3	&get_n_moveDir() const;
+	float getBombTime() const;
+	void setBombTime(float _bombTime);
 
 	virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
 };

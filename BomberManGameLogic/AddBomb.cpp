@@ -4,9 +4,9 @@
 
 #include "AddBomb.hpp"
 
-AddBomb::AddBomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
-		PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius)
-{
+AddBomb::AddBomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model,
+				 cge::Loader &loader, float hitBoxRadius) :
+		PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius) {
 
 }
 

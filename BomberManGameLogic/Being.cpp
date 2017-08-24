@@ -12,7 +12,8 @@ Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 		_damage(damage),
 		_deathTimeout(1000),
 		_alive(true),
-		_wallPass(false)
+		_wallPass(false),
+		_bombTime(2000)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
 }
@@ -136,5 +137,13 @@ bool Being::isWallPass() const {
 
 void Being::setWallPass(bool wallPass) {
 	Being::_wallPass = wallPass;
+}
+
+float Being::getBombTime() const {
+	return _bombTime;
+}
+
+void Being::setBombTime(float _bombTime) {
+	Being::_bombTime = _bombTime;
 }
 
