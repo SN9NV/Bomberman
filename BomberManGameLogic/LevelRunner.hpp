@@ -18,6 +18,7 @@
 #include "Onil.hpp"
 #include "PowerUPAbstract.hpp"
 #include "../rendering/SpriteRenderer.hpp"
+#include "LevelFactory.hpp"
 
 enum levelState
 {
@@ -36,7 +37,8 @@ private:
 	std::vector<cge::Audio::Source *>	_sources;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
-	std::map<std::string, cge::Model> _models;
+	//std::map<std::string, cge::Model> _models;
+	LevelFactory _objtLoader;
 	std::vector<std::string> _map;
 	cge::Loader &_loader;
 	Player	*_player;
@@ -64,7 +66,7 @@ private:
 	void beingWorldInteraction();
 	void bombWorldInteraction();
 	void loadMapEntitys();
-	cge::Model *getModel(std::string name);
+	//cge::Model *getModel(std::string name);
 	void checkBeingBlast(int x, int y);
 	bool checkWallBlast(int x, int y);
 	void checkBombBlast(int x, int y);

@@ -9,7 +9,7 @@ std::uniform_int_distribution<int> _n_disision(0, 1);
 std::uniform_int_distribution<int> _n_change(0, 3);
 std::default_random_engine _gen;
 
-Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, Player& player, std::vector<std::vector<cge::Entity *>> &level, float hitBox) :
+Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, const Player& player, std::vector<std::vector<cge::Entity *>> &level, float hitBox) :
 		Being(position, rotation, scale, model, loader, hitBox, 0.002f),
 		_changeDir(0),
 		_player(player),
