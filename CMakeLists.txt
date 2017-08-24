@@ -101,7 +101,7 @@ set(SOURCE_FILES
 		rendering/Renderer.cpp			rendering/Renderer.hpp
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
-		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp BomberManGameLogic/AddBomb.cpp BomberManGameLogic/AddBomb.hpp entites/Sprite.cpp entites/Sprite.hpp)
+		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp BomberManGameLogic/AddBomb.cpp BomberManGameLogic/AddBomb.hpp entites/Sprite.cpp entites/Sprite.hpp BomberManGameLogic/LevelFactory.cpp BomberManGameLogic/LevelFactory.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

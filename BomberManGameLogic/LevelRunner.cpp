@@ -31,10 +31,11 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_powerUpInstance(nullptr),
 		_powerup(false),
 		_life({20, window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
-		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1,
-			   _loader.loadTexture("resources/Textures/StopWatch.png")) {
-	const std::string resRoot = "resources/models/";
-	_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader,
+		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/StopWatch.png")),
+		_objtLoader(_loader, _level, *_player)
+{
+	//const std::string resRoot = "resources/models/";
+	/*_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader,
 										  cge::Model::Type::STATIC));
 	_models.emplace("Wall", cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", this->_loader,
 									   cge::Model::Type::STATIC));
@@ -63,7 +64,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	_models.emplace("WingBoot",
 					cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", this->_loader,
 							   cge::Model::Type::STATIC));
-
+*/
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
 										 GL_SRC_ALPHA, GL_ONE);
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1),
@@ -73,12 +74,12 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 	this->_player->setAnimationSpeed(2.6f);
 }
 
-cge::Model *LevelRunner::getModel(std::string name) {
+/*cge::Model *LevelRunner::getModel(std::string name) {
 	auto found = _models.find(name);
 	if (found != _models.end())
 		return (&found->second);
 	return (nullptr);
-}
+}*/
 
 void LevelRunner::bumpBeing(Being *being) {
 	glm::vec3 pos;
@@ -328,8 +329,8 @@ void LevelRunner::loadMapEntitys() {
 		for (size_t j = 0; j < _map[i].length(); ++j) {
 			switch (_map[i][j]) {
 				case 'w':
-					if ((tmpMdl = getModel("Wall")) != nullptr) {
-						tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader);
+					if ((tmpEnt = _objtLoader.loadObject("Wall", {j, 0, i})) != nullptr) {
+						//tmpEnt = new Wall({j, 0, i}, {0, 0, 0}, 1, *tmpMdl, _loader);
 						_level[i][j] = tmpEnt;
 					}
 					break;
@@ -339,9 +340,9 @@ void LevelRunner::loadMapEntitys() {
 					_map[i][j] = '.';
 					break;
 				case 'd':
-					if ((tmpMdl = getModel("DestructWall")) != nullptr) {
-						float rotation = (rand() % 4) * 90;
-						tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader);
+					if ((tmpEnt = _objtLoader.loadObject("DestructWall", {j,0,i})) != nullptr) {
+						//float rotation = (rand() % 4) * 90;
+						//tmpEnt = new DestructWall({j, 0, i}, {0, glm::radians(rotation), 0}, 1, *tmpMdl, _loader);
 						_level[i][j] = tmpEnt;
 						_dwalls++;
 					}
@@ -351,17 +352,18 @@ void LevelRunner::loadMapEntitys() {
 			}
 		}
 	}
-	if ((tmpMdl = getModel("Balloon")) != nullptr) {
+	_objtLoader.setLevel(_level);
+	if ( _objtLoader.has("Balloon")) {
 		while (_balloons > 0) {
-			tmpBeing = new Balloon({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader);
+			tmpBeing = dynamic_cast<Being *>(_objtLoader.loadObject("Balloon", {0, 0, 0}));
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_balloons--;
 		}
 	}
-	if ((tmpMdl = getModel("Onile")) != nullptr) {
+	if (_objtLoader.has("Onile")) {
 		while (_onil > 0) {
-			tmpBeing = new Onil({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, *_player, _level);
+			tmpBeing = dynamic_cast<Being *>(_objtLoader.loadObject("Onile", {0, 0, 0}));
 			_beings.push_back(tmpBeing);
 			placeBeing(tmpBeing);
 			_onil--;
