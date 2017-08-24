@@ -23,13 +23,28 @@ class LevelFactory {
 
 	typedef cge::Entity *(*func) (glm::vec3 position, cge::Model &model);
 
+public:
+	enum objID{
+		AddBomb = 0,
+		Balloon,
+		Bomb,
+		DestructWall,
+		FireDown,
+		FireUp,
+		FullFire,
+		Gate,
+		Onile,
+		Wall,
+		WingBoot
+	};
+
 private:
 	cge::Loader &_loader;
 	std::vector<std::vector<cge::Entity *>> &_level;
 	Player &_player;
 	const std::string resRoot = "resources/models/";
 	int _damage;
-	std::map<std::string, std::pair<cge::Model, func>> _map;
+	std::map<std::string, std::pair<cge::Model, unsigned int>> _map;
 
 	cge::Entity *makeAddBomb(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeBalloon(glm::vec3 position, cge::Model &model);
@@ -49,6 +64,8 @@ public:
 	cge::Entity *loadObject(std::string object, glm::vec3 position);
 	void setDamage(int _damage);
 	bool has(std::string object);
+
+
 };
 
 

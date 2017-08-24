@@ -11,7 +11,7 @@
 class Onil : public Being {
 private:
 	int _changeDir;
-	Player& _player;
+	const Player& _player;
 	std::vector<std::vector<cge::Entity *>> &_level;
 
 	bool somethingInTheWayX(const glm::vec3 &pPos, const glm::vec3 &onilPos);

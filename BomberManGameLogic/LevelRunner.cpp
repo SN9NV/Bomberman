@@ -32,7 +32,7 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_powerup(false),
 		_life({20, window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
 		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/StopWatch.png")),
-		_objtLoader(_loader, _level, *_player)
+		_objtLoader(loader, _level, *player)
 {
 	//const std::string resRoot = "resources/models/";
 	/*_models.emplace("AddBomb", cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", this->_loader,
@@ -179,8 +179,9 @@ void LevelRunner::beingWorldInteraction() {
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
 				y = (int) (round(pos.z));
-				if ((*being)->isPlaceBomb() && (tmpmdl = getModel("Bomb")) != nullptr && _level[y][x] == nullptr) {
-					Bomb *nbomb = new Bomb({x, 0, y}, {0, 0, 0}, 1, *tmpmdl, _loader, (*being)->getDamage(), 0.4);
+				if ((*being)->isPlaceBomb() && _level[y][x] == nullptr) {
+					_objtLoader.setDamage((*being)->getDamage());
+					Bomb *nbomb = dynamic_cast<Bomb *>(_objtLoader.loadObject("Bomb", {x, 0, y}));
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
 					(*being)->placeBomb(nbomb);
@@ -372,7 +373,7 @@ void LevelRunner::loadMapEntitys() {
 }
 
 bool LevelRunner::checkWallBlast(int x, int y) {
-	cge::Model *tmpMdl;
+	cge::Entity *tmpEnt;
 
 	if (_level[y][x] != nullptr) {
 		if (dynamic_cast<DestructWall *>(_level[y][x]) != nullptr) {
@@ -384,12 +385,11 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 			srand((unsigned int) time(nullptr) + _dwalls);
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
-					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
-					std::cout << "make gate" << std::endl;
+					if ((tmpEnt = _objtLoader.loadObject("Gate", {x, 0, y})) != nullptr)
+						_gate = dynamic_cast<Gate *>(tmpEnt);
 				} else if (rand() % 20 == 1) {
-					if ((tmpMdl = getModel("Gate")) != nullptr)
-						_gate = new Gate({x, 0, y}, {0, 0, 0}, 1, *tmpMdl, _loader);
+					if ((tmpEnt = _objtLoader.loadObject("Gate", {x, 0, y})) != nullptr)
+						_gate = dynamic_cast<Gate *>(tmpEnt);
 				}
 			}
 			if (!_powerup) {
@@ -463,19 +463,11 @@ void LevelRunner::loadMapFromFile(const std::string &path) {
 		}
 
 		if (std::regex_match(line, match, regPowerUp)) {
-			cge::Model *tmpMdl;
+			cge::Entity *tmpEnt;
 			std::ssub_match sub_match = match[1];
 			std::string piece = sub_match.str();
-			if (piece == "FireUp" && (tmpMdl = getModel("FireUp")) != nullptr) {
-				_powerUpInstance = new FireUp({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-			} else if (piece == "FireDown" && (tmpMdl = getModel("FireDown")) != nullptr) {
-				_powerUpInstance = new FireDown({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-			} else if (piece == "FullFire" && (tmpMdl = getModel("FullFire")) != nullptr) {
-				_powerUpInstance = new FullFire({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-			} else if (piece == "WingBoot" && (tmpMdl = getModel("WingBoot")) != nullptr) {
-				_powerUpInstance = new WingBoot({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
-			} else if (piece == "AddBomb" && (tmpMdl = getModel("AddBomb")) != nullptr) {
-				_powerUpInstance = new AddBomb({0, 0, 0}, {0, 0, 0}, 1, *tmpMdl, _loader, 0.3);
+			if ((tmpEnt = _objtLoader.loadObject("FireUp", {0, 0, 0})) != nullptr) {
+				_powerUpInstance = dynamic_cast<PowerUPAbstract *>(tmpEnt);
 			}
 		}
 
@@ -741,12 +733,10 @@ void LevelRunner::update() {
 	_camera.setPosition({plpos.x, 10, plpos.z});
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {
-			std::cout << "make enemy because gate damage\n";
-			cge::Model *tmp;
-			if ((tmp = getModel("Balloon")) != nullptr) {
-				_beings.push_back(
-						new Balloon({_gate->getPosition().x, 0, _gate->getPosition().z}, {0, 0, 0}, 1, *tmp, _loader,
-									0.5f));
+			Being *tmpEnt;
+			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Balloon", {_gate->getPosition().x, 0, _gate->getPosition().z}))) !=
+				nullptr) {
+				_beings.push_back(tmpEnt);
 			}
 		}
 		_gate->update();
