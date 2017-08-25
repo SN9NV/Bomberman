@@ -61,6 +61,10 @@ set(SOURCE_FILES
 		BomberManGameLogic/FullFire.cpp		BomberManGameLogic/FullFire.hpp
 		BomberManGameLogic/WingBoot.cpp		BomberManGameLogic/WingBoot.hpp
 		BomberManGameLogic/Onil.cpp			BomberManGameLogic/Onil.hpp
+		BomberManGameLogic/AddBomb.cpp		BomberManGameLogic/AddBomb.hpp
+		BomberManGameLogic/LevelFactory.cpp	BomberManGameLogic/LevelFactory.hpp
+		BomberManGameLogic/Deternator.cpp	BomberManGameLogic/Deternator.hpp
+		BomberManGameLogic/Ovapi.cpp		BomberManGameLogic/Ovapi.hpp
 
 		entites/Camera.cpp			entites/Camera.hpp
 		entites/Entity.cpp			entites/Entity.hpp
@@ -69,6 +73,7 @@ set(SOURCE_FILES
 		entites/RawModel.cpp		entites/RawModel.hpp
 		entites/TextureAtlas.cpp	entites/TextureAtlas.hpp
 		entites/Partical.cpp		entites/Partical.hpp
+		entites/Sprite.cpp			entites/Sprite.hpp
 
 		error_handling/printError.cpp	error_handling/printError.hpp
 
@@ -103,11 +108,7 @@ set(SOURCE_FILES
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
 		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp
-
-		BomberManGameLogic/AddBomb.cpp BomberManGameLogic/AddBomb.hpp
-		entites/Sprite.cpp entites/Sprite.hpp
-		BomberManGameLogic/LevelFactory.cpp BomberManGameLogic/LevelFactory.hpp
-		BomberManGameLogic/Deternator.cpp BomberManGameLogic/Deternator.hpp)
+)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

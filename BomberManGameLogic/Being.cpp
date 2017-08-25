@@ -12,7 +12,7 @@ Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 		_damage(damage),
 		_deathTimeout(1000),
 		_alive(true),
-		_wallPass(false),
+		_wallPass(wallPass),
 		_bombTime(2000)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);

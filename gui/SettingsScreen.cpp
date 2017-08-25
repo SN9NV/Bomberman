@@ -166,7 +166,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		if (this->validateKeyBindings("txtb_MoveUp", result))
 			this->_changesMade = true;
 		else {
-			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Question,
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
 			this->txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
 			return (false);
@@ -190,7 +190,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		if (this->validateKeyBindings("txtb_MoveDown", result))
 			this->_changesMade = true;
 		else {
-			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Question,
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
 			this->txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
 			return (false);
@@ -214,7 +214,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		if (this->validateKeyBindings("txtb_MoveRight", result))
 			this->_changesMade = true;
 		else {
-			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Question,
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
 			this->txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
 			return (false);
@@ -238,7 +238,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		if (this->validateKeyBindings("txtb_MoveLeft", result))
 			this->_changesMade = true;
 		else {
-			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Question,
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
 			this->txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft));
 			return (false);
@@ -262,7 +262,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		if (this->validateKeyBindings("txtb_Detonate", result))
 			this->_changesMade = true;
 		else {
-			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Question,
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
 			this->txtb_Detonate->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDetonate));
 			return (false);
