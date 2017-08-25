@@ -59,6 +59,7 @@ private:
 	int _dwalls;
 	int _balloons;
 	int _onil;
+	int _ovapi;
 	bool _powerup;
 	PowerUPAbstract *_powerUpInstance;
 

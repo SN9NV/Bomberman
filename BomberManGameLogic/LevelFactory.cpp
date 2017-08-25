@@ -4,6 +4,7 @@
 
 #include "LevelFactory.hpp"
 #include "Deternator.hpp"
+#include "Ovapi.hpp"
 
 
 LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Entity *>> &level,
@@ -19,6 +20,7 @@ LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Ent
 	//_map.emplace("Bomber", std::pair<cge::Model, func> (cge::Model(resRoot + "Bomber.glb", resRoot + "BomberManTextureDiffuseColor.png", _loader, cge::Model::Type::STREAMING), makeWall));
 	_map.emplace("Balloon", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Balloon.glb", resRoot + "BalloonDiffuseColor.png", _loader, cge::Model::Type::STREAMING), objID::Balloon));
 	_map.emplace("Onile", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Onile.glb", resRoot + "OnileDiffuseColor.png", _loader, cge::Model::Type::STREAMING), objID::Onile));
+	_map.emplace("Ovapi", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Ovapi.glb", resRoot + "OvapiDiffuseColor.png", _loader, cge::Model::Type::STREAMING), objID::Ovapi));
 	_map.emplace("Gate", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Gate.glb", resRoot + "GateDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Gate));
 	_map.emplace("FireUp", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FireUp));
 	_map.emplace("FireDown", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FireDown));
@@ -63,6 +65,10 @@ cge::Entity *LevelFactory::makeGate(glm::vec3 position, cge::Model &model) {
 
 cge::Entity *LevelFactory::makeOnile(glm::vec3 position, cge::Model &model) {
 	return new Onil(position, {0,0,0}, 1, model,_loader, _player, _level);
+}
+
+cge::Entity *LevelFactory::makeOvapi(glm::vec3 position, cge::Model &model) {
+	return new class Ovapi(position, {0,0,0}, 1, model,_loader, _player, _level);
 }
 
 cge::Entity *LevelFactory::makeWall(glm::vec3 position, cge::Model &model) {
@@ -113,6 +119,8 @@ cge::Entity *LevelFactory::loadObject(std::string object, glm::vec3 position) {
 			return makeGate(position, find->second.first);
 		case objID::Onile :
 			return makeOnile(position, find->second.first);
+		case objID::Ovapi :
+			return makeOvapi(position, find->second.first);
 		case objID::WingBoot :
 			return makeWingBoot(position, find->second.first);
 		default:
