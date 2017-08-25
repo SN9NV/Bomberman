@@ -25,6 +25,7 @@ namespace cge {
 			unsigned int	KeyRight;
 			unsigned int	KeyDown;
 			unsigned int	KeyLeft;
+			unsigned int	KeyDetonate;
 
 			/**Window Settings**/
 			bool			Fullscreen;
@@ -58,6 +59,7 @@ namespace cge {
 			void						setKeyRight(unsigned int kr);
 			void						setKeyDown(unsigned int kd);
 			void						setKeyLeft(unsigned int kl);
+			void						setKeyDetonate(unsigned int d);
 
 			/**Window Setters**/
 			void						setFullscreen(bool fs);

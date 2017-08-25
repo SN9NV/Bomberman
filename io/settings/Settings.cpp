@@ -77,6 +77,10 @@ void cge::Settings::Settings::setKeyLeft(unsigned int kl) {
 	this->_settings.KeyLeft = kl;
 }
 
+void cge::Settings::Settings::setKeyDetonate(unsigned int d) {
+	this->_settings.KeyDetonate = d;
+}
+
 void cge::Settings::Settings::setFullscreen(bool fs) {
 	this->_settings.Fullscreen = fs;
 }
@@ -94,6 +98,7 @@ void cge::Settings::Settings::setToDefaults() {
 	this->_settings.KeyRight = GLFW_KEY_D;
 	this->_settings.KeyDown = GLFW_KEY_S;
 	this->_settings.KeyLeft = GLFW_KEY_A;
+	this->_settings.KeyDetonate = GLFW_KEY_V;
 
 	this->_settings.MasterVolume = 0.5f;
 	this->_settings.MusicVolume = 0.8f;

@@ -13,6 +13,7 @@
 #include <nanogui/nanogui.h>
 #include "CustomButton.hpp"
 #include "../io/audio/AudioSource.hpp"
+#include "CustomTextbox.hpp"
 
 namespace cge {
 	namespace GUI {
@@ -49,10 +50,14 @@ namespace cge {
 
 			/**Textboxes for Key Binding control**/
 			std::string		charToString(int chr);
-			nanogui::TextBox* txtb_MoveUp;
-			nanogui::TextBox* txtb_MoveRight;
-			nanogui::TextBox* txtb_MoveDown;
-			nanogui::TextBox* txtb_MoveLeft;
+			Custom::CustomTextbox* txtb_MoveUp;
+			Custom::CustomTextbox* txtb_MoveRight;
+			Custom::CustomTextbox* txtb_MoveDown;
+			Custom::CustomTextbox* txtb_MoveLeft;
+			Custom::CustomTextbox* txtb_Detonate;
+
+			std::map<std::string, Custom::CustomTextbox*> _txtbInputs;
+			bool validateKeyBindings(const std::string& input, int key);
 
 			/**Window Settings**/
 			nanogui::CheckBox *chkbx_FullScreen;
