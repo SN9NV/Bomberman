@@ -155,13 +155,22 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveUp = p_MoveUp->add<nanogui::Label>("Move Up:");
 	lbl_MoveUp->setFixedWidth(80);
 	p_MoveUp->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	txtb_MoveUp = p_MoveUp->add<nanogui::TextBox>();
+	txtb_MoveUp = p_MoveUp->add<Custom::CustomTextbox>();
+	this->txtb_MoveUp->setId("txtb_MoveUp");
+	this->_txtbInputs.insert(std::make_pair("txtb_MoveUp", this->txtb_MoveUp));
 	txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
 	txtb_MoveUp->setEditable(true);
 	txtb_MoveUp->setFixedWidth(50);
 	txtb_MoveUp->setFormat("[A-Z]");
-	txtb_MoveUp->setCallback([&] (const std::string& str)-> bool {
-		this->_changesMade = true;
+	txtb_MoveUp->setTextChangedCallback([&](int result) -> bool {
+		if (this->validateKeyBindings("txtb_MoveUp", result))
+			this->_changesMade = true;
+		else {
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+			this->txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
+			return (false);
+		}
 		return (true);
 	});
 
@@ -170,13 +179,22 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveDown = p_MoveDown->add<nanogui::Label>("Move Down:");
 	lbl_MoveDown->setFixedWidth(80);
 	p_MoveDown->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	txtb_MoveDown = p_MoveDown->add<nanogui::TextBox>();
+	txtb_MoveDown = p_MoveDown->add<Custom::CustomTextbox>();
+	this->txtb_MoveDown->setId("txtb_MoveDown");
+	this->_txtbInputs.insert(std::make_pair("txtb_MoveDown", this->txtb_MoveDown));
 	txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
 	txtb_MoveDown->setEditable(true);
 	txtb_MoveDown->setFixedWidth(50);
 	txtb_MoveDown->setFormat("[A-Z]");
-	txtb_MoveDown->setCallback([&] (const std::string& str)-> bool {
-		this->_changesMade = true;
+	txtb_MoveDown->setTextChangedCallback([&](int result) -> bool {
+		if (this->validateKeyBindings("txtb_MoveDown", result))
+			this->_changesMade = true;
+		else {
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+			this->txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
+			return (false);
+		}
 		return (true);
 	});
 
@@ -185,13 +203,22 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveRight = p_MoveRight->add<nanogui::Label>("Move Right:");
 	lbl_MoveRight->setFixedWidth(80);
 	p_MoveRight->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	txtb_MoveRight = p_MoveRight->add<nanogui::TextBox>();
+	txtb_MoveRight = p_MoveRight->add<Custom::CustomTextbox>();
+	this->txtb_MoveRight->setId("txtb_MoveRight");
+	this->_txtbInputs.insert(std::make_pair("txtb_MoveRight", this->txtb_MoveRight));
 	txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
 	txtb_MoveRight->setEditable(true);
 	txtb_MoveRight->setFixedWidth(50);
 	txtb_MoveRight->setFormat("[A-Z]");
-	txtb_MoveRight->setCallback([&] (const std::string& str)-> bool {
-		this->_changesMade = true;
+	txtb_MoveRight->setTextChangedCallback([&](int result) -> bool {
+		if (this->validateKeyBindings("txtb_MoveRight", result))
+			this->_changesMade = true;
+		else {
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+			this->txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
+			return (false);
+		}
 		return (true);
 	});
 
@@ -200,13 +227,46 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	auto lbl_MoveLeft = p_MoveLeft->add<nanogui::Label>("Move Left:");
 	lbl_MoveLeft->setFixedWidth(80);
 	p_MoveLeft->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
-	txtb_MoveLeft = p_MoveLeft->add<nanogui::TextBox>();
+	txtb_MoveLeft = p_MoveLeft->add<Custom::CustomTextbox>();
+	this->txtb_MoveLeft->setId("txtb_MoveLeft");
+	this->_txtbInputs.insert(std::make_pair("txtb_MoveLeft", this->txtb_MoveLeft));
 	txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft)); //Change here to settings
 	txtb_MoveLeft->setEditable(true);
 	txtb_MoveLeft->setFixedWidth(50);
 	txtb_MoveLeft->setFormat("[A-Z]");
-	txtb_MoveLeft->setCallback([&] (const std::string& str)-> bool {
-		this->_changesMade = true;
+	txtb_MoveLeft->setTextChangedCallback([&](int result) -> bool {
+		if (this->validateKeyBindings("txtb_MoveLeft", result))
+			this->_changesMade = true;
+		else {
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+			this->txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft));
+			return (false);
+		}
+		return (true);
+	});
+
+	/**KEY-BINDINGS: Detonate/Special**/
+	nanogui::Widget* p_Detonate = keyBindings->add<nanogui::Widget>();
+	auto lbl_Detonate = p_Detonate->add<nanogui::Label>("Special:");
+	lbl_Detonate->setFixedWidth(80);
+	p_Detonate->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 0, 6));
+	txtb_Detonate = p_Detonate->add<Custom::CustomTextbox>();
+	this->txtb_Detonate->setId("txtb_Detonate");
+	this->_txtbInputs.insert(std::make_pair("txtb_Detonate", this->txtb_Detonate));
+	txtb_Detonate->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDetonate));
+	txtb_Detonate->setEditable(true);
+	txtb_Detonate->setFixedWidth(50);
+	txtb_Detonate->setFormat("[A-Z]");
+	txtb_Detonate->setTextChangedCallback([&](int result) -> bool {
+		if (this->validateKeyBindings("txtb_Detonate", result))
+			this->_changesMade = true;
+		else {
+			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
+				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+			this->txtb_Detonate->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDetonate));
+			return (false);
+		}
 		return (true);
 	});
 
@@ -343,11 +403,13 @@ void cge::GUI::SettingsScreen::saveSettings() {
 	setts->setKeyRight(static_cast<unsigned int>(this->txtb_MoveRight->value()[0]));
 	setts->setKeyDown(static_cast<unsigned int>(this->txtb_MoveDown->value()[0]));
 	setts->setKeyLeft(static_cast<unsigned int>(this->txtb_MoveLeft->value()[0]));
+	setts->setKeyDetonate(static_cast<unsigned int>(this->txtb_Detonate->value()[0]));
 
 	_player->set_up(this->txtb_MoveUp->value()[0]);
 	_player->set_right(this->txtb_MoveRight->value()[0]);
 	_player->set_down(this->txtb_MoveDown->value()[0]);
 	_player->set_left(this->txtb_MoveLeft->value()[0]);
+	_player->setSpecial(this->txtb_Detonate->value()[0]);
 
 	if (cb_Resolution->selectedIndex() == 0) {
 		setts->setHeight(1080);
@@ -406,5 +468,16 @@ cge::GUI::SettingsScreen::SettingsScreen(const cge::GUI::SettingsScreen &cpy) :
 cge::GUI::SettingsScreen cge::GUI::SettingsScreen::operator=(const cge::GUI::SettingsScreen &rhs) {
 	*this = rhs;
 	return (*this);
+}
+
+bool cge::GUI::SettingsScreen::validateKeyBindings(const std::string& input, int key) {
+	for (auto iter : this->_txtbInputs) {
+		if (iter.second->id() == input)
+			continue;
+		if (iter.second->value()[0] == key) {
+			return (false);
+		}
+	}
+	return (true);
 }
 
