@@ -77,6 +77,10 @@ void cge::Settings::Settings::setKeyLeft(unsigned int kl) {
 	this->_settings.KeyLeft = kl;
 }
 
+void cge::Settings::Settings::setKeyDetonate(unsigned int d) {
+	this->_settings.KeyDetonate = d;
+}
+
 void cge::Settings::Settings::setFullscreen(bool fs) {
 	this->_settings.Fullscreen = fs;
 }
@@ -94,6 +98,7 @@ void cge::Settings::Settings::setToDefaults() {
 	this->_settings.KeyRight = GLFW_KEY_D;
 	this->_settings.KeyDown = GLFW_KEY_S;
 	this->_settings.KeyLeft = GLFW_KEY_A;
+	this->_settings.KeyDetonate = GLFW_KEY_V;
 
 	this->_settings.MasterVolume = 0.5f;
 	this->_settings.MusicVolume = 0.8f;
@@ -110,4 +115,18 @@ float cge::Settings::Settings::getMusicVolume() const {
 
 float cge::Settings::Settings::getSfxVolume() const {
 	return (this->_settings.SfxVolume * this->_settings.MasterVolume);
+}
+
+cge::Settings::Settings::Settings(const cge::Settings::Settings &cpy) {
+	this->_fileName = cpy._fileName;
+	this->_settings = cpy._settings;
+	this->s_instance = cpy.s_instance;
+}
+
+cge::Settings::Settings cge::Settings::Settings::operator=(const cge::Settings::Settings &rhs) {
+	*this = rhs;
+	return (*this);
+}
+
+cge::Settings::Settings::~Settings() {
 }

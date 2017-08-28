@@ -20,6 +20,7 @@ namespace cge {
 	namespace GUI {
 		class LoadGameScreen {
 		public:
+			LoadGameScreen() = delete;
 			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader, int* currMap);
 
 			LoadGameScreen(const LoadGameScreen & cpy);
@@ -33,7 +34,6 @@ namespace cge {
 			void setInputCallbacks();
 			void ReinitializeScreen();
 		private:
-			LoadGameScreen();
 
 			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen*	_screen;

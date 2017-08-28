@@ -13,13 +13,16 @@
 #include <nanogui/nanogui.h>
 #include "CustomButton.hpp"
 #include "../io/audio/AudioSource.hpp"
+#include "CustomTextbox.hpp"
 
 namespace cge {
 	namespace GUI {
 		class SettingsScreen {
 		public:
+			SettingsScreen() = delete;
 			SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader);
-
+			SettingsScreen(const SettingsScreen & cpy);
+			SettingsScreen operator=(const SettingsScreen& rhs);
 			~SettingsScreen();
 
 			nanogui::Screen *getScreen();
@@ -29,7 +32,6 @@ namespace cge {
 			void setInputCallbacks();
 			void ReinitializeScreen();
 		private:
-			SettingsScreen();
 
 			nanogui::ref<nanogui::Window> nanoguiWindow;
 			nanogui::Screen *_screen;
@@ -48,10 +50,14 @@ namespace cge {
 
 			/**Textboxes for Key Binding control**/
 			std::string		charToString(int chr);
-			nanogui::TextBox* txtb_MoveUp;
-			nanogui::TextBox* txtb_MoveRight;
-			nanogui::TextBox* txtb_MoveDown;
-			nanogui::TextBox* txtb_MoveLeft;
+			Custom::CustomTextbox* txtb_MoveUp;
+			Custom::CustomTextbox* txtb_MoveRight;
+			Custom::CustomTextbox* txtb_MoveDown;
+			Custom::CustomTextbox* txtb_MoveLeft;
+			Custom::CustomTextbox* txtb_Detonate;
+
+			std::map<std::string, Custom::CustomTextbox*> _txtbInputs;
+			bool validateKeyBindings(const std::string& input, int key);
 
 			/**Window Settings**/
 			nanogui::CheckBox *chkbx_FullScreen;

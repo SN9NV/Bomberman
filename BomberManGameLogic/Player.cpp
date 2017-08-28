@@ -5,7 +5,8 @@ Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale
 		Being(position, rotation, scale, model, loader, speed, hitBoxRadius),
 		_lives(3),
 		_pauseMenue(false),
-		_score(0)
+		_score(0),
+		_detonator(false)
 {
 
 }
@@ -15,6 +16,7 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	_playAnimation = false;
 
 	static unsigned bombBounce = 0;
+	static unsigned detonateBounce = 0;
 
 	if (input.isKeyPressed(_up)) {
 		_playAnimation = true;
@@ -43,6 +45,18 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 		bombBounce = 300;
 	}
 
+	detonateBounce = (lastFrameTime > detonateBounce) ? 0 : detonateBounce - lastFrameTime;
+	if (input.isKeyPressed(_special)) {
+		if (detonateBounce == 0) {
+			int i = 0;
+			while (i < _bombs.size() && _bombs[i]->isDeternate())
+			{
+				i++;
+			}
+			_bombs[i]->setDetonate(true);
+			detonateBounce = 300;
+		}
+	}
 	if (input.isKeyPressed(_menue)) {
 		_pauseMenue = true;
 	}
@@ -144,4 +158,12 @@ void Player::set_left(int left) {
 
 void Player::set_right(int right) {
 	this->_right = right;
+}
+
+bool Player::isDetonator() const {
+	return _detonator;
+}
+
+void Player::setDetonator(bool _detonator) {
+	Player::_detonator = _detonator;
 }

@@ -18,6 +18,7 @@
 #include "Onil.hpp"
 #include "PowerUPAbstract.hpp"
 #include "../rendering/SpriteRenderer.hpp"
+#include "LevelFactory.hpp"
 
 enum levelState
 {
@@ -36,7 +37,7 @@ private:
 	std::vector<cge::Audio::Source *>	_sources;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
-	std::map<std::string, cge::Model> _models;
+	LevelFactory _objtLoader;
 	std::vector<std::string> _map;
 	cge::Loader &_loader;
 	Player	*_player;
@@ -58,15 +59,16 @@ private:
 	int _dwalls;
 	int _balloons;
 	int _onil;
+	int _ovapi;
 	bool _powerup;
 	PowerUPAbstract *_powerUpInstance;
 
 	void beingWorldInteraction();
 	void bombWorldInteraction();
 	void loadMapEntitys();
-	cge::Model *getModel(std::string name);
 	void checkBeingBlast(int x, int y);
 	bool checkWallBlast(int x, int y);
+	void checkBombBlast(int x, int y);
 	void bumpBeing(Being *);
 	void endLevel();
 	bool checkMapWall();
@@ -80,14 +82,13 @@ private:
 	void cleanLevel();
 	void update();
 	void render();
+	void loadMapFromFile(const std::string &path);
 
 public:
 	int getState() const;
 	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice);
 	int runLevel(const std::string &path);
     int resumeLevel();
-//todo: move loadMapfrom file to private
-	void loadMapFromFile(const std::string &path);
 };
 
 

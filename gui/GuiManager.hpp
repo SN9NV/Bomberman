@@ -23,6 +23,8 @@ namespace cge {
 							Player* player,
 							int* currMap,
 							cge::Loader& loader);
+
+		GuiManager() = delete;
 		explicit GuiManager(cge::Window& win,
 							cge::GameState* state,
 							cge::GameState *prevState,

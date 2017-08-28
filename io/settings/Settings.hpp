@@ -25,6 +25,7 @@ namespace cge {
 			unsigned int	KeyRight;
 			unsigned int	KeyDown;
 			unsigned int	KeyLeft;
+			unsigned int	KeyDetonate;
 
 			/**Window Settings**/
 			bool			Fullscreen;
@@ -34,6 +35,11 @@ namespace cge {
 
 		class Settings {
 		public:
+			Settings() = delete;
+			Settings(const Settings & cpy);
+			Settings operator=(const Settings & rhs);
+			~Settings();
+
 			static void						Initialise(std::string file);
 			static cge::Settings::Settings*	getSingleton();
 
@@ -53,6 +59,7 @@ namespace cge {
 			void						setKeyRight(unsigned int kr);
 			void						setKeyDown(unsigned int kd);
 			void						setKeyLeft(unsigned int kl);
+			void						setKeyDetonate(unsigned int d);
 
 			/**Window Setters**/
 			void						setFullscreen(bool fs);
@@ -62,7 +69,6 @@ namespace cge {
 			void 						writeToBinaryFile();
 		private:
 			Settings(std::string file);
-			~Settings();
 
 			static Settings*			s_instance;
 			t_settings					_settings;
