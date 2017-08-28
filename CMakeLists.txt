@@ -47,7 +47,7 @@ set(SOURCE_FILES
 		tinyGLTF/stb_image.h
 		tinyGLTF/tiny_gltf.h
 
-        BomberManGameLogic/PowerUPAbstract.hpp
+		BomberManGameLogic/PowerUPAbstract.hpp
 		BomberManGameLogic/Being.cpp		BomberManGameLogic/Being.hpp
 		BomberManGameLogic/Player.cpp		BomberManGameLogic/Player.hpp
 		BomberManGameLogic/Bomb.cpp			BomberManGameLogic/Bomb.hpp
@@ -65,6 +65,8 @@ set(SOURCE_FILES
 		BomberManGameLogic/LevelFactory.cpp	BomberManGameLogic/LevelFactory.hpp
 		BomberManGameLogic/Deternator.cpp	BomberManGameLogic/Deternator.hpp
 		BomberManGameLogic/Ovapi.cpp		BomberManGameLogic/Ovapi.hpp
+		BomberManGameLogic/WallPass.cpp		BomberManGameLogic/WallPass.hpp
+		BomberManGameLogic/Floor.cpp		BomberManGameLogic/Floor.hpp
 
 		entites/Camera.cpp			entites/Camera.hpp
 		entites/Entity.cpp			entites/Entity.hpp
@@ -105,8 +107,7 @@ set(SOURCE_FILES
 		rendering/Renderer.cpp			rendering/Renderer.hpp
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
-		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp
-        BomberManGameLogic/WallPass.cpp BomberManGameLogic/WallPass.hpp BomberManGameLogic/Floor.cpp BomberManGameLogic/Floor.hpp)
+		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)
@@ -119,11 +120,11 @@ if (NOT PKG_CONFIG_EXECUTABLE)
 	find_package(PkgConfig REQUIRED)
 endif()
 
-# Find the dependencies for the project				Mac				Linux
-pkg_search_module(GLEW		REQUIRED	glew)			#> 	glew			libglew-dev
-pkg_search_module(GLM		REQUIRED	glm)			#> 	glm				Install from source (https://github.com/g-truc/glm)
-#pkg_search_module(GLFW3		REQUIRED	glfw3)		#> 	glfw3			libglfw3-dev
-pkg_search_module(SNDFILE	REQUIRED	sndfile)		#> 	libsndfile		libsndfile1-dev
+# Find the dependencies for the project						Mac				Linux
+pkg_search_module(GLEW		REQUIRED	glew)			#>	glew			libglew-dev
+pkg_search_module(GLM		REQUIRED	glm)			#>	glm				Install from source (https://github.com/g-truc/glm)
+#pkg_search_module(GLFW3		REQUIRED	glfw3)		#>	glfw3			libglfw3-dev
+pkg_search_module(SNDFILE	REQUIRED	sndfile)		#>	libsndfile		libsndfile1-dev
 pkg_search_module(FT		REQUIRED	freetype2)
 
 if (NOT GLEW_FOUND)
