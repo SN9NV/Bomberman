@@ -108,7 +108,7 @@ set(SOURCE_FILES
 		rendering/ParticalRenderer.cpp	rendering/ParticalRenderer.hpp
 		rendering/SpriteRenderer.cpp	rendering/SpriteRenderer.hpp
 		rendering/TextRenderer.cpp		rendering/TextRenderer.hpp
-)
+        BomberManGameLogic/WallPass.cpp BomberManGameLogic/WallPass.hpp)
 
 
 # Find OpenGL (for Mac mostly, Linux didn't need this)

@@ -5,6 +5,7 @@
 #include "LevelFactory.hpp"
 #include "Deternator.hpp"
 #include "Ovapi.hpp"
+#include "WallPass.hpp"
 
 
 LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Entity *>> &level,
@@ -14,6 +15,7 @@ LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Ent
 
 	_map.emplace("AddBomb", std::pair<cge::Model, unsigned int>(cge::Model(resRoot + "Bomb.glb", resRoot + "ADDBombDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::AddBomb));
 	_map.emplace("Wall", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Wall.glb", resRoot + "SolidWallDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Wall));
+	_map.emplace("WallPass", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "WallPass.glb", resRoot + "WallPassDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::WallPass));
 	_map.emplace("Deternator", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Deternator.glb", resRoot + "DetornatorDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Deternator));
 	_map.emplace("DestructWall", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "DestructWall.glb", resRoot + "DestructWallDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::DestructWall));
 	_map.emplace("Bomb", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Bomb.glb", resRoot + "BombDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Bomb));
@@ -75,6 +77,11 @@ cge::Entity *LevelFactory::makeWall(glm::vec3 position, cge::Model &model) {
 	return new class Wall(position, {0,0,0}, 1, model,_loader, 0.5);
 }
 
+cge::Entity *LevelFactory::makeWallPass(glm::vec3 position, cge::Model &model)
+{
+	return new class WallPass(position, {0,0,0}, 1, model, _loader, 0.3f);
+}
+
 cge::Entity *LevelFactory::makeWingBoot(glm::vec3 position, cge::Model &model) {
 	return new class WingBoot(position, {0,0,0}, 1, model,_loader, 0.3);
 }
@@ -101,6 +108,8 @@ cge::Entity *LevelFactory::loadObject(std::string object, glm::vec3 position) {
 			return makeAddBomb(position, find->second.first);
 		case objID::Wall :
 			return makeWall(position, find->second.first);
+		case objID::WallPass :
+			return makeWallPass(position, find->second.first);
 		case objID::DestructWall :
 			return makeDestructWall(position, find->second.first);
 		case objID::Deternator:
@@ -136,5 +145,7 @@ bool LevelFactory::has(std::string object) {
 void LevelFactory::setBombTime(float time) {
 	_bombtime = time;
 }
+
+
 
 

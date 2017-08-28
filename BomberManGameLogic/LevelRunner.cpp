@@ -33,7 +33,10 @@ LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &windo
 		_life({20, window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
 		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1,
 			   _loader.loadTexture("resources/Textures/StopWatch.png")),
-		_objtLoader(loader, _level, *player)
+		_objtLoader(loader, _level, *player),
+		_balloons(0),
+		_onil(0),
+		_ovapi(0)
 {
 	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
 										 GL_SRC_ALPHA, GL_ONE);
@@ -331,8 +334,8 @@ void LevelRunner::bombWorldInteraction()
 
 void LevelRunner::loadMapEntitys()
 {
+
 	srand((unsigned int) (time(nullptr)));
-	cge::Model *tmpMdl;
 	cge::Entity *tmpEnt;
 	Being *tmpBeing;
 
@@ -473,11 +476,12 @@ void LevelRunner::loadMapFromFile(const std::string &path)
 	std::smatch match;
 	std::regex regEnemies(
 			"^(?:(balloon:) ([0-9]{1,2})\\s*)?(?:(onile:) ([0-9]{1,2})\\s*)?(?:(ovapi:) ([0-9]{1,2})\\s*)?$");
-	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WingBoot|AddBomb|Deternator)?$");
+	std::regex regPowerUp("^(FireUp|FullFire|FireDown|WallPass|WingBoot|AddBomb|Deternator)?$");
 
 
 	_balloons = 0;
 	_onil = 0;
+	_ovapi = 0;
 	_map.clear();
 	if (ifs.good())
 	{
@@ -590,6 +594,7 @@ int LevelRunner::runLevel(const std::string &path)
 	_levelTime = 200000;
 
 	loadMapEntitys();
+	_player->setPlaceBomb(false);
 	_state = levelState::PLAY;
 	runLevelLoop();
 	if (_state != levelState::PAUSE)
@@ -827,7 +832,7 @@ void LevelRunner::update()
 		if (_gate->isDamage())
 		{
 			Being *tmpEnt;
-			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Balloon", {_gate->getPosition().x, 0,
+			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {_gate->getPosition().x, 0,
 																				   _gate->getPosition().z}))) !=
 				nullptr)
 			{

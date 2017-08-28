@@ -37,6 +37,7 @@ public:
 		Onile,
 		Ovapi,
 		Wall,
+		WallPass,
 		WingBoot
 	};
 
@@ -61,6 +62,7 @@ private:
 	cge::Entity *makeOnile(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeOvapi(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeWall(glm::vec3 position, cge::Model &model);
+	cge::Entity *makeWallPass(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeWingBoot(glm::vec3 position, cge::Model &model);
 
 public:

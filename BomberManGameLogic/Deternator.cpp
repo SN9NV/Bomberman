@@ -10,7 +10,7 @@ player.setBombTime(10000);
 }
 
 void Deternator::Reverse(Player &player) {
-	player.setBombTime(2000);
+	player.setBombTime(1500);
 	player.setDetonator(false);
 }
 
