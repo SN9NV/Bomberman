@@ -41,9 +41,8 @@ public:
 	void setScore(int score);
 	void addScore(int addition);
 	void subScore(int subtraction);
-
 	bool isDetonator() const;
-
+	void playSound(std::string sound);
 	void setDetonator(bool _detonator);
 
 private:
@@ -58,6 +57,8 @@ private:
 	int _menue = GLFW_KEY_ESCAPE;
 	bool _pauseMenue;
 	bool _detonator;
+
+	void	_setEffects();
 };
 
 #endif //BOMBERMAN_PLAYER_HPP

@@ -19,7 +19,7 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
-
+//this->_setEffects();
 }
 
 void cge::Entity::addPosition(const glm::vec3 &delta) {
@@ -269,4 +269,8 @@ const std::map<std::string, cge::Audio::Source *> &cge::Entity::getSoundEffects(
 
 const std::vector<glm::mat4> &cge::Entity::getJointTransforms() const {
 	return this->_animatedMatrices;
+}
+
+void cge::Entity::_setEffects() {
+	this->addNewSoundEffect("dieSound", "resources/audio/balloon.wav");
 }

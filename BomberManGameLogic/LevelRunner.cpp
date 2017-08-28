@@ -132,6 +132,7 @@ void LevelRunner::beingWorldInteraction() {
 						if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
 							_powerUpInstance->Powerup(*_player);
 							_powerUpInstance->deActivete();
+							_player->playSound("activate");
 						}
 					}
 					if (_gate != nullptr && _gate->isActive() && y == _gate->getPosition().z &&
@@ -141,9 +142,9 @@ void LevelRunner::beingWorldInteraction() {
 					}
 
 				}
-				if (roundf(oldpos.x) != roundf(pos.x) && _level[(int)roundf(pos.z)][(int)roundf(pos.x)] != nullptr)
+				if (roundf(oldpos.x) != roundf(pos.x) && _level[(int) roundf(pos.z)][(int) roundf(pos.x)] != nullptr)
 					(*being)->setPosition({pos.x, 0, oldpos.z});
-				if (roundf(oldpos.z) != roundf(pos.z) && _level[(int)roundf(pos.z)][(int)roundf(pos.x)] != nullptr)
+				if (roundf(oldpos.z) != roundf(pos.z) && _level[(int) roundf(pos.z)][(int) roundf(pos.x)] != nullptr)
 					(*being)->setPosition({oldpos.x, 0, (*being)->getPosition().z});
 				bumpBeing((*being));
 				pos = (*being)->getPosition();
@@ -369,7 +370,7 @@ bool LevelRunner::checkWallBlast(int x, int y) {
 					if ((tmpEnt = _objtLoader.loadObject("Gate", {x, 0, y})) != nullptr)
 						_gate = dynamic_cast<Gate *>(tmpEnt);
 				} else if (_beings.size() == 0) {
-					if (rand() % 5 == 1)
+					if (rand() % 3 == 1)
 						if ((tmpEnt = _objtLoader.loadObject("Gate", {x, 0, y})) != nullptr)
 							_gate = dynamic_cast<Gate *>(tmpEnt);
 				} else {
@@ -525,7 +526,7 @@ void LevelRunner::cleanLevel() {
 
 	_player->setPlaceBomb(false);
 	_particalRenderer.clearParticals();
-	if (_state == levelState::FAIL) {
+	if (_state != levelState::COMPLETE && _powerup && !_powerUpInstance->isActive()) {
 		_powerUpInstance->Reverse(*_player);
 	}
 	_powerup = false;
@@ -557,9 +558,8 @@ void LevelRunner::cleanLevel() {
 		delete (_gate);
 		_gate = nullptr;
 	}
-	for (auto floor : _floors)
-	{
-		delete(floor);
+	for (auto floor : _floors) {
+		delete (floor);
 	}
 	_floors.clear();
 	for (auto &source : this->_sources) {
@@ -714,8 +714,11 @@ void LevelRunner::update() {
 	}
 	if (_player->isPauseMenue())
 		_state = levelState::PAUSE;
-	if (_beings.size() == 1 && _gate != nullptr)
-		_gate->activate();
+	if (_beings.size() == 1) {
+		_player->playSound("activate");
+		if (_gate != nullptr)
+			_gate->activate();
+	}
 	beingWorldInteraction();
 	if (_state == levelState::PLAY)
 		bombWorldInteraction();

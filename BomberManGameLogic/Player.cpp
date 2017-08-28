@@ -8,7 +8,7 @@ Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale
 		_score(0),
 		_detonator(false)
 {
-
+this->_setEffects();
 }
 
 bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
@@ -159,5 +159,14 @@ bool Player::isDetonator() const {
 void Player::setDetonator(bool _detonator) {
 	Player::_detonator = _detonator;
 }
+
+void Player::_setEffects() {
+	this->addNewSoundEffect("activate", "resources/audio/Activation.wav");
+}
+
+void Player::playSound(std::string sound) {
+	this->playEffect(sound);
+}
+
 
 

@@ -60,7 +60,7 @@ namespace cge {
 		double			_animationSpeed;
 		bool			_needsTransformationUpdate;
 		std::vector<glm::mat4>	_animatedMatrices;
-
+		virtual void	_setEffects();
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		struct Transformation {
