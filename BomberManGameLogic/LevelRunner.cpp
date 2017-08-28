@@ -851,36 +851,49 @@ void LevelRunner::update()
 
 void LevelRunner::render()
 {
+	std::vector<cge::Entity *> entities;
+
 	_renderer.prepare();
 	_entShader.begin();
 	_camera.setTrackEntity(*_player);
 	_camera.setTrackOffset({0, 8, 5});
 
-	_entShader.begin();
-	_renderer.prepare();
+//	_entShader.begin();
+//	_renderer.prepare();
 	_camera.update(_entShader);
-	for (auto &vecit : _level)
-	{
-		for (auto &entit : vecit)
-		{
-			if (entit != nullptr)
-				_renderer.render(*entit);
+	for (auto &vecit : _level) {
+		for (const auto entit : vecit) {
+			if (entit != nullptr) {
+//				_renderer.render(*entit);
+				entities.push_back(entit);
+			}
 		}
 	}
-	for (auto being : _beings)
-		_renderer.render(*being);
-	if (_gate != nullptr)
+
+	for (const auto being : _beings) {
+//		_renderer.render(*being);
+		entities.push_back(being);
+	}
+
+	if (_gate != nullptr) {
 		_renderer.render(*_gate);
-	if (_powerUpInstance != nullptr && _powerUpInstance->isActive())
+//		entities.push_back(_gate);
+	}
+
+	if (_powerUpInstance != nullptr && _powerUpInstance->isActive()) {
 		_renderer.render(*_powerUpInstance);
+//		entities.push_back(_powerUpInstance);
+	}
+
+	_renderer.render(entities);
+
 	_entShader.end();
+
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 	_spriteRenderer.DrawSprite(_life, _window.getWidth(), _window.getHeight());
 	_spriteRenderer.DrawSprite(_timer, _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText((std::to_string(_player->getLives())), 84, _window.getHeight() - 100, {255, 0, 0}, 1,
-						   _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48), _window.getHeight() - 100,
-						   {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText((std::to_string(_player->getLives())), 84, _window.getHeight() - 100, {255, 0, 0}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48), _window.getHeight() - 100, {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 

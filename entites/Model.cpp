@@ -1,4 +1,5 @@
 #include "Model.hpp"
+#include "../rendering/Renderer.hpp"
 
 cge::Model::Model(const tinygltf::Model &model, const Texture &texture, Model::Type type) :
 		_vaoID(0),
@@ -53,10 +54,67 @@ void cge::Model::_create() {
 
 		this->_vbos.push_back(vboID);
 	}
+
+	/// Bind stuff
+
+	for (auto &primitive : this->_model.meshes[0].primitives) {
+		if (primitive.indices < 0)
+			continue;
+
+		for (auto &attr : primitive.attributes) {
+			const auto &accessor = this->_model.accessors[attr.second];
+
+			glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[accessor.bufferView]);
+
+			GLint size;
+
+			switch (accessor.type) {
+				case TINYGLTF_TYPE_VEC2:
+					size = 2;
+					break;
+				case TINYGLTF_TYPE_VEC3:
+					size = 3;
+					break;
+				case TINYGLTF_TYPE_VEC4:
+					size = 4;
+					break;
+				default:
+					size = 1;
+			}
+
+			GLuint index = cge::Renderer::attrType::convert(attr.first);
+
+			if (index != cge::Renderer::attrType::UNKNOWN) {
+				glVertexAttribPointer(
+						index,
+						size,
+						(GLenum)accessor.componentType,
+						(GLboolean)((accessor.normalized) ? GL_TRUE : GL_FALSE),
+						(GLsizei)this->_model.bufferViews[accessor.bufferView].byteStride,
+						BUFFER_OFFSET(accessor.byteOffset)
+				);
+
+				this->_AttribArrayIndexes.push_back(index);
+			}
+		}
+	}
+
+	const auto &indexAssessor = this->_model.accessors[this->_model.meshes[0].primitives[0].indices];
+	this->_indexAssessor = this->_AttribArrayIndexes[indexAssessor.bufferView];
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 cge::Model::Type cge::Model::getType() const {
 	return this->_type;
+}
+
+const std::vector<GLuint> &cge::Model::getAttribArrayIndexes() const {
+	return this->_AttribArrayIndexes;
+}
+
+GLuint cge::Model::getIndexAssessor() const {
+	return this->_indexAssessor;
 }
 
 std::ostream	&operator<<(std::ostream &out, cge::Model::Type type) {
