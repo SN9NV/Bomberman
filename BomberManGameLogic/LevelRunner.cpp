@@ -141,6 +141,10 @@ void LevelRunner::beingWorldInteraction() {
 					}
 
 				}
+				if (roundf(oldpos.x) != roundf(pos.x) && _level[(int)roundf(pos.z)][(int)roundf(pos.x)] != nullptr)
+					(*being)->setPosition({pos.x, 0, oldpos.z});
+				if (roundf(oldpos.z) != roundf(pos.z) && _level[(int)roundf(pos.z)][(int)roundf(pos.x)] != nullptr)
+					(*being)->setPosition({oldpos.x, 0, (*being)->getPosition().z});
 				bumpBeing((*being));
 				pos = (*being)->getPosition();
 				x = (int) (round(pos.x));
@@ -227,7 +231,7 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
 						sheild = sheild | 0b00000001;
 					else {
-						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, 500);
+						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z + i}, 100);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z + i));
 					checkBombBlast((int) (bombPos.x), (int) (bombPos.z + i));
@@ -237,7 +241,7 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z - i)))
 						sheild = sheild | 0b00000010;
 					else {
-						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, 500);
+						fireEffect({bombPos.x, bombPos.y + 0.5, bombPos.z - i}, 100);
 					}
 					checkBeingBlast((int) (bombPos.x), (int) (bombPos.z - i));
 					checkBombBlast((int) (bombPos.x), (int) (bombPos.z - i));
@@ -247,7 +251,7 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x + i), (int) (bombPos.z)))
 						sheild = sheild | 0b00000100;
 					else {
-						fireEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, 500);
+						fireEffect({bombPos.x + i, bombPos.y + .5, bombPos.z}, 100);
 					}
 					checkBeingBlast((int) bombPos.x + i, (int) (bombPos.z));
 					checkBombBlast((int) bombPos.x + i, (int) (bombPos.z));
@@ -257,7 +261,7 @@ void LevelRunner::bombWorldInteraction() {
 					if (checkWallBlast((int) (bombPos.x - i), (int) (bombPos.z)))
 						sheild = sheild | 0b00001000;
 					else {
-						fireEffect({bombPos.x - i, bombPos.y + .5, bombPos.z}, 500);
+						fireEffect({bombPos.x - i, bombPos.y + .5, bombPos.z}, 100);
 					}
 					checkBeingBlast((int) (bombPos.x - i), (int) (bombPos.z));
 					checkBombBlast((int) (bombPos.x - i), (int) (bombPos.z));

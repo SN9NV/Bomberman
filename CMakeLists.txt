@@ -88,8 +88,6 @@ set(SOURCE_FILES
 		gui/LoadGameScreen.cpp		gui/LoadGameScreen.hpp
 		gui/SaveGameScreen.cpp		gui/SaveGameScreen.hpp
 		gui/PauseGameScreen.cpp		gui/PauseGameScreen.hpp
-		gui/SaveGameScreen.cpp		gui/SaveGameScreen.hpp
-		gui/PauseGameScreen.cpp		gui/PauseGameScreen.hpp
 		gui/CustomButton.cpp		gui/CustomButton.hpp
 		gui/CustomTextbox.cpp		gui/CustomTextbox.hpp
 
