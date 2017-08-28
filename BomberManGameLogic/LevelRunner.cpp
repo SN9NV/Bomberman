@@ -358,6 +358,7 @@ void LevelRunner::loadMapEntitys()
 				case 'p':
 					_player->setPosition({j, 0, i});
 					_beings.emplace_back(this->_player);
+					_floors.push_back(_objtLoader.loadObject("Floor", {j,0,i}));
 					_map[i][j] = '.';
 					break;
 				case 'd':
@@ -370,6 +371,7 @@ void LevelRunner::loadMapEntitys()
 					}
 					break;
 				default:
+					_floors.push_back(_objtLoader.loadObject("Floor", {j,0,i}));
 					break;
 			}
 		}
@@ -417,6 +419,7 @@ bool LevelRunner::checkWallBlast(int x, int y)
 	{
 		if (dynamic_cast<DestructWall *>(_level[y][x]) != nullptr)
 		{
+			_floors.push_back(_objtLoader.loadObject("Floor", {x, 0,y}));
 			delete (_level[y][x]);
 			_level[y][x] = nullptr;
 			_dwalls--;
@@ -437,7 +440,7 @@ bool LevelRunner::checkWallBlast(int x, int y)
 			}
 			if (!_powerup)
 			{
-				if (rand() % 10 == 1 && _powerUpInstance != nullptr)
+				if (/*rand() % 10 == 1 && */_powerUpInstance != nullptr)
 				{
 					std::cout << "place PowerUP\n";
 					_powerUpInstance->setPosition({x, 0, y});
@@ -516,7 +519,7 @@ void LevelRunner::loadMapFromFile(const std::string &path)
 			}
 		}
 
-		std::cout << "balloons: " << _balloons << " onils: " << _onil << " ovapi: " << _ovapi << std::endl;
+		//std::cout << "balloons: " << _balloons << " onils: " << _onil << " ovapi: " << _ovapi << std::endl;
 
 		std::getline(ifs, line);
 		if (!std::regex_match(line, regPowerUp))
@@ -609,7 +612,7 @@ void LevelRunner::cleanLevel()
 
 	_player->setPlaceBomb(false);
 	_particalRenderer.clearParticals();
-	if (_powerup && !_powerUpInstance->isActive())
+	if (_state == levelState::FAIL)
 	{
 		_powerUpInstance->Reverse(*_player);
 	}
@@ -859,6 +862,10 @@ void LevelRunner::render()
 	_entShader.begin();
 	_renderer.prepare();
 	_camera.update(_entShader);
+	for (auto &floor : _floors)
+	{
+		_renderer.render(*floor);
+	}
 	for (auto &vecit : _level)
 	{
 		for (auto &entit : vecit)
