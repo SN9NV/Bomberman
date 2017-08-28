@@ -29,6 +29,7 @@ LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Ent
 	_map.emplace("FireDown", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FireDown));
 	_map.emplace("FullFire", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FullFire));
 	_map.emplace("Floor", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Floor.glb", resRoot + "FloorDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Floor));
+	_map.emplace("FloorBurn", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Floor.glb", resRoot + "FloorBurnDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Floor));
 	_map.emplace("WingBoot", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::WingBoot));
 
 }

@@ -55,4 +55,8 @@ namespace cge {
 			this->_vbos.push_back(vboID);
 		}
 	}
+
+	void Model::setTexture(Texture texture) {
+		_texture = texture;
+	}
 }

@@ -84,6 +84,7 @@ private:
 	void update();
 	void render();
 	void loadMapFromFile(const std::string &path);
+	void rotatePowerUp();
 
 public:
 	int getState() const;

@@ -29,6 +29,7 @@ namespace cge {
 		GLuint					getVaoID() const;
 		std::vector<GLuint>		&getVBOs();
 		cge::Texture			&getTexture();
+		void					setTexture(Texture texture);
 		tinygltf::Model 		&getTinygltfModel();
 
 	private:
