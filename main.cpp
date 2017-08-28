@@ -34,7 +34,7 @@ int main() {
 	cge::Audio::Device	defaultAudioDevice;
 
 
-	int currMap = 0;
+	int currMap = 2;
 	std::vector<std::string> maps = {
 		"../resources/Maps/Map1",
 		"../resources/Maps/Map2",
@@ -81,6 +81,8 @@ int main() {
 						currMap++;
 						if ((size_t)currMap >= maps.size())
 							state = cge::GameState::PLAY_MENU;
+						if (currMap % 2 == 0)
+							player->addLives(1);
 					}
 
 					std::cout << "level exit state " << state << std::endl;
