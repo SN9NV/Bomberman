@@ -6,6 +6,7 @@
 #include "Deternator.hpp"
 #include "Ovapi.hpp"
 #include "WallPass.hpp"
+#include "Floor.hpp"
 
 
 LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Entity *>> &level,
@@ -27,6 +28,7 @@ LevelFactory::LevelFactory(cge::Loader &loader, std::vector<std::vector<cge::Ent
 	_map.emplace("FireUp", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FireUp.glb", resRoot + "FireUpDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FireUp));
 	_map.emplace("FireDown", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FireDown.glb", resRoot + "FireDownDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FireDown));
 	_map.emplace("FullFire", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "FullFire.glb", resRoot + "FullFireDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::FullFire));
+	_map.emplace("Floor", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "Floor.glb", resRoot + "FloorDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::Floor));
 	_map.emplace("WingBoot", std::pair<cge::Model, unsigned int> (cge::Model(resRoot + "WingBoot.glb", resRoot + "WingdBootDiffuseColor.png", _loader, cge::Model::Type::STATIC), objID::WingBoot));
 
 }
@@ -59,6 +61,10 @@ cge::Entity *LevelFactory::makeFireUp(glm::vec3 position, cge::Model &model) {
 
 cge::Entity *LevelFactory::makeFullFire(glm::vec3 position, cge::Model &model) {
 	return new class FullFire(position, {0,0,0}, 1, model,_loader, 0.3);
+}
+
+cge::Entity *LevelFactory::makeFloor(glm::vec3 position, cge::Model &model) {
+	return new class Floor(position, {0,0,0}, 1, model, _loader, 0);
 }
 
 cge::Entity *LevelFactory::makeGate(glm::vec3 position, cge::Model &model) {
@@ -124,6 +130,8 @@ cge::Entity *LevelFactory::loadObject(std::string object, glm::vec3 position) {
 			return makeFireUp(position, find->second.first);
 		case objID::FullFire :
 			return makeFullFire(position, find->second.first);
+		case objID::Floor :
+			return makeFloor(position, find->second.first);
 		case objID::Gate :
 			return makeGate(position, find->second.first);
 		case objID::Onile :
@@ -145,6 +153,8 @@ bool LevelFactory::has(std::string object) {
 void LevelFactory::setBombTime(float time) {
 	_bombtime = time;
 }
+
+
 
 
 
