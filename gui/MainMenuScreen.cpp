@@ -43,6 +43,7 @@ cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
 		player->setLives(3);
 		player->setPauseMenue(false);
 		player->setDamage(2);
+		player->setScore(0);
 		*currMap = 0;
 	});
 	btn_NewGame->setMouseEnterCallback([&] {

@@ -86,8 +86,10 @@ int main() {
 						if (currMap % 2 == 0)
 							player->addLives(1);
 					}
-				} else
+				} else {
+					levelRunner->DrawEOGCredits();
 					gameState = cge::PLAY_MENU;
+				}
 				break;
 			case (cge::PLAY_PAUSE):
 				menuSound->setGain(setts->getMusicVolume());
