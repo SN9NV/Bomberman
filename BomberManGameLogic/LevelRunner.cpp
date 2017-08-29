@@ -190,6 +190,7 @@ void LevelRunner::checkBeingBlast(int x, int y) {
 				_state = levelState::WANTS_QUIT;
 			} else {
 				(*being)->setAlive(false);
+				_player->addScore((int)((*being)->getPoints()));
 			}
 		}
 		being++;
