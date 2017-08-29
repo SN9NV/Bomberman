@@ -5,7 +5,6 @@
 #ifndef BOMBERMAN_LEVELRUNNNER_HPP
 #define BOMBERMAN_LEVELRUNNNER_HPP
 
-
 #include "../entites/Model.hpp"
 #include "../rendering/TextRenderer.hpp"
 #include "Bomb.hpp"
@@ -19,6 +18,8 @@
 #include "PowerUPAbstract.hpp"
 #include "../rendering/SpriteRenderer.hpp"
 #include "LevelFactory.hpp"
+#include <chrono>
+#include <thread>
 
 enum levelState
 {
@@ -91,6 +92,7 @@ public:
 	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice);
 	int runLevel(const std::string &path);
     int resumeLevel();
+	void DrawEOGCredits();
 };
 
 

@@ -34,7 +34,7 @@ int main() {
 	cge::Audio::Device	defaultAudioDevice;
 
 
-	int currMap = 2;
+	int currMap = 0;
 	std::vector<std::string> maps = {
 		"../resources/Maps/Map1",
 		"../resources/Maps/Map2",
@@ -79,14 +79,13 @@ int main() {
 						gameState = cge::PLAY_PAUSE;
 					else if (state == levelState::COMPLETE && (size_t)currMap < maps.size()) {
 						currMap++;
-						if ((size_t)currMap >= maps.size())
-							state = cge::GameState::PLAY_MENU;
+						if ((size_t)currMap >= maps.size()) {
+							levelRunner->DrawEOGCredits();
+							gameState = cge::GameState::PLAY_MENU;
+						}
 						if (currMap % 2 == 0)
 							player->addLives(1);
 					}
-
-					std::cout << "level exit state " << state << std::endl;
-					std::cout << "Player Lives: " << player->getLives() << std::endl;
 				} else
 					gameState = cge::PLAY_MENU;
 				break;
@@ -109,8 +108,6 @@ int main() {
 				levelSounds[currMap]->setPlaying(false);
 				if (state == levelState::PAUSE)
 					gameState = cge::PLAY_PAUSE;
-				std::cout << "level exit state " << state << std::endl;
-				std::cout << "Player Lives: " << player->getLives() << std::endl;
 				break;
 			default:
 				menuSound->setGain(setts->getMusicVolume());

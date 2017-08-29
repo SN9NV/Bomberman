@@ -16,6 +16,7 @@ Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 		_level(level)
 {
 	this->_setEffects();
+	_points = 200;
 }
 
 bool Onil::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {

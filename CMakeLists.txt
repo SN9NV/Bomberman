@@ -11,7 +11,7 @@ set(RESOURCE_DIRS
 		)
 
 if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nanogui/build")
-	message(ERROR "The Bomberman dependency repositories (NanoGUI) are missing! "
+	message(INFO "The Bomberman dependency repositories (NanoGUI) are missing! "
 			"You probably did not clone the project with --recursive.\n"
 			"Automatically cloning submodules...")
 	execute_process(COMMAND git submodule update --init --recursive)
