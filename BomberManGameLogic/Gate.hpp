@@ -14,6 +14,8 @@ private:
 	bool	_damage;
 	size_t	_damageCycles;
 
+	//void	_setEffects() override;
+
 public:
 	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius = 0.5f);
 

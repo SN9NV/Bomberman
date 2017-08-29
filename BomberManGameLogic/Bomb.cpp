@@ -34,7 +34,6 @@ Bomb::~Bomb() {
 
 void Bomb::_setEffects() {
 	this->addNewSoundEffect("explosion", "resources/audio/boom.wav");
-
 }
 
 void Bomb::setDetonate(bool _isDetonate) {

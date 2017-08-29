@@ -34,6 +34,7 @@ class LevelRunner
 {
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
+	std::vector<cge::Entity *> _floors;
 	std::vector<cge::Audio::Source *>	_sources;
 	std::vector<Being *> _beings;
 	std::vector<Bomb *> _bombs;
@@ -83,6 +84,7 @@ private:
 	void update();
 	void render();
 	void loadMapFromFile(const std::string &path);
+	void rotatePowerUp();
 
 public:
 	int getState() const;

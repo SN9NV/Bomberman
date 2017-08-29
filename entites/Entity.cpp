@@ -315,3 +315,7 @@ glm::mat4 cge::Entity::getTransformation() {
 const cge::Entity::RenderParameters &cge::Entity::getRenderParameters() const {
 	return this->_renderParameters;
 }
+
+void cge::Entity::_setEffects() {
+	this->addNewSoundEffect("dieSound", "resources/audio/balloon.wav");
+}

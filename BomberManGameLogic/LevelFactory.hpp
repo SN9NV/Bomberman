@@ -33,6 +33,7 @@ public:
 		FireDown,
 		FireUp,
 		FullFire,
+		Floor,
 		Gate,
 		Onile,
 		Ovapi,
@@ -58,6 +59,7 @@ private:
 	cge::Entity *makeFireDown(glm::vec3 position, cge::Model &model);
 	cge::Entity	*makeFireUp(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeFullFire(glm::vec3 position, cge::Model &model);
+	cge::Entity *makeFloor(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeGate(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeOnile(glm::vec3 position, cge::Model &model);
 	cge::Entity *makeOvapi(glm::vec3 position, cge::Model &model);

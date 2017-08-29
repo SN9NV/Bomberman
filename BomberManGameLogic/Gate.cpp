@@ -10,7 +10,7 @@ Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 		_damage(false),
 		_damageCycles(0)
 {
-
+//this->_setEffects();
 }
 
 
@@ -18,7 +18,9 @@ bool Gate::isActive() const {
 	return _active;
 }
 
-void Gate::activate() {
+void Gate::activate()
+{
+	//this->playEffect("activate");
 	_active = true;
 }
 
@@ -46,3 +48,9 @@ bool Gate::update() {
 	
 	return true;
 }
+
+/*
+void Gate::_setEffects() {
+	this->addNewSoundEffect("activate", "resources/audio/Activation.wav");
+}
+*/

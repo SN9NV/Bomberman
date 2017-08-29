@@ -94,10 +94,12 @@ namespace cge {
 
 		RenderParameters							_renderParameters;
 		std::vector<glm::mat4>						_animatedMatrices;
+
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
-		void	_applyAnimation(cge::GLSLProgram &shader);
-		void	_animateSkeleton(cge::Entity::_AnimateSkeleton &vars);
+		virtual void	_setEffects();
+		void			_applyAnimation(cge::GLSLProgram &shader);
+		void			_animateSkeleton(cge::Entity::_AnimateSkeleton &vars);
 	};
 }
 
