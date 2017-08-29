@@ -15,7 +15,7 @@ Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 		_player(player),
 		_level(level)
 {
-
+	this->_setEffects();
 }
 
 bool Onil::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
@@ -97,4 +97,8 @@ bool Onil::somethingInTheWayY(const glm::vec3 &pPos, const glm::vec3 &onilPos) {
 		sX++;
 	}
 	return (false);
+}
+
+void Onil::_setEffects() {
+	this->addNewSoundEffect("dieSound", "resources/audio/OnileDeth2.wav");
 }

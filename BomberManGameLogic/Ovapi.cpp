@@ -15,7 +15,7 @@ Ovapi::Ovapi(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 		_changeDir(0),
 		_player(player),
 		_level(level) {
-
+	this->_setEffects();
 }
 
 bool Ovapi::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
@@ -73,5 +73,9 @@ bool Ovapi::update(const cge::InputManager &input, cge::GLSLProgram &shader, uns
 	if (lastFrameTime < 500)
 		return (Being::update(input, shader, lastFrameTime));
 	return (true);
+}
+
+void Ovapi::_setEffects() {
+	this->addNewSoundEffect("dieSound", "resources/audio/OvapiDeth.wav");
 }
 

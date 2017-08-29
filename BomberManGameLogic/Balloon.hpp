@@ -16,7 +16,7 @@ public:
 
 private:
 	int _changeDir;
-
+protected:
 	void	_setEffects() override;
 };
 
