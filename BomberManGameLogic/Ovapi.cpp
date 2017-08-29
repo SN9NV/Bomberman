@@ -16,6 +16,7 @@ Ovapi::Ovapi(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 		_player(player),
 		_level(level) {
 	this->_setEffects();
+	_points = 2000;
 }
 
 bool Ovapi::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {

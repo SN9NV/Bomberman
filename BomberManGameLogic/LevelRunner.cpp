@@ -189,6 +189,7 @@ void LevelRunner::checkBeingBlast(int x, int y) {
 				_state = levelState::WANTS_QUIT;
 			} else {
 				(*being)->setAlive(false);
+				_player->addScore((int)((*being)->getPoints()));
 			}
 		}
 		being++;
@@ -396,13 +397,28 @@ void LevelRunner::endLevel() {
 	while (endTime < 1000) {
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive() && _player->getPosition() == _gate->getPosition()) {
-			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
+			//_gate->setRotation({0, -(endTime * M_PI / 180), 0});
 			portalUseEffect(_gate->getPosition(), 20);
 		}
 		render();
 		endTime += _window.getFrameTime();
 	}
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	if (_state == levelState::COMPLETE)
+		_textRenderer.DrawText("level complected", (_window.getWidth() - (8 * 48)) / 2, (_window.getHeight() - 48) /2, {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
+	else
+		_textRenderer.DrawText("level failed", (_window.getWidth() - (6 * 48)) / 2, (_window.getHeight() - 48) /2, {0, 0, 0}, 1, _window.getWidth(), _window.getHeight());
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	std::chrono::duration<double> elapsed_seconds;
+	start = std::chrono::system_clock::now();
+	_window.swapBuffers();
 	cleanLevel();
+	do
+	{
+		end = std::chrono::system_clock::now();
+		elapsed_seconds = end-start;
+	}while (elapsed_seconds.count() < 2);
 }
 
 void LevelRunner::loadMapFromFile(const std::string &path) {
@@ -818,4 +834,32 @@ void LevelRunner::checkBombBlast(int x, int y) {
 void LevelRunner::rotatePowerUp() {
 	static const float raidSec = 0.003185225;
 	_powerUpInstance->addRotation({0, _window.getFrameTime() * raidSec, 0});
+}
+
+void LevelRunner::DrawEOGCredits() {
+	int yTitle =  _window.getHeight() * 0.1;
+	int yAuthors = yTitle - 80;
+	int yAuthorOne = yAuthors - 30;
+	int yAuthorTwo = yAuthorOne - 30;
+	int yAuthorThree = yAuthorTwo - 30;
+	int end = yAuthorThree - 20;
+
+	int width = static_cast<int>(_window.getHeight());
+	while (end < width) {
+		this->_renderer.prepare();
+		_textRenderer.DrawText("~ The End : Your Score: " + std::to_string(_player->getScore()) + " ~", 30, yTitle++, {0, 0, 0}, 1,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText("Authors:", 40, yAuthors++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Angus Dippenaar (adippena)", 45, yAuthorOne++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Robert Jones (rojones)", 45, yAuthorTwo++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Owen Exall (oexall)", 45, yAuthorThree++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+
+		_window.swapBuffers();
+		end++;
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
+	}
 }
