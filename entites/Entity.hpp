@@ -92,8 +92,8 @@ namespace cge {
 		double			_animationSpeed;
 		bool			_needsTransformationUpdate;
 
-		RenderParameters							_renderParameters;
-		std::vector<glm::mat4>						_animatedMatrices;
+		RenderParameters		_renderParameters;
+		std::vector<glm::mat4>	_animatedMatrices;
 
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 

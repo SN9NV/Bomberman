@@ -603,23 +603,23 @@ void LevelRunner::runLevelLoop() {
 	while (_state == levelState::PLAY) {
 		update();
 		render();
-		_inputManager->pollKeyEvnt();
 
+		_inputManager->pollKeyEvnt();
 
 		this->_audioDevice.setLocation(this->_player->getPosition(), true);
 
 		/// Clean up sound effects from deleted entities
 		this->_sources.erase(std::remove_if(
-				this->_sources.begin(),
-				this->_sources.end(),
-				[](cge::Audio::Source *source) {
-					if (!source->isPlaying()) {
-						delete source;
-						return true;
-					}
-
-					return false;
+			this->_sources.begin(),
+			this->_sources.end(),
+			[](cge::Audio::Source *source) {
+				if (!source->isPlaying()) {
+					delete source;
+					return true;
 				}
+
+				return false;
+			}
 		), this->_sources.end());
 	}
 
@@ -708,8 +708,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -741,9 +740,7 @@ void LevelRunner::update() {
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {
 			Being *tmpEnt;
-			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {_gate->getPosition().x, 0,
-																				 _gate->getPosition().z}))) != nullptr)
-			{
+			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {_gate->getPosition().x, 0, _gate->getPosition().z}))) != nullptr) {
 				_beings.push_back(tmpEnt);
 			}
 		}
@@ -762,40 +759,35 @@ void LevelRunner::update() {
 
 void LevelRunner::render() {
 	std::vector<cge::Entity *> entities;
-	_renderer.prepare();
 	_entShader.begin();
+	_renderer.prepare();
 	_camera.setTrackEntity(*_player);
 	_camera.setTrackOffset({0, 8, 5});
 
-//	_entShader.begin();
-//	_renderer.prepare();
 	_camera.update(_entShader);
 
 	for (auto &floor : _floors) {
-		_renderer.render(*floor);
+		entities.push_back(floor);
 	}
+
 	for (auto &vecit : _level) {
 		for (auto &entit : vecit) {
 			if (entit != nullptr) {
-				_renderer.render(*entit);
 				entities.push_back(entit);
 			}
 		}
 	}
 
 	for (const auto being : _beings) {
-//		_renderer.render(*being);
-		entities.push_back(being);
+		entities.push_back(dynamic_cast<cge::Entity *>(being));
 	}
 
 	if (_gate != nullptr) {
-//		_renderer.render(*_gate);
-		entities.push_back(_gate);
+		entities.push_back(dynamic_cast<cge::Entity *>(_gate));
 	}
 
 	if (_powerUpInstance != nullptr && _powerUpInstance->isActive()) {
-//		_renderer.render(*_powerUpInstance);
-		entities.push_back(_powerUpInstance);
+		entities.push_back(dynamic_cast<cge::Entity *>(_powerUpInstance));
 	}
 
 	_renderer.render(entities);

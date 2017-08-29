@@ -44,12 +44,12 @@ bool Being::update(const cge::InputManager &input, cge::GLSLProgram &shader, uns
 }
 
 void Being::setDirection() {
-	float angle = static_cast<float>(atan2(_n_moveDir.x, _n_moveDir.z));
+	float angle = atan2f(_n_moveDir.x, _n_moveDir.z);
 	cge::Entity::setRotation({0,angle, 0});
 }
 
 float Being::getDirAngle() {
-	return static_cast<float>(atan2(_n_moveDir.x, _n_moveDir.z) * 180 / M_PI);
+	return atan2f(_n_moveDir.x, _n_moveDir.z) * 180 / static_cast<float>(M_PI);
 }
 
 const glm::vec3 &Being::get_n_moveDir() const {

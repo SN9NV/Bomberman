@@ -94,8 +94,9 @@ float cge::Entity::getScale() const {
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	if (this->_isAnimated) {
-		if (this->_playAnimation)
+		if (this->_playAnimation) {
 			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
+		}
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -188,6 +189,9 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		skeletonTransformation = glm::translate(skeletonTransformation, skeletonTranslation);
 	}
 
+	this->_animatedMatrices.resize(skin.joints.size());
+//	std::cout << "Animated matrices: " << this->_animatedMatrices.size() << "\n";
+
 	for (auto &joint : model.nodes[skin.skeleton].children) {
 		if (joint < skin.skeleton) {
 			continue;
@@ -206,13 +210,12 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		this->_animateSkeleton(vars);
 	}
 
-	///> Saving joint transforms
-	this->_animatedMatrices.resize(animatedMatrices.size());
-	auto _animatedMatrix = this->_animatedMatrices.begin();
-
-	for (auto &animatedMatrix : animatedMatrices) {
-		*(_animatedMatrix++) = animatedMatrix.second;
-	}
+//	this->_animatedMatrices.resize(animatedMatrices.size(), glm::mat4());
+//	auto _animatedMatrix = this->_animatedMatrices.begin();
+//
+//	for (auto &animatedMatrix : animatedMatrices) {
+//		*(_animatedMatrix++) = animatedMatrix.second;
+//	}
 }
 
 void	cge::Entity::_animateSkeleton(cge::Entity::_AnimateSkeleton &vars) {
@@ -231,7 +234,14 @@ void	cge::Entity::_animateSkeleton(cge::Entity::_AnimateSkeleton &vars) {
 				glm::mat4_cast(glm::normalize(jointTransform->second.rotation));
 	}
 
-	vars.animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+//	vars.animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+	this->_animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+
+//	std::cout << "Node: " << vars.startNodeIndex << " Children: " << vars.nodes[vars.startNodeIndex].children.size() << " [ ";
+//	for (auto &child : vars.nodes[vars.startNodeIndex].children) {
+//		std::cout << child << ", ";
+//	}
+//	std::cout << " ]\n";
 
 	for (auto &child : vars.nodes[vars.startNodeIndex].children) {
 		vars.parentTransform = currentTransform;
