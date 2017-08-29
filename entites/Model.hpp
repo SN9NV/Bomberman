@@ -31,8 +31,8 @@ namespace cge {
 		const std::vector<GLuint>	&getVBOs() const;
 		const cge::Texture			&getTexture() const;
 		const tinygltf::Model 		&getTinygltfModel() const;
-		const std::vector<GLuint>	&getAttribArrayIndexes() const;
 		GLuint						getIndexAssessor() const;
+		std::vector<GLuint>			&getAttribArrayIndexes();
 
 	private:
 		GLuint				_vaoID;

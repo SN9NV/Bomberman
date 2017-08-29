@@ -1,6 +1,8 @@
 #ifndef NEW_ENTITY_HPP
 #define NEW_ENTITY_HPP
 
+#include <vector>
+
 #include <glm/glm.hpp>
 #include "Model.hpp"
 #include "../rendering/GLSLProgram.hpp"
@@ -12,6 +14,18 @@
 namespace cge {
 	class Entity {
 	public:
+		struct RenderParameters {
+			GLuint	VAO;
+			GLuint	textureID;
+			GLuint	indexAssessor;
+			std::vector<GLuint>	*attribArrayIndexes;
+
+			GLenum	mode;
+			GLsizei	count;
+			GLenum	componentType;
+			size_t	byteOffset;
+		};
+
 		Entity() = delete;
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius);
 		~Entity();
@@ -39,31 +53,12 @@ namespace cge {
 		double			getAnimationSpeed() const;
 		void			playEffect(const std::string &name) const;
 		const std::vector<glm::mat4>	&getJointTransforms() const;
+		const RenderParameters			&getRenderParameters() const;
 
 		const std::map<std::string, cge::Audio::Source *>	&getSoundEffects() const;
 
 	protected:
 		static constexpr unsigned __MAX_JOINTS = 50;
-
-		cge::Model		&_model;
-		cge::Loader		&_loader;
-		glm::vec3		_position;
-		glm::vec3		_rotation;
-		float 			_scale;
-		float			_hitBoxRadius;
-		glm::mat4		_transformation;
-		GLint			_transformationLocation;
-		double			_lastTicks;
-		double			_ticksDelta;
-		double			_animationTicks;
-		unsigned		_currentAnimation;
-		bool			_hasAnimation;
-		bool 			_playAnimation;
-		double			_animationSpeed;
-		bool			_needsTransformationUpdate;
-		std::vector<glm::mat4>	_animatedMatrices;
-
-		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		struct Transformation {
 			glm::vec3	translation;
@@ -79,6 +74,27 @@ namespace cge {
 			int									startNodeIndex;
 			int									rootNodeIndex;
 		};
+
+		cge::Model		&_model;
+		cge::Loader		&_loader;
+		glm::vec3		_position;
+		glm::vec3		_rotation;
+		float 			_scale;
+		float			_hitBoxRadius;
+		glm::mat4		_transformation;
+		GLint			_transformationLocation;
+		double			_lastTicks;
+		double			_ticksDelta;
+		double			_animationTicks;
+		unsigned		_currentAnimation;
+		bool			_isAnimated;
+		bool 			_playAnimation;
+		double			_animationSpeed;
+		bool			_needsTransformationUpdate;
+
+		RenderParameters							_renderParameters;
+		std::vector<glm::mat4>						_animatedMatrices;
+		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		void	_applyAnimation(cge::GLSLProgram &shader);
 		void	_animateSkeleton(cge::Entity::_AnimateSkeleton &vars);

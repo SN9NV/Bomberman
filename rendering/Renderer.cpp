@@ -29,7 +29,13 @@ void	cge::Renderer::drawMesh(const tinygltf::Model &model, const tinygltf::Mesh 
 		if (primitive.indices < 0)
 			continue;
 
-		glEnableVertexAttribArray(index);
+		for (auto &attr : primitive.attributes) {
+			GLuint index = attrType::convert(attr.first);
+
+			if (index != attrType::UNKNOWN) {
+				glEnableVertexAttribArray(index);
+			}
+		}
 
 		const auto &indexAssessor = model.accessors[primitive.indices];
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboMap[indexAssessor.bufferView]);
@@ -115,41 +121,13 @@ void	cge::Renderer::uploadView(const glm::mat4 &view) const {
 }
 
 void	cge::Renderer::render(std::vector<Entity *> &entities) const {
-//	double time = glfwGetTime();
-
-	std::sort(entities.begin(), entities.end(), [](cge::Entity *e1, cge::Entity *e2) -> bool {
-		const auto &m1 = e1->getModel();
-		const auto &m2 = e2->getModel();
-
-		/// Sort by render type, then model (using memory address as identifier), then by texture ID.
-		/// Render type
-//		if (m1.getType() > m2.getType()) return true;
-//		if (m1.getType() < m2.getType()) return false;
-
-		/// Model address
-//		if (&m1.getTinygltfModel() > &m2.getTinygltfModel()) return true;
-//		if (&m1.getTinygltfModel() < &m2.getTinygltfModel()) return false;
-
-		/// Texture ID
-//		if (m1.getTexture().getID() < m2.getTexture().getID()) return true;
-//		if (m1.getTexture().getID() > m2.getTexture().getID()) return false;
-		return (m1.getTexture().getID() < m2.getTexture().getID());
-
-		/// Don't swap. Entities are identical
-//		return false;
-	});
-
-
-	auto vao = entities[0]->getModel().getVaoID();
-	auto textureID = entities[0]->getModel().getTexture().getID();
-	auto isAnimated = entities[0]->isAnimated();
-
 	for (auto &entity : entities) {
-		auto model = entity->getModel();
+		auto renderParameters = entity->getRenderParameters();
 
-//		glBindVertexArray(model.getVaoID());
+		/// Bind the model and texture
+		glBindVertexArray(renderParameters.VAO);
+
 		/// Upload the model's transformation matrix
-//		this->uploadTransformation(Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(), entity->getScale()));
 		this->uploadTransformation(entity->getTransformation());
 
 		/// Upload animations
@@ -157,54 +135,27 @@ void	cge::Renderer::render(std::vector<Entity *> &entities) const {
 			this->uploadJointTransforms(entity->getJointTransforms());
 		}
 
-		/// Bind the model and texture
-		if (vao != model.getVaoID() || entity == entities[0]) {
-			glBindVertexArray(model.getVaoID());
-			vao = model.getVaoID();
-		}
-
 		/// Upload if the model has an animation or not
-		if (isAnimated != entity->isAnimated() || entity == entities[0]) {
-			this->uploadIsAnimated(entity->isAnimated());
-//			isAnimated = entity->isAnimated();
-		}
+		this->uploadIsAnimated(entity->isAnimated());
 
 		/// Draw the triangles
-		if (textureID != model.getTexture().getID() || entity == entities[0]) {
-			glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
-//			textureID = model.getTexture().getID();
-		}
+		glBindTexture(GL_TEXTURE_2D, renderParameters.textureID);
 
-		const tinygltf::Model	&renderModel = model.getTinygltfModel();
-		const tinygltf::Scene	&scene = renderModel.scenes[renderModel.defaultScene];
-		const auto &indexes = model.getAttribArrayIndexes();
-
-		for (auto index : indexes) {
+		for (auto &index : *renderParameters.attribArrayIndexes) {
 			glEnableVertexAttribArray(index);
 		}
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.getIndexAssessor());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderParameters.indexAssessor);
 
 		glDrawElements(
-				(GLenum)primitive.mode,
-				(GLsizei)indexAssessor.count,
-				(GLenum)indexAssessor.componentType,
-				BUFFER_OFFSET(indexAssessor.byteOffset)
+			renderParameters.mode,
+			renderParameters.count,
+			renderParameters.componentType,
+			BUFFER_OFFSET(renderParameters.byteOffset)
 		);
 
-		for (auto &attr : primitive.attributes) {
-			GLuint index = attrType::convert(attr.first);
-
-			if (index != attrType::UNKNOWN) {
-				glDisableVertexAttribArray(index);
-			}
-		}
-
-		for (auto &nodeIndex : scene.nodes) {
-			const tinygltf::Node	&node = renderModel.nodes[nodeIndex];
-			drawMesh(renderModel, renderModel.meshes[(node.mesh >= 0) ? node.mesh : 0], model.getVBOs());
+		for (auto &index : *renderParameters.attribArrayIndexes) {
+			glDisableVertexAttribArray(index);
 		}
 	}
-
-//	std::cout << "Frame time: " << (glfwGetTime() - time) * 1000 << "\n";
 }

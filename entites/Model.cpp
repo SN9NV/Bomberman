@@ -49,58 +49,51 @@ void cge::Model::_create() {
 		GLuint vboID = 0;
 		glGenBuffers(1, &vboID);
 		glBindBuffer((GLenum)view.target, vboID);
-		glBufferData((GLenum)view.target, view.byteLength, buffer.data.data() + view.byteOffset, (GLenum)this->_type);
+		glBufferData((GLenum)view.target, view.byteLength, buffer.data.data() + view.byteOffset, GL_STATIC_DRAW);
 		glBindBuffer((GLenum)view.target, 0);
 
 		this->_vbos.push_back(vboID);
 	}
 
 	/// Bind stuff
+	for (auto &attr : this->_model.meshes[0].primitives[0].attributes) {
+		const auto &accessor = this->_model.accessors[attr.second];
 
-	for (auto &primitive : this->_model.meshes[0].primitives) {
-		if (primitive.indices < 0)
-			continue;
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[accessor.bufferView]);
 
-		for (auto &attr : primitive.attributes) {
-			const auto &accessor = this->_model.accessors[attr.second];
+		GLint size;
 
-			glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[accessor.bufferView]);
+		switch (accessor.type) {
+			case TINYGLTF_TYPE_VEC2:
+				size = 2;
+				break;
+			case TINYGLTF_TYPE_VEC3:
+				size = 3;
+				break;
+			case TINYGLTF_TYPE_VEC4:
+				size = 4;
+				break;
+			default:
+				size = 1;
+		}
 
-			GLint size;
+		GLuint index = cge::Renderer::attrType::convert(attr.first);
 
-			switch (accessor.type) {
-				case TINYGLTF_TYPE_VEC2:
-					size = 2;
-					break;
-				case TINYGLTF_TYPE_VEC3:
-					size = 3;
-					break;
-				case TINYGLTF_TYPE_VEC4:
-					size = 4;
-					break;
-				default:
-					size = 1;
-			}
+		if (index != cge::Renderer::attrType::UNKNOWN) {
+			glVertexAttribPointer(
+					index,
+					size,
+					(GLenum) accessor.componentType,
+					(GLboolean) ((accessor.normalized) ? GL_TRUE : GL_FALSE),
+					(GLsizei) this->_model.bufferViews[accessor.bufferView].byteStride,
+					BUFFER_OFFSET(accessor.byteOffset)
+			);
 
-			GLuint index = cge::Renderer::attrType::convert(attr.first);
-
-			if (index != cge::Renderer::attrType::UNKNOWN) {
-				glVertexAttribPointer(
-						index,
-						size,
-						(GLenum)accessor.componentType,
-						(GLboolean)((accessor.normalized) ? GL_TRUE : GL_FALSE),
-						(GLsizei)this->_model.bufferViews[accessor.bufferView].byteStride,
-						BUFFER_OFFSET(accessor.byteOffset)
-				);
-
-				this->_AttribArrayIndexes.push_back(index);
-			}
+			this->_AttribArrayIndexes.push_back(index);
 		}
 	}
 
-	const auto &indexAssessor = this->_model.accessors[this->_model.meshes[0].primitives[0].indices];
-	this->_indexAssessor = this->_AttribArrayIndexes[indexAssessor.bufferView];
+	this->_indexAssessor = this->_vbos[this->_model.accessors[this->_model.meshes[0].primitives[0].indices].bufferView];
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -109,7 +102,7 @@ cge::Model::Type cge::Model::getType() const {
 	return this->_type;
 }
 
-const std::vector<GLuint> &cge::Model::getAttribArrayIndexes() const {
+std::vector<GLuint> &cge::Model::getAttribArrayIndexes() {
 	return this->_AttribArrayIndexes;
 }
 

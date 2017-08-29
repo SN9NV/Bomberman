@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "../extras/Maths.hpp"
 #include "../extras/glmOstream.hpp"
+#include "../tinyGLTF/tiny_gltf.h"
 
 cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
 		_model(model),
@@ -15,11 +16,36 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_ticksDelta(0.0),
 		_animationTicks(1.0),
 		_currentAnimation(0),
-		_hasAnimation(!model.getTinygltfModel().animations.empty()),
+		_isAnimated(!model.getTinygltfModel().animations.empty()),
 		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
+	/// Render parameters
+	/*
+	 *  GLuint	&VAO;
+		GLuint	&textureID;
+		GLuint	&indexAssessor;
+		bool	&isAnimated;
+		std::vector<GLuint>	&attribArrayIndexes;
 
+		GLenum	&mode;
+		GLsizei	&count;
+		GLenum	&componentType;
+		void	*byteOffset;
+	 * */
+	const tinygltf::Model	&tinyModel = this->_model.getTinygltfModel();
+	const auto &indexAssessor = tinyModel.accessors[tinyModel.meshes[0].primitives[0].indices];
+
+	this->_renderParameters = {
+			this->_model.getVaoID(),
+			this->_model.getTexture().getID(),
+			this->_model.getIndexAssessor(),
+			&this->_model.getAttribArrayIndexes(),
+			static_cast<GLenum>(tinyModel.meshes[0].primitives[0].mode),
+			static_cast<GLsizei>(indexAssessor.count),
+			static_cast<GLenum>(indexAssessor.componentType),
+			indexAssessor.byteOffset
+	};
 }
 
 cge::Entity::~Entity() {
@@ -67,7 +93,7 @@ float cge::Entity::getScale() const {
 }
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
-	if (this->_hasAnimation) {
+	if (this->_isAnimated) {
 		if (this->_playAnimation)
 			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
 
@@ -85,7 +111,7 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 
 void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	const tinygltf::Model &model = this->_model.getTinygltfModel();
-	if (!this->_hasAnimation || model.skins.empty() || model.skins[0].joints.empty()) {
+	if (!this->_isAnimated || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;
 	}
 
@@ -184,6 +210,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	this->_animatedMatrices.resize(animatedMatrices.size());
 	auto _animatedMatrix = this->_animatedMatrices.begin();
 
+	std::cout << animatedMatrices.size() << "\n";
 	for (auto &animatedMatrix : animatedMatrices) {
 		*(_animatedMatrix++) = animatedMatrix.second;
 	}
@@ -238,7 +265,7 @@ void cge::Entity::setAnimationSpeed(float speed) {
 }
 
 bool cge::Entity::isAnimated() const {
-	return this->_hasAnimation;
+	return this->_isAnimated;
 }
 
 double cge::Entity::getAnimationSpeed() const {
@@ -284,4 +311,8 @@ glm::mat4 cge::Entity::getTransformation() {
 	}
 
 	return this->_transformation;
+}
+
+const cge::Entity::RenderParameters &cge::Entity::getRenderParameters() const {
+	return this->_renderParameters;
 }
