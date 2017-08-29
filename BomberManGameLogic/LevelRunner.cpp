@@ -190,6 +190,7 @@ void LevelRunner::checkBeingBlast(int x, int y) {
 				_state = levelState::WANTS_QUIT;
 			} else {
 				(*being)->setAlive(false);
+				_player->addScore((int)((*being)->getPoints()));
 			}
 		}
 		being++;
@@ -397,13 +398,28 @@ void LevelRunner::endLevel() {
 	while (endTime < 1000) {
 		_player->setRotation({0, endTime * M_PI / 180, 0});
 		if (_gate != nullptr && _gate->isActive() && _player->getPosition() == _gate->getPosition()) {
-			_gate->setRotation({0, -(endTime * M_PI / 180), 0});
+			//_gate->setRotation({0, -(endTime * M_PI / 180), 0});
 			portalUseEffect(_gate->getPosition(), 20);
 		}
 		render();
 		endTime += _window.getFrameTime();
 	}
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	if (_state == levelState::COMPLETE)
+		_textRenderer.DrawText("level complected", (_window.getWidth() - (8 * 48)) / 2, (_window.getHeight() - 48) /2, {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
+	else
+		_textRenderer.DrawText("level failed", (_window.getWidth() - (6 * 48)) / 2, (_window.getHeight() - 48) /2, {0, 0, 0}, 1, _window.getWidth(), _window.getHeight());
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	std::chrono::duration<double> elapsed_seconds;
+	start = std::chrono::system_clock::now();
+	_window.swapBuffers();
 	cleanLevel();
+	do
+	{
+		end = std::chrono::system_clock::now();
+		elapsed_seconds = end-start;
+	}while (elapsed_seconds.count() < 2);
 }
 
 void LevelRunner::loadMapFromFile(const std::string &path) {
