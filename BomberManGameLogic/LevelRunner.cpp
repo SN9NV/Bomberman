@@ -806,3 +806,31 @@ void LevelRunner::rotatePowerUp() {
 	static const float raidSec = 0.003185225;
 	_powerUpInstance->addRotation({0, _window.getFrameTime() * raidSec, 0});
 }
+
+void LevelRunner::DrawEOGCredits() {
+	int yTitle =  _window.getHeight() * 0.1;
+	int yAuthors = yTitle - 80;
+	int yAuthorOne = yAuthors - 30;
+	int yAuthorTwo = yAuthorOne - 30;
+	int yAuthorThree = yAuthorTwo - 30;
+	int end = yAuthorThree - 20;
+
+	int width = static_cast<int>(_window.getHeight());
+	while (end < width) {
+		this->_renderer.prepare();
+		_textRenderer.DrawText("~ The End : Your Score: " + std::to_string(_player->getScore()) + " ~", 30, yTitle++, {0, 0, 0}, 1,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText("Authors:", 40, yAuthors++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Angus Dippenaar (adippena)", 45, yAuthorOne++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Robert Jones (rojones)", 45, yAuthorTwo++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Owen Exall (oexall)", 45, yAuthorThree++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+
+		_window.swapBuffers();
+		end++;
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
+	}
+}
