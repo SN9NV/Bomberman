@@ -210,7 +210,6 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	this->_animatedMatrices.resize(animatedMatrices.size());
 	auto _animatedMatrix = this->_animatedMatrices.begin();
 
-	std::cout << animatedMatrices.size() << "\n";
 	for (auto &animatedMatrix : animatedMatrices) {
 		*(_animatedMatrix++) = animatedMatrix.second;
 	}
