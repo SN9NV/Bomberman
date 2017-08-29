@@ -18,7 +18,10 @@ private:
 
 public:
 	Ovapi(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, const Player& player, std::vector<std::vector<cge::Entity *>> &level, float hitBox = 0.5f);
-	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
+	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) override;
+
+protected:
+	void	_setEffects() override;
 };
 
 
