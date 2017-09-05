@@ -1,7 +1,6 @@
 #version 330 core
 
 const int MAX_JOINTS = 50;
-const int MAX_WEIGHTS = 4;
 
 layout(location = 0) in vec3	vertexPosition;
 layout(location = 1) in vec3	vertexNormal;
@@ -11,7 +10,6 @@ layout(location = 4) in vec4	vertexWeights;
 
 out vec3	fragmentNormal;
 out vec2	fragmentUV;
-//out vec4	fragmentWeights;
 out vec3	toLight;
 
 uniform bool	isAnimated;
@@ -37,6 +35,5 @@ void main() {
 
 	fragmentNormal = (transform * vec4(vertexNormal, 0.0)).xyz;
 	fragmentUV = vertexUV;
-//	fragmentWeights = vertexWeights;
 	toLight = normalize(lightLocation - position.xyz);
 }

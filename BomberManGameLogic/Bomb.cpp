@@ -18,18 +18,17 @@ bool Bomb::update(const cge::InputManager &input, unsigned lastFrameTime) {
 	return (!_isDetonate);
 }
 
+
 bool Bomb::isDeternate()
 {
 	return (_isDetonate);
 }
 
-int Bomb::getBombradius() const
-{
+int Bomb::getBombradius() const {
 	return _bombRadius;
 }
 
-Bomb::~Bomb()
-{
+Bomb::~Bomb() {
 	this->playEffect("explosion");
 }
 
@@ -40,4 +39,3 @@ void Bomb::_setEffects() {
 void Bomb::setDetonate(bool _isDetonate) {
 	Bomb::_isDetonate = _isDetonate;
 }
-

@@ -7,27 +7,11 @@
 #include "../entites/Entity.hpp"
 #include "../io/Window.hpp"
 
+#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+
 namespace cge {
 	class Renderer {
 	public:
-		Renderer() = default;
-		Renderer(GLSLProgram &shader);
-
-		~Renderer() = default;
-
-		void	prepare() const;
-		void	render(Entity &entity) const;
-		void	render(std::vector<cge::Entity> &entities) const;
-
-		/// Upload uniforms
-		void	uploadIsAnimated(bool isAnimated) const;
-		void	uploadJointTransforms(const std::vector<glm::mat4> &jointTransforms) const;
-		void	uploadTransformation(const glm::mat4 &transformation) const;
-		void	uploadView(const glm::mat4 &view) const;
-
-	private:
-		const GLSLProgram &_shader;
-
 		class attrType {
 		public:
 			static constexpr GLuint POSITION = 0;
@@ -40,7 +24,25 @@ namespace cge {
 			static GLuint convert(const std::string &type);
 		};
 
-		void drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const;
+		Renderer() = default;
+		Renderer(GLSLProgram &shader);
+
+		~Renderer() = default;
+
+		void	prepare() const;
+		void	render(Entity &entity) const;
+		void	render(std::vector<cge::Entity *> &entities) const;
+
+		/// Upload uniforms
+		void	uploadIsAnimated(bool isAnimated) const;
+		void	uploadJointTransforms(const std::vector<glm::mat4> &jointTransforms) const;
+		void	uploadTransformation(const glm::mat4 &transformation) const;
+		void	uploadView(const glm::mat4 &view) const;
+
+	private:
+		const GLSLProgram &_shader;
+
+		void drawMesh(const tinygltf::Model &model, const tinygltf::Mesh &mesh, const std::vector<GLuint> &vboMap) const;
 
 		/// Uniform variables
 		static constexpr unsigned __MAX_JOINTS = 50;

@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "../extras/Maths.hpp"
 #include "../extras/glmOstream.hpp"
+#include "../tinyGLTF/tiny_gltf.h"
 
 cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius) :
 		_model(model),
@@ -9,17 +10,50 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_rotation(rotation),
 		_scale(scale),
 		_hitBoxRadius(hitBoxRadius * _scale),
-		_transformation(1.0),
+		_transformation(Maths::createTransformationMatrix(position, rotation, scale)),
 		_transformationLocation(0),
 		_lastTicks(glfwGetTime()),
 		_ticksDelta(0.0),
 		_animationTicks(1.0),
 		_currentAnimation(0),
-		_hasAnimation(!model.getTinygltfModel().animations.empty()),
+		_isAnimated(!model.getTinygltfModel().animations.empty()),
 		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
-//this->_setEffects();
+	/// Render parameters
+	/*
+	 *  GLuint	&VAO;
+		GLuint	&textureID;
+		GLuint	&indexAssessor;
+		bool	&isAnimated;
+		std::vector<GLuint>	&attribArrayIndexes;
+
+		GLenum	&mode;
+		GLsizei	&count;
+		GLenum	&componentType;
+		void	*byteOffset;
+	 * */
+	const tinygltf::Model	&tinyModel = this->_model.getTinygltfModel();
+	const auto &indexAssessor = tinyModel.accessors[tinyModel.meshes[0].primitives[0].indices];
+
+	this->_renderParameters = {
+			this->_model.getVaoID(),
+			this->_model.getTexture().getID(),
+			this->_model.getIndexAssessor(),
+			&this->_model.getAttribArrayIndexes(),
+			static_cast<GLenum>(tinyModel.meshes[0].primitives[0].mode),
+			static_cast<GLsizei>(indexAssessor.count),
+			static_cast<GLenum>(indexAssessor.componentType),
+			indexAssessor.byteOffset
+	};
+}
+
+cge::Entity::~Entity() {
+	for (auto &source : this->_soundEffects) {
+		if (!source.second->isPlaying()) {
+			delete source.second;
+		}
+	}
 }
 
 void cge::Entity::addPosition(const glm::vec3 &delta) {
@@ -59,9 +93,10 @@ float cge::Entity::getScale() const {
 }
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
-	if (this->_hasAnimation) {
-		if (this->_playAnimation)
+	if (this->_isAnimated) {
+		if (this->_playAnimation) {
 			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
+		}
 
 		if (shader.isInUse()) {
 			this->_applyAnimation(shader);
@@ -76,14 +111,14 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 }
 
 void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
-	tinygltf::Model &model = this->_model.getTinygltfModel();
-	if (!this->_hasAnimation || model.skins.empty() || model.skins[0].joints.empty()) {
+	const tinygltf::Model &model = this->_model.getTinygltfModel();
+	if (!this->_isAnimated || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;
 	}
 
 	std::map<int, cge::Entity::Transformation>	transformationMap;
 
-	unsigned char *data = model.buffers[0].data.data();
+	const unsigned char *data = model.buffers[0].data.data();
 	tinygltf::Animation animation = model.animations[this->_currentAnimation];
 
 	for (auto &channel : animation.channels) {
@@ -97,7 +132,7 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		tinygltf::Accessor		outAccessor	= model.accessors[animationSampler.output];
 		tinygltf::BufferView	outBuffView	= model.bufferViews[outAccessor.bufferView];
 
-		auto *keyFrames = reinterpret_cast<float *>(data + inBuffView.byteOffset);
+		auto *keyFrames = reinterpret_cast<const float *>(data + inBuffView.byteOffset);
 		float animationLength = inAccessor.count * (keyFrames[1] - keyFrames[0]);
 
 		if (this->_animationTicks < 0.0) {
@@ -131,15 +166,15 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		float interpolant = static_cast<float>(this->_animationTicks - lowerKeyframeTime) / (upperKeyframeTime - lowerKeyframeTime);
 
 		if (channel.target_path == "translation") {
-			auto *translation = reinterpret_cast<glm::vec3 *>(data + outBuffView.byteOffset);
+			auto *translation = reinterpret_cast<const glm::vec3 *>(data + outBuffView.byteOffset);
 			transformationMap[channel.target_node].translation = glm::mix(translation[lowerKeyframe], translation[upperKeyframe], interpolant);
 		} else if (channel.target_path == "rotation") {
-			auto *rotation = reinterpret_cast<glm::quat *>(data + outBuffView.byteOffset);
+			auto *rotation = reinterpret_cast<const glm::quat *>(data + outBuffView.byteOffset);
 			transformationMap[channel.target_node].rotation = glm::slerp(rotation[lowerKeyframe], rotation[upperKeyframe], interpolant);
 		}
 	}
 
-	tinygltf::Skin	&skin = model.skins[0];
+	const tinygltf::Skin	&skin = model.skins[0];
 	int rootJointIndex = skin.joints[0];
 
 	auto						*inverseMatrices = (glm::mat4 *)(data + model.bufferViews[skin.inverseBindMatrices].byteOffset);
@@ -147,12 +182,15 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 	std::map<int, glm::mat4>	animatedMatrices;
 
 
-	tinygltf::Node &skeleton = model.nodes[skin.skeleton];
+	const tinygltf::Node &skeleton = model.nodes[skin.skeleton];
 
 	if (!skeleton.translation.empty()) {
 		glm::vec3	skeletonTranslation(skeleton.translation[0], skeleton.translation[1], skeleton.translation[2]);
 		skeletonTransformation = glm::translate(skeletonTransformation, skeletonTranslation);
 	}
+
+	this->_animatedMatrices.resize(skin.joints.size());
+//	std::cout << "Animated matrices: " << this->_animatedMatrices.size() << "\n";
 
 	for (auto &joint : model.nodes[skin.skeleton].children) {
 		if (joint < skin.skeleton) {
@@ -172,13 +210,12 @@ void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
 		this->_animateSkeleton(vars);
 	}
 
-	///> Saving joint transforms
-	this->_animatedMatrices.resize(animatedMatrices.size());
-	auto _animatedMatrix = this->_animatedMatrices.begin();
-
-	for (auto &animatedMatrix : animatedMatrices) {
-		*(_animatedMatrix++) = animatedMatrix.second;
-	}
+//	this->_animatedMatrices.resize(animatedMatrices.size(), glm::mat4());
+//	auto _animatedMatrix = this->_animatedMatrices.begin();
+//
+//	for (auto &animatedMatrix : animatedMatrices) {
+//		*(_animatedMatrix++) = animatedMatrix.second;
+//	}
 }
 
 void	cge::Entity::_animateSkeleton(cge::Entity::_AnimateSkeleton &vars) {
@@ -197,7 +234,14 @@ void	cge::Entity::_animateSkeleton(cge::Entity::_AnimateSkeleton &vars) {
 				glm::mat4_cast(glm::normalize(jointTransform->second.rotation));
 	}
 
-	vars.animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+//	vars.animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+	this->_animatedMatrices[vars.startNodeIndex - vars.rootNodeIndex] = currentTransform * inverseMatrix;
+
+//	std::cout << "Node: " << vars.startNodeIndex << " Children: " << vars.nodes[vars.startNodeIndex].children.size() << " [ ";
+//	for (auto &child : vars.nodes[vars.startNodeIndex].children) {
+//		std::cout << child << ", ";
+//	}
+//	std::cout << " ]\n";
 
 	for (auto &child : vars.nodes[vars.startNodeIndex].children) {
 		vars.parentTransform = currentTransform;
@@ -230,20 +274,18 @@ void cge::Entity::setAnimationSpeed(float speed) {
 }
 
 bool cge::Entity::isAnimated() const {
-	return this->_hasAnimation;
+	return this->_isAnimated;
 }
 
 double cge::Entity::getAnimationSpeed() const {
 	return this->_animationSpeed;
 }
 
-bool cge::Entity::isPlayAnimation() const
-{
+bool cge::Entity::isPlayAnimation() const {
 	return _playAnimation;
 }
 
-void cge::Entity::setPlayAnimation(bool playAnimation)
-{
+void cge::Entity::setPlayAnimation(bool playAnimation) {
 	this->_playAnimation = playAnimation;
 }
 
@@ -269,6 +311,19 @@ const std::map<std::string, cge::Audio::Source *> &cge::Entity::getSoundEffects(
 
 const std::vector<glm::mat4> &cge::Entity::getJointTransforms() const {
 	return this->_animatedMatrices;
+}
+
+glm::mat4 cge::Entity::getTransformation() {
+	if (this->_needsTransformationUpdate) {
+		this->_transformation = Maths::createTransformationMatrix(this->_position, this->_rotation, this->_scale);
+		this->_needsTransformationUpdate = false;
+	}
+
+	return this->_transformation;
+}
+
+const cge::Entity::RenderParameters &cge::Entity::getRenderParameters() const {
+	return this->_renderParameters;
 }
 
 void cge::Entity::_setEffects() {

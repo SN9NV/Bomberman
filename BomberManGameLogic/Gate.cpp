@@ -14,8 +14,7 @@ Gate::Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 }
 
 
-bool Gate::isActive() const
-{
+bool Gate::isActive() const {
 	return _active;
 }
 
@@ -39,12 +38,14 @@ void Gate::damage(size_t damageCycles) {
 }
 
 bool Gate::update() {
-	if (_damageCycles == 1)
+	if (_damageCycles == 1) {
 		_damage = false;
-	if (_damageCycles > 0)
-	{
+	}
+
+	if (_damageCycles > 0) {
 		_damageCycles--;
 	}
+	
 	return true;
 }
 

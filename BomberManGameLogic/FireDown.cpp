@@ -8,12 +8,14 @@ FireDown::FireDown(const glm::vec3 &position, const glm::vec3 &rotation, float s
 	PowerUPAbstract(position, rotation, scale, model, loader, hitBoxRadius) {}
 
 void FireDown::Powerup(Player &player) {
-	if (player.getDamage() > 2)
+	if (player.getDamage() > 2) {
 		player.setDamage(player.getDamage() - 1);
+	}
 }
 
 void FireDown::Reverse(Player &player) {
-		if (player.getDamage() < 5)
-			player.setDamage(player.getDamage() + 1);
+	if (player.getDamage() < 5) {
+		player.setDamage(player.getDamage() + 1);
+	}
 }
 

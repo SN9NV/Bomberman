@@ -107,7 +107,6 @@ void LevelRunner::beingWorldInteraction() {
 	glm::vec3 oldpos;
 	glm::vec3 pos;
 	glm::vec3 dist;
-	cge::Model *tmpmdl;
 	std::vector<Being *>::iterator being;
 	int x;
 	int y;
@@ -604,23 +603,23 @@ void LevelRunner::runLevelLoop() {
 	while (_state == levelState::PLAY) {
 		update();
 		render();
-		_inputManager->pollKeyEvnt();
 
+		_inputManager->pollKeyEvnt();
 
 		this->_audioDevice.setLocation(this->_player->getPosition(), true);
 
 		/// Clean up sound effects from deleted entities
 		this->_sources.erase(std::remove_if(
-				this->_sources.begin(),
-				this->_sources.end(),
-				[](cge::Audio::Source *source) {
-					if (!source->isPlaying()) {
-						delete source;
-						return true;
-					}
-
-					return false;
+			this->_sources.begin(),
+			this->_sources.end(),
+			[](cge::Audio::Source *source) {
+				if (!source->isPlaying()) {
+					delete source;
+					return true;
 				}
+
+				return false;
+			}
 		), this->_sources.end());
 	}
 
@@ -676,8 +675,7 @@ void LevelRunner::portalActiveEffect(glm::vec3 position, size_t numParticals) {
 		verlocity.z = disvz(gen);
 
 		lifetime = dislife(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA,
-									  GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, 0.05, 0, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -710,8 +708,7 @@ void LevelRunner::portalUseEffect(glm::vec3 position, size_t numParticals) {
 		lifetime = dislife(gen);
 		scale = disscale(gen);
 		rotation = disrot(gen);
-		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t),
-									  GL_SRC_ALPHA, GL_ONE);
+		_particalRenderer.addPartical(cge::Partical(position, verlocity, 0.01, lifetime, scale, rotation, 0, t), GL_SRC_ALPHA, GL_ONE);
 	}
 
 }
@@ -743,9 +740,7 @@ void LevelRunner::update() {
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {
 			Being *tmpEnt;
-			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {_gate->getPosition().x, 0,
-																				 _gate->getPosition().z}))) !=
-				nullptr) {
+			if ((tmpEnt = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {_gate->getPosition().x, 0, _gate->getPosition().z}))) != nullptr) {
 				_beings.push_back(tmpEnt);
 			}
 		}
@@ -763,37 +758,47 @@ void LevelRunner::update() {
 }
 
 void LevelRunner::render() {
-	_renderer.prepare();
+	std::vector<cge::Entity *> entities;
 	_entShader.begin();
+	_renderer.prepare();
 	_camera.setTrackEntity(*_player);
 	_camera.setTrackOffset({0, 8, 5});
 
-	_entShader.begin();
-	_renderer.prepare();
 	_camera.update(_entShader);
+
 	for (auto &floor : _floors) {
-		_renderer.render(*floor);
+		entities.push_back(floor);
 	}
+
 	for (auto &vecit : _level) {
 		for (auto &entit : vecit) {
-			if (entit != nullptr)
-				_renderer.render(*entit);
+			if (entit != nullptr) {
+				entities.push_back(entit);
+			}
 		}
 	}
-	for (auto being : _beings)
-		_renderer.render(*being);
-	if (_gate != nullptr)
-		_renderer.render(*_gate);
-	if (_powerUpInstance != nullptr && _powerUpInstance->isActive())
-		_renderer.render(*_powerUpInstance);
+
+	for (const auto being : _beings) {
+		entities.push_back(dynamic_cast<cge::Entity *>(being));
+	}
+
+	if (_gate != nullptr) {
+		entities.push_back(dynamic_cast<cge::Entity *>(_gate));
+	}
+
+	if (_powerUpInstance != nullptr && _powerUpInstance->isActive()) {
+		entities.push_back(dynamic_cast<cge::Entity *>(_powerUpInstance));
+	}
+
+	_renderer.render(entities);
+
 	_entShader.end();
+
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
 	_spriteRenderer.DrawSprite(_life, _window.getWidth(), _window.getHeight());
 	_spriteRenderer.DrawSprite(_timer, _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText((std::to_string(_player->getLives())), 84, _window.getHeight() - 100, {255, 0, 0}, 1,
-						   _window.getWidth(), _window.getHeight());
-	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48), _window.getHeight() - 100,
-						   {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText((std::to_string(_player->getLives())), 84, _window.getHeight() - 100, {255, 0, 0}, 1, _window.getWidth(), _window.getHeight());
+	_textRenderer.DrawText(std::to_string(_levelTime / 1000), _window.getWidth() - (4 * 48), _window.getHeight() - 100, {255, 255, 255}, 1, _window.getWidth(), _window.getHeight());
 	_window.swapBuffers();
 }
 

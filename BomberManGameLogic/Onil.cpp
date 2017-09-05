@@ -20,84 +20,83 @@ Onil::Onil(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 }
 
 bool Onil::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
-	int moveDir;
-	float pX, pZ;
-	pX = static_cast<float>(round(_player.getPosition().x));
-	pZ = static_cast<float>(round(_player.getPosition().z));
-	float x;
-	float z;
+	auto pX = static_cast<float>(round(_player.getPosition().x));
+	auto pZ = static_cast<float>(round(_player.getPosition().z));
 	static const int timeToRandom = 1000;
-	if (pX == round(this->getPosition().x) &&
-			!somethingInTheWayX(_player.getPosition(), this->getPosition())) {
+
+	if (pX == round(this->getPosition().x) && !somethingInTheWayX(_player.getPosition(), this->getPosition())) {
 		_n_moveDir.x = 0;
+
 		if (pZ < round(this->getPosition().z))
 			_n_moveDir.z = -1;
 		else if (pZ > round(this->getPosition().z))
 			_n_moveDir.z = 1;
-	} else if (pZ == round(this->getPosition().z) &&
-			!somethingInTheWayY(_player.getPosition(), this->getPosition())){
+	} else if (pZ == round(this->getPosition().z) && !somethingInTheWayY(_player.getPosition(), this->getPosition())){
 		_n_moveDir.z = 0;
+
 		if (pX < round(this->getPosition().x))
 			_n_moveDir.x = -1;
 		else if (pX > round(this->getPosition().x))
 			_n_moveDir.x = 1;
 	} else if (_changeDir >= timeToRandom && _n_change(_gen) == 1) {
-		x = fmodf(_position.x, 1);
-		z = fmodf(_position.z, 1);
-		if ((z < 0.01 || z > 0.99)) {
+		float x = fmodf(_position.x, 1);
+		float z = fmodf(_position.z, 1);
+
+		if (z < 0.01 || z > 0.99) {
 				_n_moveDir.x = 0;
 				_n_moveDir.z = (_n_disision(_gen) == 1) ? -1 : 1;
 			_position.z = static_cast<float>(round(_position.z));
-		}
-		else if ((x < 0.01 || x > 0.99))
-		{
+		} else if ((x < 0.01 || x > 0.99)) {
 			_n_moveDir.z = 0;
 			_n_moveDir.x = (_n_disision(_gen) == 1) ? -1 : 1;
 			_position.x = static_cast<float>(round(_position.x));
 		}
 	} else if (_n_moveDir.x == 0 && _n_moveDir.z == 0) {
 		if (_n_disision(_gen) == 1) {
-			moveDir = (_n_disision(_gen) == 1) ? -1 : 1;
+			int moveDir = (_n_disision(_gen) == 1) ? -1 : 1;
 			_n_moveDir.x = ((int) _n_moveDir.x == moveDir) ? -moveDir : moveDir;
 		} else {
-			moveDir = (_n_disision(_gen) == 1) ? -1 : 1;
+			int moveDir = (_n_disision(_gen) == 1) ? -1 : 1;
 			_n_moveDir.z = ((int) _n_moveDir.z == moveDir) ? -moveDir : moveDir;
 		}
 	}
+
 	_changeDir = (_changeDir >= timeToRandom) ? 0 : _changeDir + lastFrameTime;
+
 	if (_n_moveDir.x != 0 || _n_moveDir.z != 0)
 		Being::setDirection();
 	if (lastFrameTime < 500)
 		return (Being::update(input, shader, lastFrameTime));
-	return (true);
+
+	return true;
 }
 
 bool Onil::somethingInTheWayX(const glm::vec3 &pPos, const glm::vec3 &onilPos) {
 	float sZ = (pPos.z > onilPos.z) ? onilPos.z : pPos.z;
 	float eZ = (pPos.z < onilPos.z) ? onilPos.z : pPos.z;
-	cge::Entity *tmpEnt;
 
 	sZ++;
 	while (sZ < eZ) {
 		if (_level[sZ][pPos.x] != nullptr)
-			return (true);
+			return true;
 		sZ++;
 	}
-	return (false);
+
+	return false;
 }
 
 bool Onil::somethingInTheWayY(const glm::vec3 &pPos, const glm::vec3 &onilPos) {
 	float sX = (pPos.x > onilPos.x) ? onilPos.x : pPos.x;
 	float eX = (pPos.x < onilPos.x) ? onilPos.x : pPos.x;
-	cge::Entity *tmpEnt;
 
 	sX++;
 	while (sX < eX) {
 		if (_level[pPos.z][sX] != nullptr)
-			return (true);
+			return true;
 		sX++;
 	}
-	return (false);
+
+	return false;
 }
 
 void Onil::_setEffects() {

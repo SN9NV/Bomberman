@@ -1,8 +1,6 @@
 #include "Renderer.hpp"
 #include "../extras/Maths.hpp"
 
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
-
 cge::Renderer::Renderer(GLSLProgram &shader) :
 		_shader(shader)
 {
@@ -26,44 +24,15 @@ void	cge::Renderer::prepare() const {
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 
-void	cge::Renderer::drawMesh(tinygltf::Model &model, const tinygltf::Mesh &mesh, std::vector<GLuint> &vboMap) const {
+void	cge::Renderer::drawMesh(const tinygltf::Model &model, const tinygltf::Mesh &mesh, const std::vector<GLuint> &vboMap) const {
 	for (auto &primitive : mesh.primitives) {
 		if (primitive.indices < 0)
 			continue;
 
 		for (auto &attr : primitive.attributes) {
-			const auto &accessor = model.accessors[attr.second];
-
-			glBindBuffer(GL_ARRAY_BUFFER, vboMap[accessor.bufferView]);
-
-			GLint size;
-
-			switch (accessor.type) {
-				case TINYGLTF_TYPE_VEC2:
-					size = 2;
-					break;
-				case TINYGLTF_TYPE_VEC3:
-					size = 3;
-					break;
-				case TINYGLTF_TYPE_VEC4:
-					size = 4;
-					break;
-				default:
-					size = 1;
-			}
-
 			GLuint index = attrType::convert(attr.first);
 
 			if (index != attrType::UNKNOWN) {
-				glVertexAttribPointer(
-						index,
-						size,
-						(GLenum)accessor.componentType,
-						(GLboolean)((accessor.normalized) ? GL_TRUE : GL_FALSE),
-						(GLsizei)model.bufferViews[accessor.bufferView].byteStride,
-						BUFFER_OFFSET(accessor.byteOffset)
-				);
-
 				glEnableVertexAttribArray(index);
 			}
 		}
@@ -108,11 +77,11 @@ void	cge::Renderer::render(Entity &entity) const {
 	/// Draw the triangles
 	glBindTexture(GL_TEXTURE_2D, entityModel.getTexture().getID());
 
-	tinygltf::Model	&model = entityModel.getTinygltfModel();
+	const tinygltf::Model	&model = entityModel.getTinygltfModel();
 	const tinygltf::Scene &scene = model.scenes[model.defaultScene];
 
 	for (auto &nodeIndex : scene.nodes) {
-		tinygltf::Node	&node = model.nodes[nodeIndex];
+		const tinygltf::Node	&node = model.nodes[nodeIndex];
 		drawMesh(model, model.meshes[(node.mesh >= 0) ? node.mesh : 0], entityModel.getVBOs());
 	}
 }
@@ -139,7 +108,7 @@ void	cge::Renderer::uploadJointTransforms(const std::vector<glm::mat4> &jointTra
 	}
 
 	while (i < this->__MAX_JOINTS) {
-		this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], glm::mat4(1.0f));
+		this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], glm::mat4());
 	}
 }
 
@@ -151,6 +120,42 @@ void	cge::Renderer::uploadView(const glm::mat4 &view) const {
 	this->_shader.uploadMatrix4f(this->_uniformView, view);
 }
 
-void	cge::Renderer::render(std::vector<Entity> &entities) const {
+void	cge::Renderer::render(std::vector<Entity *> &entities) const {
+	for (auto &entity : entities) {
+		auto renderParameters = entity->getRenderParameters();
 
+		/// Bind the model and texture
+		glBindVertexArray(renderParameters.VAO);
+
+		/// Upload the model's transformation matrix
+		this->uploadTransformation(entity->getTransformation());
+
+		/// Upload animations
+		if (entity->isAnimated()) {
+			this->uploadJointTransforms(entity->getJointTransforms());
+		}
+
+		/// Upload if the model has an animation or not
+		this->uploadIsAnimated(entity->isAnimated());
+
+		/// Draw the triangles
+		glBindTexture(GL_TEXTURE_2D, renderParameters.textureID);
+
+		for (auto &index : *renderParameters.attribArrayIndexes) {
+			glEnableVertexAttribArray(index);
+		}
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderParameters.indexAssessor);
+
+		glDrawElements(
+			renderParameters.mode,
+			renderParameters.count,
+			renderParameters.componentType,
+			BUFFER_OFFSET(renderParameters.byteOffset)
+		);
+
+		for (auto &index : *renderParameters.attribArrayIndexes) {
+			glDisableVertexAttribArray(index);
+		}
+	}
 }

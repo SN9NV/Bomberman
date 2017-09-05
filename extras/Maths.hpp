@@ -13,6 +13,13 @@ namespace cge {
 		float 		vec3LenSqr(glm::vec3 vec);
 		float 		particalCameraDistance(glm::vec3 vec, glm::vec3 cameraRot);
 		glm::vec3	scaleVec3(float scale, glm::vec3 vec);
+
+		template <class T>
+		T clamp(T value, T min, T max) {
+			if (value < min) return min;
+			if (value > max) return max;
+			return value;
+		}
 	}
 }
 
