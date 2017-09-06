@@ -876,7 +876,8 @@ void LevelRunner::DrawEOGCredits() {
 	int yAuthorOne = yAuthors - 30;
 	int yAuthorTwo = yAuthorOne - 30;
 	int yAuthorThree = yAuthorTwo - 30;
-	int end = yAuthorThree - 20;
+	int yAuthorFour = yAuthorThree - 30;
+	int end = yAuthorFour - 20;
 
 	int width = static_cast<int>(_window.getHeight());
 	while (end < width) {
@@ -890,6 +891,8 @@ void LevelRunner::DrawEOGCredits() {
 		_textRenderer.DrawText(" - Robert Jones (rojones)", 45, yAuthorTwo++, {0, 0, 0}, 0.5f,
 							   _window.getWidth(), _window.getHeight());
 		_textRenderer.DrawText(" - Owen Exall (oexall)", 45, yAuthorThree++, {0, 0, 0}, 0.5f,
+							   _window.getWidth(), _window.getHeight());
+		_textRenderer.DrawText(" - Mfanyana Malaba (mfmalaba)", 45, yAuthorFour++, {0, 0, 0}, 0.5f,
 							   _window.getWidth(), _window.getHeight());
 
 		_window.swapBuffers();
