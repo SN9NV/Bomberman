@@ -129,18 +129,18 @@ int Player::get_menue() const {
 }
 
 int Player::getScore() const {
-	return this->_score;
+	return static_cast<int>(this->_score);
 }
 
-void Player::setScore(int score) {
+void Player::setScore(size_t score) {
 	this->_score = score;
 }
 
-void Player::addScore(int addition) {
+void Player::addScore(size_t addition) {
 	this->_score += addition;
 }
 
-void Player::subScore(int subtraction) {
+void Player::subScore(size_t subtraction) {
 	this->_score -= subtraction;
 }
 

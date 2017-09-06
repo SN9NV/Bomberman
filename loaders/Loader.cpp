@@ -102,14 +102,6 @@ tinygltf::Model &cge::Loader::loadGLTFModel(const std::string &modelPath) {
 			exit(1);
 		}
 
-		for (auto &node : model.animations) {
-			for (auto &translation : node.channels) {
-				std::cout << translation.sampler << " ";
-			}
-
-			std::cout << "\n";
-		}
-
 		return model;
 	}
 

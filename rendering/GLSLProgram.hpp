@@ -29,6 +29,7 @@ namespace cge {
 		void	uploadBool(GLint location, bool value) const;
 		void	uploadBool(const std::string &uniformName, bool value) const;
 		void	uploadMatrix4f(GLint location, const glm::mat4 &value) const;
+		void	uploadMatrix4f(GLint location, const std::vector<glm::mat4> &value) const;
 		void	uploadMatrix4f(const std::string &uniformName, const glm::mat4 &value) const;
 		bool	isInUse() const;
 

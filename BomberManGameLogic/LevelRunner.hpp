@@ -21,8 +21,7 @@
 #include <chrono>
 #include <thread>
 
-enum levelState
-{
+enum levelState {
 	PLAY = 1,
 	WANTS_QUIT,
 	FAIL,
@@ -31,8 +30,15 @@ enum levelState
 	PAUSE
 };
 
-class LevelRunner
-{
+/// Shield masks
+enum Shield {
+	UP		= (1u << 0),
+	DOWN	= (1u << 1),
+	LEFT	= (1u << 2),
+	RIGHT	= (1u << 3)
+};
+
+class LevelRunner {
 private:
 	std::vector<std::vector<cge::Entity *>> _level;
 	std::vector<cge::Entity *> _floors;

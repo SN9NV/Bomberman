@@ -38,16 +38,16 @@ public:
 	int loseLife();
 
 	int getScore() const;
-	void setScore(int score);
-	void addScore(int addition);
-	void subScore(int subtraction);
+	void setScore(size_t score);
+	void addScore(size_t addition);
+	void subScore(size_t subtraction);
 	bool isDetonator() const;
 	void playSound(std::string sound);
 	void setDetonator(bool _detonator);
 
 private:
 	int _lives;
-	int _score;
+	size_t _score;
 	int _up = GLFW_KEY_W;
 	int _down = GLFW_KEY_S;
 	int _left = GLFW_KEY_A;

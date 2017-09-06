@@ -10,10 +10,7 @@ cge::Renderer::Renderer(GLSLProgram &shader) :
 		this->_uniformIsAnimated = this->_shader.getUniformLocation("isAnimated");
 		this->_uniformTransformation = this->_shader.getUniformLocation("transformation");
 		this->_uniformView = this->_shader.getUniformLocation("view");
-
-		for (unsigned i = 0; i < this->__MAX_JOINTS; i++) {
-			this->_uniformJointTransforms[i] = this->_shader.getUniformLocation("jointTransforms[" + std::to_string(i) + "]");
-		}
+		this->_uniformJointTransforms = this->_shader.getUniformLocation("jointTransforms");
 	if (!programInUse) shader.end();
 }
 
@@ -101,15 +98,7 @@ void	cge::Renderer::uploadIsAnimated(bool isAnimated) const {
 }
 
 void	cge::Renderer::uploadJointTransforms(const std::vector<glm::mat4> &jointTransforms) const {
-	unsigned i = 0;
-
-	for (auto &jointTransform : jointTransforms) {
-		this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], jointTransform);
-	}
-
-	while (i < this->__MAX_JOINTS) {
-		this->_shader.uploadMatrix4f(this->_uniformJointTransforms[i++], glm::mat4());
-	}
+	this->_shader.uploadMatrix4f(this->_uniformJointTransforms, jointTransforms);
 }
 
 void	cge::Renderer::uploadTransformation(const glm::mat4 &transformation) const {
@@ -120,7 +109,7 @@ void	cge::Renderer::uploadView(const glm::mat4 &view) const {
 	this->_shader.uploadMatrix4f(this->_uniformView, view);
 }
 
-void	cge::Renderer::render(std::vector<Entity *> &entities) const {
+void	cge::Renderer::render(std::vector<Entity *> &entities) {
 	for (auto &entity : entities) {
 		auto renderParameters = entity->getRenderParameters();
 
@@ -130,13 +119,13 @@ void	cge::Renderer::render(std::vector<Entity *> &entities) const {
 		/// Upload the model's transformation matrix
 		this->uploadTransformation(entity->getTransformation());
 
+		/// Upload if the model has an animation or not
+		this->uploadIsAnimated(entity->isAnimated());
+
 		/// Upload animations
 		if (entity->isAnimated()) {
 			this->uploadJointTransforms(entity->getJointTransforms());
 		}
-
-		/// Upload if the model has an animation or not
-		this->uploadIsAnimated(entity->isAnimated());
 
 		/// Draw the triangles
 		glBindTexture(GL_TEXTURE_2D, renderParameters.textureID);

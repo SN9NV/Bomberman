@@ -27,11 +27,10 @@ namespace cge {
 		/// Read shaders from file
 		std::string	VertexShaderSRC = IO::readFileToString(vertexFilePath);
 		std::string FragmentShaderSRC = IO::readFileToString(fragmentFilePath);
-		std::cout << "compiling " << vertexFilePath << std::endl;
 		if (this->_compileShader(VertexShaderSRC, this->_vertexShaderID)) {
 			return true;
 		}
-		std::cout << "compiling " << fragmentFilePath << std::endl;
+
 		return this->_compileShader(FragmentShaderSRC, this->_fragmentShaderID);
 	}
 
@@ -189,5 +188,9 @@ namespace cge {
 		if (!this->_isInUse) {
 			std::cerr << "Program is not in use\n";
 		}
+	}
+
+	void GLSLProgram::uploadMatrix4f(GLint location, const std::vector<glm::mat4> &values) const {
+		glUniformMatrix4fv(location, static_cast<GLsizei>(values.size()), GL_FALSE, (GLfloat *)values.data());
 	}
 }

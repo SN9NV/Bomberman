@@ -12,6 +12,29 @@
 #include "../entites/Partical.hpp"
 #include "../entites/Camera.hpp"
 
+typedef struct particle_s {
+	glm::vec3	position;
+	glm::vec3	positionTolerance;
+	glm::vec3	velocity;
+	glm::vec3	velocityTolerance;
+
+	float		gravityEffect;
+	float		gravityTolerance;
+	float		lifetime;
+	float		lifetimeTolerance;
+	float		scale;
+	float		scaleTolerance;
+	float		rotation;
+	float		rotationTolerance;
+	float		spin;
+	float		spinTolerance;
+
+	size_t				numParticles;
+	cge::TextureAtlas	texture;
+	GLenum				specularFactor;
+	GLenum				diffuseFactor;
+} particle_t;
+
 namespace cge {
 
 	class ParticalRenderer {
@@ -37,8 +60,6 @@ namespace cge {
 		glm::mat4 viewModelMatrix(Partical partical, Camera camera);
 
 	public:
-		//ParticalRenderer();
-
 		~ParticalRenderer() = default;
 
 		explicit ParticalRenderer(GLSLProgram &shader);
@@ -49,38 +70,7 @@ namespace cge {
 
 		void addParticalTexture(cge::TextureAtlas texture, GLenum specFac, GLenum deffFac);
 
-		void partivalEffect(glm::vec3 position, glm::vec3 positionTolorence,
-							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
-							float gravityeffect, float gravertyTolerance,
-							float lifetime, float lifetimeTolorence,
-							float scale, float scaleTolorence,
-							float rotation, float rotationTolorence,
-							float spin, float spinTolorencce,
-							size_t numParticals,
-							TextureAtlas texture,
-							GLenum specFac, GLenum deffFac);
-
-		void partivalEffectPos(glm::vec3 position, glm::vec3 positionTolorence,
-							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
-							float gravityeffect, float gravertyTolerance,
-							float lifetime, float lifetimeTolorence,
-							float scale, float scaleTolorence,
-							float rotation, float rotationTolorence,
-							float spin, float spinTolorencce,
-							size_t numParticals,
-							TextureAtlas texture,
-							GLenum specFac, GLenum deffFac);
-
-		void partivalEffectNeg(glm::vec3 position, glm::vec3 positionTolorence,
-							glm::vec3 verlocity, glm::vec3 verlocityTolorence,
-							float gravityeffect, float gravertyTolerance,
-							float lifetime, float lifetimeTolorence,
-							float scale, float scaleTolorence,
-							float rotation, float rotationTolorence,
-							float spin, float spinTolorencce,
-							size_t numParticals,
-							TextureAtlas texture,
-							GLenum specFac, GLenum deffFac);
+		void particleEffect(particle_t p);
 
 		void render(Partical &partical, Camera &camera);
 
