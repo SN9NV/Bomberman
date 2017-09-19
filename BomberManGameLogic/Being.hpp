@@ -30,6 +30,7 @@ public:
 
 	Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader,
 		  float speed, float hitBoxRadius, int damage = 2, bool wallPass = false, size_t points = 100);
+	virtual ~Being() = default;
 
 	int getDamage() const;
 	bool isAlive() const;

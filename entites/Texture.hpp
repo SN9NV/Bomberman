@@ -1,8 +1,7 @@
 #ifndef NEW_TEXTURE_HPP
 #define NEW_TEXTURE_HPP
 
-
-#include <GL/glew.h>
+#include "../shared.hpp"
 
 namespace cge {
 	class Texture {

@@ -14,19 +14,19 @@
 namespace cge {
 	class Partical {
 	protected:
-		glm::vec3 _position;
-		glm::vec3 _verlocity;
-		float _gravityeffect;
-		float _lifrtime;
-		float _scale;
-		float _elapsedtime;
-		float _distCamSqur;
-		float _rotation;
-		float _spin;
-		TextureAtlas _texture;
-		glm::vec2 _currOff;
-		glm::vec2 _nextOff;
-		float _blend;
+		glm::vec3		_position;
+		glm::vec3		_verlocity;
+		glm::vec2		_currOff;
+		glm::vec2		_nextOff;
+		TextureAtlas	_texture;
+		float			_gravityeffect;
+		float			_lifrtime;
+		float			_scale;
+		float			_rotation;
+		float			_spin;
+		float			_elapsedtime;
+		float			_distCamSqur;
+		float			_blend;
 
 	public:
 		virtual ~Partical();

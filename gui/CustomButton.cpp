@@ -28,8 +28,3 @@ cge::GUI::Custom::CustomButton::CustomButton(cge::GUI::Custom::CustomButton &cpy
 		nanogui::Button(cpy.parent(), cpy.caption(), cpy.icon()) {
 	this->mMouseEnterCallback = cpy.mMouseEnterCallback;
 }
-
-cge::GUI::Custom::CustomButton cge::GUI::Custom::CustomButton::operator=(const cge::GUI::Custom::CustomButton &rhs) {
-	*this = rhs;
-	return (*this);
-}

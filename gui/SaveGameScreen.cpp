@@ -7,8 +7,8 @@
 cge::GUI::SaveGameScreen::SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap)  :
 		_window(win),
 		_player(player),
-		_audioMenuScroll("../resources/audio/click.wav", loader),
-		_currMap(currMap)
+		_currMap(currMap),
+		_audioMenuScroll("../resources/audio/click.wav", loader)
 {
 	this->_audioMenuScroll.setLooping(false);
 	this->_audioMenuScroll.setGain(0.09f);
@@ -332,14 +332,9 @@ void cge::GUI::SaveGameScreen::ReinitializeScreen() {
 cge::GUI::SaveGameScreen::SaveGameScreen(const cge::GUI::SaveGameScreen &cpy) :
 		_window(cpy._window),
 		_player(cpy._player),
-		_audioMenuScroll(cpy._audioMenuScroll),
-		_currMap(cpy._currMap)
+		_currMap(cpy._currMap),
+		_audioMenuScroll(cpy._audioMenuScroll)
 {
 	this->_screen = cpy._screen;
 	this->nanoguiWindow = cpy.nanoguiWindow;
-}
-
-cge::GUI::SaveGameScreen cge::GUI::SaveGameScreen::operator=(const cge::GUI::SaveGameScreen &rhs) {
-	*this = rhs;
-	return (*this);
 }

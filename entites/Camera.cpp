@@ -6,13 +6,13 @@
 cge::Camera::Camera(const glm::vec3 &position, const glm::vec3 &rotation, const Window &window) :
 		_position(position),
 		_rotation(rotation),
-		_projectionMatrix(
-				glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
+		_projectionMatrix(glm::perspectiveFov<float>(FOV, window.getWidth(), window.getHeight(), NEAR_PLANE, FAR_PLANE)),
 		_viewMatrix(1.0f),
-		_needsUpdate(true),
 		_track(nullptr),
 		_trackOffset(1.0f),
-		_trackOldPosition(0.0f) {
+		_trackOldPosition(0.0f),
+		_needsUpdate(true)
+{
 
 }
 

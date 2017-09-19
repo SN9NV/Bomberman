@@ -4,16 +4,10 @@
 
 #include "MainMenuScreen.hpp"
 
-
-cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win,
-										 cge::GameState *currState,
-										 cge::GameState *prevState,
-										 Player* player,
-										 int* currMap,
-										 cge::Loader& _loader) :
+cge::GUI::MainMenuScreen::MainMenuScreen(cge::Window &win, cge::GameState *currState, cge::GameState *prevState, Player *player, int *currMap, cge::Loader &loader) :
 		_window(win),
 		_player(player),
-		_audioMouseEnter("../resources/audio/click.wav", _loader)
+		_audioMouseEnter("../resources/audio/click.wav", loader)
 {
 	this->_audioMouseEnter.setLooping(false);
 	this->_audioMouseEnter.setGain(0.09f);
@@ -192,6 +186,10 @@ cge::GUI::MainMenuScreen::MainMenuScreen(const cge::GUI::MainMenuScreen &cpy) :
 }
 
 cge::GUI::MainMenuScreen cge::GUI::MainMenuScreen::operator=(const cge::GUI::MainMenuScreen &rhs) {
-	*this = rhs;
-	return (*this);
+	this->_window = rhs._window;
+	this->_screen = rhs._screen;
+	this->_player = rhs._player;
+	this->_audioMouseEnter = rhs._audioMouseEnter;
+
+	return *this;
 }

@@ -14,7 +14,10 @@ Ovapi::Ovapi(const glm::vec3 &position, const glm::vec3 &rotation, float scale, 
 		Being(position, rotation, scale, model, loader, hitBox, 0.002f, 0, true),
 		_changeDir(0),
 		_player(player),
-		_level(level) {
+		_level(level)
+{
+	(void)_level;
+
 	this->_setEffects();
 	_points = 2000;
 }
@@ -79,4 +82,3 @@ bool Ovapi::update(const cge::InputManager &input, cge::GLSLProgram &shader, uns
 void Ovapi::_setEffects() {
 	this->addNewSoundEffect("dieSound", "resources/audio/OvapiDeth.wav");
 }
-

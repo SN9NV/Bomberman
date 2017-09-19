@@ -8,9 +8,9 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	_window(win),
 	_player(player),
 	_audioMenuScroll("../resources/audio/click.wav", loader),
+	_currMap(currMap),
 	_gameState(_currState),
 	_prevState(prevState),
-	_currMap(currMap),
 	_loader(loader)
 {
 	this->_audioMenuScroll.setLooping(false);
@@ -20,7 +20,7 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	for (int i = 0; i < 6; i++)
 		this->_availableSaves.insert(std::make_pair(i, nullptr));
 	this->searchAvailableSaves();
-	
+
 	glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -34,7 +34,7 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 	glfwSwapBuffers(this->_window.getGLFWWindow());
 
 	// Create nanogui gui
-	bool enabled = true;
+	// bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
 	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Load Game");
 	nanogui::AdvancedGridLayout layout(
@@ -42,7 +42,7 @@ cge::GUI::LoadGameScreen::LoadGameScreen(cge::Window &win, cge::GameState *_curr
 			{100, 100, 100, 100, 50},
 			5);
 	nanoguiWindow->setLayout(&layout);
-	
+
 	cge::GUI::Custom::CustomButton *btn_MainMenu = new cge::GUI::Custom::CustomButton(nanoguiWindow, "Back");
 	layout.setAnchor(btn_MainMenu, nanogui::AdvancedGridLayout::Anchor(0, 4,
 			nanogui::Alignment::Middle, nanogui::Alignment::Middle));
@@ -298,10 +298,12 @@ void cge::GUI::LoadGameScreen::loadGame(int slot) {
 	if (this->_availableSaves[slot]->isAvailable()) {
 		if (*this->_prevState == cge::GameState::PLAY_PAUSE) {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
-												  "Loose progress.",
-												  "You are about to load a game and will loose all unsaved progess. Continue?",
-												  "Yes", "No", true);
-			dlg->setCallback([&, slot](int result) {
+												"Loose progress.",
+												"You are about to load a game and will loose all unsaved progess. Continue?",
+												"Yes", "No", true);
+
+			(void)dlg;
+			dlg->setCallback([this, slot](int result) {
 				if (result == 0)
 					this->load(slot);
 			});
@@ -310,6 +312,8 @@ void cge::GUI::LoadGameScreen::loadGame(int slot) {
 	} else {
 		auto noSaveDlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 			"No Saved Game!", "No Saved Game available on this slot.", "OK", "Cancel", false);
+
+		(void)noSaveDlg;
 	}
 }
 
@@ -338,6 +342,8 @@ void cge::GUI::LoadGameScreen::load(int slot) {
 			} else {
 				auto noSaveDlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 					"Error", "Failed to load save game. Corrupted save file.", "OK", "Cancel", false);
+
+				(void)noSaveDlg;
 				ifs.close();
 				return ;
 			}
@@ -362,16 +368,11 @@ cge::GUI::LoadGameScreen::LoadGameScreen(const cge::GUI::LoadGameScreen &cpy) :
 	_window(cpy._window),
 	_player(cpy._player),
 	_audioMenuScroll("../resources/audio/click.wav", cpy._loader),
+	_currMap(cpy._currMap),
 	_gameState(cpy._gameState),
 	_prevState(cpy._prevState),
-	_currMap(cpy._currMap),
 	_loader(cpy._loader)
 {
 	this->_screen = cpy._screen;
 	this->nanoguiWindow = cpy.nanoguiWindow;
-}
-
-cge::GUI::LoadGameScreen cge::GUI::LoadGameScreen::operator=(const cge::GUI::LoadGameScreen &rhs) {
-	*this = rhs;
-	return (*this);
 }

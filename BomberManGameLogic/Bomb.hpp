@@ -22,7 +22,7 @@ public:
 	virtual ~Bomb();
 
 	int getBombradius() const;
-	bool update(const cge::InputManager &input, unsigned lastFrameTime);
+	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 	bool isDeternate();
 
 	bool isIsDetonate() const;

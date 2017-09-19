@@ -8,13 +8,13 @@
 Being::Being(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius, float speed, int damage, bool wallPass, size_t points) :
 		Entity(position, rotation, scale, model, loader, hitBoxRadius),
 		_speed(speed),
+		_bombTime(1500),
 		_maxBomb(1),
 		_placeBomb(false),
 		_damage(damage),
 		_deathTimeout(1000),
 		_alive(true),
 		_wallPass(wallPass),
-		_bombTime(1500),
 		_points (points)
 {
 	this->_n_moveDir = glm::vec3(0, 0, 0);
@@ -136,4 +136,3 @@ void Being::setBombTime(float _bombTime) {
 size_t Being::getPoints() const {
 	return _points;
 }
-

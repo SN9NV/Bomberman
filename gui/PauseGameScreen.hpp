@@ -20,7 +20,7 @@ namespace cge {
 			PauseGameScreen() = delete;
 			PauseGameScreen(cge::Window& win, cge::GameState* _currState, cge::GameState* prevState, Player *player, int* currMap, cge::Loader& loader);
 			PauseGameScreen(const PauseGameScreen & cpy);
-			PauseGameScreen operator=(const PauseGameScreen & rhs);
+			PauseGameScreen &operator=(const PauseGameScreen & rhs) = default;
 			~PauseGameScreen();
 
 			nanogui::Screen* getScreen();

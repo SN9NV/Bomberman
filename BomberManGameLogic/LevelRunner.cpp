@@ -15,37 +15,32 @@
 #include "WingBoot.hpp"
 #include "AddBomb.hpp"
 
-LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager,
-						 cge::Audio::Device &audioDevice) :
+LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
-		_player(player),
-		_audioDevice(audioDevice),
-		_gate(nullptr),
 		_window(window),
+		_inputManager(inputManager),
 		_entShader("shaders/vertex.glsl", "shaders/fragment.glsl"),
 		_partShader("shaders/particalVertex.glsl", "shaders/particalFragment.glsl"),
 		_renderer(_entShader),
 		_camera({0.0f, 5.0f, 0.0f}, {1.5f, 0.0f, 0.0f}, _window),
 		_particalRenderer(_partShader),
-		_inputManager(inputManager),
-		_powerUpInstance(nullptr),
-		_powerup(false),
 		_life({20, window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/Heart.png")),
-		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1,
-			   _loader.loadTexture("resources/Textures/StopWatch.png")),
+		_timer({window.getWidth() - (5 * 48), window.getHeight() - 100}, {48, 48}, 1, _loader.loadTexture("resources/Textures/StopWatch.png")),
+		_audioDevice(audioDevice),
+		_player(player),
+		_gate(nullptr),
 		_objtLoader(loader, _level, *player),
+		_powerUpInstance(nullptr),
 		_balloons(0),
 		_onil(0),
-		_ovapi(0) {
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4),
-										 GL_SRC_ALPHA, GL_ONE);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1),
-										 GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2),
-										 GL_SRC_ALPHA, GL_ONE);
+		_ovapi(0),
+		_powerup(false)
+{
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/FireBallAtlas.png", 4), GL_SRC_ALPHA, GL_ONE);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/Textures/ConcreatFragment.png", 1), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	_particalRenderer.addParticalTexture(_loader.loadTextureAtlas("resources/TextureAtlas/PortalEffect.png", 2), GL_SRC_ALPHA, GL_ONE);
 	this->_player->setAnimationSpeed(2.6f);
 }
-
 
 void LevelRunner::bumpBeing(Being *being) {
 	glm::vec3 pos;
@@ -196,7 +191,7 @@ void LevelRunner::bombWorldInteraction() {
 	for (auto bomb = _bombs.begin(); bomb != _bombs.end();) {
 		unsigned shield = 0;
 
-		if (!(*bomb)->update(*_inputManager, _window.getFrameTime())) {
+		if (!(*bomb)->update(*_inputManager, _entShader, _window.getFrameTime())) {
 			bool found = false;
 			auto bombPos = (*bomb)->getPosition();
 			auto being = _beings.begin();
@@ -217,7 +212,7 @@ void LevelRunner::bombWorldInteraction() {
 				_floors.push_back(_objtLoader.loadObject("FloorBurn", bombPos));
 			}
 
-			for (unsigned i = 1; i < (*bomb)->getBombradius(); i++) {
+			for (int i = 1; i < (*bomb)->getBombradius(); i++) {
 				if (bombPos.z + i < _level.size() && (shield & Shield::UP) == 0) {
 					checkGateDamage({bombPos.x, bombPos.y, bombPos.z + i}, *being);
 					if (checkWallBlast((int) (bombPos.x), (int) (bombPos.z + i)))
@@ -786,7 +781,7 @@ void LevelRunner::update() {
 				_beings.push_back(tmpEnt);
 			}
 		}
-		_gate->update();
+		_gate->update(*_inputManager, _entShader, 0);
 		if (_gate->isActive() && time == 0) {
 			portalActiveEffect(_gate->getPosition(), 1);
 		}

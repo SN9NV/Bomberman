@@ -14,7 +14,7 @@ namespace cge {
 			public:
 				CustomTextbox() = delete;
 				CustomTextbox(Custom::CustomTextbox& cpy);
-				CustomTextbox operator=(const CustomTextbox& rhs);
+				CustomTextbox &operator=(const CustomTextbox &rhs) = default;
 				explicit CustomTextbox(nanogui::Widget* parent, const std::string& caption = "Untitled");
 				~CustomTextbox();
 

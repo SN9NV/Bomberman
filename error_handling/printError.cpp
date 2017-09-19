@@ -26,12 +26,6 @@ void	getGLError() {
 		case GL_OUT_OF_MEMORY:
 			printError(error, "Out of memory");
 			break;
-		case GL_STACK_OVERFLOW:
-			printError(error, "Stack overflow");
-			break;
-		case GL_STACK_UNDERFLOW:
-			printError(error, "Stack underflow");
-			break;
 		default:
 			printError(error, "Unknown OpenGL error code");
 	}

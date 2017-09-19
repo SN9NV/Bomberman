@@ -6,16 +6,11 @@
 
 cge::GuiManager *cge::GuiManager::s_instance = nullptr;
 
-bool cge::GuiManager::initialise(cge::Window& win,
-								cge::GameState *state,
-								cge::GameState *prevState,
-								Player* player,
-								int* currMap,
-								cge::Loader& _loader)
-{
+bool cge::GuiManager::initialise(cge::Window& win, cge::GameState *state, cge::GameState *prevState, Player* player, int *currMap, cge::Loader& loader){
 	if (s_instance == nullptr) {
-		s_instance = new GuiManager(win, state, prevState, player, currMap, _loader);
+		s_instance = new GuiManager(win, state, prevState, player, currMap, loader);
 	}
+
 	return (true);
 }
 
@@ -26,23 +21,18 @@ cge::GuiManager *cge::GuiManager::getSingleton() {
 	return (s_instance);
 }
 
-cge::GuiManager::GuiManager(cge::Window &win,
-							cge::GameState *state,
-							cge::GameState *prevState,
-							Player* player,
-							int* currMap,
-							cge::Loader& _loader) :
-	_window(win),
-	_prevState(prevState),
-	_state(state),
-	_player(player),
-	_currMap(currMap)
+cge::GuiManager::GuiManager(cge::Window &win, cge::GameState *state, cge::GameState *prevState, Player* player, int *currMap, cge::Loader& loader) :
+		_window(win),
+		_prevState(prevState),
+		_state(state),
+		_player(player),
+		_currMap(currMap)
 {
-	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, prevState, player, currMap, _loader);
-	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player, _loader);
-	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, prevState, player, _loader, currMap);
-	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player, _loader, currMap);
-	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, prevState, player, currMap, _loader);
+	this->_mainMenuScreen = new cge::GUI::MainMenuScreen(win, state, prevState, player, currMap, loader);
+	this->_settingsScreen = new cge::GUI::SettingsScreen(win, state, prevState, player, loader);
+	this->_loadGameScreen = new cge::GUI::LoadGameScreen(win, state, prevState, player, loader, currMap);
+	this->_saveGameScreen = new cge::GUI::SaveGameScreen(win, state, player, loader, currMap);
+	this->_pauseGameScreen = new cge::GUI::PauseGameScreen(win, state, prevState, player, currMap, loader);
 }
 
 cge::GuiManager::~GuiManager() {
@@ -55,6 +45,7 @@ cge::GuiManager::~GuiManager() {
 
 void cge::GuiManager::drawScreen(int screen) {
 	glfwSetInputMode(this->_window.getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 	switch (screen) {
 		case (cge::GameState::PLAY_OPTS):
 			this->_settingsScreen->setInputCallbacks();
@@ -89,12 +80,12 @@ void cge::GuiManager::ReinitializeScreens() {
 }
 
 cge::GuiManager::GuiManager(const cge::GuiManager &cpy) :
-	_window(cpy._window),
-	_prevState(cpy._prevState),
-	_state(cpy._state),
-	_player(cpy._player),
-	_currMap(cpy._currMap)
-{	
+		_window(cpy._window),
+		_prevState(cpy._prevState),
+		_state(cpy._state),
+		_player(cpy._player),
+		_currMap(cpy._currMap)
+{
 	this->_mainMenuScreen = cpy._mainMenuScreen;
 	this->_settingsScreen = cpy._settingsScreen;
 	this->_loadGameScreen = cpy._loadGameScreen;
@@ -103,6 +94,17 @@ cge::GuiManager::GuiManager(const cge::GuiManager &cpy) :
 }
 
 cge::GuiManager cge::GuiManager::operator=(const cge::GuiManager &rhs) {
-	*this = rhs;
-	return (*this);
+	this->_window = rhs._window;
+	this->_prevState = rhs._prevState;
+	this->_state = rhs._state;
+	this->_player = rhs._player;
+	this->_currMap = rhs._currMap;
+
+	this->_mainMenuScreen = rhs._mainMenuScreen;
+	this->_settingsScreen = rhs._settingsScreen;
+	this->_loadGameScreen = rhs._loadGameScreen;
+	this->_saveGameScreen = rhs._saveGameScreen;
+	this->_pauseGameScreen = rhs._pauseGameScreen;
+
+	return *this;
 }

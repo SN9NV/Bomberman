@@ -18,6 +18,7 @@ private:
 
 public:
 	Gate(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float hitBoxRadius = 0.5f);
+	virtual ~Gate() = default;
 
 	void activate();
 	bool isActive() const;
@@ -25,7 +26,7 @@ public:
 	bool isDamage() const;
 	void setDamage(bool damage);
 	void damage(size_t damageCycles);
-	bool update();
+	bool update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 };
 
 

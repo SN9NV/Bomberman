@@ -14,8 +14,8 @@ namespace cge {
 			class CustomButton : public nanogui::Button {
 			public:
 				CustomButton(nanogui::Widget *parent, const std::string &text = "Untitled", int icon = 0);
-				CustomButton(CustomButton & cpy);
-				CustomButton operator=(const CustomButton & rhs);
+				CustomButton(CustomButton &cpy);
+				CustomButton &operator=(const CustomButton &rhs) = default;
 				~CustomButton() override;
 
 				void setMouseEnterCallback(const std::function<void()> &callback);

@@ -35,9 +35,3 @@ cge::GUI::Custom::CustomTextbox::CustomTextbox(cge::GUI::Custom::CustomTextbox &
 {
 	this->_textChangedCallback = cpy._textChangedCallback;
 }
-
-cge::GUI::Custom::CustomTextbox cge::GUI::Custom::CustomTextbox::operator=(
-		const cge::GUI::Custom::CustomTextbox &rhs) {
-	*this = rhs;
-	return (*this);
-}

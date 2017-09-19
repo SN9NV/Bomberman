@@ -24,7 +24,7 @@ namespace cge {
 			LoadGameScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader, int* currMap);
 
 			LoadGameScreen(const LoadGameScreen & cpy);
-			LoadGameScreen operator=(const LoadGameScreen & rhs);
+			LoadGameScreen &operator=(const LoadGameScreen & rhs) = default;
 			~LoadGameScreen();
 
 			nanogui::Screen *getScreen();

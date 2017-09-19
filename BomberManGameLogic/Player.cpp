@@ -4,8 +4,8 @@
 Player::Player(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cge::Model &model, cge::Loader &loader, float speed, float hitBoxRadius) :
 		Being(position, rotation, scale, model, loader, speed, hitBoxRadius),
 		_lives(3),
-		_pauseMenue(false),
 		_score(0),
+		_pauseMenue(false),
 		_detonator(false)
 {
 this->_setEffects();
@@ -48,11 +48,11 @@ bool Player::update(const cge::InputManager &input, cge::GLSLProgram &shader, un
 	detonateBounce = (lastFrameTime > detonateBounce) ? 0 : detonateBounce - lastFrameTime;
 	if (input.isKeyPressed(_special)) {
 		if (detonateBounce == 0) {
-			int i = 0;
-			while (i < _bombs.size() && _bombs[i]->isDeternate())
-			{
+			unsigned i = 0;
+			while (i < _bombs.size() && _bombs[i]->isDeternate()){
 				i++;
 			}
+			
 			_bombs[i]->setDetonate(true);
 			detonateBounce = 300;
 		}

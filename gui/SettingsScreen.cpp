@@ -6,6 +6,8 @@
 #include "../io/settings/Settings.hpp"
 #include "GuiManager.hpp"
 
+#include <memory>
+
 cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader) :
 	_window(win),
 	_player(player),
@@ -31,7 +33,6 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	glfwSwapBuffers(this->_window.getGLFWWindow());
 
 	// Create nanogui gui
-	bool enabled = true;
 	nanogui::FormHelper *gui = new nanogui::FormHelper(_screen);
 	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Settings");
 	nanogui::AdvancedGridLayout layout(
@@ -55,7 +56,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 			*this->_currState = *this->_prevState;
 		}
 	});
-	btn_MainMenu->setMouseEnterCallback([&] {
+	btn_MainMenu->setMouseEnterCallback([this] {
 		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
@@ -66,7 +67,7 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	btn_Save->setCallback([&] {
 		this->saveSettings();
 	});
-	btn_Save->setMouseEnterCallback([&] {
+	btn_Save->setMouseEnterCallback([this] {
 		this->_audioMenuScroll.setGain(cge::Settings::Settings::getSingleton()->getSfxVolume());
 		this->_audioMenuScroll.setPlaying();
 	});
@@ -168,10 +169,13 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		else {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+
+			(void)dlg;
 			this->txtb_MoveUp->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyUpwards));
-			return (false);
+
+			return false;
 		}
-		return (true);
+		return true;
 	});
 
 	/**KEY-BINDINGS: Move Down**/
@@ -192,6 +196,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		else {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+
+			(void)dlg;
 			this->txtb_MoveDown->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDown));
 			return (false);
 		}
@@ -216,6 +222,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		else {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+
+			(void)dlg;
 			this->txtb_MoveRight->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyRight));
 			return (false);
 		}
@@ -234,12 +242,14 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 	txtb_MoveLeft->setEditable(true);
 	txtb_MoveLeft->setFixedWidth(50);
 	txtb_MoveLeft->setFormat("[A-Z]");
-	txtb_MoveLeft->setTextChangedCallback([&](int result) -> bool {
+	txtb_MoveLeft->setTextChangedCallback([this](int result) -> bool {
 		if (this->validateKeyBindings("txtb_MoveLeft", result))
 			this->_changesMade = true;
 		else {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+
+			(void)dlg;
 			this->txtb_MoveLeft->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyLeft));
 			return (false);
 		}
@@ -264,6 +274,8 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		else {
 			auto dlg = new nanogui::MessageDialog(this->_screen, nanogui::MessageDialog::Type::Warning,
 				"Already in use.", "Key assigned already in use. Please user another one.", "Ok", "No", false);
+
+			(void)dlg;
 			this->txtb_Detonate->setValue(charToString(cge::Settings::Settings::getSingleton()->getSettings().KeyDetonate));
 			return (false);
 		}
@@ -288,14 +300,16 @@ cge::GUI::SettingsScreen::SettingsScreen(cge::Window &win, cge::GameState *_curr
 		cb_Resolution->setSelectedIndex(1);
 	else
 		cb_Resolution->setSelectedIndex(2);
-	cb_Resolution->setCallback([&] (int index) {
-		_windowChangesMade = true;
+	cb_Resolution->setCallback([this] (int index) {
+		(void)index;
+		this->_windowChangesMade = true;
 	});
 
 	chkbx_FullScreen = new nanogui::CheckBox(windowSettings, "Fullscreen");
 	chkbx_FullScreen->setChecked(cge::Settings::Settings::getSingleton()->getSettings().Fullscreen);
-	chkbx_FullScreen->setCallback([&] (bool state) {
-		_windowChangesMade = true;
+	chkbx_FullScreen->setCallback([this] (bool state) {
+		(void)state;
+		this->_windowChangesMade = true;
 	});
 
 	tabs->setActiveTab(0);
@@ -465,11 +479,6 @@ cge::GUI::SettingsScreen::SettingsScreen(const cge::GUI::SettingsScreen &cpy) :
 	this->nanoguiWindow = cpy.nanoguiWindow;
 }
 
-cge::GUI::SettingsScreen cge::GUI::SettingsScreen::operator=(const cge::GUI::SettingsScreen &rhs) {
-	*this = rhs;
-	return (*this);
-}
-
 bool cge::GUI::SettingsScreen::validateKeyBindings(const std::string& input, int key) {
 	for (auto iter : this->_txtbInputs) {
 		if (iter.second->id() == input)
@@ -480,4 +489,3 @@ bool cge::GUI::SettingsScreen::validateKeyBindings(const std::string& input, int
 	}
 	return (true);
 }
-

@@ -28,7 +28,7 @@ namespace cge {
 
 		Entity() = delete;
 		Entity(const glm::vec3 &position, const glm::vec3 &rotation, float scale, Model &model, cge::Loader &loader, float hitBoxRadius);
-		~Entity();
+		virtual ~Entity();
 
 		virtual bool	update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime);
 		void			addPosition(const glm::vec3 &delta);

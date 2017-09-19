@@ -40,66 +40,69 @@ enum Shield {
 
 class LevelRunner {
 private:
-	std::vector<std::vector<cge::Entity *>> _level;
-	std::vector<cge::Entity *> _floors;
-	std::vector<cge::Audio::Source *>	_sources;
-	std::vector<Being *> _beings;
-	std::vector<Bomb *> _bombs;
-	LevelFactory _objtLoader;
-	std::vector<std::string> _map;
-	cge::Loader &_loader;
-	Player	*_player;
-	Gate	*_gate;
-	cge::Window &_window;
-	cge::GLSLProgram _entShader;
-	cge::GLSLProgram _partShader;
-	cge::InputManager *_inputManager;
-	cge::Renderer _renderer;
-	cge::Camera _camera;
-	cge::ParticalRenderer _particalRenderer;
-	cge::TextRenderer _textRenderer;
-	cge::SpriteRenderer _spriteRenderer;
-	cge::Sprite _life;
-	cge::Sprite _timer;
-	cge::Audio::Device	_audioDevice;
-	unsigned _levelTime;
-	int _state = levelState::PLAY;
-	int _dwalls;
-	int _balloons;
-	int _onil;
-	int _ovapi;
-	bool _powerup;
-	PowerUPAbstract *_powerUpInstance;
+	std::vector<std::vector<cge::Entity *> >	_level;
+	std::vector<cge::Entity *>					_floors;
+	std::vector<cge::Audio::Source *>			_sources;
+	std::vector<Being *>						_beings;
+	std::vector<Bomb *>							_bombs;
+	std::vector<std::string>					_map;
 
-	void beingWorldInteraction();
-	void bombWorldInteraction();
-	void loadMapEntitys();
-	void checkBeingBlast(int x, int y);
-	bool checkWallBlast(int x, int y);
-	void checkBombBlast(int x, int y);
-	void bumpBeing(Being *);
-	void endLevel();
-	bool checkMapWall();
-	void runLevelLoop();
-	void fireEffect(glm::vec3 position, size_t numParticals);
-	void portalActiveEffect(glm::vec3 position, size_t numParticals);
-	void portalUseEffect(glm::vec3 position, size_t numParticals);
-	void wallBrakeEffect(glm::vec3 position, size_t numParticals);
-	void checkGateDamage(glm::vec3 position, Being *being);
-	void placeBeing(Being *being);
-	void cleanLevel();
-	void update();
-	void render();
-	void loadMapFromFile(const std::string &path);
-	void rotatePowerUp();
+	cge::Loader				&_loader;
+	cge::Window				&_window;
+	cge::InputManager		*_inputManager;
+	cge::GLSLProgram		_entShader;
+	cge::GLSLProgram		_partShader;
+	cge::Renderer			_renderer;
+	cge::Camera				_camera;
+	cge::ParticalRenderer	_particalRenderer;
+	cge::TextRenderer		_textRenderer;
+	cge::SpriteRenderer		_spriteRenderer;
+	cge::Sprite				_life;
+	cge::Sprite				_timer;
+	cge::Audio::Device		_audioDevice;
+
+	Player			*_player;
+	Gate			*_gate;
+	LevelFactory	_objtLoader;
+
+	PowerUPAbstract	*_powerUpInstance;
+	unsigned		_levelTime;
+	int				_state = levelState::PLAY;
+	int				_dwalls;
+	int				_balloons;
+	int				_onil;
+	int				_ovapi;
+	bool			_powerup;
+
+	void	beingWorldInteraction();
+	void	bombWorldInteraction();
+	void	loadMapEntitys();
+	void	checkBeingBlast(int x, int y);
+	bool	checkWallBlast(int x, int y);
+	void	checkBombBlast(int x, int y);
+	void	bumpBeing(Being *);
+	void	endLevel();
+	bool	checkMapWall();
+	void	runLevelLoop();
+	void	fireEffect(glm::vec3 position, size_t numParticals);
+	void	portalActiveEffect(glm::vec3 position, size_t numParticals);
+	void	portalUseEffect(glm::vec3 position, size_t numParticals);
+	void	wallBrakeEffect(glm::vec3 position, size_t numParticals);
+	void	checkGateDamage(glm::vec3 position, Being *being);
+	void	placeBeing(Being *being);
+	void	cleanLevel();
+	void	update();
+	void	render();
+	void	loadMapFromFile(const std::string &path);
+	void	rotatePowerUp();
 
 public:
-	int getState() const;
 	LevelRunner(cge::Loader &_loader, Player *_player, cge::Window &_window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice);
-	int runLevel(const std::string &path);
-    int resumeLevel();
-	void DrawEOGCredits();
-};
 
+	int		getState() const;
+	int		runLevel(const std::string &path);
+	int		resumeLevel();
+	void	DrawEOGCredits();
+};
 
 #endif //BOMBERMAN_LEVELRUNNNER_HPP

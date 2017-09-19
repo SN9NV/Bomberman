@@ -2,7 +2,7 @@
 #define NEW_INPUTMANAGER_HPP
 
 #include "Window.hpp"
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 #include <unordered_map>
 

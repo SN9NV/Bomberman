@@ -18,4 +18,9 @@ namespace cge {
 	};
 }
 
+#ifndef GLFW_INCLUDE_GLCOREARB
+#define GLFW_INCLUDE_GLCOREARB
+	#include "dependencies/nanogui/ext/glfw/include/GLFW/glfw3.h"
+#endif
+
 #endif //BOMBERMAN_SHARED_HPP

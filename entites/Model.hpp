@@ -5,8 +5,6 @@ namespace cge {
 	class Loader;
 }
 
-#include <GL/glew.h>
-
 #include "Texture.hpp"
 #include "../tinyGLTF/tiny_gltf.h"
 #include "../loaders/Loader.hpp"

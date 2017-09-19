@@ -22,7 +22,7 @@ namespace cge {
 			SettingsScreen() = delete;
 			SettingsScreen(cge::Window &win, cge::GameState *_currState, cge::GameState *prevState, Player *player, cge::Loader& loader);
 			SettingsScreen(const SettingsScreen & cpy);
-			SettingsScreen operator=(const SettingsScreen& rhs);
+			SettingsScreen &operator=(const SettingsScreen& rhs) = default;
 			~SettingsScreen();
 
 			nanogui::Screen *getScreen();

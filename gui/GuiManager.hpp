@@ -17,25 +17,15 @@
 namespace cge {
 	class GuiManager {
 	public:
-		static bool	initialise(cge::Window& ,
-							cge::GameState* state,
-							cge::GameState *prevState,
-							Player* player,
-							int* currMap,
-							cge::Loader& loader);
+		static bool	initialise(cge::Window& win, cge::GameState *state, cge::GameState *prevState, Player *player, int *currMap, cge::Loader &loader);
 
 		GuiManager() = delete;
-		explicit GuiManager(cge::Window& win,
-							cge::GameState* state,
-							cge::GameState *prevState,
-							Player* player,
-							int* currMap,
-							cge::Loader& _loader);
+		explicit GuiManager(cge::Window &win, cge::GameState *state, cge::GameState *prevState, Player *player, int *currMap, cge::Loader &loader);
 
-		static GuiManager*	getSingleton();
+		static GuiManager	*getSingleton();
 
-		GuiManager(const GuiManager & cpy);
-		GuiManager operator=(const GuiManager& rhs);
+		GuiManager(const GuiManager &cpy);
+		GuiManager operator=(const GuiManager &rhs);
 		~GuiManager();
 
 		void drawScreen(int screen);
@@ -43,21 +33,20 @@ namespace cge {
 		void ReinitializeScreens();
 
 	private:
-		static cge::GuiManager*		s_instance;
+		static cge::GuiManager	*s_instance;
 
-		cge::GameState*				_prevState;
-		cge::GameState*				_state;
-		cge::Window&				_window;
-		Player*						_player;
-		int*						_currMap;
+		cge::Window				&_window;
+		cge::GameState			*_prevState;
+		cge::GameState			*_state;
+		Player					*_player;
+		int						*_currMap;
 
-		cge::GUI::MainMenuScreen*	_mainMenuScreen;
-		cge::GUI::SettingsScreen*	_settingsScreen;
-		cge::GUI::LoadGameScreen*	_loadGameScreen;
-		cge::GUI::SaveGameScreen*	_saveGameScreen;
-		cge::GUI::PauseGameScreen*	_pauseGameScreen;
+		cge::GUI::MainMenuScreen	*_mainMenuScreen;
+		cge::GUI::SettingsScreen	*_settingsScreen;
+		cge::GUI::LoadGameScreen	*_loadGameScreen;
+		cge::GUI::SaveGameScreen	*_saveGameScreen;
+		cge::GUI::PauseGameScreen	*_pauseGameScreen;
 	};
 }
-
 
 #endif //BOMBERMAN_GUIMANAGER_HPP

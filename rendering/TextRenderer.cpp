@@ -2,7 +2,6 @@
 // Created by Owen Exall on 2017/08/16.
 //
 
-#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "TextRenderer.hpp"
 #include "../error_handling/Exceptions.hpp"
@@ -140,4 +139,3 @@ void cge::TextRenderer::DrawText(std::string text, float x, float y, glm::vec3 c
 	glBindTexture(GL_TEXTURE_2D, 0);
 	this->_textShader.end();
 }
-

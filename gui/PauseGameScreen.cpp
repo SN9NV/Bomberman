@@ -235,8 +235,3 @@ cge::GUI::PauseGameScreen::PauseGameScreen(const cge::GUI::PauseGameScreen &cpy)
 	this->_screen = cpy._screen;
 	this->nanoguiWindow = cpy.nanoguiWindow;
 }
-
-cge::GUI::PauseGameScreen cge::GUI::PauseGameScreen::operator=(const cge::GUI::PauseGameScreen &rhs) {
-	*this = rhs;
-	return (*this);
-}

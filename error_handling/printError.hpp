@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include <GL/glew.h>
+#include "../shared.hpp"
 
 void	getGLError();
 void	getALError();

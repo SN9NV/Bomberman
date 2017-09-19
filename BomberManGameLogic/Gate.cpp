@@ -37,7 +37,11 @@ void Gate::damage(size_t damageCycles) {
 	_damage = true;
 }
 
-bool Gate::update() {
+bool Gate::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
+	(void)input;
+	(void)shader;
+	(void)lastFrameTime;
+
 	if (_damageCycles == 1) {
 		_damage = false;
 	}
@@ -45,12 +49,6 @@ bool Gate::update() {
 	if (_damageCycles > 0) {
 		_damageCycles--;
 	}
-	
+
 	return true;
 }
-
-/*
-void Gate::_setEffects() {
-	this->addNewSoundEffect("activate", "resources/audio/Activation.wav");
-}
-*/

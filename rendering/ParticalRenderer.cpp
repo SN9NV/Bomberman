@@ -20,8 +20,10 @@ const std::vector<unsigned int> ind = {
 		1, 2, 3
 };
 
-cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) : plane(vert, ind, true),
-																	_shader(shader) {
+cge::ParticalRenderer::ParticalRenderer(cge::GLSLProgram &shader) :
+		plane(vert, ind, true),
+		_shader(shader)
+{
 	glBindVertexArray(plane.getVao());
 	glGenBuffers(1, &_instanceVBO);
 

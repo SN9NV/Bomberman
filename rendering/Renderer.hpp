@@ -1,7 +1,6 @@
 #ifndef NEW_RENDERER_HPP
 #define NEW_RENDERER_HPP
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "GLSLProgram.hpp"
 #include "../entites/Entity.hpp"

@@ -23,7 +23,7 @@ namespace cge {
 			SaveGameScreen() = delete;
 			SaveGameScreen(cge::Window &win, cge::GameState *_currState, Player *player, cge::Loader& loader, int* currMap);
 			SaveGameScreen(const SaveGameScreen & cpy);
-			SaveGameScreen operator=(const SaveGameScreen & rhs);
+			SaveGameScreen &operator=(const SaveGameScreen & rhs) = default;
 			~SaveGameScreen();
 
 			nanogui::Screen *getScreen();

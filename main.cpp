@@ -1,9 +1,12 @@
+#include "shared.hpp"
+
 #include "io/Window.hpp"
 #include "loaders/Loader.hpp"
 #include "rendering/GLSLProgram.hpp"
 #include "rendering/Renderer.hpp"
 #include "entites/Camera.hpp"
 #include "extras/Maths.hpp"
+#include <glm/glm.hpp>
 
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION

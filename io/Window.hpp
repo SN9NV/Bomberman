@@ -3,8 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 #include "../error_handling/Exceptions.hpp"
 #include "settings/Settings.hpp"
 #include "../loaders/Loader.hpp"

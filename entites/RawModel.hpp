@@ -7,7 +7,7 @@
 
 
 #include <vector>
-#include <GL/glew.h>
+#include "../shared.hpp"
 
 namespace cge
 {

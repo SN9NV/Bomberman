@@ -7,6 +7,7 @@
 
 
 #include <map>
+#include "../shared.hpp"
 #include "../entites/RawModel.hpp"
 #include "GLSLProgram.hpp"
 #include "../entites/Partical.hpp"

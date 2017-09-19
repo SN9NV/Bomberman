@@ -20,19 +20,6 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
-	/// Render parameters
-	/*
-	 *  GLuint	&VAO;
-		GLuint	&textureID;
-		GLuint	&indexAssessor;
-		bool	&isAnimated;
-		std::vector<GLuint>	&attribArrayIndexes;
-
-		GLenum	&mode;
-		GLsizei	&count;
-		GLenum	&componentType;
-		void	*byteOffset;
-	 * */
 	const tinygltf::Model	&tinyModel = this->_model.getTinygltfModel();
 	const auto &indexAssessor = tinyModel.accessors[tinyModel.meshes[0].primitives[0].indices];
 
@@ -93,6 +80,8 @@ float cge::Entity::getScale() const {
 }
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
+	(void)input;
+
 	if (this->_isAnimated) {
 		if (this->_playAnimation) {
 			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
@@ -111,6 +100,8 @@ bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shade
 }
 
 void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
+	(void)shader;
+
 	const tinygltf::Model &model = this->_model.getTinygltfModel();
 	if (!this->_isAnimated || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;

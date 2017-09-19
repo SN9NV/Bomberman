@@ -11,9 +11,11 @@ Bomb::Bomb(const glm::vec3 &position, const glm::vec3 &rotation, float scale, cg
 }
 
 
-bool Bomb::update(const cge::InputManager &input, unsigned lastFrameTime) {
-	_ticks -= lastFrameTime;
+bool Bomb::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	(void)input;
+	(void)shader;
+
+	_ticks -= lastFrameTime;
 	_isDetonate = (_isDetonate) ? true : (_ticks <= 0);
 	return (!_isDetonate);
 }

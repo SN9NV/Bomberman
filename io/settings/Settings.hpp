@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 #include "../../error_handling/Exceptions.hpp"
 
 namespace cge {
@@ -37,8 +37,8 @@ namespace cge {
 		public:
 			Settings() = delete;
 			Settings(const Settings & cpy);
-			Settings operator=(const Settings & rhs);
-			~Settings();
+			Settings &operator=(const Settings &rhs) = default;
+			~Settings() = default;
 
 			static void						Initialise(std::string file);
 			static cge::Settings::Settings*	getSingleton();

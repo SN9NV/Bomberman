@@ -2,7 +2,6 @@
 // Created by Robert JONES on 2017/08/15.
 //
 
-#include <GL/glew.h>
 #include "RawModel.hpp"
 
 namespace cge
