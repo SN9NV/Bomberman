@@ -17,6 +17,7 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		_animationTicks(1.0),
 		_currentAnimation(0),
 		_isAnimated(!model.getTinygltfModel().animations.empty()),
+		_playAnimation(this->_isAnimated),
 		_animationSpeed(1.0),
 		_needsTransformationUpdate(true)
 {
@@ -24,14 +25,14 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 	const auto &indexAssessor = tinyModel.accessors[tinyModel.meshes[0].primitives[0].indices];
 
 	this->_renderParameters = {
-			this->_model.getVaoID(),
-			this->_model.getTexture().getID(),
-			this->_model.getIndexAssessor(),
-			&this->_model.getAttribArrayIndexes(),
-			static_cast<GLenum>(tinyModel.meshes[0].primitives[0].mode),
-			static_cast<GLsizei>(indexAssessor.count),
-			static_cast<GLenum>(indexAssessor.componentType),
-			indexAssessor.byteOffset
+		this->_model.getVaoID(),
+		this->_model.getTexture().getID(),
+		this->_model.getIndexAssessor(),
+		&this->_model.getAttribArrayIndexes(),
+		static_cast<GLenum>(tinyModel.meshes[0].primitives[0].mode),
+		static_cast<GLsizei>(indexAssessor.count),
+		static_cast<GLenum>(indexAssessor.componentType),
+		indexAssessor.byteOffset
 	};
 }
 
@@ -81,27 +82,17 @@ float cge::Entity::getScale() const {
 
 bool	cge::Entity::update(const cge::InputManager &input, cge::GLSLProgram &shader, unsigned lastFrameTime) {
 	(void)input;
+	(void)shader;
 
-	if (this->_isAnimated) {
-		if (this->_playAnimation) {
-			this->_animationTicks += ((lastFrameTime / 1000.0) * this->_animationSpeed);
-		}
-
-		if (shader.isInUse()) {
-			this->_applyAnimation(shader);
-		} else {
-			shader.begin();
-			this->_applyAnimation(shader);
-			shader.end();
-		}
+	if (this->_isAnimated && this->_playAnimation) {
+		this->_animationTicks += (lastFrameTime / 1000.0) * this->_animationSpeed;
+		this->_applyAnimation();
 	}
 
 	return true;
 }
 
-void cge::Entity::_applyAnimation(cge::GLSLProgram &shader) {
-	(void)shader;
-
+void cge::Entity::_applyAnimation() {
 	const tinygltf::Model &model = this->_model.getTinygltfModel();
 	if (!this->_isAnimated || model.skins.empty() || model.skins[0].joints.empty()) {
 		return;

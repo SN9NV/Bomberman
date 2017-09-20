@@ -38,10 +38,10 @@ void	cge::Renderer::drawMesh(const tinygltf::Model &model, const tinygltf::Mesh 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboMap[indexAssessor.bufferView]);
 
 		glDrawElements(
-				(GLenum)primitive.mode,
-				(GLsizei)indexAssessor.count,
-				(GLenum)indexAssessor.componentType,
-				BUFFER_OFFSET(indexAssessor.byteOffset)
+			(GLenum)primitive.mode,
+			(GLsizei)indexAssessor.count,
+			(GLenum)indexAssessor.componentType,
+			BUFFER_OFFSET(indexAssessor.byteOffset)
 		);
 
 		for (auto &attr : primitive.attributes) {

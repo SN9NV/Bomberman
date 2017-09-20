@@ -36,7 +36,6 @@ int main() {
 	LevelRunner			*levelRunner;
 	cge::Audio::Device	defaultAudioDevice;
 
-
 	int currMap = 0;
 	std::vector<std::string> maps = {
 		"../resources/Maps/Map1",

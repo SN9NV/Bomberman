@@ -98,7 +98,7 @@ namespace cge {
 		std::map<std::string, cge::Audio::Source *>	_soundEffects;
 
 		virtual void	_setEffects();
-		void			_applyAnimation(cge::GLSLProgram &shader);
+		void			_applyAnimation();
 		void			_animateSkeleton(cge::Entity::_AnimateSkeleton &vars);
 	};
 }
