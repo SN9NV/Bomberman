@@ -34,6 +34,8 @@ cge::Entity::Entity(const glm::vec3 &position, const glm::vec3 &rotation, float 
 		static_cast<GLenum>(indexAssessor.componentType),
 		indexAssessor.byteOffset
 	};
+
+	this->_applyAnimation();
 }
 
 cge::Entity::~Entity() {
