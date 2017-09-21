@@ -14,6 +14,7 @@
 #include "FullFire.hpp"
 #include "WingBoot.hpp"
 #include "AddBomb.hpp"
+#include "../extras/glmOstream.hpp"
 
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
@@ -808,6 +809,7 @@ void LevelRunner::update() {
 	}
 
 	glm::vec3 plpos = _player->getPosition();
+
 	this->_camera.setPosition({plpos.x, 10, plpos.z});
 	if (_gate != nullptr) {
 		if (_gate->isDamage()) {

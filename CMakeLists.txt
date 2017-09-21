@@ -121,14 +121,14 @@ if (NOT PKG_CONFIG_EXECUTABLE)
 endif()
 
 # Find the dependencies for the project						Mac				Linux
-pkg_search_module(GLEW		REQUIRED	glew)			#>	glew			libglew-dev
+# pkg_search_module(GLEW		REQUIRED	glew)			#>	glew			libglew-dev
 pkg_search_module(GLM		REQUIRED	glm)			#>	glm				Install from source (https://github.com/g-truc/glm)
 pkg_search_module(SNDFILE	REQUIRED	sndfile)		#>	libsndfile		libsndfile1-dev
 pkg_search_module(FT		REQUIRED	freetype2)
 
-if (NOT GLEW_FOUND)
-	installPkg(glew libglew-dev)
-endif()
+# if (NOT GLEW_FOUND)
+# 	installPkg(glew libglew-dev)
+# endif()
 
 if (NOT GLM_FOUND)
 	installPkg(glm FALSE)
