@@ -23,10 +23,16 @@ else
 	fi
 fi
 
+echo "Updating dependencies & resources"
+git submodule update --init --recursive
+
 echo "Installing Bomberman"
 mkdir build
 cd build
 cmake ..
+if [ $? -ne 0 ]; then
+	cmake ..
+fi
 make -j 4
 
 RED='\033[0;31m'
