@@ -111,11 +111,11 @@ void LevelRunner::beingWorldInteraction() {
 			_beings.erase(being);
 		} else if ((*being)->isAlive()) {
 			glm::vec3 pos = (*being)->getPosition();
-			int x = roundf(pos.x);
-			int y = roundf(pos.z);
-
+			pos = (*being)->getPosition();
+			int x = static_cast<int>(roundf(pos.x));
+			int y = static_cast<int>(roundf(pos.z));
 			if ((*being)->get_n_moveDir().x != 0 || (*being)->get_n_moveDir().z != 0 || (*being)->isPlaceBomb()) {
-				if (*being == _player) {
+				if ((*being) == _player) {
 					if (_powerUpInstance != nullptr) {
 						glm::vec3 dist = _player->getPosition() - _powerUpInstance->getPosition();
 						float fdist = cge::Maths::vec3Len(dist);
@@ -133,22 +133,25 @@ void LevelRunner::beingWorldInteraction() {
 						_player->setPosition(_gate->getPosition());
 						_state = levelState::COMPLETE;
 					}
-
 				}
 
-				if (roundf(oldpos.x) != roundf(pos.x) && _level[roundf(pos.z)][roundf(pos.x)] != nullptr) {
-					(*being)->setPosition({pos.x, 0, oldpos.z});
+				if (y < 0 || y > (int)_level.size() ||
+						x < 0 || x > (int)_level[y].size() ||
+						_level[y][x] != nullptr) {
+					if (_level[(int) (round(oldpos.z))][(int) (round(oldpos.x))] == nullptr) {
+						(*being)->setPosition(oldpos);
+						(*being)->setMoveDir({0, 0, 0});
+					} else if ((int) (round(oldpos.z)) != y ||
+							   (int) (round(oldpos.x)) != x) {
+						(*being)->setPosition(oldpos);
+						(*being)->setMoveDir({0, 0, 0});
+					}
 				}
 
-				if (roundf(oldpos.z) != roundf(pos.z) && _level[roundf(pos.z)][roundf(pos.x)] != nullptr) {
-					(*being)->setPosition({oldpos.x, 0, (*being)->getPosition().z});
-				}
-
-				bumpBeing(*being);
+				bumpBeing((*being));
 				pos = (*being)->getPosition();
-				x = roundf(pos.x);
-				y = roundf(pos.z);
-
+				x = (int) (round(pos.x));
+				y = (int) (round(pos.z));
 				if ((*being)->isPlaceBomb() && _level[y][x] == nullptr) {
 					_objtLoader.setDamage((*being)->getDamage());
 					_objtLoader.setBombTime((*being)->getBombTime());
@@ -158,7 +161,6 @@ void LevelRunner::beingWorldInteraction() {
 					(*being)->placeBomb(nbomb);
 				}
 			}
-
 			being++;
 		} else
 			being++;
