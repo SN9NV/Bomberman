@@ -109,7 +109,25 @@ void	cge::Renderer::uploadView(const glm::mat4 &view) const {
 	this->_shader.uploadMatrix4f(this->_uniformView, view);
 }
 
+bool sortOnTexture(cge::Entity *en1, cge::Entity *en2)
+{
+	return (en1->getRenderParameters().textureID < en2->getRenderParameters().textureID);
+}
+
 void	cge::Renderer::render(std::vector<Entity *> &entities) {
+	GLuint lastTextur;
+
+
+	std::sort(entities.begin(), entities.end(), sortOnTexture);
+
+
+
+	if(!entities.empty())
+	{
+		auto foo = entities.begin();
+		lastTextur = (*foo)->getRenderParameters().textureID;
+		glBindTexture(GL_TEXTURE_2D, lastTextur);
+	}
 	for (auto &entity : entities) {
 		auto renderParameters = entity->getRenderParameters();
 
@@ -128,7 +146,11 @@ void	cge::Renderer::render(std::vector<Entity *> &entities) {
 		}
 
 		/// Draw the triangles
-		glBindTexture(GL_TEXTURE_2D, renderParameters.textureID);
+		if (renderParameters.textureID != lastTextur)
+		{
+			glBindTexture(GL_TEXTURE_2D, renderParameters.textureID);
+			lastTextur = renderParameters.textureID;
+		}
 
 		for (auto &index : *renderParameters.attribArrayIndexes) {
 			glEnableVertexAttribArray(index);
