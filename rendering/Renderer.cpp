@@ -117,10 +117,7 @@ bool sortOnTexture(cge::Entity *en1, cge::Entity *en2)
 void	cge::Renderer::render(std::vector<Entity *> &entities) {
 	GLuint lastTextur;
 
-
 	std::sort(entities.begin(), entities.end(), sortOnTexture);
-
-
 
 	if(!entities.empty())
 	{
