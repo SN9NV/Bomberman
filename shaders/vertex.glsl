@@ -8,7 +8,9 @@ layout(location = 2) in vec2	vertexUV;
 layout(location = 3) in vec4	vertexJointIncides;
 layout(location = 4) in vec4	vertexWeights;
 
+out vec3	fragmentNormal;
 out vec2	fragmentUV;
+out vec3	frsgmrntPosition;
 
 uniform bool	isAnimated;
 uniform mat4	jointTransforms[MAX_JOINTS];
@@ -29,5 +31,7 @@ void main() {
 	vec4 position = transform * vec4(vertexPosition, 1.0);
 	gl_Position = view * position;
 
+	fragmentNormal = (transform * vec4(vertexNormal, 0.0)).xyz;
 	fragmentUV = vertexUV;
+	frsgmrntPosition =  position.xyz;
 }

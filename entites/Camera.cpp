@@ -55,6 +55,12 @@ void cge::Camera::update(const cge::GLSLProgram &shader) {
 			shader.getUniformLocation("view"),
 			this->_projectionMatrix * this->_viewMatrix
 	);
+
+	shader.uploadvec3d(
+
+			shader.getUniformLocation("cameraPosition"),
+			_position
+	);
 }
 
 void cge::Camera::setPosition(const glm::vec3 &position) {
