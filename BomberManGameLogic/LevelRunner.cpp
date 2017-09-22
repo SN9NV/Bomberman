@@ -16,6 +16,11 @@
 #include "AddBomb.hpp"
 #include "../extras/glmOstream.hpp"
 
+bool sortOnTexture(cge::Entity *en1, cge::Entity *en2)
+{
+	return (en1->getRenderParameters().textureID < en2->getRenderParameters().textureID);
+}
+
 LevelRunner::LevelRunner(cge::Loader &loader, Player *player, cge::Window &window, cge::InputManager *inputManager, cge::Audio::Device &audioDevice) :
 		_loader(loader),
 		_window(window),
@@ -124,6 +129,10 @@ void LevelRunner::beingWorldInteraction() {
 						if (_state == levelState::PLAY && fdist < hit && _powerUpInstance->isActive()) {
 							_powerUpInstance->Powerup(*_player);
 							_powerUpInstance->deActivete();
+							size_t j = 0;
+							while(_batch[j] != _powerUpInstance && j < _batch.size())j++;
+							if (j < _batch.size())
+								_batch.erase(_batch.begin() + j);
 							_player->playSound("activate");
 						}
 					}
@@ -158,6 +167,8 @@ void LevelRunner::beingWorldInteraction() {
 					Bomb *nbomb = dynamic_cast<Bomb *>(_objtLoader.loadObject("Bomb", {x, 0, y}));
 					_level[y][x] = nbomb;
 					_bombs.push_back(nbomb);
+					_batch.push_back((cge::Entity *)(nbomb));
+					std::sort(_batch.begin(), _batch.end(), sortOnTexture);
 					(*being)->placeBomb(nbomb);
 				}
 			}
@@ -213,12 +224,21 @@ void LevelRunner::bombWorldInteraction() {
 
 			checkGateDamage(bombPos, *being);
 			checkBeingBlast(bombPos.x, bombPos.z);
+			cge::Entity *tmpEnt;
 			fireEffect({bombPos.x, bombPos.y + .5, bombPos.z}, 500);
 			{
 				unsigned i = 0;
 				while (_floors[i]->getPosition() != (*bomb)->getPosition() && i < _floors.size()) i++;
-				_floors.erase(_floors.begin() + i);
-				_floors.push_back(_objtLoader.loadObject("FloorBurn", bombPos));
+				unsigned j = 0;
+				while (_batch[j] != _floors[i] && j < _batch.size()) j++;
+				if (i != _floors.size())
+					_floors.erase(_floors.begin() + i);
+				if (j != _batch.size())
+					_batch.erase(_batch.begin() + j);
+				tmpEnt = _objtLoader.loadObject("FloorBurn", bombPos);
+				_floors.push_back(tmpEnt);
+				_batch.push_back((tmpEnt));
+				std::sort(_batch.begin(), _batch.end(), sortOnTexture);
 			}
 
 			for (int i = 1; i < (*bomb)->getBombradius(); i++) {
@@ -274,7 +294,12 @@ void LevelRunner::bombWorldInteraction() {
 					checkBombBlast(bombPos.x - i, bombPos.z);
 				}
 			}
-
+			if (shield != 0)
+				std::sort(_batch.begin(), _batch.end(), sortOnTexture);
+			size_t j = 0;
+			while (_batch[j] != _level[bombPos.z][bombPos.x] && j < _batch.size()) j++;
+			if (j < _batch.size())
+				_batch.erase(_batch.begin() + j);
 			_level[bombPos.z][bombPos.x] = nullptr;
 			Bomb *tmpBomb = *bomb;
 			auto bombEffects = tmpBomb->getSoundEffects();
@@ -310,26 +335,32 @@ void LevelRunner::loadMapEntitys() {
 				case 'w':
 					if ((tmpEnt = _objtLoader.loadObject("Wall", {j, 0, i})) != nullptr) {
 						_level[i][j] = tmpEnt;
+						_batch.push_back(tmpEnt);
 					}
 
 					break;
 				case 'p':
 					_player->setPosition({j, 0, i});
 					_beings.emplace_back(this->_player);
-					_floors.push_back(_objtLoader.loadObject("Floor", {j, 0, i}));
+					tmpEnt = _objtLoader.loadObject("Floor", {j, 0, i});
+					_floors.push_back(tmpEnt);
+					_batch.push_back(tmpEnt);
+					_batch.push_back((cge::Entity*)this->_player);
 					_map[i][j] = '.';
 
 					break;
 				case 'd':
 					if ((tmpEnt = _objtLoader.loadObject("DestructWall", {j, 0, i})) != nullptr) {
 						_level[i][j] = tmpEnt;
+						_batch.push_back(tmpEnt);
 						_dwalls++;
 					}
 
 					break;
 				default:
-					_floors.push_back(_objtLoader.loadObject("Floor", {j, 0, i}));
-
+					tmpEnt = _objtLoader.loadObject("Floor", {j, 0, i});
+					_floors.push_back(tmpEnt);
+					_batch.push_back(tmpEnt);
 					break;
 			}
 		}
@@ -339,8 +370,10 @@ void LevelRunner::loadMapEntitys() {
 
 	if (_objtLoader.has("Balloon")) {
 		while (_balloons > 0) {
-			tmpBeing = dynamic_cast<Being *>(_objtLoader.loadObject("Balloon", {0, 0, 0}));
+			tmpEnt = _objtLoader.loadObject("Balloon", {0, 0, 0});
+			tmpBeing = dynamic_cast<Being *>(tmpEnt);
 			_beings.push_back(tmpBeing);
+			_batch.push_back(tmpEnt);
 			placeBeing(tmpBeing);
 			_balloons--;
 		}
@@ -348,8 +381,10 @@ void LevelRunner::loadMapEntitys() {
 
 	if (_objtLoader.has("Onile")) {
 		while (_onil > 0) {
-			tmpBeing = dynamic_cast<Being *>(_objtLoader.loadObject("Onile", {0, 0, 0}));
+			tmpEnt = _objtLoader.loadObject("Onile", {0, 0, 0});
+			tmpBeing = dynamic_cast<Being *>(tmpEnt);
 			_beings.push_back(tmpBeing);
+			_batch.push_back(tmpEnt);
 			placeBeing(tmpBeing);
 			_onil--;
 		}
@@ -357,14 +392,15 @@ void LevelRunner::loadMapEntitys() {
 
 	if (_objtLoader.has("Ovapi")) {
 		while (_ovapi > 0) {
-			if ((tmpBeing = dynamic_cast<Being *>(_objtLoader.loadObject("Ovapi", {0, 0, 0}))) != nullptr) {
+				tmpEnt = _objtLoader.loadObject("Ovapi", {0, 0, 0});
+				tmpBeing = dynamic_cast<Being *>(tmpEnt);
 				_beings.push_back(tmpBeing);
+				_batch.push_back(tmpEnt);
 				placeBeing(tmpBeing);
-			}
-
 			_ovapi--;
 		}
 	}
+	std::sort(_batch.begin(), _batch.end(), sortOnTexture);
 }
 
 bool LevelRunner::checkWallBlast(float x, float y) {
@@ -375,7 +411,13 @@ bool LevelRunner::checkWallBlast(float x, float y) {
 
 	if (_level[iy][ix] != nullptr) {
 		if (dynamic_cast<DestructWall *>(_level[iy][ix]) != nullptr) {
-			_floors.push_back(_objtLoader.loadObject("Floor", {ix, 0, iy}));
+			tmpEnt = _objtLoader.loadObject("Floor", {ix, 0, iy});
+			_floors.push_back(tmpEnt);
+			_batch.push_back(tmpEnt);
+			size_t j = 0;
+			while (_batch[j] != _level[iy][ix] && j < _batch.size()) j++;
+			if (j < _batch.size())
+				_batch.erase(_batch.begin() + j);
 			delete (_level[iy][ix]);
 			_level[iy][ix] = nullptr;
 			_dwalls--;
@@ -386,15 +428,24 @@ bool LevelRunner::checkWallBlast(float x, float y) {
 			if (_gate == nullptr) {
 				if (_dwalls == 0) {
 					if ((tmpEnt = _objtLoader.loadObject("Gate", {ix, 0, iy})) != nullptr)
+					{
 						_gate = dynamic_cast<Gate *>(tmpEnt);
+						_batch.push_back(tmpEnt);
+					}
 				} else if (_beings.size() == 0) {
 					if (rand() % 3 == 1)
 						if ((tmpEnt = _objtLoader.loadObject("Gate", {ix, 0, iy})) != nullptr)
+						{
 							_gate = dynamic_cast<Gate *>(tmpEnt);
+							_batch.push_back(tmpEnt);
+						}
 				} else {
 					if (rand() % 20 == 1)
 						if ((tmpEnt = _objtLoader.loadObject("Gate", {ix, 0, iy})) != nullptr)
+						{
 							_gate = dynamic_cast<Gate *>(tmpEnt);
+							_batch.push_back(tmpEnt);
+						}
 				}
 			}
 
@@ -402,6 +453,7 @@ bool LevelRunner::checkWallBlast(float x, float y) {
 				if (rand() % 10 == 1 && _powerUpInstance != nullptr) {
 					_powerUpInstance->setPosition({ix, 0, iy});
 					_powerUpInstance->activete();
+					_batch.push_back((cge::Entity *)_powerUpInstance);
 					_powerup = true;
 				}
 			}
@@ -575,6 +627,7 @@ void LevelRunner::cleanLevel() {
 	_player->setPlaceBomb(false);
 	_particalRenderer.clearParticals();
 
+	_batch.clear();
 	if (_state != levelState::COMPLETE && _powerup && !_powerUpInstance->isActive()) {
 		_powerUpInstance->Reverse(*_player);
 	}
@@ -819,6 +872,8 @@ void LevelRunner::update() {
 
 			if (tmpEnt != nullptr) {
 				_beings.push_back(tmpEnt);
+				_batch.push_back((cge::Entity *)(tmpEnt));
+				std::sort(_batch.begin(), _batch.end(), sortOnTexture);
 			}
 		}
 
@@ -845,31 +900,7 @@ void LevelRunner::render() {
 	_camera.setTrackOffset({0, 8, 5});
 	_camera.update(_entShader);
 
-	for (auto &floor : _floors) {
-		entities.push_back(floor);
-	}
-
-	for (auto &vecit : _level) {
-		for (auto &entit : vecit) {
-			if (entit != nullptr) {
-				entities.push_back(entit);
-			}
-		}
-	}
-
-	for (const auto being : _beings) {
-		entities.push_back(dynamic_cast<cge::Entity *>(being));
-	}
-
-	if (_gate != nullptr) {
-		entities.push_back(dynamic_cast<cge::Entity *>(_gate));
-	}
-
-	if (_powerUpInstance != nullptr && _powerUpInstance->isActive()) {
-		entities.push_back(dynamic_cast<cge::Entity *>(_powerUpInstance));
-	}
-
-	_renderer.render(entities);
+	_renderer.render(_batch);
 	_entShader.end();
 
 	_particalRenderer.updateRender(_camera, _window.getFrameTime());
@@ -937,3 +968,4 @@ void LevelRunner::DrawEOGCredits() {
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 	}
 }
+

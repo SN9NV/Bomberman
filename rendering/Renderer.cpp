@@ -109,15 +109,10 @@ void	cge::Renderer::uploadView(const glm::mat4 &view) const {
 	this->_shader.uploadMatrix4f(this->_uniformView, view);
 }
 
-bool sortOnTexture(cge::Entity *en1, cge::Entity *en2)
-{
-	return (en1->getRenderParameters().textureID < en2->getRenderParameters().textureID);
-}
 
 void	cge::Renderer::render(std::vector<Entity *> &entities) {
-	GLuint lastTextur;
+	GLuint lastTextur = 0;
 
-	std::sort(entities.begin(), entities.end(), sortOnTexture);
 
 	if(!entities.empty())
 	{

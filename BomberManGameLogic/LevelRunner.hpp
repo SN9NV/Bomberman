@@ -46,6 +46,7 @@ private:
 	std::vector<Being *>						_beings;
 	std::vector<Bomb *>							_bombs;
 	std::vector<std::string>					_map;
+	std::vector<cge::Entity *>					_batch;
 
 	cge::Loader				&_loader;
 	cge::Window				&_window;
